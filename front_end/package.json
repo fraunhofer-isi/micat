@@ -8,7 +8,7 @@
     "start": "next start",
     "li": "next lint",
     "lint:fix": "eslint --fix --ext .js,.jsx src",
-    "lint": "next lint & next lint test & next lint test-react",
+    "lint": "next lint & next lint test",
     "test": "jest",
     "test-coverage": "jest --coverage --testMatch \"**/test/**/?(*.)+(test).js?(x)\"",
     "test-watch": "jest --watch",
