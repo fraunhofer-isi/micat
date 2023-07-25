@@ -30,3 +30,9 @@ jobs:
         cd doc
         make html
         make pdf     
+     name: conserve documentation artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: doc-build
+          path: |
+            doc/build           
