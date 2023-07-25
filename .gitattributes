@@ -1,0 +1,15 @@
+# Use LF line ending when downloading files with git
+# Also see
+# https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+* text eol=lf
+
+# Denote all files that are truly binary and should not be modified:
+*.png binary
+*.jpg binary
+*.ico binary
+
+*.sqlite binary
+
+*.xls binary
+*.xlsx binary
+*.pptx binary

@@ -1,0 +1,45 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: back_end
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: install dependencies
+      run: |
+        cd back_end
+        # python -m pip install --upgrade pip
+        # also see settings in pyproject.toml
+        pip install .[dev]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems        
+    - name: format
+      run: |
+        cd back_end
+        python -m isort .
+        python -m black src
+        python -m black test
+        python -m black import
+    - name: lint
+      run: |
+        cd back_end
+        python -m pylint src
+        python -m pylint test --recursive=true
+        python -m pylint import --recursive=true        
+    - name: test
+      run: |
+        cd back_end
+        python -m pytest --cov
