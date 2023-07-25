@@ -29,8 +29,8 @@ jobs:
         make html
         make pdf     
     - name: artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: doc
-          path: |
-            doc/build           
+      uses: actions/upload-artifact@v3
+      with:
+        name: doc
+        path: |
+          doc/build           
