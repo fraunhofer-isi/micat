@@ -1,4 +1,4 @@
-name: documentation
+name: doc
 
 on:
   push:
@@ -39,14 +39,13 @@ jobs:
       - name: pdf artifact
         uses: actions/upload-artifact@v3
         with:
-          name: doc
-          path: |
-            doc/build/pdf/index.pdf
-      - name: setup pages
+          name: doc.pdf
+          path: doc/build/pdf/index.pdf
+      - name: setup github pages
         uses: actions/configure-pages@v3
-      - name: upload pages artifact
+      - name: pages artifact
         uses: actions/upload-pages-artifact@v2
-        with:         
+        with:              
           path: 'doc/build/html'
       - name: deploy to github pages
         id: deployment
