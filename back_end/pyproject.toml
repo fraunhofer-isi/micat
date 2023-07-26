@@ -73,6 +73,7 @@ data = [
 
 license = [
     'licensecheck==2023.1.4',
+	'poetry==',  # required for licensecheck to consider nested dependencies
     'license_scanner==0.1.2'
 
 ]
@@ -82,8 +83,12 @@ dev = ['micat[lint, format, test, doc, data, license]']
 
 [tool.licensecheck]
 using = 'PEP631'
-zero = true
-ignore-licenses = ['ZOPE PUBLIC LICENSE']
+zero = true  # results in non-zero exit code if incompatibilities are found
+ignore-licenses = [
+    'Zope Public License', # not known by licensecheck; similar to BSD and compatible to agplv3
+	'Apache Software License'  # currently there is a bug about the compatibility of apache license and agplv3; therefore we ignore it
+]
+
 
 [tool.black]
 line-length = 120
