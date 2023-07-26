@@ -16,6 +16,7 @@ author = 'Stefan Eidelloth'
 extensions = [
     'myst_parser',  # Also see https://myst-parser.readthedocs.io/en/latest/intro.html
     'rst2pdf.pdfbuilder',  # Also see https://github.com/rst2pdf/rst2pdf
+    'sphinx.ext.autosectionlabel', # Also see https://www.sphinx-doc.org/en/master/usage/extensions/autosectionlabel.html
 ]
 
 # myst parser syntax extensions, also see https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
@@ -35,6 +36,11 @@ myst_enable_extensions = [
     #"substitution",
     #"tasklist",
 ]
+
+# autosectionlabel True to prefix each section label with the name of the document it is in, followed by a colon. 
+# For example, index:Introduction for a section called Introduction that appears in document index.rst. Useful for 
+# avoiding ambiguity when the same section heading appears in different documents.
+autosectionlabel_prefix_document = True
 
 # Grouping the document tree into PDF files. List of tuples
 # (source start file, target name, title, author, options).
