@@ -87,6 +87,8 @@ cogeneration power plants with the final to primary energy carriers conversion v
 as result. The input values stem from the Eurostat complete energy balances and from
 the EU Reference Scenario 2020.
 
+[*The functioning of the FEC-to-PEC-conversion module can be found here*](chi_calc)
+
 Calculation of final energy mix
 ----
 If no data is provided by the user, default assumptions are made in order to provide
