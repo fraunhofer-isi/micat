@@ -279,5 +279,6 @@ table. As such, the id_parameter template is often altered in the process of imp
 existing or adding new indicators.
 
 *The id_parameter table can be found here: back_end/import/public/id_parameter.xlsx*
+
 *Since it is a work-in-progress and changes are frequent, as well as its considerable*
 *length, it has not been included here*
