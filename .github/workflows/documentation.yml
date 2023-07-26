@@ -27,10 +27,21 @@ jobs:
       run: |
         cd doc
         make html
-        make pdf     
-    - name: artifact
+        make pdf        
+    - name: pdf artifact
       uses: actions/upload-artifact@v3
       with:
         name: doc
         path: |
-          doc/build           
+          doc/build/pdf/index.pdf
+  pages:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+    - id: deployment
+      uses: sphinx-notes/pages@v3          
