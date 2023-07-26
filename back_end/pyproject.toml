@@ -73,7 +73,7 @@ data = [
 
 license = [
     'licensecheck==2023.1.4',
-	'poetry==',  # required for licensecheck to consider nested dependencies
+	'poetry==1.5.1',  # required for licensecheck to consider nested dependencies
     'license_scanner==0.1.2'
 
 ]
