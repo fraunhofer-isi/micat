@@ -19,7 +19,8 @@ build-backend = "hatchling.build"
 [project]
 name = 'micat'
 version = '0.0.1'
-requires-python = ">=3.11.0"
+requires-python = '>=3.11.0'
+license = 'agpl3'
 
 dependencies = [
     ## web
@@ -70,17 +71,24 @@ data = [
     'xlwings==0.30.10; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
 
-dev = ['micat[lint, format, test, doc, data]']
+license = [
+    'licensecheck==2023.1.4',
+    'license_scanner==0.1.2'
+
+]
+
+dev = ['micat[lint, format, test, doc, data, license]']
 
 
-
+[tool.licensecheck]
+using = 'PEP631'
 
 [tool.black]
 line-length = 120
 skip-string-normalization = true
 
 [tool.isort]
-profile = "black"
+profile = 'black'
 
 
 [tool.pytest.ini_options]
