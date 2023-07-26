@@ -20,7 +20,7 @@ build-backend = "hatchling.build"
 name = 'micat'
 version = '0.0.1'
 requires-python = '>=3.11.0'
-license = 'agpl3'
+license = {text = 'GNU Affero General Public License v3 or later (AGPLv3+)'}
 
 dependencies = [
     ## web
@@ -34,7 +34,7 @@ dependencies = [
     'watchdog==3.0.0',
     ## scientific calculus
     'pandas==2.0.2',
-    'numpy==1.25.0',
+    'numpy==1.25.1',
     ## excel
     'XlsxWriter==3.1.2',
     'openpyxl==3.1.2',
