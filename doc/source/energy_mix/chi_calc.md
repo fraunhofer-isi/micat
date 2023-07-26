@@ -1,3 +1,4 @@
+(chi_calc)=
 Calculation of $`\chi`$
 -
 
