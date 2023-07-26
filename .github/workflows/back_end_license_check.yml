@@ -21,8 +21,10 @@ jobs:
     - name: install dependencies
       run: |
         cd back_end
-        pip install .      
+        pip install .     
     - name: license check
       run: |
+        pip install license_scanner
         license_scanner
+        pip install licensecheck
         licensecheck
