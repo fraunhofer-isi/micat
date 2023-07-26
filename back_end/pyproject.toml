@@ -82,6 +82,8 @@ dev = ['micat[lint, format, test, doc, data, license]']
 
 [tool.licensecheck]
 using = 'PEP631'
+zero = true
+ignore-licenses = ['ZOPE PUBLIC LICENSE']
 
 [tool.black]
 line-length = 120
