@@ -1,0 +1,28 @@
+# This workflow will install Python dependencies (without dev dependencies) and
+# run a license check 
+
+name: back_end_license_check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.11
+    - name: install dependencies
+      run: |
+        cd back_end
+        pip install .      
+    - name: license check
+      run: |
+        license_scanner
+        licensecheck
