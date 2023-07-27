@@ -21,12 +21,9 @@ jobs:
     - name: install dependencies
       run: |
         cd back_end
-        pip install .     
+        pip install .
     - name: license check
       run: |
         cd back_end
-        pip install license_scanner
-        license_scanner
-        pip install licensecheck
-        # also see settings in pyproject.toml
-        licensecheck --ignore-licenses='Apache' --ignore-packages='waitress'
+        pip install license_scanner, licensecheck  
+        python check_licenses.py

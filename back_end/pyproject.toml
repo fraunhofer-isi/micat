@@ -38,6 +38,7 @@ dependencies = [
     ## excel
     'XlsxWriter==3.1.2',
     'openpyxl==3.1.2',
+    'pyiotools==0.3.18'
 ]
 
 [project.optional-dependencies]
@@ -79,11 +80,6 @@ license = [
 ]
 
 dev = ['micat[lint, format, test, doc, data, license]']
-
-
-[tool.licensecheck]
-using = 'PEP631'
-zero = true  # results in non-zero exit code if incompatibilities are found
 
 [tool.black]
 line-length = 120
