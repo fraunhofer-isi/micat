@@ -25,4 +25,4 @@ jobs:
     - name: license check
       run: |
         cd back_end      
-        python check_licenses.py
+        python check/check_licenses.py

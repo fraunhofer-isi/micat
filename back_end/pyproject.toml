@@ -170,7 +170,7 @@ with open('pylint.log', 'w') as pylint_log:
         sys.path.append(import_path)
 
         pylint_log.write("Checking file names...\\n")
-        from check_file_names import main as check_file_names
+        from check.check_file_names import main as check_file_names
         check_file_names()
         pylint_log.write("Finished init-hook.\\n")
     else:
@@ -191,7 +191,7 @@ with open('pylint.log', 'w') as pylint_log:
         pylint_log.write("Added hard coded paths.\\n")
 
         pylint_log.write("Checking file names...\\n")
-        from check_file_names import main as check_file_names
+        from check.check_file_names import main as check_file_names
         check_file_names(back_end_path)
         pylint_log.write("Finished init-hook.\\n")
 
