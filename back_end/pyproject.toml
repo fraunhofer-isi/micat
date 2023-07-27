@@ -38,7 +38,7 @@ dependencies = [
     ## excel
     'XlsxWriter==3.1.2',
     'openpyxl==3.1.2',
-    'pyiotools==0.3.18'
+    'pyiotools==0.3.18'  # TOD : remove after testing license check
 ]
 
 [project.optional-dependencies]
@@ -74,9 +74,7 @@ data = [
 
 license = [
     'licensecheck==2023.1.4',
-	'poetry==1.5.1',  # required for licensecheck to consider nested dependencies
     'license_scanner==0.1.2'
-
 ]
 
 dev = ['micat[lint, format, test, doc, data, license]']
