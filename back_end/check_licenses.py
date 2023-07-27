@@ -1,26 +1,34 @@
+from sys import exit as sysexit
+
 from licensecheck import formatter, get_deps
 from licensecheck import license_matrix, packageinfo
 from licensecheck.types import JOINS, License, PackageInfo
 
 from license_scanner import get_all_licenses
 
-from sys import exit
-
 
 def main():
     using = 'PEP631'
     ignore_packages = []
     fail_packages = []
-    ignore_licenses = ['Apache Software License', 'Zope Public License']
+    ignore_licenses = [
+        # work around for bug in licensecheck for apache
+        'Apache Software License',
+        # not know by licensecheck, yet
+        'Zope Public License',
+        # work around for bug in licensecheck for dual license
+        'MIT License;; Academic Free License (AFL)',
+    ]
     fail_licenses = []
 
     is_using_license_scanner = True
     if is_using_license_scanner:
         # considers all packages from the workspace; only makes sense in the context of
-        # continuous integration pipelines/workflow actions
+        # continuous integration pipelines/workflow actions (or within virtualenvs)
         licenses_from_license_scanner = get_all_licenses()
         requirements = sum(licenses_from_license_scanner.values(), [])
     else:
+        # only considers direct dependencies
         requirements = get_deps.getReqs(using)
 
     project_license, dependencies = _license_and_dependencies(
@@ -33,15 +41,17 @@ def main():
     )
 
     simple_format = formatter.formatMap['simple']
-    output = simple_format(project_license, sorted(dependencies))
+    # noinspection PyTypeChecker
+    sorted_dependencies = sorted(dependencies)
+    output = simple_format(project_license, sorted_dependencies)
     print(output)
 
     is_incompatible = any(not dependency.licenseCompat for dependency in dependencies)
     exit_code = 1 if is_incompatible else 0
-    exit(exit_code)
+    sysexit(exit_code)
 
 
-def _license_and_dependencies(
+def _license_and_dependencies(  # pylint: disable=too-many-arguments
     using: str,
     ignore_packages: list[str],
     fail_packages: list[str],
@@ -63,11 +73,11 @@ def _license_and_dependencies(
             fail_packages,
             ignore_licenses,
             ignore_packages,
-            )
+        )
     return project_license, packages
 
 
-def _check_and_update_compatibility(
+def _check_and_update_compatibility(  # pylint: disable=too-many-arguments
     package,
     project_license,
     fail_licenses,
