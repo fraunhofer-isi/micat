@@ -1,12 +1,14 @@
 {
   "name": "micat",
   "version": "0.0.1",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build && next export",
     "start": "next start",
     "li": "next lint",
+    "license-check": "node check/check_licenses.js",
     "lint:fix": "eslint --fix --ext .js,.jsx src",
     "lint": "next lint & next lint test",
     "test": "jest",
@@ -69,6 +71,7 @@
     "jest-jasmine2": "29.6.1",
     "jsdom": "22.1.0",
     "jsdom-worker": "0.3.0",
-    "sass": "1.64.0"
+    "license-checker": "25.0.1",  
+    "sass": "1.64.0"   
   }
 }

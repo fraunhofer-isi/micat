@@ -1,0 +1,29 @@
+# This workflow will install node dependencies, lint, test and build with a single version of node
+# For more information see: https://github.com/actions/starter-workflows/tree/main/ci
+
+name: front_end
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up node 
+      uses: actions/setup-node@v3
+      with:
+        node-version: 19
+    - name: install dependencies
+      run: |
+        cd front_end    
+        npx next telemetry disable
+        npm install       
+    - name: license check
+      run: |
+        cd front_end  
+        npm run license-check
