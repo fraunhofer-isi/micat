@@ -36,7 +36,7 @@ const allowedLicensesString = allowedLicenses.join(';');
 
 const excludedPackages = [
   'buffers@0.1.1',  // has no license
-  'micat@0.0.1',
+  'micat@0.0.1',  // workaround; determination of the project license does not seem to work correctly
 ];
 const excludePackageString = excludedPackages.join(';');
 
@@ -45,7 +45,6 @@ const options = {
   production: true,
   onlyAllow: allowedLicensesString,
   excludePackages: excludePackageString,
-  summary: true
 };
 
 licenseChecker.init(
