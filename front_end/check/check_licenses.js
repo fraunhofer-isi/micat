@@ -35,7 +35,7 @@ const allowedLicensesString = allowedLicenses.join(';');
 // console.log(allowedLicensesString)
 
 const excludedPackages = [
-  'buffers@0.1.1',
+  'buffers@0.1.1',  // has no license
   'micat@0.0.1',
 ];
 const excludePackageString = excludedPackages.join(';');
