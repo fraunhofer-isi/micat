@@ -72,7 +72,7 @@ data = [
 ]
 
 license = [
-    'licensecheck==2023.1.4',
+    'licensecheck==2023.2',
     'license_scanner==0.1.3'
 
 ]
