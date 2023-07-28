@@ -30,7 +30,7 @@
     "react-bootstrap-icons": "1.10.3",
     "react-dom": "18.2.0",
     "react-tabs": "6.0.2",
-    "tabulator-tables": "5.5.0",
+    "tabulator-tables": "5.5.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
   },
   "devDependencies": {
