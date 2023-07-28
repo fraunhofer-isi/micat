@@ -1,3 +1,6 @@
+# This workflow runs renovate bot to check for newer dependencies
+# For more information see: https://docs.renovatebot.com
+
 name: renovate
 on:
   push:
