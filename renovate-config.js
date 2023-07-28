@@ -6,7 +6,7 @@ module.exports = {
   platform: 'github',
   includeForks: true,
   dryRun: 'full',
-  repositories: ['micat'],
+  repositories: ['fraunhofer-isi/micat'],
   packageRules: [
     {
       description: 'lockFileMaintenance',
