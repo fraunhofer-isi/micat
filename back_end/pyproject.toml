@@ -43,7 +43,7 @@ dependencies = [
 [project.optional-dependencies]
 lint = [
     'pylint==2.17.4',
-    'dill==0.3.6',
+    'dill==0.3.7',
 ]
 
 format = [
