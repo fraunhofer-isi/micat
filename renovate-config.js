@@ -11,8 +11,7 @@ module.exports = {
   "requireConfig": "optional",
   "platform": "github",
   "forkProcessing": "enabled",
-  "dryRun": "full", //"full",  // use full to only log messages instead of creating pull requests
-  //"repositories": ["fraunhofer-isi/micat"],  // needs to be adapted to your repository
+  "dryRun": null, //"full",  // use full to only log messages instead of creating pull requests
   "autodiscover": true,
   "packageRules": [
     {
@@ -27,6 +26,7 @@ module.exports = {
      ],
      "automerge": true,
      "automergeType": "branch",
+     "ignoreTests": true, // set to false if you want updates only to be installed if tests pass
      "dependencyDashboardApproval": false,
      "minimumReleaseAge": null
     }
