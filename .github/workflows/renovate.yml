@@ -21,4 +21,4 @@ jobs:
         uses: renovatebot/github-action@v39.0.1
         with:
           token: ${{ secrets.RENOVATE_TOKEN }}
-          autodiscover: true
+          configurationFile: renovate-config.js
