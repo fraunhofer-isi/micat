@@ -25,6 +25,8 @@ MICAT – Multiple Impacts Calculation Tool – is a project that aims to develo
 
 [![renovate](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml)
 
+[![CodeQL](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql)
+
 ## Documentation
 
 https://fraunhofer-isi.github.io/micat
