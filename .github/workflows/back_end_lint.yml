@@ -48,7 +48,7 @@ jobs:
         gistID: c2b1cd79759facc6cef9d7dde5076f9d
         filename: micat_back_end_lint.json
         label: micat_back_end_lint
-        message: ${{ env.ANSWER }}
-        valColorRange: ${{ env.ANSWER }}
+        message: ${{ env.PYLINT_SCORE }}
+        valColorRange: ${{ env.PYLINT_SCORE }}
         maxColorRange: 100
         minColorRange: 0
