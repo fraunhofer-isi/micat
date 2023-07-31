@@ -1,0 +1,39 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: back_end_coverage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.11
+    - name: install dependencies
+      run: |
+        cd back_end
+        # python -m pip install --upgrade pip
+        # also see settings in pyproject.toml
+        pip install .[dev]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
+    - name: test
+      run: |
+        cd back_end
+        python -m pytest --cov  --cov-report xml
+    - name: badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+      auth: ${{ secrets.GIST_SECRET }}
+      gistID: c2b1cd79759facc6cef9d7dde5076f9d
+      filename: micat_back_end_test_coverage.json
+      label: Micat back_end test coverage
+      message: World
+      color: orange
