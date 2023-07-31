@@ -1,0 +1,44 @@
+# This workflow will install node dependencies, lint, test and build with a single version of node
+# For more information see: https://github.com/actions/starter-workflows/tree/main/ci
+
+name: front_end_lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up node 
+      uses: actions/setup-node@v3
+      with:
+        node-version: 19
+    - name: install dependencies
+      run: |
+        cd front_end    
+        npx next telemetry disable
+        npm install       
+    - name: lint
+      run: |
+        cd front_end  
+        mkdir eslint
+        npm run lint | tee ./eslint/eslint.log
+        ESLINT_SCORE=$(awk '$1 == "Required" {print $NF+0}' ./eslint/eslint.log)
+        echo "ESLINT_SCORE=$ESLINT_SCORE" >> $GITHUB_ENV
+        echo "Eslint score is $ESLINT_SCORE"
+    - name: badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: c2b1cd79759facc6cef9d7dde5076f9d
+        filename: micat_front_end_lint.json
+        label: lint
+        message: ${{ env.ESLINT_SCORE }}
+        valColorRange: ${{ env.ESLINT_SCORE }}
+        maxColorRange: 10
+        minColorRange: 0

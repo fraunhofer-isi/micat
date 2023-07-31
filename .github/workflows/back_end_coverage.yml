@@ -37,7 +37,7 @@ jobs:
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: c2b1cd79759facc6cef9d7dde5076f9d
-        filename: micat_back_end_test_coverage.json
+        filename: micat_back_end_coverage.json
         label: coverage
         message: ${{ env.PYTEST_COVERAGE }}
         valColorRange: ${{ env.PYTEST_COVERAGE }}

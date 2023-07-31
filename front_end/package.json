@@ -10,7 +10,7 @@
     "li": "next lint",
     "license-check": "node check/check_licenses.js",
     "lint:fix": "eslint --fix --ext .js,.jsx src",
-    "lint": "next lint & next lint test",
+    "lint": "next lint --format json --output-file eslint.json & next lint test",
     "test": "jest",
     "test-coverage": "jest --coverage --testMatch \"**/test/**/?(*.)+(test).js?(x)\"",
     "test-watch": "jest --watch",

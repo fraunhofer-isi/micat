@@ -1,0 +1,44 @@
+# This workflow will install node dependencies, lint, test and build with a single version of node
+# For more information see: https://github.com/actions/starter-workflows/tree/main/ci
+
+name: front_end_test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up node 
+      uses: actions/setup-node@v3
+      with:
+        node-version: 19
+    - name: install dependencies
+      run: |
+        cd front_end    
+        npx next telemetry disable
+        npm install
+    - name: test
+      run: |
+        cd front_end
+        mkdir .coverage
+        npm run test-coverage | tee ./.coverage/coverage.log     
+        JEST_COVERAGE=$(awk '$1 == "Statements" {print $NF+0}' ./jest/coverage.log)
+        echo "JEST_COVERAGE=$JEST_COVERAGE" >> $GITHUB_ENV
+        echo "Jest test coverage is $JEST_COVERAGE"
+    - name: badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: c2b1cd79759facc6cef9d7dde5076f9d
+        filename: micat_front_end_coverage.json
+        label: lint
+        message: ${{ env.JEST_COVERAGE }}
+        valColorRange: ${{ env.JEST_COVERAGE }}
+        maxColorRange: 100
+        minColorRange: 0
