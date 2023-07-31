@@ -7,7 +7,7 @@ MICAT – Multiple Impacts Calculation Tool – is a project that aims to develo
 
 [![lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_back_end_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_lint.yml)
 
-[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_back_end_test_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_coverage.yml)
+[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_back_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_coverage.yml)
 
 [![license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml)
 
@@ -15,7 +15,7 @@ MICAT – Multiple Impacts Calculation Tool – is a project that aims to develo
 
 [![lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_front_end_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml)
 
-[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_front_end_test_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_coverage.yml)
+[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_front_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_coverage.yml)
 
 [![license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml)
 
