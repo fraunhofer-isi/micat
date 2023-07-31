@@ -35,7 +35,7 @@ jobs:
       uses: schneegans/dynamic-badges-action@v1.6.0
       with:
         auth: ${{ secrets.GIST_SECRET }}
-        gistID: c2b1cd79759facc6cef9d7dde5076f9d
+        gistID: ${{ secrets.GIST_ID }}
         filename: micat_front_end_lint.json
         label: lint
         message: ${{ env.ESLINT_SCORE }}
