@@ -27,18 +27,4 @@ jobs:
       run: |
         cd front_end  
         mkdir eslint
-        npm run lint | tee ./eslint/eslint.log
-        ESLINT_SCORE=$(awk '$1 == "Required" {print $NF+0}' ./eslint/eslint.log)
-        echo "ESLINT_SCORE=$ESLINT_SCORE" >> $GITHUB_ENV
-        echo "Eslint score is $ESLINT_SCORE"
-    - name: badge
-      uses: schneegans/dynamic-badges-action@v1.6.0
-      with:
-        auth: ${{ secrets.GIST_SECRET }}
-        gistID: ${{ secrets.GIST_ID }}
-        filename: micat_front_end_lint.json
-        label: lint
-        message: ${{ env.ESLINT_SCORE }}
-        valColorRange: ${{ env.ESLINT_SCORE }}
-        maxColorRange: 10
-        minColorRange: 0
+        npm run lint
