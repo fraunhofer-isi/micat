@@ -3,15 +3,25 @@ MICAT – Multiple Impacts Calculation Tool – is a project that aims to develo
 
 ## Badges
 
+## Backend
+
+[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_back_end_test_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_coverage.yml)
+
+[![pylint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_back_end_pylint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_lint.yml)
+
+[![license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml)
+
+## Frontend
+
+[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_front_end_test_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_coverage.yml)
+
+[![eslint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/c2b1cd79759facc6cef9d7dde5076f9d/raw/micat_front_end_eslint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml)
+
+[![license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml)
+
+## General
+
 [![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml)
-
-[![back_end_license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml)
-
-[![back_end](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end.yml)
-
-[![front_end_license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml)
-
-[![front_end](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end.yml)
 
 [![renovate](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml)
 
