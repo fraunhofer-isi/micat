@@ -40,10 +40,10 @@ def main():
         requirements
     )
 
-    simple_format = formatter.formatMap['simple']
+    ansi_format = formatter.formatMap['ansi']
     # noinspection PyTypeChecker
     sorted_dependencies = sorted(dependencies)
-    output = simple_format(project_license, sorted_dependencies)
+    output = ansi_format(project_license, sorted_dependencies)
     print(output)
 
     is_incompatible = any(not dependency.licenseCompat for dependency in dependencies)

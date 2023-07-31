@@ -34,6 +34,15 @@ module.exports = {
       // sphinx-rtd-theme does not support Sphinx 7.0.1 yet  https://github.com/readthedocs/sphinx_rtd_theme/issues/1463
       "matchPackageNames": ["Sphinx"],
       "allowedVersions": "<7.0"
+    },
+    {
+      // licensecheck > 2023.1.4 has bugs regarding ignoreLicense option:
+      // https://github.com/FHPythonUtils/LicenseCheck/issues/48
+      "matchPackageNames": ["licensecheck"],
+      "allowedVersions": "<=2023.1.4"
     }
+
+
+
   ]
 };
