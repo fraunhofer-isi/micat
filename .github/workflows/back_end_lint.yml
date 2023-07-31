@@ -34,6 +34,7 @@ jobs:
     - name: lint
       run: |
         cd back_end
+        mkdir ./pylint
         python -m pylint src --output-format=text . | tee ./pylint/pylint.log || pylint-exit $?
         python -m pylint test --recursive=true
         python -m pylint import --recursive=true   
