@@ -30,11 +30,7 @@ module.exports = {
      "dependencyDashboardApproval": false,
      "minimumReleaseAge": null
     },
-    {
-      // numpy 1.25.2 has a bug: requires python < 3.11
-      "matchPackageNames": ["numpy"],
-      "allowedVersions": "<1.25.2"
-    },
+
     {
       // sphinx-rtd-theme does not support Sphinx 7.0.1 yet  https://github.com/readthedocs/sphinx_rtd_theme/issues/1463
       "matchPackageNames": ["Sphinx"],
