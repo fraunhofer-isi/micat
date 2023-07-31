@@ -31,9 +31,9 @@ jobs:
     - name: badge
       uses: schneegans/dynamic-badges-action@v1.6.0
       with:
-      auth: ${{ secrets.GIST_SECRET }}
-      gistID: c2b1cd79759facc6cef9d7dde5076f9d
-      filename: micat_back_end_test_coverage.json
-      label: Micat back_end test coverage
-      message: World
-      color: orange
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: c2b1cd79759facc6cef9d7dde5076f9d
+        filename: micat_back_end_test_coverage.json
+        label: micat_back_end_test_coverage
+        message: hello world
+        color: orange
