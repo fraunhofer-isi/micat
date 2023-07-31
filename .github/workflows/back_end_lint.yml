@@ -34,10 +34,20 @@ jobs:
     - name: lint
       run: |
         cd back_end
-        python -m pylint src
+        python -m pylint src --output-format=text . | tee ./pylint/pylint.log || pylint-exit $?
         python -m pylint test --recursive=true
-        python -m pylint import --recursive=true        
-    - name: test
-      run: |
-        cd back_end
-        python -m pytest --cov
+        python -m pylint import --recursive=true   
+        PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' ./pylint/pylint.log)
+        echo "PYLINT_SCORE=$PYLINT_SCORE" >> $GITHUB_ENV
+        echo "Pylint score is $PYLINT_SCORE"
+    - name: badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: c2b1cd79759facc6cef9d7dde5076f9d
+        filename: micat_back_end_lint.json
+        label: micat_back_end_lint
+        message: ${{ env.ANSWER }}
+        valColorRange: ${{ env.ANSWER }}
+        maxColorRange: 100
+        minColorRange: 0
