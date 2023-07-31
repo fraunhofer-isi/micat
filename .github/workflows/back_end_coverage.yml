@@ -29,7 +29,7 @@ jobs:
         cd back_end
         mkdir ./pytest
         python -m pytest --cov | tee ./pytest/coverage.log
-        PYTEST_COVERAGE==$(awk '$1 == "Required" {print $NF+0}' ./pytest/coverage.log)
+        PYTEST_COVERAGE=$(awk '$1 == "Required" {print $NF+0}' ./pytest/coverage.log)
         echo "PYTEST_COVERAGE=$PYTEST_COVERAGE" >> $GITHUB_ENV
         echo "Pytest coverage is $PYTEST_COVERAGE"
     - name: badge
