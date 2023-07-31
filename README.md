@@ -1,4 +1,4 @@
-# micat
+# MICAT
 MICAT – Multiple Impacts Calculation Tool – is a project that aims to develop a comprehensive approach to estimate Multiple Impacts of Energy Efficiency (MI-EE) by co-creating a free, easy-to-use, scientifically sound online tool (MICATool).
 
 ## Documentation
