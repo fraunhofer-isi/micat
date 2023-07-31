@@ -1,11 +1,13 @@
-# micat
+# MICAT
 MICAT – Multiple Impacts Calculation Tool – is a project that aims to develop a comprehensive approach to estimate Multiple Impacts of Energy Efficiency (MI-EE) by co-creating a free, easy-to-use, scientifically sound online tool (MICATool).
+
+## Documentation
+
+https://fraunhofer-isi.github.io/micat
 
 ## Badges
 
 ## Backend
-
-$secrets.GIST_SECRET
 
 [![lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_lint.yml)
 
@@ -15,7 +17,7 @@ $secrets.GIST_SECRET
 
 ## Frontend
 
-[![lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_front_end_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml)
+[![front_end_lint](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml)
 
 [![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_front_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_coverage.yml)
 
@@ -27,6 +29,8 @@ $secrets.GIST_SECRET
 
 [![renovate](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml)
 
-## Documentation
+[![CodeQL](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql)
 
-https://fraunhofer-isi.github.io/micat
+## Notes
+
+<p><a href="https://www.fraunhofer.de/en/publishing-notes.html">PUBLISHING NOTES</a></p>
