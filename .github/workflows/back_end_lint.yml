@@ -47,8 +47,8 @@ jobs:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: c2b1cd79759facc6cef9d7dde5076f9d
         filename: micat_back_end_lint.json
-        label: micat_back_end_lint
+        label: lint
         message: ${{ env.PYLINT_SCORE }}
         valColorRange: ${{ env.PYLINT_SCORE }}
-        maxColorRange: 100
+        maxColorRange: 10
         minColorRange: 0
