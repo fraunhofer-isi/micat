@@ -29,6 +29,11 @@ module.exports = {
      "ignoreTests": true, // set to false if you want updates only to be installed if tests pass
      "dependencyDashboardApproval": false,
      "minimumReleaseAge": null
+    },
+    {
+      // sphinx-rtd-theme does not support Sphinx 7.0.1 yet  https://github.com/readthedocs/sphinx_rtd_theme/issues/1463
+      "matchPackageNames": ["Sphinx"],
+      "allowedVersions": "<7.0"
     }
   ]
 };
