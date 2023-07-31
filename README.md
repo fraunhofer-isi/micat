@@ -5,8 +5,6 @@ MICAT – Multiple Impacts Calculation Tool – is a project that aims to develo
 
 ## Backend
 
-$secrets.GIST_SECRET
-
 [![lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_lint.yml)
 
 [![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_coverage.yml)
