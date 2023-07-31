@@ -1,6 +1,10 @@
 # micat
 MICAT – Multiple Impacts Calculation Tool – is a project that aims to develop a comprehensive approach to estimate Multiple Impacts of Energy Efficiency (MI-EE) by co-creating a free, easy-to-use, scientifically sound online tool (MICATool).
 
+## Documentation
+
+https://fraunhofer-isi.github.io/micat
+
 ## Badges
 
 ## Backend
@@ -27,6 +31,6 @@ MICAT – Multiple Impacts Calculation Tool – is a project that aims to develo
 
 [![CodeQL](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql)
 
-## Documentation
+## Notes
 
-https://fraunhofer-isi.github.io/micat
+<p><a href="https://www.fraunhofer.de/en/publishing-notes.html">PUBLISHING NOTES</a></p>
