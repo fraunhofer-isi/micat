@@ -1,5 +1,5 @@
 from main import main
-from mock import MagicMock, call, patch
+from mock import patch
 
 
 @patch('builtins.print')
