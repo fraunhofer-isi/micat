@@ -29,8 +29,9 @@ jobs:
         cd back_end
         mkdir ./pytest
         python -m pytest --cov >> ./pytest/coverage.log
-        PYTEST_COVERAGE=$(sed -n 's/^Total coverage: \([-0-9.]*\)\/.*/\1/p' ./pytest/coverage.log)
+        PYTEST_COVERAGE==$(awk '$1 == "Required test" {print $NF+0}' ./pytest/coverage.log)
         echo "PYTEST_COVERAGE=$PYTEST_COVERAGE" >> $GITHUB_ENV
+        echo "Pytest coverage is $PYTEST_COVERAGE"
     - name: badge
       uses: schneegans/dynamic-badges-action@v1.6.0
       with:
