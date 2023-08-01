@@ -31,9 +31,9 @@ if "%1" == "pdf" (
 )
 
 if "%1" == "latexpdf" (
-  %SPHINXBUILD% -b latexpdf %SOURCEDIR% %BUILDDIR%/html
+  %SPHINXBUILD% -M latexpdf %SOURCEDIR% %BUILDDIR%/html
   echo.
-  echo.Build finished. The PDF file is %BUILDDIR%/html/micat.pdf
+  echo.Build finished. The PDF file is %BUILDDIR%/html/latex\micat.pdf
   goto end
 )
 

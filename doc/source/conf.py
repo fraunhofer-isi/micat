@@ -93,10 +93,24 @@ latex_logo = html_logo
 latex_elements = {  # Also see https://www.sphinx-doc.org/en/master/latex.html#the-latex-elements-configuration-setting
     'preamble': '',
     'maketitle': r'''    
-    \makeatletter\meaning\@maketitle\makeatother
+      \newpage
+      \null
+      \vskip 2em%
+      \begin{center}%
+      \let \footnote \thanks
+        {\LARGE \@title \par}%
+        \vskip 1.5em%
+        {\large
+          \lineskip .5em%
+          \begin{tabular}[t]{c}%
+            \@author
+          \end{tabular}\par}%
+        \vskip 1em%
+        %{\large \@date}%
+      \end{center}%
+      \par
+      \vskip 1.5em}
     ''',
-
-
 }
 
 
