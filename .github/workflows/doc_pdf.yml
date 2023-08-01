@@ -26,17 +26,22 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.11
-      - name: install dependencies
+      - name: install python dependencies
         run: |
           cd back_end       
           # also see settings in pyproject.toml
-          pip install .[doc]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems        
-      - name: build pdf doc
-        uses: ammaraskar/sphinx-action@master
-        with:
-          pre-build-command: 'apt-get update -y && apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended'
-          build-command: 'make latexpdf'
-          docs-folder: 'doc'
+          pip install .[doc]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
+      - name: install latex
+        run: |
+          apt-get update -y 
+          apt-get install -y latexmk 
+          # apt-get install -y texlive-latex-recommended 
+          # apt-get install -y texlive-latex-extra 
+          # apt-get install -y texlive-fonts-recommended
+      - name: build doc
+        run: |
+          cd doc
+          make latexpdf
       - name: setup github pages
         uses: actions/configure-pages@v3
       - name: pages artifact
