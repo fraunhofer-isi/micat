@@ -37,7 +37,7 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 
 ## Notes
 
-<p><a href="https://www.fraunhofer.de/en/publishing-notes.html">PUBLISHING NOTES</a></p>
+<p><a href="https://www.isi.fraunhofer.de/en/publishing-notes.html">PUBLISHING NOTES</a></p>
 
 <p><a href="https://github.com/fraunhofer-isi/micat/blob/main/LICENSE">LICENSE</a></p>
 
