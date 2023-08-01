@@ -39,8 +39,8 @@ jobs:
         run: |
           sudo apt-get update -y 
           sudo apt-get install -y latexmk 
+          sudo apt-get install -y texlive-latex-extra  # otherwise LaTeX Error: File `cmap.sty' not found 
           # sudo apt-get install -y texlive-latex-recommended 
-          # sudo apt-get install -y texlive-latex-extra 
           # sudo apt-get install -y texlive-fonts-recommended
       - name: build pdf doc
         run: |
