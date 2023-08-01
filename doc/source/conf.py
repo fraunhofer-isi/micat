@@ -88,7 +88,7 @@ exclude_patterns = []
 
 # Also see https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output
 
-# latex_logo = html_logo
+latex_logo = html_logo
 
 
 
