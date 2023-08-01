@@ -94,7 +94,7 @@ latex_elements = {  # Also see https://www.sphinx-doc.org/en/master/latex.html#t
     'preamble': '',
     'maketitle': r'''    
     This work is licensed under AGPL3+    
-    \maketitle
+    \meaning\maketitle
     ''',
 
 }
