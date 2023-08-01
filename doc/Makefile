@@ -23,9 +23,9 @@ pdf:
 
 # latexpdf target
 latexpdf:
-	@$(SPHINXBUILD) -M latexpdf "$(SOURCEDIR)" "$(BUILDDIR)/html"  $(O)
+	@$(SPHINXBUILD) -b latexpdf "$(SOURCEDIR)" "$(BUILDDIR)/html"  $(O)
 	@echo
-	@echo "Build finished. The PDF file is $(BUILDDIR)/html/micat.pdf"
+	@echo "Build finished. The PDF file is $(BUILDDIR)/html/latex/micat.pdf"
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
