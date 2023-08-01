@@ -36,7 +36,7 @@ jobs:
         with:
           pre-build-command: 'apt-get update -y && apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended'
           build-command: 'make latexpdf'
-          docs-folder: 'doc/'
+          docs-folder: 'doc'
       - name: setup github pages
         uses: actions/configure-pages@v3
       - name: pages artifact
