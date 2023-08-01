@@ -66,7 +66,7 @@ html_logo = 'micat_logo.jpg'
 # (source start file, target name, title, author, options).
 # Documentation of options: https://rst2pdf.org/static/manual.pdf
 pdf_documents = [
-    ('index', 'micat', ' ', author),
+    ('index', 'micat', project, author),
 ]
 
 # A comma-separated list of custom stylesheets. Example:
@@ -89,6 +89,12 @@ exclude_patterns = []
 # Also see https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output
 
 latex_logo = html_logo
+
+latex_elements = {  # Also see https://www.sphinx-doc.org/en/master/latex.html#the-latex-elements-configuration-setting
+    'preamble': '',
+    'maketitle': '',
+    'atendofbody': 'Custom footer'
+}
 
 
 
