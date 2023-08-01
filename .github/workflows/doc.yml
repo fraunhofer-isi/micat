@@ -38,16 +38,11 @@ jobs:
       - name: install latex
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: latexmk texlive-latex-extra  # texlive-latex-recommended texlive-fonts-recommended
+          # for possible required latex packages also see
+          # https://www.sphinx-doc.org/en/master/usage/builders/index.html#sphinx.builders.latex.LaTeXBuilder
+          packages: latexmk texlive-latex-extra  # texlive-latex-recommended texlive-fonts-recommended tex-gyre
           version: 1.0
           execute_install_scripts: true
-      #- name: install latex
-      #  run: |
-      #    sudo apt-get update -y
-      #    sudo apt-get install -y latexmk
-      #    sudo apt-get install -y texlive-latex-extra  # otherwise LaTeX Error: File `cmap.sty' not found
-      #    # sudo apt-get install -y texlive-latex-recommended
-      #    # sudo apt-get install -y texlive-fonts-recommended
       - name: build pdf doc
         run: |
           cd doc

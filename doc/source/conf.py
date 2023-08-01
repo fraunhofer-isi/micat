@@ -60,6 +60,8 @@ html_logo = 'micat_logo.jpg'
 
 # -- Options for PDF output -------------------------------------------------
 
+
+
 # Grouping the document tree into PDF files. List of tuples
 # (source start file, target name, title, author, options).
 # Documentation of options: https://rst2pdf.org/static/manual.pdf
@@ -83,6 +85,10 @@ pdf_language = "en_US"
 pdf_style_path = ['.', '_styles']
 
 exclude_patterns = []
+
+# Also see https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output
+
+latex_logo = html_logo
 
 
 
