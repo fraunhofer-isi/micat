@@ -7,8 +7,9 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'MICAT'
-copyright = '2023, Fraunhofer'
-author = 'Stefan Eidelloth'
+# noinspection PyShadowingBuiltins
+copyright = '2023, Fraunhofer. Also see `PUBLISHING NOTES <https://www.fraunhofer.de/en/publishing-notes.html>`_'
+author = 'Frederic Berger, Stefan Eidelloth'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -75,3 +76,4 @@ exclude_patterns = []
 
 html_theme = 'sphinx_rtd_theme'  # 'sphinxawesome_theme'
 html_static_path = ['_static']
+html_logo = 'micat_logo.jpg'
