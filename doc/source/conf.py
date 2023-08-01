@@ -92,8 +92,13 @@ latex_logo = html_logo
 
 latex_elements = {  # Also see https://www.sphinx-doc.org/en/master/latex.html#the-latex-elements-configuration-setting
     'preamble': '',
-    'maketitle': '',
-    'atendofbody': 'Custom footer'
+    'maketitle': r'''
+    \uppertitleback{
+        This work is licensed under AGPL3+
+    }
+    \maketitle
+    ''',
+    
 }
 
 
