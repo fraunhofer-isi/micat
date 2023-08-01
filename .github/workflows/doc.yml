@@ -1,4 +1,4 @@
-name: doc_pdf
+name: doc_html
 
 on:
   push:
@@ -30,7 +30,11 @@ jobs:
         run: |
           cd back_end       
           # also see settings in pyproject.toml
-          pip install .[doc]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
+          pip install .[doc]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems        
+      - name: build html doc
+        run: |
+          cd doc
+          make html
       - name: install latex
         run: |
           sudo apt-get update -y 
@@ -38,7 +42,7 @@ jobs:
           # sudo apt-get install -y texlive-latex-recommended 
           # sudo apt-get install -y texlive-latex-extra 
           # sudo apt-get install -y texlive-fonts-recommended
-      - name: build doc
+      - name: build pdf doc
         run: |
           cd doc
           make latexpdf
