@@ -8,7 +8,7 @@
 
 project = 'MICAT'
 # noinspection PyShadowingBuiltins
-copyright = '2023, Fraunhofer. Also see `PUBLISHING NOTES <https://www.fraunhofer.de/en/publishing-notes.html>`_'
+copyright = '2023, Fraunhofer'
 author = 'Frederic Berger, Stefan Eidelloth'
 
 # -- General configuration ---------------------------------------------------
@@ -66,7 +66,7 @@ pdf_language = "en_US"
 # A list of folders to search for stylesheets. Example:
 pdf_style_path = ['.', '_styles']
 
-templates_path = ['_templates']
+
 exclude_patterns = []
 
 
@@ -74,6 +74,13 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'  # 'sphinxawesome_theme'
+templates_path = ['_templates']
+
+# Some availble themes:
+# 'agogo', 'basic', ' bizstyle', 'classic', 'default', 'epub', 'haiku', 'natura', 'nonav', 'pyramid', 'scrolls',
+# 'sphinx doc', 'traditional'
+# 'sphinxawesome_theme',
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_logo = 'micat_logo.jpg'
+
