@@ -14,10 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: set up python
+    - name: setup python
       uses: actions/setup-python@v3
       with:
         python-version: 3.11
+        cache: 'pip'
     - name: install dependencies
       run: |
         cd back_end
