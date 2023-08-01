@@ -33,11 +33,11 @@ jobs:
           pip install .[doc]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
       - name: install latex
         run: |
-          apt-get update -y 
-          apt-get install -y latexmk 
-          # apt-get install -y texlive-latex-recommended 
-          # apt-get install -y texlive-latex-extra 
-          # apt-get install -y texlive-fonts-recommended
+          sudo apt-get update -y 
+          sudo apt-get install -y latexmk 
+          # sudo apt-get install -y texlive-latex-recommended 
+          # sudo apt-get install -y texlive-latex-extra 
+          # sudo apt-get install -y texlive-fonts-recommended
       - name: build doc
         run: |
           cd doc
