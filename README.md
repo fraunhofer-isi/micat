@@ -5,6 +5,8 @@
 
 https://fraunhofer-isi.github.io/micat
 
+https://fraunhofer-isi.github.io/micat/micat.pdf
+
 https://micat-project.eu
 
 ## Badges
@@ -29,7 +31,9 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 
 ### General
 
-[![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml)
+[![doc_html](https://github.com/fraunhofer-isi/micat/actions/workflows/doc_html.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc_html.yml)
+
+[![doc_pdf](https://github.com/fraunhofer-isi/micat/actions/workflows/doc_pdf.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc_pdf.yml)
 
 [![renovate](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml)
 
