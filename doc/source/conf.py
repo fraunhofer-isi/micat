@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = ''  # project title already given by logo
+project = 'MICAT'
 # noinspection PyShadowingBuiltins
 copyright = '2023, Fraunhofer'
 author = 'Frederic Berger, Stefan Eidelloth'
@@ -66,7 +66,7 @@ html_logo = 'micat_logo.jpg'
 # (source start file, target name, title, author, options).
 # Documentation of options: https://rst2pdf.org/static/manual.pdf
 pdf_documents = [
-    ('index', 'micat', project, author),
+    ('index', 'micat', '', author),
 ]
 
 # A comma-separated list of custom stylesheets. Example:
