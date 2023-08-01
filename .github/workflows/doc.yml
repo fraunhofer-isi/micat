@@ -36,16 +36,14 @@ jobs:
           cd doc
           make html
       - name: install latex
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
+        run: |          
+          sudo apt-get update -y
+          sudo apt-get install -y latexmk
+          sudo apt-get install -y texlive-latex-extra  # otherwise LaTeX Error: File `cmap.sty' not found
           # for possible required latex packages also see
           # https://www.sphinx-doc.org/en/master/usage/builders/index.html#sphinx.builders.latex.LaTeXBuilder
-          packages: latexmk texlive-latex-extra  # texlive-latex-recommended texlive-fonts-recommended tex-gyre
-          version: 1.0
-          execute_install_scripts: true
-      - name: cleanup latex # otherwise the cached files might cause the issue I can't find the format file `pdflatex.fmt'!
-        run: |
-          sudo texconfig rehash
+          # sudo apt-get install -y texlive-latex-recommended
+          # sudo apt-get install -y texlive-fonts-recommended
       - name: build pdf doc
         run: |
           cd doc
