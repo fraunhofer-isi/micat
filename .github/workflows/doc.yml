@@ -1,4 +1,4 @@
-name: doc_html
+name: doc
 
 on:
   push:
