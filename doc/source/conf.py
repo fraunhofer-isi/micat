@@ -43,11 +43,28 @@ myst_enable_extensions = [
 # avoiding ambiguity when the same section heading appears in different documents.
 autosectionlabel_prefix_document = True
 
+
+# -- Options for HTML output -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+templates_path = ['_templates']
+
+# Some availble themes:
+# 'agogo', 'basic', ' bizstyle', 'classic', 'default', 'epub', 'haiku', 'natura', 'nonav', 'pyramid', 'scrolls',
+# 'sphinx doc', 'traditional'
+# 'sphinxawesome_theme',
+html_theme = 'sphinx_rtd_theme'
+html_static_path = ['_static']
+html_logo = 'micat_logo.jpg'
+
+
+# -- Options for PDF output -------------------------------------------------
+
 # Grouping the document tree into PDF files. List of tuples
 # (source start file, target name, title, author, options).
 # Documentation of options: https://rst2pdf.org/static/manual.pdf
 pdf_documents = [
-    ('index', 'index', 'MICAT', 'Stefan Eidelloth'),
+    ('index', 'index', project, author),
 ]
 
 # A comma-separated list of custom stylesheets. Example:
@@ -62,25 +79,12 @@ pdf_compressed = True
 # Language to be used for hyphenation support
 pdf_language = "en_US"
 
-
 # A list of folders to search for stylesheets. Example:
 pdf_style_path = ['.', '_styles']
-
 
 exclude_patterns = []
 
 
 
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-templates_path = ['_templates']
-
-# Some availble themes:
-# 'agogo', 'basic', ' bizstyle', 'classic', 'default', 'epub', 'haiku', 'natura', 'nonav', 'pyramid', 'scrolls',
-# 'sphinx doc', 'traditional'
-# 'sphinxawesome_theme',
-html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
-html_logo = 'micat_logo.jpg'
 

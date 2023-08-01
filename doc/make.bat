@@ -26,7 +26,7 @@ if errorlevel 9009 (
 if "%1" == "pdf" (
   %SPHINXBUILD% -b pdf %SOURCEDIR% %BUILDDIR%/html 
   echo.
-  echo.Build finished. The PDF file is %BUILDDIR%/html/index.html
+  echo.Build finished. The PDF file is %BUILDDIR%/html/index.pdf
   goto end
 )
 
