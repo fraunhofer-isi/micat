@@ -64,7 +64,7 @@ html_logo = 'micat_logo.jpg'
 # (source start file, target name, title, author, options).
 # Documentation of options: https://rst2pdf.org/static/manual.pdf
 pdf_documents = [
-    ('index', 'index', project, author),
+    ('index', 'micat', project, author),
 ]
 
 # A comma-separated list of custom stylesheets. Example:
