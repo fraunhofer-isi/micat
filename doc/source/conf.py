@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'MICAT'
+project = ''  # project title already given by logo
 # noinspection PyShadowingBuiltins
 copyright = '2023, Fraunhofer'
 author = 'Frederic Berger, Stefan Eidelloth'
