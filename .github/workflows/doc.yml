@@ -43,8 +43,9 @@ jobs:
           packages: latexmk texlive-latex-extra  # texlive-latex-recommended texlive-fonts-recommended tex-gyre
           version: 1.0
           execute_install_scripts: true
+      - name: cleanup latex # otherwise the cached files might cause the issue I can't find the format file `pdflatex.fmt'!
         run: |
-          sudo texconfig rehash  # otherwise the cached files might cause the issue I can't find the format file `pdflatex.fmt'!
+          sudo texconfig rehash
       - name: build pdf doc
         run: |
           cd doc
