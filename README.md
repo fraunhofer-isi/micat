@@ -9,7 +9,7 @@ https://micat-project.eu
 
 ## Badges
 
-Click on some badge to go to the corresponding **quality assurance** workflow:
+Click on some badge to navigate to the corresponding **quality assurance** workflow:
 
 ### Backend
 
