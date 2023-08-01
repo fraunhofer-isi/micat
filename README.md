@@ -7,7 +7,7 @@ https://fraunhofer-isi.github.io/micat
 
 https://fraunhofer-isi.github.io/micat/micat.pdf
 
-https://micat-project.eu
+https://micatool.eu
 
 ## Badges
 
