@@ -93,19 +93,7 @@ latex_logo = html_logo
 latex_elements = {  # Also see https://www.sphinx-doc.org/en/master/latex.html#the-latex-elements-configuration-setting
     'preamble': '',
     'maketitle': r'''    
-    macro:->\let \Hy @ saved @ footnotemark \
-    @footnotemark
-    \let
-    \Hy @ saved @ footnotetext \
-    @footnotetext
-    \let \
-    @footnotemark
-    \H @ @ footnotemark \let \
-    @footnotetext
-    \H @ @ footnotetext \
-    @ifnextchar[
-    \Hy @ maketitle @ optarg
-    {\HyOrg @ maketitle \Hy @ maketitle @ end}
+    \makeatletter\meaning\@maketitle\makeatother
     ''',
 
 
