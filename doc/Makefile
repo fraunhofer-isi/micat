@@ -16,14 +16,14 @@ help:
 
 # Pdf target
 pdf:
-	@$(SPHINXBUILD) -b pdf "$(SOURCEDIR)" "$(BUILDDIR)/html"  $(O)
+	@$(SPHINXBUILD) -M pdf "$(SOURCEDIR)" "$(BUILDDIR)/html"  $(O)
 	@echo
 	@echo "Build finished. The PDF file is $(BUILDDIR)/html/micat.pdf"
 
 
 # latexpdf target
 latexpdf:
-	@$(SPHINXBUILD) -b latexpdf "$(SOURCEDIR)" "$(BUILDDIR)/html"  $(O)
+	@$(SPHINXBUILD) -M latexpdf "$(SOURCEDIR)" "$(BUILDDIR)/html"  $(O)
 	@echo
 	@echo "Build finished. The PDF file is $(BUILDDIR)/html/micat.pdf"
 
