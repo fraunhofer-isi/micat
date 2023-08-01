@@ -23,7 +23,7 @@ pdf:
 
 # latexpdf target
 latexpdf:
-	@$(SPHINXBUILD) -b latexpdf "$(SOURCEDIR)" "$(BUILDDIR)/html"  $(O)
+	@$(SPHINXBUILD) -M latexpdf "$(SOURCEDIR)" "$(BUILDDIR)/html"  $(O)
 	@echo
 	@echo "Build finished. The PDF file is $(BUILDDIR)/html/latex/micat.pdf"
 
