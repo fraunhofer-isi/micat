@@ -39,8 +39,7 @@ jobs:
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: latexmk texlive-latex-extra  # texlive-latex-recommended texlive-fonts-recommended
-          version: @latest
-
+          version: 1.0
       #- name: install latex
       #  run: |
       #    sudo apt-get update -y
