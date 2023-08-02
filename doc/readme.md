@@ -1,6 +1,10 @@
 We use a combination of Sphinx (*.rst)  and MyST markdown (.md) to create our documentation.
 Only the main entry point `source/index.rst` is written in *.rst. 
-For the individual content files we use MySt markdown: https://mystmd.org/guide. 
+For the individual content files we use MySt markdown: 
+
+https://mystmd.org/guide
+https://jupyterbook.org/en/stable/reference/cheatsheet.html
+ 
 
 The usage of extended markdown flavor MyST instead of *.rst allows us to easier transfer 
 content between readme files, issue tickets, wiki pages and this documentation. 
@@ -25,8 +29,12 @@ https://plugins.jetbrains.com/search?search=markdown%20editor
 
 https://mystmd.org/guide
 
+https://jupyterbook.org/en/stable/reference/cheatsheet.html
 
-**c)** In order to build the documentation **locally**, use following commands from wthin the `doc` folder:
+Unfortunately, even when using the MyST extension vor VsCodium, the markdown **preview does not support MyST** directives, yet.
+
+
+**c)** In order to build the documentation **locally**, use following commands from within the `doc` folder:
 
 ./make.bat html
 ./make.bat pdf        (experimental preview, based on rst2pdf, does not require extra software; different look & feel)
