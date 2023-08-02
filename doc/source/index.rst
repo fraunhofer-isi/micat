@@ -15,6 +15,8 @@ Welcome to MICAT's documentation!
 
    introduction/introduction
    energy_mix/energy_mix_description
+   indices/indices_description
+
 
 Indices and tables
 ==================
