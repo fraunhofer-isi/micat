@@ -1,3 +1,6 @@
+import Index from '../../../../src/pages/[id-mode]/[id-region]/index';
+
 it('construction', () => {
-    expect(1).toBe(1);
+  const result = Index({});
+  expect(result).toBe('Hello world');
 });

@@ -20,21 +20,21 @@ build-backend = "hatchling.build"
 name = 'micat'
 version = '0.0.1'
 requires-python = '>=3.11.0'
-license = 'agpl3'
+license = {text = 'GNU Affero General Public License v3 or later (AGPLv3+)'}
 
 dependencies = [
     ## web
     'flask==2.3.2',
-    'flask-cors==3.0.10',
+    'flask-cors==4.0.0',
     'flask-compress==1.13',
-    'urllib3==2.0.3',
+    'urllib3==2.0.4',
     'waitress==2.1.2',
     'Werkzeug==2.3.6',
     'requests==2.31.0',
     'watchdog==3.0.0',
     ## scientific calculus
-    'pandas==2.0.2',
-    'numpy==1.25.0',
+    'pandas==2.0.3',
+    'numpy==1.25.2',
     ## excel
     'XlsxWriter==3.1.2',
     'openpyxl==3.1.2',
@@ -42,19 +42,20 @@ dependencies = [
 
 [project.optional-dependencies]
 lint = [
-    'pylint==2.17.4',
-    'dill==0.3.6',
+    'pylint==2.17.5',
+    'pylint-exit==1.2.0',
+    'dill==0.3.7',
 ]
 
 format = [
-    'black[d]==23.3.0',
+    'black[d]==23.7.0',
 ]
 
 test = [
     'pytest==7.4.0',
     'pytest-cov==4.1.0',
     'coverage==7.2.7',
-    'mock==5.0.2',
+    'mock==5.1.0',
 ]
 
 doc = [
@@ -66,14 +67,14 @@ doc = [
 ]
 
 data = [
-    'Office365-REST-Python-Client==2.4.1', # for sharepoint api
-    'paramiko==3.2.0', # for uploading files to weblication
+    'Office365-REST-Python-Client==2.4.3', # for sharepoint api
+    'paramiko==3.3.1', # for uploading files to weblication
     'xlwings==0.30.10; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
 
 license = [
-    'licensecheck==2023.1.4',
-    'license_scanner==0.1.2'
+    'licensecheck==2023.1.4',  # later versions have bugs
+    'license_scanner==0.1.3'
 
 ]
 
@@ -82,6 +83,9 @@ dev = ['micat[lint, format, test, doc, data, license]']
 
 [tool.licensecheck]
 using = 'PEP631'
+zero = true  # results in non-zero exit code if incompatibilities are found
+ignore_licenses = ['ZOPE PUBLIC LICENSE', 'REPOZE PUBLIC LICENSE', 'Apache Software License']
+
 
 [tool.black]
 line-length = 120
@@ -99,8 +103,10 @@ profile = 'black'
 addopts = [
     # !! do not include --cov option here because it would destroy PyCharm debug feature !!
     # Also see https://stackoverflow.com/questions/40718760/unable-to-debug-in-pycharm-with-pytest
-    '--junitxml=report.xml',
     '--import-mode=importlib',
+    '--cov-fail-under=98',
+    '--cov-report=html:pytest',
+    '--junitxml=report.xml',
     '-s'  # enables logging output in console while debugging tests
 ]
 pythonpath = ['src', 'test']
@@ -169,7 +175,7 @@ with open('pylint.log', 'w') as pylint_log:
         sys.path.append(import_path)
 
         pylint_log.write("Checking file names...\\n")
-        from check_file_names import main as check_file_names
+        from check.check_file_names import main as check_file_names
         check_file_names()
         pylint_log.write("Finished init-hook.\\n")
     else:
@@ -190,7 +196,7 @@ with open('pylint.log', 'w') as pylint_log:
         pylint_log.write("Added hard coded paths.\\n")
 
         pylint_log.write("Checking file names...\\n")
-        from check_file_names import main as check_file_names
+        from check.check_file_names import main as check_file_names
         check_file_names(back_end_path)
         pylint_log.write("Finished init-hook.\\n")
 

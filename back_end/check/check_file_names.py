@@ -32,21 +32,21 @@ def check_folders_and_files_to_be_in_snake_case(
         for sub_folder in sub_folders:
             if _is_excluded_folder(sub_folder, folders_to_exclude):
                 continue
-            else:
-                check_folders_and_files_to_be_in_snake_case(
-                    directory_to_check + "/" + sub_folder,
-                    folders_to_exclude,
-                    file_names_to_exclude,
-                )
+
+            check_folders_and_files_to_be_in_snake_case(
+                directory_to_check + "/" + sub_folder,
+                folders_to_exclude,
+                file_names_to_exclude,
+            )
 
         if _is_excluded_folder(path, folders_to_exclude):
             continue
-        else:
-            for name in files:
-                if name in file_names_to_exclude:
-                    continue
-                else:
-                    _check_snake_case(path, name)
+
+        for name in files:
+            if name in file_names_to_exclude:
+                continue
+
+            _check_snake_case(path, name)
         break
 
 

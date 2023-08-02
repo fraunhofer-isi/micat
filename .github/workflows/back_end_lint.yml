@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: back_end
+name: back_end_lint
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: set up python
+    - name: setup python
       uses: actions/setup-python@v3
       with:
         python-version: 3.11
@@ -24,10 +24,6 @@ jobs:
         # python -m pip install --upgrade pip
         # also see settings in pyproject.toml
         pip install .[dev]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems        
-    - name: license check
-      run: |
-        license_scanner
-        licensecheck        
     - name: format
       run: |
         cd back_end
@@ -38,10 +34,21 @@ jobs:
     - name: lint
       run: |
         cd back_end
-        python -m pylint src
+        mkdir ./pylint
+        python -m pylint src --output-format=text . | tee ./pylint/pylint.log || pylint-exit $?
         python -m pylint test --recursive=true
-        python -m pylint import --recursive=true        
-    - name: test
-      run: |
-        cd back_end
-        python -m pytest --cov
+        python -m pylint import --recursive=true   
+        PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' ./pylint/pylint.log)
+        echo "PYLINT_SCORE=$PYLINT_SCORE" >> $GITHUB_ENV
+        echo "Pylint score is $PYLINT_SCORE"
+    - name: badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: ${{ secrets.GIST_ID }}
+        filename: micat_back_end_lint.json
+        label: lint
+        message: ${{ env.PYLINT_SCORE }}
+        valColorRange: ${{ env.PYLINT_SCORE }}
+        maxColorRange: 10
+        minColorRange: 0
