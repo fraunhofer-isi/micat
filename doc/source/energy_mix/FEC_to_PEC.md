@@ -1,4 +1,10 @@
-..This file contains the equations to convert FEC to PEC. It stems from #47 on GitLab
+---
+title: FEC-to-PEC conversion
+description: This page contains the equations to convert final energy (FEC) to primary energy consumption (PEC).
+---
+
+FEC to PEC conversion
+===
 
 **A.** **Total primary energy saving** for several years for each primary energy carrier:
 

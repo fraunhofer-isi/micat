@@ -1,3 +1,11 @@
+---
+title: Calculation of improvement action energy mix
+description: This page describes the equations necessary to calculate the energy mix of an improvement action starting from the (sub-)sectoral energy mix and a coefficient vector.
+---
+
+Calculation of improvement action energy mix
+===
+
 This module calculates the energy mix of each id_action_type based on the subsectoral energy mix. To do so, the following equation is necessary:
 
 $`\Delta E_{e, ss, a, y} = \lambda_{e, ss, a, y} \cdot \Delta E_{ss, a, y}`$ 
