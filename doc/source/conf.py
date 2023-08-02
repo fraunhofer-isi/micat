@@ -8,6 +8,7 @@
 
 project = 'MICAT'
 project_url = 'https://micatool.eu'
+github_url = 'https://github.com/fraunhofer-isi/micat'
 # noinspection PyShadowingBuiltins
 copyright = '2023 Fraunhofer'
 author = 'Frederic Berger, Stefan Eidelloth'
@@ -119,6 +120,9 @@ latex_elements = {
             
             \vspace{15mm}
             {\href{''' + project_url + '}{' + project_url + r'''}}
+            
+            \vspace{15mm}
+            {\href{''' + github_url + '}{' + github_url + r'''}}
             
             \vfill
             © Copyright ''' + copyright + r'''            
