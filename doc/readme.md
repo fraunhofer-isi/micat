@@ -23,6 +23,9 @@ and published at
 
 Also see
 
+
+https://github.com/executablebooks/myst-vs-code
+
 https://marketplace.visualstudio.com/items?itemName=ExecutableBookProject.myst-highlight
 
 https://plugins.jetbrains.com/search?search=markdown%20editor
@@ -31,7 +34,7 @@ https://mystmd.org/guide
 
 https://jupyterbook.org/en/stable/reference/cheatsheet.html
 
-Unfortunately, even when using the MyST extension vor VsCodium, the markdown **preview does not support MyST** directives, yet.
+Unfortunately, even when using the MyST extension vor VsCodium, the markdown **preview does not support all MyST** directives, yet.
 
 
 **c)** In order to build the documentation **locally**, use following commands from within the `doc` folder:
