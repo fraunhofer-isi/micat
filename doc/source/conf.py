@@ -7,9 +7,11 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'MICAT'
+project_url = 'https://micatool.eu'
 # noinspection PyShadowingBuiltins
-copyright = '2023, Fraunhofer'
+copyright = '2023 Fraunhofer'
 author = 'Frederic Berger, Stefan Eidelloth'
+
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -48,19 +50,16 @@ autosectionlabel_prefix_document = True
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 templates_path = ['_templates']
+html_static_path = ['_static']
 
-# Some availble themes:
-# 'agogo', 'basic', ' bizstyle', 'classic', 'default', 'epub', 'haiku', 'natura', 'nonav', 'pyramid', 'scrolls',
-# 'sphinx doc', 'traditional'
+# Some available themes:
+# 'agogo', 'basic', ' bizstyle', 'classic', 'default', 'epub', 'haiku',
+# 'natura', 'nonav', 'pyramid', 'scrolls', 'sphinx doc', 'traditional',
 # 'sphinxawesome_theme',
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
 html_logo = 'micat_logo.jpg'
 
-
 # -- Options for PDF output -------------------------------------------------
-
-
 
 # Grouping the document tree into PDF files. List of tuples
 # (source start file, target name, title, author, options).
@@ -86,31 +85,47 @@ pdf_style_path = ['.', '_styles']
 
 exclude_patterns = []
 
-# Also see https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output
+# Documentation of latexpdf options:
+
+# https://www.sphinx-doc.org/en/master/latex.html
+# https://www.sphinx-doc.org/en/master/latex.html#latex-macros-and-environments
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output
+# https://9to5answer.com/sphinx-pdf-themes
 
 latex_logo = html_logo
 
-latex_elements = {  # Also see https://www.sphinx-doc.org/en/master/latex.html#the-latex-elements-configuration-setting
-    'preamble': '',
-    'maketitle': r'''    
-      \newpage
-      \null
-      \vskip 2em%
-      \begin{center}%
-      \let \footnote \thanks
-        {\LARGE \@title \par}%
-        \vskip 1.5em%
-        {\large
-          \lineskip .5em%
-          \begin{tabular}[t]{c}%
-            \@author
-          \end{tabular}\par}%
-        \vskip 1em%
-        %{\large \@date}%
-      \end{center}%
-      \par
-      \vskip 1.5em}
+latex_elements = {
+    'preamble': r'''
+        % a) Here you can adapt the style of the pdf output
+        % Also see https://www.sphinx-doc.org/en/master/latex.html
+        % b) Its also possible to create an adapted version of some file
+        % under build/latex (e.g. sphinxhowto.cls), put it under source/_templates and 
+        % reference it from this configuration file. Also see
+        % https://www.sphinx-doc.org/en/master/latex.html#latex-macros-and-environments
+
     ''',
+    'maketitle': r'''      
+        \pagenumbering{Roman} 
+        \begin{titlepage}
+            \centering
+            \vspace*{40mm}
+            \begin{figure}[!h]
+                \centering
+                \sphinxlogo
+            \end{figure}
+
+            \vspace{0mm}
+            \Large \textbf{{''' + author + r'''}}
+            
+            \vspace{15mm}
+            {\href{''' + project_url + '}{' + project_url + r'''}}
+            
+            \vfill
+            © Copyright ''' + copyright + r'''            
+        \end{titlepage}        
+        \pagenumbering{arabic}
+    ''',
+
 }
 
 
