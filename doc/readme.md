@@ -23,6 +23,7 @@ and published at
 
 Also see
 
+https://pypi.org/project/jupyterlab-myst/
 
 https://github.com/executablebooks/myst-vs-code
 
