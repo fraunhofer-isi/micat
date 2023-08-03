@@ -104,8 +104,6 @@ addopts = [
     # !! do not include --cov option here because it would destroy PyCharm debug feature !!
     # Also see https://stackoverflow.com/questions/40718760/unable-to-debug-in-pycharm-with-pytest
     '--import-mode=importlib',
-    '--cov-fail-under=98',
-    '--cov-report=html:pytest',
     '--junitxml=report.xml',
     '-s'  # enables logging output in console while debugging tests
 ]

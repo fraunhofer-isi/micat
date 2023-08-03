@@ -17,3 +17,4 @@ launch.json
 *.ttf
 logger.log
 /doc/build
+.ipynb_checkpoints
