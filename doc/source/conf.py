@@ -32,7 +32,7 @@ myst_enable_extensions = [
     "dollarmath",
     #"fieldlist",
     #"html_admonition",
-    #"html_image",
+    "html_image",
     #"linkify",
     #"replacements",
     #"smartquotes",
@@ -58,9 +58,16 @@ html_static_path = ['_static']
 # 'natura', 'nonav', 'pyramid', 'scrolls', 'sphinx doc', 'traditional',
 # 'sphinxawesome_theme',
 html_theme = 'sphinx_rtd_theme'
-html_logo = 'micat_logo.jpg'
+html_logo = 'micat_logo.svg'
+
+html_theme_options = {
+    'logo_only': True,
+    'style_nav_header_background': 'lightgrey'
+}
 
 # -- Options for PDF output -------------------------------------------------
+
+latex_logo = 'micat_logo.png'
 
 # Grouping the document tree into PDF files. List of tuples
 # (source start file, target name, title, author, options).
@@ -93,7 +100,7 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output
 # https://9to5answer.com/sphinx-pdf-themes
 
-latex_logo = html_logo
+
 
 latex_elements = {
     'preamble': r'''
@@ -103,19 +110,20 @@ latex_elements = {
         % under build/latex (e.g. sphinxhowto.cls), put it under source/_templates and 
         % reference it from this configuration file. Also see
         % https://www.sphinx-doc.org/en/master/latex.html#latex-macros-and-environments
-
+        \usepackage{svg}
+        \usepackage{shellesc}
     ''',
     'maketitle': r'''      
         \pagenumbering{Roman} 
         \begin{titlepage}
             \centering
-            \vspace*{40mm}
+            \vspace*{30mm}
             \begin{figure}[!h]
                 \centering
                 \sphinxlogo
             \end{figure}
 
-            \vspace{0mm}
+            \vspace{15mm}
             \Large \textbf{{''' + author + r'''}}
             
             \vspace{15mm}
