@@ -62,7 +62,7 @@ html_logo = 'micat_logo.svg'
 
 html_theme_options = {
     'logo_only': True,
-    'style_nav_header_background': 'lightgrey'
+    'style_nav_header_background': '#efefef'
 }
 
 # -- Options for PDF output -------------------------------------------------
