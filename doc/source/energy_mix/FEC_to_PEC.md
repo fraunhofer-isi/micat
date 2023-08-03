@@ -1,6 +1,7 @@
 ---
 title: FEC-to-PEC conversion
 description: This page contains the equations to convert final energy (FEC) to primary energy consumption (PEC).
+license: AGPL-3.0-only
 ---
 
 FEC to PEC conversion

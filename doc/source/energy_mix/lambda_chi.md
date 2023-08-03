@@ -1,7 +1,8 @@
 ---
 title: Calculation of improvement action energy mix
 description: This page describes the equations necessary to calculate the energy mix of an improvement action starting from the (sub-)sectoral energy mix and a coefficient vector.
-thumbnail: https://fraunhofer-isi.github.io/micat/_static/micat_logo.jpg
+thumbnail: {image} ../micat_logo.svg
+license: AGPL-3.0-only
 ---
 
 Calculation of improvement action energy mix

@@ -1,6 +1,7 @@
 ---
 title: Scaling of data for the local level
 description: This page shows the equation used to scale absolute database values for the local level.
+license: AGPL-3.0-only
 ---
 
 Scale database values for local level by population
