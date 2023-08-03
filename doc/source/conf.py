@@ -58,7 +58,7 @@ html_static_path = ['_static']
 # 'natura', 'nonav', 'pyramid', 'scrolls', 'sphinx doc', 'traditional',
 # 'sphinxawesome_theme',
 html_theme = 'sphinx_rtd_theme'
-html_logo = 'micat_logo.eps'
+html_logo = 'micat_logo.jpg'
 
 # -- Options for PDF output -------------------------------------------------
 
