@@ -87,7 +87,7 @@ cogeneration power plants with the final to primary energy carriers conversion v
 as result. The input values stem from the Eurostat complete energy balances and from
 the EU Reference Scenario 2020.
 
-[*The functioning of the FEC-to-PEC-conversion module can be found here*](chi_calc)
+*The functioning of the FEC-to-PEC-conversion module can be found [here](./FEC_to_PEC.md).*
 
 Calculation of final energy mix
 ----
@@ -104,7 +104,7 @@ a vector containing a coefficient for each final energy carrier is stored in the
 This vector is multiplied elementwise with the sector's (or subsector's) energy mix vector.
 After normalising the vector, the improvement action energy mix is obtained.
 
-*The equations behind the multiplication and normalisation are described here*
+*The equations behind the multiplication and normalisation are described [here](./lambda_chi.md).*
 
 This process has the benefit of allowing the use of widely available sectoral energy mix
 data. Since the coefficient vector is rather time-constant, merely the sectoral data needs
@@ -118,7 +118,7 @@ energy mix by the (sub-)sectoral energy mix, with the data needing to stem from 
 consistent source or scenario. Since some of these sources and scenarios are not public, 
 merely the coefficients are stored in the database, not the underlying datasets and scenarios.
 
-*How these vectors of coefficients are calculated is shown here*
+*How these vectors of coefficients are calculated is shown [here](./chi_calc.md).*
 
 
 

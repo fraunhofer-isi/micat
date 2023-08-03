@@ -74,7 +74,7 @@ for different years. However, not all values are available for each year.
 Therefore, in order to avoid unfounded assumptions, missing values are inter- 
 and extrapolated linearly. 
 
-An issue is the incosistency of the underlying baseline before and after 2020,
+An issue is the inconsistency of the underlying baseline before and after 2020,
 which stem from Eurostat and the EU Reference Scenario 2020, respectively. In 
 order to avoid statistical artifacts at the crossover of both baselines, two
 separated baselines have been defined. The ex-post baseline based on Eurostat 
@@ -281,4 +281,4 @@ existing or adding new indicators.
 *The id_parameter table can be found here: back_end/import/public/id_parameter.xlsx*
 
 *Since it is a work-in-progress and changes are frequent, as well as its considerable*
-*length, it has not been included here*
+*length, it has not been included here.*

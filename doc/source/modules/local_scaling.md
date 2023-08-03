@@ -1,0 +1,28 @@
+---
+title: Scaling of data for the local level
+description: This page shows the equation used to scale absolute database values for the local level.
+---
+
+Scale database values for local level by population
+===
+
+When using the local level, absolute values $X_c$ are scaled with the value of the local 
+population $pop_{\rm{local}}$:
+
+$X_{\rm{local}} = X_c \cdot pop_{\rm{local}} / pop_c$
+
+$X_{local}$ = scaled value for the municipality 
+
+$pop_{\rm local}$ = local population value, specified for a municipality by user in front end
+
+$pop_c$ = national population related to $X_c$ (id_parameter = 24, "primes_parameters")
+
+*This is relevant for the following id_parameters:*
+
+2: GAE
+
+10: GDP
+
+24: Population
+
+32: Dwelling stock

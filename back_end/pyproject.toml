@@ -63,7 +63,7 @@ doc = [
     'myst-parser==2.0.0',
     'sphinx-rtd-theme==1.2.2',
     'sphinxawesome-theme==4.1.0',
-    'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.100',
+    'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.101',
 ]
 
 data = [
