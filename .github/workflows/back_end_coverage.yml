@@ -38,7 +38,7 @@ jobs:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: ${{ secrets.GIST_ID }}
         filename: micat_back_end_coverage.json
-        label: coverage
+        label: back_end_coverage
         message: ${{ env.PYTEST_COVERAGE }}
         valColorRange: ${{ env.PYTEST_COVERAGE }}
         maxColorRange: 100
