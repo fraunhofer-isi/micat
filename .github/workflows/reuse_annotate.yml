@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: reuse compliance check
+      - name: create copyright and license annotations
         uses: fsfe/reuse-action@v2
         with:
           # also see https://reuse.readthedocs.io/en/v2.1.0/usage.html
@@ -26,3 +26,5 @@ jobs:
           args: annotate --copyright="Fraunhofer-Gesellschaft e.V., München" --copyright-style=symbol --merge-copyrights --license=AGPL-3.0-or-later --skip-unrecognised --recursive .
       - name: push changes made by reuse annotate
         uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          token: ${{ secrets.RENOVATE_TOKEN }}
