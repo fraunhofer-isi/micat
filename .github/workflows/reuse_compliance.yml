@@ -14,28 +14,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: setup python
-      uses: actions/setup-python@v3
-      with:
-        python-version: 3.11
-    - name: install dependencies
-      run: |
-        cd back_end
-        # python -m pip install --upgrade pip
-        # also see settings in pyproject.toml
-        pip install .[dev]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
-    - name: reuse
-      run: |
-        reuse lint
-    #- name: badge
-    #  uses: schneegans/dynamic-badges-action@v1.6.0
-    #  with:
-    #    auth: ${{ secrets.GIST_SECRET }}
-    #    gistID: ${{ secrets.GIST_ID }}
-    #    filename: micat_reuse_compliance.json
-    #    label: reuse compliance
-    #    message: ${{ env.PYLINT_SCORE }}
-    #    valColorRange: ${{ env.PYLINT_SCORE }}
-    #    maxColorRange: 10
-    #    minColorRange: 0
+      - uses: actions/checkout@v3
+      - name: reuse compliance check
+        uses: fsfe/reuse-action@v2
