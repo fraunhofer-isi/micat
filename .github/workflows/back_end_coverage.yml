@@ -1,3 +1,7 @@
+# © 2023 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
@@ -38,7 +42,7 @@ jobs:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: ${{ secrets.GIST_ID }}
         filename: micat_back_end_coverage.json
-        label: coverage
+        label: back_end_coverage
         message: ${{ env.PYTEST_COVERAGE }}
         valColorRange: ${{ env.PYTEST_COVERAGE }}
         maxColorRange: 100

@@ -1,3 +1,9 @@
+<!--
+© 2023 Fraunhofer-Gesellschaft e.V., München
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Introduction
 
 We use a combination of Sphinx (*.rst)  and MyST markdown (.md) to create our documentation.

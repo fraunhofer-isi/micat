@@ -1,3 +1,7 @@
+# © 2023 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # This module checks if all file and folder names follow
 # the snake_case naming convention.
 # It is included from the pyproject.toml file via init-hook

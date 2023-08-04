@@ -1,3 +1,7 @@
+# © 2023 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from sys import exit as sysexit
 
 from licensecheck import formatter, get_deps
@@ -9,14 +13,14 @@ from license_scanner import get_all_licenses
 
 def main():
     using = 'PEP631'
-    ignore_packages = []
+    ignore_packages = ['reuse']  # work around for bug in licensecheck for multiple licenses
     fail_packages = []
     ignore_licenses = [
         # work around for bug in licensecheck for apache
         'Apache Software License',
         # not know by licensecheck, yet
         'Zope Public License',
-        # work around for bug in licensecheck for dual license
+        # work around for bug in licensecheck for multiple licenses
         'MIT License;; Academic Free License (AFL)',
     ]
     fail_licenses = []

@@ -1,0 +1,35 @@
+# © 2023 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# This workflow uses the reuse tool to include copyright & license annotations
+# For more information see: https://reuse.software/
+
+name: reuse_annotate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: create copyright and license annotations
+        uses: fsfe/reuse-action@v2
+        with:
+          # also see https://reuse.readthedocs.io/en/v2.1.0/usage.html
+          # copyright style follows the one used at https://www.fraunhofer.de/en/publishing-notes.html
+          args: annotate --copyright="Fraunhofer-Gesellschaft e.V., München" --copyright-style=symbol --merge-copyrights --license=AGPL-3.0-or-later --skip-unrecognised --recursive .
+      - name: push changes made by reuse annotate
+        # also see https://github.com/stefanzweifel/git-auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: create copyright and license annotations with reuse tool \#2
