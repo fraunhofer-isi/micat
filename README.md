@@ -15,31 +15,37 @@ For more **open source** software provided by [**Fraunhofer ISI**](https://www.i
 
 Click on some badge to navigate to the corresponding **quality assurance** workflow:
 
-### Backend
+### Documentation 
 
-[![lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_lint.yml)
+[![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml) Geneation of documentation with [Sphinx](https://www.sphinx-doc.org/)
 
-[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_coverage.yml)
+### Formatting & linting
 
-[![license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml)
+[![back_end_lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_lint.yml) Checks code formatting with [Pylint](https://pylint.readthedocs.io/)
 
-### Frontend
+[![front_end_lint](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml) Checks code formatting with [ESlint](https://eslint.org/)
 
-[![front_end_lint](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml)
+### Test coverage
 
-[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_front_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_coverage.yml)
+[![backend_coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_coverage.yml) Determines test coverage with [pytest-cov](https://github.com/pytest-dev/pytest-cov)
 
-[![license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml)
+[![front_end_coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_front_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_coverage.yml) Determines test coverage with [jest](https://jestjs.io/)
 
-### General
+### License compliance
 
-[![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml)
+[![back_end_license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml) Checks license compatibility with [LicenseCheck](https://github.com/FHPythonUtils/LicenseCheck)
 
-[![renovate](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml)
+[![front_end_license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml) Checks license compatibility with [license-checker](https://github.com/davglass/license-checker)
 
-[![reuse compliance](https://api.reuse.software/badge/github.com/fraunhofer-isi/micat)](https://api.reuse.software/info/github.com/fraunhofer-isi/micat)
+[![reuse_annotate](https://github.com/fraunhofer-isi/micat/actions/workflows/reuse_annotate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/reuse_annotate.yml) Creates copyright & license annotations with [reuse](https://git.fsfe.org/reuse/tool)
 
-[![CodeQL](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql)
+[![reuse compliance](https://api.reuse.software/badge/github.com/fraunhofer-isi/micat)](https://api.reuse.software/info/github.com/fraunhofer-isi/micat) Checks for REUSE compliance with [reuse](https://git.fsfe.org/reuse/tool)
+
+### Dependency updates & security checks
+
+[![renovate](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml) Updates dependencies with [renovate](https://github.com/renovatebot/renovate)
+
+[![CodeQL](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql) Discovers vulnerabilities with [CodeQL](https://codeql.github.com/)
 
 ## Notes
 
