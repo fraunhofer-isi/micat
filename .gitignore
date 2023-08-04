@@ -22,3 +22,4 @@ launch.json
 logger.log
 /doc/build
 .ipynb_checkpoints
+.idea
