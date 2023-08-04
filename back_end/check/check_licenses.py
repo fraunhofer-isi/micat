@@ -13,14 +13,14 @@ from license_scanner import get_all_licenses
 
 def main():
     using = 'PEP631'
-    ignore_packages = []
+    ignore_packages = ['reuse']  # work around for bug in licensecheck for multiple licenses
     fail_packages = []
     ignore_licenses = [
         # work around for bug in licensecheck for apache
         'Apache Software License',
         # not know by licensecheck, yet
         'Zope Public License',
-        # work around for bug in licensecheck for dual license
+        # work around for bug in licensecheck for multiple licenses
         'MIT License;; Academic Free License (AFL)',
     ]
     fail_licenses = []
