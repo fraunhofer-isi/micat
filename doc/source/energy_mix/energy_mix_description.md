@@ -1,6 +1,6 @@
 ---
 title: Energy mix and how it's calculated within the MICATool
-license: AGPL-3.0-only
+license: AGPL
 ---
 
 Energy mix and how it's calculated within the MICATool

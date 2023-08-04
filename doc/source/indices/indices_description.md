@@ -1,7 +1,7 @@
 ---
 title: The indices in the MICATool
 description: This page describes the different indices used in the characterisation and coding of the MICATool.
-license: AGPL-3.0-only
+license: AGPL
 ---
 
 The indices in the MICATool
