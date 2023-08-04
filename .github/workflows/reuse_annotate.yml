@@ -25,4 +25,4 @@ jobs:
           # copyright style follows the one used at https://www.fraunhofer.de/en/publishing-notes.html
           args: annotate --copyright="Fraunhofer-Gesellschaft e.V., München" --copyright-style=symbol --merge-copyrights --license=AGPL-3.0-or-later --skip-unrecognised --recursive .
       - name: push changes made by reuse annotate
-      - uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v4
