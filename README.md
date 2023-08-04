@@ -23,7 +23,7 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 
 ### Documentation 
 
-[![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml) Geneation of documentation with [Sphinx](https://www.sphinx-doc.org/)
+[![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml) Generates documentation with [Sphinx](https://www.sphinx-doc.org/)
 
 ### Formatting & linting
 
@@ -57,6 +57,6 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 
 <p><a href="https://www.isi.fraunhofer.de/en/publishing-notes.html">PUBLISHING NOTES</a></p>
 
-<p><a href="https://github.com/fraunhofer-isi/micat/blob/main/LICENSE">LICENSE</a></p>
+<p><a href="https://github.com/fraunhofer-isi/micat/blob/main/LICENSES/AGPL-3.0-or-later.txt">LICENSE</a></p>
 
 

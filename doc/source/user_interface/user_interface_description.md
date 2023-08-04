@@ -11,7 +11,7 @@ tooltip: True
 license: AGPL
 ---
 
-The front end vizard of the MICATool
+The front end vizard
 ===
 
 Selection of the geographic area

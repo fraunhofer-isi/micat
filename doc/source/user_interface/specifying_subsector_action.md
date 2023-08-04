@@ -29,11 +29,11 @@ Decomposition
 In the course of the decomposition, a measure package, programme, or policy instrument is disaggregated in its
 parts, each addressing a certain combination of (sub-)sector and improvement action. Accordingly, shares of the 
 total energy savings and investments should be allocated to the single parts. These can then be inputed into the
-MICATool. An example is shown in [](#decomposition_figure).
+MICATool. An example is shown in [Figure 1](#decomposition_figure).
 
 ```{figure} ./decomposition.png
 :name: decomposition_figure
 :align: center
 
-Example of an energy efficiency programme's decomposition
+Figure 1: Example of an energy efficiency programme's decomposition
 ```

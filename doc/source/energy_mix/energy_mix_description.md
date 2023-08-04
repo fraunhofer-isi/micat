@@ -9,7 +9,7 @@ title: Energy mix and how it's calculated within the MICATool
 license: AGPL
 ---
 
-Energy mix and how it's calculated within the MICATool
+Energy mix and how it's calculated
 ============
 
 Generally, the energy mix describes of which energy carriers and to which shares
