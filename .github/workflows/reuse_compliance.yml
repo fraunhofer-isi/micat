@@ -1,0 +1,24 @@
+# This workflow installs Python dependencies and uses the reuse tool
+# to confirm reuse compliance
+# For more information see: https://reuse.software/
+
+name: reuse_compliance
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: include copyright and license headers
+        uses: fsfe/reuse-action@v2
+        with:
+          # also see https://reuse.readthedocs.io/en/v2.1.0/usage.html
+          args: annotate --copyright="Fraunhofer" --copyright-style=string-symbol --license=AGPL-3.0-or-later
+      - name: reuse compliance check
+        uses: fsfe/reuse-action@v2

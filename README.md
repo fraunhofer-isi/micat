@@ -37,6 +37,8 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 
 [![renovate](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/renovate.yml)
 
+[![reuse compliance](https://api.reuse.software/badge/github.com/fraunhofer-isi/micat)](https://api.reuse.software/info/github.com/fraunhofer-isi/micat)
+
 [![CodeQL](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql)
 
 ## Notes
