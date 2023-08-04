@@ -16,7 +16,7 @@ Welcome to MICAT's documentation!
    introduction/introduction
    energy_mix/energy_mix_description
    indices/indices_description
-   user_interface/geography
+   user_interface/user_interface_description
 
 
 Indices and tables

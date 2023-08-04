@@ -5,8 +5,6 @@ license: AGPL
 ---
 
 Accounting of energy savings and how to input them into the MICATool
-===
-
-The input vizard
 -
+
 

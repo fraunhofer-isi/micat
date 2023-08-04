@@ -7,12 +7,6 @@ license: AGPL
 Selection of (sub-)sector and improvement action
 ===
 
-Selection pane
--
-
-In order for the MICATool to properly work, measures, policies, and scenarios need to be decomposed into combinations 
-of (sub-)sectors and improvement actions. This is due to the fact, that impact factors and default values may strongly
-differ between different combinations. How to decompose a measure is described below in the Section Decomposition.
 
 Background
 -
