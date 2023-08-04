@@ -1,0 +1,19 @@
+# This workflow uses the reuse tool to confirm reuse compliance
+# For more information see: https://reuse.software/
+
+name: reuse_compliance
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: reuse compliance check
+        # also see https://reuse.readthedocs.io/en/v2.1.0/usage.html
+        uses: fsfe/reuse-action@v2
