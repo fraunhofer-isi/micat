@@ -1,3 +1,7 @@
+# © 2023 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from sys import exit as sysexit
 
 from licensecheck import formatter, get_deps

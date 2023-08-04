@@ -1,3 +1,7 @@
+.. © 2023 Fraunhofer-Gesellschaft e.V., München
+..
+.. SPDX-License-Identifier: AGPL-3.0-or-later
+
 .. This is the main entry point for the source files of our user documentation.
   This file is written in reStructuredText *.rst and used by Sphinx.
   The included *.md files are written in MyST, a markdown flavor. We prefer

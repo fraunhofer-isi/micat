@@ -1,3 +1,7 @@
+// © 2023 Fraunhofer-Gesellschaft e.V., München
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 const nextConfig = {
   // If you change the basePaths, also change path for favicon in _document.js
   basePath: '/mica-tool-wGlobal/python/front_end/out',

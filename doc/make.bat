@@ -1,3 +1,7 @@
+REM © 2023 Fraunhofer-Gesellschaft e.V., München
+REM
+REM SPDX-License-Identifier: AGPL-3.0-or-later
+
 @ECHO OFF
 
 pushd %~dp0

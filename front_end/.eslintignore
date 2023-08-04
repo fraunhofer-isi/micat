@@ -1,2 +1,6 @@
+# © 2023 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # /node_modules/* and /bower_components/* in the project root are ignored by default
 dist/*
