@@ -23,7 +23,7 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 
 ### Documentation 
 
-[![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml) Geneation of documentation with [Sphinx](https://www.sphinx-doc.org/)
+[![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml) Generates documentation with [Sphinx](https://www.sphinx-doc.org/)
 
 ### Formatting & linting
 
