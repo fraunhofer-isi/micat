@@ -2,7 +2,7 @@
 title: Calculation of improvement action energy mix
 description: This page describes the equations necessary to calculate the energy mix of an improvement action starting from the (sub-)sectoral energy mix and a coefficient vector.
 thumbnail: {image} ../micat_logo.jpg
-license: AGPL-3.0-only
+license: AGPL
 ---
 
 Calculation of improvement action energy mix
