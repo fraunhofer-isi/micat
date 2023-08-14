@@ -1,15 +1,16 @@
-<!--
-© 2023 Fraunhofer-Gesellschaft e.V., München
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 ---
 title: Calculation of improvement action energy mix
 description: This page describes the equations necessary to calculate the energy mix of an improvement action starting from the (sub-)sectoral energy mix and a coefficient vector.
 thumbnail: {image} ../micat_logo.jpg
 license: AGPL
 ---
+
+<!--
+© 2023 Fraunhofer-Gesellschaft e.V., München
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 
 Calculation of improvement action energy mix
 ===
@@ -24,6 +25,6 @@ $\Delta E_{e, ss, a, y} =$ final energy savings of final energy carrier $e$ for 
 
 $\lambda_{e, ss, a, y} =$ action type energy mix (as a share of a given final energy carrier from total final energy consumption within each action type (and subsector))
 
-$\chi_{e, ss, a} =$ action type energy mix coefficient
+$\chi_{e, ss, a} =$ action type energy mix coefficient (calculated [here](./chi_calc.md))
 
 $\lambda_{e, ss, y} =$ subsectoral energy mix (as a share of a given final energy carrier from total final energy consumption within each subsector)

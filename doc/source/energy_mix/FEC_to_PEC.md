@@ -1,14 +1,15 @@
+---
+title: FEC-to-PEC conversion
+description: This page contains the equations to convert final energy (FEC) to primary energy consumption (PEC).
+license: AGPL
+---
+
 <!--
 © 2023 Fraunhofer-Gesellschaft e.V., München
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
----
-title: FEC-to-PEC conversion
-description: This page contains the equations to convert final energy (FEC) to primary energy consumption (PEC).
-license: AGPL
----
 
 FEC to PEC conversion
 ===
@@ -37,11 +38,11 @@ $k_{{\rm elec}, pe, y}$: Coefficient for electricity (id_parameter = 21)
 
 $k_{{\rm H2}, pe, y}$: Coefficient for H2 and synthetic fuels (id_parameter = 22)
 
-$\Delta E_{{\rm elec}, ss, a, y} =$ Final energy saving for electricity (= $\Delta E_{e, ss, a, y}$ for e=1), follows from #24
+$\Delta E_{{\rm elec}, ss, a, y} =$ Final energy saving for electricity (= $\Delta E_{e, ss, a, y}$ for e=1), follows from [here](./lambda_chi.md)
 
 $\Delta E_{{\rm heat}, ss, a, y} =$ Final energy saving for heat (= $\Delta E_{e, ss, u, y}$ for e=7), follows from #24
 
-$\Delta E_{{\rm H2}, ss, a, y} =$ Final energy saving for hydrogen and synthetic carburants (= $\Delta E_{e, ss, a, y}$ for e=8), follows from #24
+$\Delta E_{{\rm H2}, ss, a, y} =$ Final energy saving for hydrogen and synthetic carburants (= $\Delta E_{e, ss, a, y}$ for e=8), follows from [here](./lambda_chi.md)
 
 **C.** **Import script for coefficients**
 

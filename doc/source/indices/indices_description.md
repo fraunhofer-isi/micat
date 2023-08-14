@@ -1,14 +1,15 @@
+---
+title: The indices in the MICATool
+description: This page describes the different indices used in the characterisation and coding of the MICATool.
+license: AGPL
+---
+
 <!--
 © 2023 Fraunhofer-Gesellschaft e.V., München
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
----
-title: The indices in the MICATool
-description: This page describes the different indices used in the characterisation and coding of the MICATool.
-license: AGPL
----
 
 The indices in the MICATool
 ====
