@@ -10,8 +10,6 @@ license: AGPL
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-
-
 Accounting of energy savings and how to input them into the MICATool
 ===
 

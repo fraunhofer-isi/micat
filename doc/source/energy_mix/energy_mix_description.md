@@ -9,7 +9,6 @@ license: AGPL
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-
 Energy mix and how it's calculated
 ============
 
