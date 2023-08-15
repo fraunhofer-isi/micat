@@ -21,7 +21,7 @@ Welcome to MICAT's documentation!
    energy_mix/energy_mix_description
    indices/indices_description
    user_interface/user_interface_description
-
+   list_of_pages
 
 Indices and tables
 ==================
@@ -29,3 +29,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+* :doc:`<./list_of_pages>`
