@@ -10,7 +10,6 @@ license: AGPL
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-
 Selection of (sub-)sector and improvement action
 ===
 
