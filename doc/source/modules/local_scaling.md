@@ -1,14 +1,15 @@
+---
+title: Scaling of data for the local level
+description: This page shows the equation used to scale absolute database values for the local level.
+license: AGPL
+---
+
 <!--
 © 2023 Fraunhofer-Gesellschaft e.V., München
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
----
-title: Scaling of data for the local level
-description: This page shows the equation used to scale absolute database values for the local level.
-license: AGPL
----
 
 Scale database values for local level by population
 ===

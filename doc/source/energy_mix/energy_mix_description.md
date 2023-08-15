@@ -1,13 +1,14 @@
+---
+title: Energy mix and how it's calculated within the MICATool
+license: AGPL
+---
+
 <!--
 © 2023 Fraunhofer-Gesellschaft e.V., München
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
----
-title: Energy mix and how it's calculated within the MICATool
-license: AGPL
----
 
 Energy mix and how it's calculated
 ============
