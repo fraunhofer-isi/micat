@@ -25,7 +25,6 @@ extensions = [
     'myst_parser',  # Also see https://myst-parser.readthedocs.io/en/latest/intro.html
     'rst2pdf.pdfbuilder',  # Also see https://github.com/rst2pdf/rst2pdf
     'sphinx.ext.autosectionlabel', # Also see https://www.sphinx-doc.org/en/master/usage/extensions/autosectionlabel.html
-    'sphinx.ext.intersphinx', # Also see https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html
 ]
 
 # myst parser syntax extensions, also see https://myst-parser.readthedocs.io/en/latest/syntax/optional.html

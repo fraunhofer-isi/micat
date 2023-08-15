@@ -29,4 +29,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-* :doc:`<./list_of_pages>`
+* :doc:`./list_of_pages`
