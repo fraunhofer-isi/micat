@@ -14,6 +14,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 The front end vizard
 ===
 
+This page offers a step-by-step guide through the front end of the MICATool. 
+
 Selection of the geographic area
 -
 
@@ -33,3 +35,12 @@ measure is described [on this page](./specifying_subsector_action.md).
 
 Inputing energy savings
 -
+
+The energy savings of measures have to be inputted in total annual savings, [one of three ways to account energy savings](./energy_savings_input.md).
+However, the unit of energy savings can be selected in the drop-down menu on the left above the table.
+Furthermore, in order to adapt to users' needs and data, specific year columns can be added by clicking on the "+Year"
+button in the upper right corner of the table. In the same sense, additional rows can be added with the button "+Row".
+
+Measure-specific parameters
+-
+
