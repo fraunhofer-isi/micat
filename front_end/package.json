@@ -39,7 +39,7 @@
     "@babel/preset-react": "7.22.5",
     "@eslint-recommended/eslint-config": "15.0.0",
     "@testing-library/dom": "9.3.1",
-    "@testing-library/jest-dom": "6.0.0",
+    "@testing-library/jest-dom": "6.0.1",
     "@testing-library/react": "14.0.0",
     "@testing-library/user-event": "14.4.3",
     "@typescript-eslint/parser": "6.4.0",
