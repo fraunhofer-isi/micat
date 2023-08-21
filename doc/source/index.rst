@@ -21,6 +21,7 @@ Welcome to MICAT's documentation!
    energy_mix/energy_mix_description
    indices/indices_description
    user_interface/user_interface_description
+   ecologic_indicators/ecologic_indicators_description
    list_of_pages
 
 Indices and tables
