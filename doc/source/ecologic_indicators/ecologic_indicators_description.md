@@ -34,6 +34,36 @@ values are kept in the confidential database.
 Here are the equations for the [quantification](./PEC_FEC_savings.md) and the [monetisation](./energy_cost.md). 
 The fact sheet is available as a [PDF](../fact_sheets/energy_cost_savings.pdf).
 
+Impact on RES targets
+-
+
+Greenhouse gas savings
+-
+
+Greenhouse gas emission (GHG) calculations rely on data from IIASA, modelled on the basis of the EU Reference 
+Scenario 2020. However,these factors are constant and merely calculated for the seven final energy carriers. 
+This entails that a future scenario strongly diverging from the EU Reference Scenario 2020 still uses the same 
+marginal GHG emission factors. 
+
+Furthermore, given the fact that one coefficient for electricity is calculated for every five years step based on 
+the Reference Scenario's assumed energy mix, changes in energy mix stated within the tool are currently not accounted
+for in GHG calculations.
+
+The monetisation uses the societal costs of carbon, taking costs for the environment and citizens (for instance in 
+terms of health) into account. These are provided by the German Federal Environmental Agency.
+
+The equations can be found [here](./reduction_GHG.md), whereas the fact sheet can be downloaded as a [PDF](../fact_sheets/reduction_GHG.pdf).
+
+Reduction in air pollutants
+-
+
+The calculation of air pollutants is identical to GHG savings. Thus, the same caveats apply as well. However, the
+monetisation of air pollutants takes place within the indicator "Health effects due to air pollution".
+
+The equations can be found [here](./reduction_AP.md), whereas the fact sheet can be downloaded as a [PDF](../fact_sheets/reduction_AP.pdf).
+
+
+
 
 
 

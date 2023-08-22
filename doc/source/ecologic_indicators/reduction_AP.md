@@ -1,6 +1,6 @@
 ---
 title: Reduction in air pollutants
-description: This page shows the equations necessary to calculate the reduction in air pollutants. The calculations are also used for CO2-emissions.
+description: This page shows the equations necessary to calculate the reduction in air pollutants.
 license: AGPL
 ---
 
@@ -28,5 +28,3 @@ $p = $ id_parameter for pollutant {4: CO2, 5: SO2, 6: NOX, 7: PM_2_5}
 $\Delta E_{c, e, ss, y} = $ energy savings in a given region, final energy carrier, subsector, and year
 
 The raw data for the emission factor values are in kt per PJ of energy.
-
-The same equation is also used for the calculation of CO2-emissions.

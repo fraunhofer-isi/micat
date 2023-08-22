@@ -19,7 +19,7 @@ energy consumption increases the share of renewables in energy generation.
 Quantification
 -
 
-The charts shows the indicator in %-points: $\Delta RES_{y} \cdot 100$.
+The charts shows the indicator in %-points:.
 
 $\Delta RES_{y} = \left[ {\sum_{pe=4}^5 GAE_{P, pe, y}} / ({\sum_{pe=1}^6 GAE_{P, pe, y}} - \sum_{pe=1}^6 \Delta E_{P, pe, y}) - {\sum_{pe=4}^5 GAE_{P, pe, y}} / {\sum_{pe=1}^6 GAE_{P, pe, y}} \right]$
 
@@ -29,7 +29,7 @@ $\sum_{pe=1}^6 \Delta E_{P, pe, y} =$ saved primary energy due to energy efficie
 
 $\sum_{pe=1}^6 GAE_{P, pe, y} =$ total gross available energy (id_parameter = 2)
 
-$\sum_{pe=4}^5 GAE_{P, pe, y} =$ gross available energy generated from renewables energy sources (Renewables and biomass + waste)
+$\sum_{pe=4}^5 GAE_{P, pe, y} =$ gross available energy generated from renewables energy sources (Renewables and biomass + renewable waste)
 
 Monetisation
 -
