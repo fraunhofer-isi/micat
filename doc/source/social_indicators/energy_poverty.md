@@ -69,7 +69,7 @@ $EPG_{d, y}$ = energy poverty gap (id_parameter = 27 for owner-occupiers and 28 
 
 $EC_{ss, a, y}$ = energy cost savings as calculated in #34 
 
-$I_{ss, a, y}$ = investments for a given row in the front end (id_parameter=40, calculated in #38)
+$I_{ss, a, y}$ = investments for a given row in the front end (id_parameter=40, calculated in the module [investments](../modules/investments.md))
 
 ### For id_action_type 4
 

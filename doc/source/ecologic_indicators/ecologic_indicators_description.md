@@ -1,6 +1,6 @@
 ---
 title: Ecologic indicators
-description: This page describes the underlying assumptions and data sources for the ecological indicators.
+description: This page describes the underlying assumptions and data sources for the ecologic indicators.
 license: AGPL
 ---
 
