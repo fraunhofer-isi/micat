@@ -49,7 +49,7 @@ for in mortality coefficients.
 
 The monetisation is based on the value of statistical life (VSL), with values being published by the WHO. 
 
-The equations can be found [here](./health_AP.md), the fact sheet can be downloaded as [PDF](../fact_sheets/human_health_AP.pdf).
+The equations can be found [here](./health_AP.md), the fact sheet can be downloaded as [PDF](../fact_sheets/health_AP.pdf).
 
 Lost work days due to air pollution
 -

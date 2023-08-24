@@ -21,7 +21,7 @@ ballpark conversion from energy savings is carried out, although the accuracy se
 The coefficients have been provided by e3m and have been calculated from a scenario similar to the EU Reference Scenario
 2020 (although not the original one, due to confidentiality issues).
 
-The relevant equations are on [this page](./GDP.md), the fact sheet can be found as a PDF [here](../fact_sheets/impact_on_GDP.pdf).
+The relevant equations are on [this page](./GDP.md), the fact sheet can be found as a PDF [here](../fact_sheets/GDP.pdf).
 
 Employment effects
 -
@@ -46,4 +46,9 @@ You can find the equations [here](./energy_intensity.md), the PDF of the fact sh
 Asset value of buildings
 -
 
+The indicator asset value of buildings calculates the increase in value for certain residential and tertiary measures
+(listed on the equations page). The approach works with capitalisation rates. These stem from a study by real estate
+giant CBRE. However, data was not provided for all countries, so an average of these values was used for the remaining
+countries.
 
+Which measures are included and the equations are shown on [this page](./asset_value.md). The fact sheet can be found [here](../fact_sheets/asset_value.pdf)
