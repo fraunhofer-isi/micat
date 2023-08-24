@@ -68,7 +68,7 @@
     "jest-canvas-mock": "2.5.2",
     "jest-cli": "29.6.4",
     "jest-environment-jsdom": "29.6.4",
-    "jest-jasmine2": "29.6.3",
+    "jest-jasmine2": "29.6.4",
     "jsdom": "22.1.0",
     "jsdom-worker": "0.3.0",
     "license-checker": "25.0.1",  
