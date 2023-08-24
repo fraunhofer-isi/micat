@@ -30,3 +30,20 @@ Similar to Impact on GDP, Employment effects scale with investments. Thus, simil
 data source is also identical.
 
 The relevant equations are on [this page](./employment_effects.md), the fact sheet can be found as a PDF [here](../fact_sheets/employment_effects.pdf).
+
+Impact on energy intensity
+-
+
+The impact on energy intensity indicator compares two cases, a baseline one without the entered savings and one with
+these savings. The result from the indicator Impact on GDP is also taken into account in the case with savings.
+For ex-ante assessment, the non-energy consumption is currently not subtracted (as shown in the [equations](./energy_intensity.md)), as the EU 
+Reference Scenario data does not allow enough disaggregation of the value to use it properly. Since the non-energy 
+consumption is orders of magnitude smaller than normal energy consumption and both values are affected similarly, 
+the effect should be negligible. We're working on addressing this issue.
+
+You can find the equations [here](./energy_intensity.md), the PDF of the fact sheet is downloadable from [here](../fact_sheets/energy_intensity.pdf).
+
+Asset value of buildings
+-
+
+
