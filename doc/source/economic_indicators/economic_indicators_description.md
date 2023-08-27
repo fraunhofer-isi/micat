@@ -52,3 +52,54 @@ giant CBRE. However, data was not provided for all countries, so an average of t
 countries.
 
 Which measures are included and the equations are shown on [this page](./asset_value.md). The fact sheet can be found [here](../fact_sheets/asset_value.pdf)
+
+Turnover of energy efficiency goods
+-
+
+This indicator is another approach at estimating the value chain effects of energy efficiency (however, only direct 
+effects). Compared to the indicator "Impact on GDP", this indicator scales with energy savings directly. The figures
+are issued from two large-scale studies, with more details laid out in the fact sheet.
+
+The fact sheet can be downloaded as [PDF](../fact_sheets/turnover_of_EE_goods.pdf), the relevant equations are shown 
+[here](./turnover_of_EE_goods.md).
+
+Import dependence
+-
+
+Import dependence is calculated for the three main fossil fuels: oil, coal, and gas. To do so, a case without savings is
+compared with one where the specified savings occur and the difference between both is stated in percentage points. The 
+data stems from Eurostat's complete energy balances (ex-post) and the EU Reference Scenario 2020.
+
+More details can be found in the [related equations](./import_dependence.md) and the [fact sheet](../fact_sheets/import_dependence.pdf).
+
+Supplier diversity
+-
+
+This indicator relies on the [Herfindahl-Hirschman index](https://en.wikipedia.org/wiki/Herfindahl%E2%80%93Hirschman_index), 
+a measure of market concentration. Since PRIMES does not provide any projections for the future supplier landscape of 
+fossil fuels, current Eurostat values since the invasion of Ukraine are used for the calculation of ex-ante results, 
+whereas past Eurostat figures are used for ex-post examination. Furthermore, the assumption is that energy savings
+result in a lower import from the largest supplier.
+
+More details on the methodology are shown on the related [equations page](./supplier_diversity.md) and the [fact sheet](../fact_sheets/supplier_diversity.pdf).
+
+`In reality, the assumption that reduced consumption results in an improved supplier diversity or a lower import 
+dependence is not always accurate. Instead, the selection of suppliers is less of a political decision but rather a 
+result of market decisions following the merit-order principle. The political influence merely lays in the 
+facilitation of import by provision of necessary facilities and infrastructure. In the end, other aspects might still
+get politically prioritised, such as lower energy prices or stronger domestic production, with the former often 
+contradicting the improvement of supplier diversity (the main reason for one supplier's large share of supply is often
+a favourable price). This caveat also applies to the indicator "Import dependence", both indicators should thus rather 
+be considered as the potential to reach these targets through energy efficiency, not as a self-evident consequence.`
+
+Avoided investments in additional capacity
+-
+
+This indicator assesses the effects of energy efficiency on necessary electricity generation capacity. The underlying
+assumption is that energy efficiency reduces the need to invest in new renewables capacities, since RES make up for the
+largest share of new capacities (and should do in order to reach climate neutrality). The calculation assumes new RES
+installations would follow the RES technology mix (solar, onshore wind, and offshore wind) of the past with constant 
+shares among these technologies. 
+
+More details about the general methodology and cost assumptions can be found on the related [equations page](./avoided_additional_capacity.md)
+and in the [fact sheet](../fact_sheets/avoided_additional_capacity.pdf).

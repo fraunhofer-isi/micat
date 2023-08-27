@@ -1,6 +1,6 @@
 ---
 title: Asset value of buildings
-description: This page shows the equations necessary to calculate the impact of asset values of residential and tertiary buildings.
+description: This page shows the equations necessary to calculate the impact of energy efficiency on asset values of residential and tertiary buildings.
 license: AGPL
 ---
 
@@ -13,19 +13,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 Asset value of residential and tertiary buildings
 =
 
-This indicator merely applies to the sectors 
+This indicator merely applies to the sectors:
 
-residential (id_sector=4) and 
+- residential (id_sector=4) and
+- tertiary (id_sector=3). 
 
-tertiary (id_sector=3). 
+Within these sectors, it only applies to the following end uses:
 
-Within these sectors, it only applies to the end uses
-
-building envelope (id_action_type = 1), 
-
-heating fuel switch (id_action_type = 2), and 
-
-improvement of heating (id_action_type = 3 ). 
+- building envelope (id_action_type = 1),
+- heating fuel switch (id_action_type = 2),  
+- improvement of heating (id_action_type = 3 ). 
 
 The formula is the following:
 
