@@ -4,7 +4,6 @@ description: Introduction page for the MICATool documentation
 license: AGPL
 ---
 
-
 <!--
 © 2023 Fraunhofer-Gesellschaft e.V., München
 
