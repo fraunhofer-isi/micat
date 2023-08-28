@@ -22,8 +22,8 @@ facilitate improvements by other users and explains the assumptions and methodol
 
    introduction/introduction
    user_interface/user_interface_description
-   energy_mix/energy_mix_description
    indices/indices_description
+   energy_mix/energy_mix_description
    social_indicators/social_indicators_description
    economic_indicators/economic_indicators_description
    ecologic_indicators/ecologic_indicators_description

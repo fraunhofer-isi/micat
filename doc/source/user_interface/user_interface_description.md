@@ -33,7 +33,7 @@ differ between different combinations. The selection of (sub-)sectors and improv
 measure is described [on this page](./specifying_subsector_action.md).
 
 
-Inputing energy savings
+Inputting energy savings
 -
 
 The energy savings of measures have to be inputted in total annual savings, [one of three ways to account energy savings](./energy_savings_input.md).
@@ -44,4 +44,6 @@ button in the upper right corner of the table. In the same sense, additional row
 Measure-specific parameters
 -
 
-The measure-specific template allows to alter 
+The measure-specific template allows to alter default values for a certain row in the front end vizard. Thus, the tool
+overrides the default values, in case the users changes a value in the template and uploads it. By default, the template
+is populated with the default values the tool would normally use in the entered case. 
