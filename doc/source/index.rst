@@ -14,7 +14,7 @@ Welcome to MICAT's documentation!
 =======================================
 
 The documentation explains the methodology and workflow of the MICATool. Furthermore, it explains the coding in order to
-facilitate improvements by other users.
+facilitate improvements by other users and explains the assumptions and methodologies of the implemented indicators.
 
 .. toctree::
    :maxdepth: 2
@@ -34,4 +34,4 @@ Indices and tables
 % * :ref:`genindex`
 % * :ref:`modindex`
 % * :ref:`search`
-* :doc:`./list_of_pages`
+* :doc:`./introduction/list_of_pages`
