@@ -1,3 +1,9 @@
+<!--
+© 2023 Fraunhofer-Gesellschaft e.V., München
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 Here is an example of an inline equation $z=\sqrt{x^2+y^2}$
 
 ```{code-block} python
