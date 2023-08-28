@@ -83,7 +83,7 @@ result in a lower import from the largest supplier.
 
 More details on the methodology are shown on the related [equations page](./supplier_diversity.md) and the [fact sheet](../fact_sheets/supplier_diversity.pdf).
 
-:::{admonition} Background
+```{note}
 In reality, the assumption that reduced consumption results in an improved supplier diversity or a lower import 
 dependence is not always accurate. Instead, the selection of suppliers is less of a political decision but rather a 
 result of market decisions following the merit-order principle. The political influence merely lays in the 
@@ -92,7 +92,7 @@ get politically prioritised, such as lower energy prices or stronger domestic pr
 contradicting the improvement of supplier diversity (the main reason for one supplier's large share of supply is often
 a favourable price). This caveat also applies to the indicator "Import dependence", both indicators should thus rather 
 be considered as the potential to reach these targets through energy efficiency, not as a self-evident consequence.
-:::
+```
 
 Avoided investments in additional capacity
 -

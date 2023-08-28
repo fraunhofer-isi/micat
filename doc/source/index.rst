@@ -13,23 +13,25 @@
 Welcome to MICAT's documentation!
 =======================================
 
+The documentation explains the methodology and workflow of the MICATool. Furthermore, it explains the coding in order to
+facilitate improvements by other users.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    introduction/introduction
+   user_interface/user_interface_description
    energy_mix/energy_mix_description
    indices/indices_description
-   user_interface/user_interface_description
    social_indicators/social_indicators_description
    economic_indicators/economic_indicators_description
    ecologic_indicators/ecologic_indicators_description
-   list_of_pages
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+% * :ref:`genindex`
+% * :ref:`modindex`
+% * :ref:`search`
 * :doc:`./list_of_pages`

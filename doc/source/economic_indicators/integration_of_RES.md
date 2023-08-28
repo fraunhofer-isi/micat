@@ -15,9 +15,9 @@ Impact on integration of renewables
 
 This indicator is quantified by assessing the change in demand-response potentials due to improved energy efficiency.
 
-:::{admonition} Warning
+```{warning}
 This indicator currently shows unexpected behaviour. Until this is fixed, please restrain from using its results!
-:::
+```
 
 Quantification
 -

@@ -13,9 +13,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 Avoided investments in additional capacity
 =
 
-:::{admonition} Warning
+```{warning}
 This indicator currently shows unexpected behaviour. Until this is fixed, please restrain from using its results!
-:::
+```
 
 Quantification
 -
