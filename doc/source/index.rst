@@ -31,7 +31,7 @@ facilitate improvements by other users and explains the assumptions and methodol
 Indices and tables
 ==================
 
-% * :ref:`genindex`
-% * :ref:`modindex`
-% * :ref:`search`
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 * :doc:`./introduction/list_of_pages`

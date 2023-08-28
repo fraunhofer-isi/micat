@@ -44,3 +44,4 @@ button in the upper right corner of the table. In the same sense, additional row
 Measure-specific parameters
 -
 
+The measure-specific template allows to alter 

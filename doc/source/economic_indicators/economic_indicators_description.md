@@ -87,11 +87,12 @@ More details on the methodology are shown on the related [equations page](./supp
 In reality, the assumption that reduced consumption results in an improved supplier diversity or a lower import 
 dependence is not always accurate. Instead, the selection of suppliers is less of a political decision but rather a 
 result of market decisions following the merit-order principle. The political influence merely lays in the 
-facilitation of import by provision of necessary facilities and infrastructure. In the end, other aspects might still
-get politically prioritised, such as lower energy prices or stronger domestic production, with the former often 
+facilitation of import by provision of necessary facilities and infrastructure. In the end, other aspects might 
+politically still be prioritised, such as lower energy prices or stronger domestic production, with the former often 
 contradicting the improvement of supplier diversity (the main reason for one supplier's large share of supply is often
-a favourable price). This caveat also applies to the indicator "Import dependence", both indicators should thus rather 
-be considered as the potential to reach these targets through energy efficiency, not as a self-evident consequence.
+a favourable price). This caveat applies to the two indicators "Import dependence" and "Supplier diversity, both 
+indicators' results should thus rather be considered as the potential to reach these targets through energy efficiency, 
+not a self-evident consequence.
 ```
 
 Avoided investments in additional capacity
