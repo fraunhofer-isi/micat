@@ -13,7 +13,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 Impact on energy intensity
 =
 
-`This indicator currently shows unexpected behaviour. Until this is fixed, please restrain from using its results!`
+:::{admonition} Warning
+This indicator currently shows unexpected behaviour. Until this is fixed, please restrain from using its results!
+:::
 
 The energy intensity is the quotient of primary energy consumption and GDP, thus describing the energy needed to generate a unit of GDP. The baseline (BL) without savings would look as follows:
 

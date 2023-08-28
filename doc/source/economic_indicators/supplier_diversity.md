@@ -13,7 +13,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 Supplier diversity
 =
 
-
 $ \Delta HHI_{c, e, y} = HHI_{c, e, y} - [LS_{c, e, y} + OS_{c, e, y}]$
 
 $ \Delta HHI_{c, e, y}  = $ Change in supplier diversity by energy efficiency impact, unit: unitless

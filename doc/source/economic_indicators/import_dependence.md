@@ -13,7 +13,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 Import dependence
 =
 
-`This indicator currently shows unexpected behaviour. Until this is fixed, please restrain from using its results!`
+:::{admonition} Warning
+This indicator currently shows unexpected behaviour. Until this is fixed, please restrain from using its results!
+:::
 
 Impact on import dependence belongs to the economic indicators and is calculated as follows:
 
