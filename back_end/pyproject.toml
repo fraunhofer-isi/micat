@@ -63,15 +63,16 @@ test = [
 ]
 
 doc = [
-    'Sphinx==6.2.1', # sphinx-rtd-theme does not support 7.0.1 yet  https://github.com/readthedocs/sphinx_rtd_theme/issues/1463
+    'Sphinx==7.2.6', #6.2.1', # sphinx-rtd-theme does not support 7.0.1 yet  https://github.com/readthedocs/sphinx_rtd_theme/issues/1463
     'myst-parser==2.0.0',
-    'sphinx-rtd-theme==1.3.0',
-    'sphinxawesome-theme==4.1.0',
+    'sphinx-rtd-theme==2.0.0rc2',
+    'sphinxcontrib-applehelp==1.0.3', # this version fixes a warning of default 1.0.2 dependency of sphinx: https://github.com/sphinx-doc/sphinx/issues/11098
+    'sphinxcontrib-htmlhelp==2.0.1', # this version fixes a warning of default 2.0.0 dependency of sphinx: https://github.com/sphinx-doc/sphinx/issues/11127
     'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.101',
 ]
 
 data = [
-    'Office365-REST-Python-Client==2.4.4', # for sharepoint api
+    # 'Office365-REST-Python-Client==2.4.4', # for sharepoint api
     'paramiko==3.3.1', # for uploading files to weblication
     'xlwings==0.30.12; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
