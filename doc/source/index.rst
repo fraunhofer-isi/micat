@@ -28,10 +28,8 @@ facilitate improvements by other users and explains the assumptions and methodol
    economic_indicators/economic_indicators_description
    ecologic_indicators/ecologic_indicators_description
 
-Indices and tables
-==================
+.. only:: html
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-* :doc:`./introduction/list_of_pages`
+  * :doc:`./list_of_pages`
+
+
