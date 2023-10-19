@@ -61,3 +61,13 @@ jobs:
       - name: deploy to github pages
         id: deployment
         uses: actions/deploy-pages@v2
+      - name: deploy to web server
+        uses: pressidium/lftp-mirror-action@v1
+        with:
+          host: ${{ secrets.SFTP_URL }}
+          port: ${{ secrets.SFTP_PORT }}
+          user: ${{ secrets.SFTP_USER }}
+          pass: ${{ secrets.SFTP_PASSWORD }}
+          localDir: './doc/build/html'
+          remoteDir: './doc'
+          reverse: true   
