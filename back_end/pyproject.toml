@@ -158,7 +158,7 @@ init-hook = """
 import sys
 sys.path.append('.')
 
-from check.init_hook import init
+from check.pylint_init_hook import init
 init()
 """
 
