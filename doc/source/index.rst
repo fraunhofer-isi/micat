@@ -27,6 +27,7 @@ facilitate improvements by other users and explains the assumptions and methodol
    social_indicators/social_indicators_description
    economic_indicators/economic_indicators_description
    ecologic_indicators/ecologic_indicators_description
+   api/api
 
 .. only:: html
 
