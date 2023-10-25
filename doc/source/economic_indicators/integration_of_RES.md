@@ -29,7 +29,7 @@ $`\Delta P_{DR, c, ss, a, t, y} = r_{DR, ss, a, flex, t} \cdot \Delta E_{c, ss, 
 $`\Delta P_{DR, c, ss, a, t, y} = `$ The change in demand-response potential in energy [MWh] by country, energy efficiency action, and technology.
 
 $`r_{DR, ss, a, flex, t} = `$ flexibilisable capacity share (share of installed capacity that can be flexibilised). 
-id_parameter = (do be set), source: \back_end\import\public\irena\flexibilizable_capacity_share.xlsx)
+id_parameter = (do be set), source: \micat\back_end\import_public\raw_data\irena\flexibilizable_capacity_share.xlsx)
 
 $`\Delta E_{c, ss, a, y} = `$ energy savings from a certain improvement action which is an input from MICAT and defined by the user of the tool.
 

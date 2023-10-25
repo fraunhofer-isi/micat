@@ -27,7 +27,7 @@ $v_{e, y}$ = evolution of energy prices (based on IEA World Energy Outlook). Equ
 Preprocessing of data
 -
 
-The file Enerdata_energy_prices.xlsx in confidential/Enerdata contains the data for this indicator. The first sheet either specifies the price of the energy carrier-sector-combination or specifies the code for the relevant rows in the second sheet. Since the mapping relates to sectors rather than subsectors, mapping__sector__subsector.xlsx needs to be used accordingly.
+The file Enerdata_energy_prices.xlsx in /micat/import_confidential/enerdata contains the data for this indicator. The first sheet either specifies the price of the energy carrier-sector-combination or specifies the code for the relevant rows in the second sheet. Since the mapping relates to sectors rather than subsectors, mapping__sector__subsector.xlsx needs to be used accordingly.
 
 Since there are several data gaps in the second sheet, a four-stepped process to address them is used:
 - When merely some values are missing in between for a country and energy carrier in a time se-ries, the missing values are interpolated

@@ -35,9 +35,9 @@ $IE_{c, e, y} = \sum_{pc}{IE_{c, e, pc, y}} $
 
 $HHI_{c, e, y} = $ supplier diversity for energy carrier (e) and the region (c) in each year (y), unit: unitless (factor)
 
-$k_{pc} = $ risk coefficient of suppliers , unit: unitless, id_parameter = 52, <a name="source_k"></a>source: \micat\back_end\import\public\eurostat\risk_coefficient_of_suppliers.xlsx
+$k_{pc} = $ risk coefficient of suppliers , unit: unitless, id_parameter = 52, <a name="source_k"></a>source: \micat\back_end\import_public\raw_data\eurostat\risk_coefficient_of_suppliers.xlsx
 
-$IE_{c, e, pc, y} = $ average monthly imported energy (e) by region (c)  from partner region (pc), and in each year (y), unit: ktoe, id_parameter = 51, <a name="source_IE">source: \micat\back_end\import\public\eurostat\average_monthly_imported_energy.xlsx
+$IE_{c, e, pc, y} = $ average monthly imported energy (e) by region (c)  from partner region (pc), and in each year (y), unit: ktoe, id_parameter = 51, <a name="source_IE">source: \micat\back_end\import_public\raw_data\eurostat\average_monthly_imported_energy.xlsx
 
 $IE_{c, e, y} = $ total amount of imported energy, unit: ktoe
 
