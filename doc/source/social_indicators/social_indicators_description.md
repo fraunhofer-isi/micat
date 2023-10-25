@@ -21,7 +21,7 @@ of people lifted out of energy poverty is calculated. To assume the share of mea
 the national share of energy poverty is used as a default, with the possibility to adjust it in the measure-specific
 parameter template. 
 
-The exact methodology and its background are described in length in the [fact sheet](../fact_sheets/energy_poverty.pdf).
+The exact methodology and its background are described in length in the [fact sheet](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Social-impact-Alleviation-of-energy-poverty.pdf).
 The equations used to quantify the number of people lifted out of energy poverty are shown [here](./energy_poverty.md).
 
 Health impacts due to improved indoor climate
@@ -33,7 +33,7 @@ of renovations constituting medium and deep renovations. As defaults, the projec
 national prevalence of damp and mould buildings are being used. Finally, a national coefficient describing the number of 
 disability-adjusted life years lost per damp or mould building has been calculated from past data as impact factor.
 
-The equations can be found [here](./health_IC.md), the fact sheet can be downloaded as [PDF](../fact_sheets/asthma.pdf).
+The equations can be found [here](./health_IC.md), the fact sheet can be downloaded as [PDF](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Social-impact-Avoided-burden-of-Asthma.pdf).
 
 Mortality due to reduced air pollution
 -
@@ -49,7 +49,7 @@ for in mortality coefficients.
 
 The monetisation is based on the value of statistical life (VSL), with values being published by the WHO. 
 
-The equations can be found [here](./health_AP.md), the fact sheet can be downloaded as [PDF](../fact_sheets/health_AP.pdf).
+The equations can be found [here](./health_AP.md), the fact sheet can be downloaded as [PDF](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Social-impact-Human-health-due-to-reduced-air-pollution.pdf).
 
 Lost work days due to air pollution
 -
@@ -60,4 +60,4 @@ is also provided by IIASA, again based on the EU Reference Scenario 2020, includ
 The monetisation uses the value of a work day provided by the WHO.
 
 The equations, quite similar to the above indicator, are shown on [this page](./lost_work_days.md). The fact sheet can
-be downloaded as a PDF from [here](../fact_sheets/human_health_AP.pdf), it is the same one as for the indicator above.
+be downloaded as a PDF from [here](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Social-impact-Human-health-due-to-reduced-air-pollution.pdf), it is the same one as for the indicator above.

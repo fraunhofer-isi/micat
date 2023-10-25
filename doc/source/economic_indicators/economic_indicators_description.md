@@ -21,7 +21,7 @@ ballpark conversion from energy savings is carried out, although the accuracy se
 The coefficients have been provided by e3m and have been calculated from a scenario similar to the EU Reference Scenario
 2020 (although not the original one, due to confidentiality issues).
 
-The relevant equations are on [this page](./GDP.md), the fact sheet can be found as a PDF [here](../fact_sheets/GDP.pdf).
+The relevant equations are on [this page](./GDP.md), the fact sheet can be found as a PDF [here](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Economic-impact-Impact-on-GDP.pdf).
 
 Employment effects
 -
@@ -29,7 +29,7 @@ Employment effects
 Similar to Impact on GDP, Employment effects scale with investments. Thus, similar caveats as described above apply. The
 data source is also identical.
 
-The relevant equations are on [this page](./employment_effects.md), the fact sheet can be found as a PDF [here](../fact_sheets/employment_effects.pdf).
+The relevant equations are on [this page](./employment_effects.md), the fact sheet can be found as a PDF [here](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Economic-impact-Employment-effects.pdf).
 
 Impact on energy intensity
 -
@@ -41,7 +41,7 @@ Reference Scenario data does not allow enough disaggregation of the value to use
 consumption is orders of magnitude smaller than normal energy consumption and both values are affected similarly, 
 the effect should be negligible. We're working on addressing this issue.
 
-You can find the equations [here](./energy_intensity.md), the PDF of the fact sheet is downloadable from [here](../fact_sheets/energy_intensity.pdf).
+You can find the equations [here](./energy_intensity.md), the PDF of the fact sheet is downloadable from [here](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Economic-impact-Energy-Intensity.pdf).
 
 Asset value of buildings
 -
@@ -51,7 +51,7 @@ The indicator asset value of buildings calculates the increase in value for cert
 giant CBRE. However, data was not provided for all countries, so an average of these values was used for the remaining
 countries.
 
-Which measures are included and the equations are shown on [this page](./asset_value.md). The fact sheet can be found [here](../fact_sheets/asset_value.pdf)
+Which measures are included and the equations are shown on [this page](./asset_value.md). The fact sheet can be found [here](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Economic-impact-Impact-on-the-asset-value-of-commercial-buildings.pdf)
 
 Turnover of energy efficiency goods
 -
@@ -60,7 +60,7 @@ This indicator is another approach at estimating the value chain effects of ener
 effects). Compared to the indicator "Impact on GDP", this indicator scales with energy savings directly. The figures
 are issued from two large-scale studies, with more details laid out in the fact sheet.
 
-The fact sheet can be downloaded as [PDF](../fact_sheets/turnover_of_EE_goods.pdf), the relevant equations are shown 
+The fact sheet can be downloaded as [PDF](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Economic-impact-Turnover-of-energy-efficiency-goods.pdf), the relevant equations are shown 
 [here](./turnover_of_EE_goods.md).
 
 Import dependence
@@ -70,7 +70,7 @@ Import dependence is calculated for the three main fossil fuels: oil, coal, and 
 compared with one where the specified savings occur and the difference between both is stated in percentage points. The 
 data stems from Eurostat's complete energy balances (ex-post) and the EU Reference Scenario 2020.
 
-More details can be found in the [related equations](./import_dependence.md) and the [fact sheet](../fact_sheets/import_dependence.pdf).
+More details can be found in the [related equations](./import_dependence.md) and the [fact sheet](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Economic-impact-Import-dependency.pdf).
 
 Supplier diversity
 -
@@ -81,7 +81,7 @@ fossil fuels, current Eurostat values since the invasion of Ukraine are used for
 whereas past Eurostat figures are used for ex-post examination. Furthermore, the assumption is that energy savings
 result in a lower import from the largest supplier.
 
-More details on the methodology are shown on the related [equations page](./supplier_diversity.md) and the [fact sheet](../fact_sheets/supplier_diversity.pdf).
+More details on the methodology are shown on the related [equations page](./supplier_diversity.md) and the [fact sheet](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Economic-impacts-Aggregated-energy-security-supply-diversity.pdf).
 
 ```{note}
 In reality, the assumption that reduced consumption results in an improved supplier diversity or a lower import 
@@ -105,4 +105,4 @@ installations would follow the RES technology mix (solar, onshore wind, and offs
 shares among these technologies. 
 
 More details about the general methodology and cost assumptions can be found on the related [equations page](./avoided_additional_capacity.md)
-and in the [fact sheet](../fact_sheets/avoided_additional_capacity.pdf).
+and in the [fact sheet](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Economic-impact-Avoided-additional-energy-generation-capacity.pdf).
