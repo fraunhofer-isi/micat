@@ -97,7 +97,7 @@ id_sector and id_subsector
 -
 
 The MICATool covers all end use sectors: agriculture, residential, tertiary, 
-inductry, and transport sector. These are listed in the id_sector-table. Given 
+industry, and transport sector. These are listed in the id_sector-table. Given 
 their significant variety, industry and transport have further been disaggregated 
 into subsectors, in order to provide better default data and assumptions. 
 As a result, an id_subsector-table containing the five main sectors as well as the 
