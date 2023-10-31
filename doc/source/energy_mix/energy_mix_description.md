@@ -124,7 +124,7 @@ merely altering sectoral data, which is significantly easier to gather, whether 
 national, regional, or local level.
 
 The calculation of the vectors containing the coefficients is done using a combination of
-past statistical and scenario data. They are gathered by divising the improvement actions' 
+past statistical and scenario data. They are gathered by dividing the improvement actions' 
 energy mix by the (sub-)sectoral energy mix, with the data needing to stem from one 
 consistent source or scenario. Since some of these sources and scenarios are not public, 
 merely the coefficients are stored in the database, not the underlying datasets and scenarios.
