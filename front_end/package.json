@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "build": "next build && next export",
+    "build": "next build",
     "start": "next start",
     "li": "next lint",
     "license-check": "node check/check_licenses.js",
