@@ -110,7 +110,7 @@ generally issued by statistical offices or the EU Reference Scenario 2020 per su
 or end-use, which differs from MICAT's improvement actions. Thus, the tool uses a 
 workaround, in order to be able to use the available datasets. 
 
-For each country and combination of sector (or subsector) and subsector, 
+For each country and combination of sector (or subsector) and improvement action, 
 a vector containing a coefficient for each final energy carrier is stored in the database. 
 This vector is multiplied elementwise with the sector's (or subsector's) energy mix vector.
 After normalising the vector, the improvement action energy mix is obtained.
