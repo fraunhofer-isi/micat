@@ -237,7 +237,7 @@ The primary energy carriers have been grouped into 6 overarching energy carrier 
 | **2**  | Coal                        | Coal                                                  |
 | **3**  | Gas                         | Gas \(incl\. Biogas\)                                 |
 | **4**  | Biomass And Renewable Waste | Biomass And Non\-Renewable Waste                      |
-| **5**  | Renewables                  | PV, Wind, Geothermal, Tidal, Etc                      |
+| **5**  | Renewables                  | PV, Wind, Geothermal, Tidal, etc.                     |
 | **6**  | Other                       | Other \(incl\. Nuclear, Non\-Renewable Waste, etc\.\) |
 
 
