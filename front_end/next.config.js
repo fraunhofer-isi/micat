@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 const nextConfig = {
+  output: 'export',
   // If you change the basePaths, also change path for favicon in _document.js
   basePath: '/mica-tool-wGlobal/python/front_end/out',
   reactStrictMode: true,
@@ -14,8 +15,10 @@ const nextConfig = {
       'fs': false
     };
     return config;
+  },
+  experimental: {
+   webpackBuildWorker: true
   }
-
 };
 
 // eslint-disable-next-line unicorn/prefer-module
