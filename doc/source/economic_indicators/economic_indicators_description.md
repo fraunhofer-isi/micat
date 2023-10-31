@@ -90,7 +90,7 @@ result of market decisions following the merit-order principle. The political in
 facilitation of import by provision of necessary facilities and infrastructure. In the end, other aspects might 
 politically still be prioritised, such as lower energy prices or stronger domestic production, with the former often 
 contradicting the improvement of supplier diversity (the main reason for one supplier's large share of supply is often
-a favourable price). This caveat applies to the two indicators "Import dependence" and "Supplier diversity, both 
+a favourable price). This caveat applies to the two indicators "Import dependence" and "Supplier diversity", both 
 indicators' results should thus rather be considered as the potential to reach these targets through energy efficiency, 
 not a self-evident consequence.
 ```
