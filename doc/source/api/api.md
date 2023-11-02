@@ -25,7 +25,7 @@ a) most of the endpoints can be used as URL in the address bar of a browser (**G
 
 b) some of the endpoints require to pass additional information in terms of a payload / request body (**POST** request).
 
-The recommented way to retrieve and display information is to use our front end: [https::/app.micatool.eu](https://app.micatool.eu).
+The recommenced way to retrieve and display information is to use our front end: [https::/app.micatool.eu](https://app.micatool.eu).
 Alternative approaches would be to write custom JavaScript code or use some advanced REST client tool.   
 
 
@@ -50,9 +50,9 @@ Also see related section [indices/indices_description].
 The JSON result includes the properties **headers** and **rows**.
 The individual **headers** of the ID tables are:
 
-* **id**: Unique numeric ID, used to identify the "row/entity". Also used as paramter in some API requests. 
+* **id**: Unique numeric ID, used to identify the "row/entity". Also used as parameter in some API requests. 
 * **label**: A short text that serves as a name. Might be used as a display label in graphical user interfaces, e.g. for combo boxes. 
-* **description**: Potentially longer text, including more details. Might be used as tooltip text in graphical userinterfaces to provide additional context.
+* **description**: Potentially longer text, including more details. Might be used as tooltip text in graphical user interfaces to provide additional context.
 
 **Example** JSON result for the **id_final_energy_carrier** endpoint:
 
@@ -73,7 +73,7 @@ The individual **headers** of the ID tables are:
 
 ## Mapping tables
 
-Following API endpoints provide information about mapping tables, descriping relations between ID tables:
+Following API endpoints provide information about mapping tables, describing relations between ID tables:
 
 [https://api.micatool.eu/mapping__subsector__action_type](https://api.micatool.eu/mapping__subsector__action_type)
 
@@ -94,13 +94,13 @@ The API endpoint for indicator calculations is
 
 https://api.micatool.eu/indicator_data  
 
-Please note that indicator results cannot be requiested individually. There is only this single end point and data for all calculated
+Please note that indicator results cannot be requested individually. There is only this single end point and data for all calculated
 indicators is returned as a JSON dictionary. 
 
-This enpoint requires following input parameters:
+This endpoint requires following input parameters:
 
 * **id_mode**, as query parameter in the url, also see [https://api.micatool.eu/id_mode](https://api.micatool.eu/id_mode)
-* **id_region**, as pquery parameter in the url, also see [https://api.micatool.eu/id_region](https://api.micatool.eu/id_region)
+* **id_region**, as query parameter in the url, also see [https://api.micatool.eu/id_region](https://api.micatool.eu/id_region)
 * information about **measures** and optional **parameters** as JSON payload
 
 Full example URL for POST request:
@@ -115,11 +115,11 @@ Open the developer tools of your browser (for example F12) and have a look at th
 It demonstrates an example JSON payload, including user input about energy efficiency measures.
 
 The API does not convert **units**. Energy related values need to be specified in the unit **ktoe**. 
-If your user input is specified in different units or you want to visuallize results in different units,
+If your user input is specified in different units or you want to visualize results in different units,
 you need to implement corresponding unit conversions. 
 
 Fractions need to specified (and are returned) as decimal numbers, e.g. 0.1 instead of 10 %. 
-Therfore, you might need a conversion factor of 100 in some use cases.
+Therefore, you might need a conversion factor of 100 in some use cases.
    
 
 
@@ -129,10 +129,10 @@ a) The API endpoint for generating global default parameter values is:
 
 https://api.micatool.eu/json_parameters
 
-This enpoint requires following input parameters:
+This endpoint requires following input parameters:
 
 * **id_mode**, as query parameter in the url, also see [https://api.micatool.eu/id_mode](https://api.micatool.eu/id_mode)
-* **id_region**, as pquery parameter in the url, also see [https://api.micatool.eu/id_region](https://api.micatool.eu/id_region)
+* **id_region**, as query parameter in the url, also see [https://api.micatool.eu/id_region](https://api.micatool.eu/id_region)
 
 
 Full example url: 
@@ -146,7 +146,7 @@ https://api.micatool.eu/json_measure
 This enpoint requires following input parameters:
 
 * **id_mode**, as query parameter in the url, also see [https://api.micatool.eu/id_mode](https://api.micatool.eu/id_mode)
-* **id_region**, as pquery parameter in the url, also see [https://api.micatool.eu/id_region](https://api.micatool.eu/id_region)
+* **id_region**, as query parameter in the url, also see [https://api.micatool.eu/id_region](https://api.micatool.eu/id_region)
 * information about a **measure** as JSON payload
 
 Full example URL for POST request:
@@ -189,7 +189,7 @@ Example payload for POST request:
 ## Descriptions
 
 The API endpoints **descriptions** and **single_description** provide descriptions, for example for charts.
-A single description can be idenfified by a correpsponding, unique key. 
+A single description can be identified by a corresponding, unique key. 
 
 [https://api.micatool.eu/descriptions](https://api.micatool.eu/descriptions)
 
