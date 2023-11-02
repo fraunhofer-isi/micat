@@ -35,7 +35,7 @@ $`\Delta E_{c, ss, a, y} = `$ energy savings from a certain improvement action w
 
 $DR$ = Demand-Response.
 
-$c$ = Country (region) in the europian union from table id_region.
+$c$ = Country (region) in the european union from table id_region.
 
 $ss$ = Sub-sectors
 
