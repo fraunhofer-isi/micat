@@ -19,7 +19,7 @@ $ \Delta HHI_{c, e, y}  = $ Change in supplier diversity by energy efficiency im
 
 $ HHI_{c, e, y} = $ Supplier diversity, unit: unitless, must be **calculated in the back_end** ,  calculation: [see here](#Supplier diversity)
 
-$LS_{c, e, y} = $ Impact of energy efficiency on largest supplier, unit: unitless **calculation  depends** on the user imput, calculation: [see here](#Impact-of-energy-efficiency-on-largest-supplier)
+$LS_{c, e, y} = $ Impact of energy efficiency on largest supplier, unit: unitless **calculation  depends** on the user imput, calculation: [see here](#impact-of-energy-efficiency-on-largest-supplier)
 
 $OS_{c, e, y} = $ Impact of energy efficiency on other suppliers, unit: unitless **calculation depends** on the user imput, calculation: [see here](#Impact of energy efficiency on other suppliers)
 
