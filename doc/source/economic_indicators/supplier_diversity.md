@@ -17,11 +17,11 @@ $ \Delta HHI_{c, e, y} = HHI_{c, e, y} - [LS_{c, e, y} + OS_{c, e, y}]$
 
 $ \Delta HHI_{c, e, y}  = $ Change in supplier diversity by energy efficiency impact, unit: unitless
 
-$ HHI_{c, e, y} = $ Supplier diversity, unit: unitless, must be **calculated in the back_end** ,  calculation: [see here](#Supplier diversity)
+$ HHI_{c, e, y} = $ Supplier diversity, unit: unitless, must be **calculated in the back_end** ,  calculation: [see here](#supplier-diversity)
 
 $LS_{c, e, y} = $ Impact of energy efficiency on largest supplier, unit: unitless **calculation  depends** on the user imput, calculation: [see here](#impact-of-energy-efficiency-on-largest-supplier)
 
-$OS_{c, e, y} = $ Impact of energy efficiency on other suppliers, unit: unitless **calculation depends** on the user imput, calculation: [see here](#Impact of energy efficiency on other suppliers)
+$OS_{c, e, y} = $ Impact of energy efficiency on other suppliers, unit: unitless **calculation depends** on the user imput, calculation: [see here](#impact-of-energy-efficiency-on-other-suppliers)
 
 **Note:** index _e_ is for id_final_energy_carrier and here only includes the values 2 (for oil), 3 (for coal), and 4 (for gas). For other id_final_energy_carrier are not applicable and should not be shown the user.
 
@@ -63,4 +63,4 @@ $OS_{c, e, y} = \Sigma_{pc=2}^{N_{pc}} (\frac{k_{pc} \cdot IE_{c, e, pc, y}}{IE_
 
 Parameters are explained above.
 
-**Note:**  In the $OS_{c, e, y}$ calculation, the Sigma starts from 2, which means you need to exclude the largest supplier values which you have found in the LS calculation [here](#Impact of energy efficiency on the largest supplier)
+**Note:**  In the $OS_{c, e, y}$ calculation, the Sigma starts from 2, which means you need to exclude the largest supplier values which you have found in the LS calculation [here](#impact-of-energy-efficiency-on-the-largest-supplier)
