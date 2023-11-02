@@ -29,7 +29,7 @@ Background
 Within the MICAT project, a key element is the possibility to assess energy efficiency measures, policies, and 
 scenarios on three governance levels: European Union, national, and local/regional level.
 This also means that the data that is used needs to account for these different levels, as well as showing 
-differences betweenMember States when significant. This is done by providing default data for all relevant 
+differences between Member States when significant. This is done by providing default data for all relevant 
 geographic areas.
 
 *The IDs, inter alia id_region, are described in greater detail [here](../indices/indices_description.md).*
