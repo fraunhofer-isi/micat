@@ -25,7 +25,7 @@ a) most of the endpoints can be used as URL in the address bar of a browser (**G
 
 b) some of the endpoints require to pass additional information in terms of a payload / request body (**POST** request).
 
-The recommenced way to retrieve and display information is to use our front end: [https::/app.micatool.eu](https://app.micatool.eu).
+The recommenced way to retrieve and display information is to use our front end: [https:/app.micatool.eu](https://app.micatool.eu).
 Alternative approaches would be to write custom JavaScript code or use some advanced REST client tool.   
 
 
@@ -92,7 +92,7 @@ For example, **id_subsector** 1 provides the **id_action_type** values 8, 10, 11
 
 The API endpoint for indicator calculations is
 
-https://api.micatool.eu/indicator_data  
+[https://api.micatool.eu/indicator_data](https://api.micatool.eu/indicator_data)
 
 Please note that indicator results cannot be requested individually. There is only this single end point and data for all calculated
 indicators is returned as a JSON dictionary. 
@@ -105,11 +105,11 @@ This endpoint requires following input parameters:
 
 Full example URL for POST request:
 
-https://api.micatool.eu/indicator_data?id_mode=1&id_region=1
+[https://api.micatool.eu/indicator_data?id_mode=1&id_region=1](https://api.micatool.eu/indicator_data?id_mode=1&id_region=1)
 
 For some example payload and JavaScript code see
 
-https://app.micatool.eu/demo_index.html
+[https://app.micatool.eu/demo_index.html](https://app.micatool.eu/demo_index.html)
 
 Open the developer tools of your browser (for example F12) and have a look at the source code. 
 It demonstrates an example JSON payload, including user input about energy efficiency measures.
@@ -127,7 +127,7 @@ Therefore, you might need a conversion factor of 100 in some use cases.
 
 a) The API endpoint for generating global default parameter values is:
 
-https://api.micatool.eu/json_parameters
+[https://api.micatool.eu/json_parameters](https://api.micatool.eu/json_parameters)
 
 This endpoint requires following input parameters:
 
@@ -137,11 +137,11 @@ This endpoint requires following input parameters:
 
 Full example url: 
 
-https://api.micatool.eu/json_parameters?id_mode=1&id_region=0
+[https://api.micatool.eu/json_parameters?id_mode=1&id_region=0](https://api.micatool.eu/json_parameters?id_mode=1&id_region=0)
 
 b) The API endpoint for generating measure specific default parameter values is:
 
-https://api.micatool.eu/json_measure 
+[https://api.micatool.eu/json_measure](https://api.micatool.eu/json_measure )
 
 This enpoint requires following input parameters:
 
@@ -151,7 +151,7 @@ This enpoint requires following input parameters:
 
 Full example URL for POST request:
 
-https://api.micatool.eu/json_measure?id_mode=1&id_region=0
+[https://api.micatool.eu/json_measure?id_mode=1&id_region=0](https://api.micatool.eu/json_measure?id_mode=1&id_region=0)
 
 
 Example payload for POST request:
