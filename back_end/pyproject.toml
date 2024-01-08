@@ -71,8 +71,7 @@ doc = [
     'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.101',
 ]
 
-data = [
-    # 'Office365-REST-Python-Client==2.4.4', # for sharepoint api
+data = [   
     'paramiko==3.4.0', # for uploading files to weblication
     'xlwings==0.30.13; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
