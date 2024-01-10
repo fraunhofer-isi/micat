@@ -32,4 +32,4 @@ jobs:
     - name: third party license file generation
       run: |
         cd back_end
-        python -m third_party_license_file_generator -r requirements-py.txt -p /usr/local/bin
+        python -m third_party_license_file_generator -r requirements.txt -p /opt/hostedtoolcache/Python/3.11.7/x64/bin/python3
