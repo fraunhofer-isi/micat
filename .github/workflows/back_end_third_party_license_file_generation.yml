@@ -28,7 +28,7 @@ jobs:
         pip install .[license]
     - name: generate temp requirements.txt
       run: |
-        pipreqs --force ./requirements.txt
+        pipreqs --force .
     - name: show python path
       run: |
         which python3
