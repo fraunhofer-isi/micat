@@ -1,0 +1,3 @@
+# dummy demo file to be used with third-party-license-file-generator
+
+pylint==3.0.2

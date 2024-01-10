@@ -1,0 +1,35 @@
+# © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# This workflow will install Python dependencies (without dev dependencies) and
+# run a license check 
+
+name: back_end_third_party_license_file_generation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.11
+    - name: install dependencies
+      run: |
+        cd back_end
+        pip install .[license]
+    - name: show python path
+      run: |
+        which python3
+    - name: third party license file generation
+      run: |
+        cd back_end
+        python -m third_party_license_file_generator -r requirements-py.txt -p /usr/local/bin
