@@ -4,6 +4,7 @@
 
 import os
 import sys
+
 from pylint.config import find_default_config_files
 
 

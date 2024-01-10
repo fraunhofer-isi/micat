@@ -4,11 +4,9 @@
 
 from sys import exit as sysexit
 
-from licensecheck import formatter, get_deps
-from licensecheck import license_matrix, packageinfo
-from licensecheck.types import JOINS, License, PackageInfo
-
 from license_scanner import get_all_licenses
+from licensecheck import formatter, get_deps, license_matrix, packageinfo
+from licensecheck.types import JOINS, License, PackageInfo
 
 
 def main():
