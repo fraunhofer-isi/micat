@@ -28,6 +28,7 @@ jobs:
         pip install .[license]
     - name: generate temp requirements.txt
       run: |
+        cd back_end
         pipreqs --force .
     - name: show python path
       run: |
