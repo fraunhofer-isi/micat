@@ -39,6 +39,7 @@ jobs:
         python3 -m third_party_license_file_generator -r requirements.txt -o THIRDPARTY.txt -p /opt/hostedtoolcache/Python/3.11.7/x64/bin/python3
     - name: delete temp requirements.txt file
       run: |
+        cd back_end
         rm requirements.txt
     - name: push changes
       # also see https://github.com/stefanzweifel/git-auto-commit-action
