@@ -50,6 +50,11 @@ module.exports = {
       // eslint-recommended/eslint-config@16.0.3 requires eslint-plugin-unicorn@"48.0.0"
       "matchPackageNames": ["eslint-plugin-unicorn"],
       "allowedVersions": "48.0.0"
+    },
+    {
+      // eslint-recommended/eslint-config@16.0.3 requires  eslint-plugin-jsdoc@"^46.0.0"
+      "matchPackageNames": ["eslint-plugin-jsdoc"],
+      "allowedVersions": "46.9.1"
     }
   ]
 };
