@@ -1,5 +1,0 @@
-license_scanner==0.2.5
-licensecheck==2024
-mock==5.1.0
-pandas==2.1.4
-pylint==3.0.3

@@ -36,10 +36,10 @@ jobs:
     - name: third party license file generation
       run: |
         cd back_end
-        python3 -m third_party_license_file_generator -r requirements.txt -p /opt/hostedtoolcache/Python/3.11.7/x64/bin/python3
-    #- name: delete temp requirements.txt file
-    #  run: |
-    #    rm requirements.txt
+        python3 -m third_party_license_file_generator -r requirements.txt -o THIRDPARTY.txt -p /opt/hostedtoolcache/Python/3.11.7/x64/bin/python3
+    - name: delete temp requirements.txt file
+      run: |
+        rm requirements.txt
     - name: push changes
       # also see https://github.com/stefanzweifel/git-auto-commit-action
       uses: stefanzweifel/git-auto-commit-action@v4
