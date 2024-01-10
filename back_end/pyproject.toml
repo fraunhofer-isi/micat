@@ -80,6 +80,7 @@ license = [
     'licensecheck==2023.1.4',  # later versions have bugs
     'license_scanner==0.2.5',
     'reuse==2.1.0',
+    'pipreqs==0.4.13',
     'third-party-license-file-generator==2023.2.22'
 
 ]
