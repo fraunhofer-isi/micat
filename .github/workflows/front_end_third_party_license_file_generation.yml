@@ -27,7 +27,7 @@ jobs:
     - name: third party license file generation
       run: |
         cd front_end
-        npx generate-license-file --input package.json --output THIRDPARTY.txt --overwrite
+        npx generate-license-file --input package.json --output THIRDPARTY.md --overwrite
     - name: push changes
       # also see https://github.com/stefanzweifel/git-auto-commit-action
       uses: stefanzweifel/git-auto-commit-action@v4

@@ -33,7 +33,7 @@ jobs:
     - name: third party license file generation
       run: |
         cd back_end
-        python3 -m third_party_license_file_generator -r requirements.txt -o THIRDPARTY.txt -p /opt/hostedtoolcache/Python/3.11.7/x64/bin/python3
+        python3 -m third_party_license_file_generator -r requirements.txt -o THIRDPARTY.md -p /opt/hostedtoolcache/Python/3.11.7/x64/bin/python3
     - name: delete temp requirements.txt file
       run: |
         cd back_end
