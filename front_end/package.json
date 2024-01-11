@@ -59,7 +59,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-react-hooks": "4.6.0",
-    "eslint-plugin-unicorn": "48.0.1",
+    "eslint-plugin-unicorn": "50.0.1",
     "eslint-plugin-unused-imports": "3.0.0",
     "generate-license-file": "^3.0.1",
     "glob-parent": "6.0.2",
