@@ -2,9 +2,6 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-# This workflow will install Python dependencies (without dev dependencies) and
-# run a license check 
-
 name: back_end_third_party_license_file_generation
 
 on:
