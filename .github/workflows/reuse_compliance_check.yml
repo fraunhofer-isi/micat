@@ -1,9 +1,6 @@
-# © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+# © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
-# This workflow uses the reuse tool to confirm reuse compliance
-# For more information see: https://reuse.software/
 
 name: reuse_compliance
 
@@ -14,7 +11,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

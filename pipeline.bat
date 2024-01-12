@@ -1,22 +1,33 @@
-REM © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+REM © 2024 Fraunhofer-Gesellschaft e.V., München
 REM
 REM SPDX-License-Identifier: AGPL-3.0-or-later
 
 REM This batch file can be used to run some of the pipline commands locally
-REM Run it with the command ./pipeline.bat from within PyCharm terminal.
+REM Run it with the command ./piepline.bat from within PyCharm terminal.
+REM Also see .gitlab.ci.yml in the root directory
 
-echo "Simulating front_end pipeline jobs..."'
 
-cd back_end
-call ./pipeline.bat skip_pause
-cd ..
+echo "Installing python requirements..."
+pip install -e .[dev] | findstr /V /C:"Requirement already satisfied"
 
-echo "Simulating front_end pipeline jobs..."'
-cd front_end
-call ./pipeline.bat skip_pause
+echo "Formatting code..."
+isort .
+black src -S -l 120
+black test -S -l 120
+black import -S -l 120
 
-cd ..
+echo "Checking code quality with  pylint..."
+pylint src
+pylint test --recursive=true
+pylint import --recursive=true
 
-echo "...finished simulating pipline jobs."'
+echo "Running unit tests and determining test coverage..."
+pytest --cov
 
-pause
+if (%1==skip_pause) (
+ echo "Finished back_end commands."
+) else (
+ echo "Finished back_end commands."
+ pause
+)
+

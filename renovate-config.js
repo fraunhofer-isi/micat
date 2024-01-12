@@ -1,4 +1,4 @@
-// © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+// © 2024 Fraunhofer-Gesellschaft e.V., München
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -46,15 +46,5 @@ module.exports = {
       "matchPackageNames": ["licensecheck"],
       "allowedVersions": "<=2023.1.4"
     },
-    {
-      // eslint-recommended/eslint-config@16.0.3 requires eslint-plugin-unicorn@"48.0.0"
-      "matchPackageNames": ["eslint-plugin-unicorn"],
-      "allowedVersions": "48.0.0"
-    },
-    {
-      // eslint-recommended/eslint-config@16.0.3 requires  eslint-plugin-jsdoc@"^46.0.0"
-      "matchPackageNames": ["eslint-plugin-jsdoc"],
-      "allowedVersions": "46.9.1"
-    }
   ]
 };

@@ -1,9 +1,6 @@
-# © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+# © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
-# This workflow runs renovate bot to check for newer dependencies
-# For more information see: https://docs.renovatebot.com
 
 name: renovate
 on:

@@ -1,9 +1,6 @@
-# © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+# © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
-# This workflow uses the reuse tool to include copyright & license annotations
-# For more information see: https://reuse.software/
 
 name: reuse_annotate
 
@@ -14,7 +11,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  annotate:
     runs-on: ubuntu-latest
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
@@ -32,4 +29,4 @@ jobs:
         # also see https://github.com/stefanzweifel/git-auto-commit-action
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: create copyright and license annotations with reuse tool \#2
+          commit_message: create copyright and license annotations with reuse tool

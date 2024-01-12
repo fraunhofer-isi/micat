@@ -1,26 +1,13 @@
-# © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+# © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 __pycache__
 *.coverage
 report.xml
-node_modules
-.next
-.swc
-out
-package-lock.json
-.coverage
 /pylint.log
-/.idea/workspace.xml
-/back_end/pylint.log
-poetry.lock
 .settings.json
-launch.json
-*.eot
-*.ttf
 logger.log
 /doc/build
 .ipynb_checkpoints
 .idea
-*.pdf

@@ -1,4 +1,4 @@
-# © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+# © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -24,29 +24,29 @@ author = 'Frederic Berger, Stefan Eidelloth'
 extensions = [
     'myst_parser',  # Also see https://myst-parser.readthedocs.io/en/latest/intro.html
     'rst2pdf.pdfbuilder',  # Also see https://github.com/rst2pdf/rst2pdf
-    'sphinx.ext.autosectionlabel', # Also see https://www.sphinx-doc.org/en/master/usage/extensions/autosectionlabel.html
+    'sphinx.ext.autosectionlabel',  # Also see https://www.sphinx-doc.org/en/master/usage/extensions/autosectionlabel.html
 ]
 
 # myst parser syntax extensions, also see https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
 myst_enable_extensions = [
     "amsmath",
-    #"attrs_inline",
-    #"colon_fence",
-    #"deflist",
+    # "attrs_inline",
+    # "colon_fence",
+    # "deflist",
     "dollarmath",
-    #"fieldlist",
-    #"html_admonition",
+    # "fieldlist",
+    # "html_admonition",
     "html_image",
-    #"linkify",
-    #"replacements",
-    #"smartquotes",
-    #"strikethrough",
-    #"substitution",
-    #"tasklist",
+    # "linkify",
+    # "replacements",
+    # "smartquotes",
+    # "strikethrough",
+    # "substitution",
+    # "tasklist",
 ]
 
-# autosectionlabel True to prefix each section label with the name of the document it is in, followed by a colon. 
-# For example, index:Introduction for a section called Introduction that appears in document index.rst. Useful for 
+# autosectionlabel True to prefix each section label with the name of the document it is in, followed by a colon.
+# For example, index:Introduction for a section called Introduction that appears in document index.rst. Useful for
 # avoiding ambiguity when the same section heading appears in different documents.
 autosectionlabel_prefix_document = True
 
@@ -64,10 +64,7 @@ html_static_path = ['_static']
 html_theme = 'sphinx_rtd_theme'
 html_logo = 'micat_logo.svg'
 
-html_theme_options = {
-    'logo_only': True,
-    'style_nav_header_background': '#efefef'
-}
+html_theme_options = {'logo_only': True, 'style_nav_header_background': '#efefef'}
 
 # -- Options for PDF output -------------------------------------------------
 
@@ -105,7 +102,6 @@ exclude_patterns = []
 # https://9to5answer.com/sphinx-pdf-themes
 
 
-
 latex_elements = {
     'preamble': r'''
         % a) Here you can adapt the style of the pdf output
@@ -128,23 +124,29 @@ latex_elements = {
             \end{figure}
 
             \vspace{15mm}
-            \Large \textbf{{''' + author + r'''}}
+            \Large \textbf{{'''
+    + author
+    + r'''}}
             
             \vspace{15mm}
-            {\href{''' + project_url + '}{' + project_url + r'''}}
+            {\href{'''
+    + project_url
+    + '}{'
+    + project_url
+    + r'''}}
             
             \vspace{15mm}
-            {\href{''' + github_url + '}{' + github_url + r'''}}
+            {\href{'''
+    + github_url
+    + '}{'
+    + github_url
+    + r'''}}
             
             \vfill
-            © Copyright ''' + copyright + r'''            
+            © Copyright '''
+    + copyright
+    + r'''            
         \end{titlepage}        
         \pagenumbering{arabic}
     ''',
-
 }
-
-
-
-
-

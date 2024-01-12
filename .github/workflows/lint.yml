@@ -1,9 +1,6 @@
-# © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+# © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
 name: back_end_lint
 
@@ -14,7 +11,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -24,20 +21,17 @@ jobs:
         python-version: 3.11
     - name: install dependencies
       run: |
-        cd back_end
         # python -m pip install --upgrade pip
         # also see settings in pyproject.toml
         pip install .[dev]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems        
     - name: format
       run: |
-        cd back_end
         python -m isort .
         python -m black src
         python -m black test
         python -m black import
     - name: lint
       run: |
-        cd back_end
         mkdir ./pylint
         python -m pylint src --output-format=text . | tee ./pylint/pylint.log || pylint-exit $?
         python -m pylint test --recursive=true
@@ -50,8 +44,8 @@ jobs:
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: ${{ secrets.GIST_ID }}
-        filename: micat_back_end_lint.json
-        label: back_end_lint
+        filename: micat_lint.json
+        label: lint
         message: ${{ env.PYLINT_SCORE }}
         valColorRange: ${{ env.PYLINT_SCORE }}
         maxColorRange: 10

@@ -1,5 +1,5 @@
 <!--
-© 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
+© 2024 Fraunhofer-Gesellschaft e.V., München
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
@@ -17,6 +17,8 @@ For more **open source** software provided by [**Fraunhofer ISI**](https://www.i
 
 * Project: https://micatool.eu
 
+* Front-end: https://github.com/fraunhofer-isi/micat-vue
+
 ## Badges
 
 Click on some badge to navigate to the corresponding **quality assurance** workflow:
@@ -27,21 +29,16 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 
 ### Formatting & linting
 
-[![back_end_lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_lint.yml) Checks code formatting with [Pylint](https://pylint.readthedocs.io/)
-
-[![front_end_lint](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_lint.yml) Checks code formatting with [ESlint](https://eslint.org/)
+[![lint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_lint.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/lint.yml) Checks code formatting with [Pylint](https://pylint.readthedocs.io/)
 
 ### Test coverage
 
-[![backend_coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_back_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_coverage.yml) Determines test coverage with [pytest-cov](https://github.com/pytest-dev/pytest-cov)
+[![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/coverage.yml) Determines test coverage with [pytest-cov](https://github.com/pytest-dev/pytest-cov)
 
-[![front_end_coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_front_end_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_coverage.yml) Determines test coverage with [jest](https://jestjs.io/)
 
 ### License compliance
 
-[![back_end_license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/back_end_license_check.yml) Checks license compatibility with [LicenseCheck](https://github.com/FHPythonUtils/LicenseCheck)
-
-[![front_end_license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/front_end_license_check.yml) Checks license compatibility with [license-checker](https://github.com/davglass/license-checker)
+[![license_check](https://github.com/fraunhofer-isi/micat/actions/workflows/license_check.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/license_check.yml) Checks license compatibility with [LicenseCheck](https://github.com/FHPythonUtils/LicenseCheck)
 
 [![reuse_annotate](https://github.com/fraunhofer-isi/micat/actions/workflows/reuse_annotate.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/reuse_annotate.yml) Creates copyright & license annotations with [reuse](https://git.fsfe.org/reuse/tool)
 
@@ -58,5 +55,3 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 <p><a href="https://www.isi.fraunhofer.de/en/publishing-notes.html">PUBLISHING NOTES</a></p>
 
 <p><a href="https://github.com/fraunhofer-isi/micat/blob/main/LICENSES/AGPL-3.0-or-later.txt">LICENSE</a></p>
-
-
