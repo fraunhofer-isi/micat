@@ -67,7 +67,7 @@ doc = [
     'myst-parser==2.0.0',
     'sphinx-rtd-theme==2.0.0',
     'sphinxcontrib-applehelp==1.0.8', # this version fixes a warning of default 1.0.2 dependency of sphinx: https://github.com/sphinx-doc/sphinx/issues/11098
-    'sphinxcontrib-htmlhelp==2.0.4', # this version fixes a warning of default 2.0.0 dependency of sphinx: https://github.com/sphinx-doc/sphinx/issues/11127
+    'sphinxcontrib-htmlhelp==2.0.5', # this version fixes a warning of default 2.0.0 dependency of sphinx: https://github.com/sphinx-doc/sphinx/issues/11127
     'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.101',
 ]
 
