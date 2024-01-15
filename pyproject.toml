@@ -90,6 +90,9 @@ dev = ['micat[lint, format, test, doc, data, license]']
 [tool.hatch.build.targets.wheel]
 packages = ['src']
 
+[tool.hatch.build.targets.wheel.sources]
+"src" = "micat"
+
 [tool.licensecheck]
 using = 'PEP631'
 zero = true  # results in non-zero exit code if incompatibilities are found
