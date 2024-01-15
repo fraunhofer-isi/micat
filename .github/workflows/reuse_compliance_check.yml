@@ -5,10 +5,9 @@
 name: reuse_compliance
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_run:
+    workflows: [ "reuse_annotate" ]
+    types: [ completed ]
 
 jobs:
   check:

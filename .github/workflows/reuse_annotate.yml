@@ -5,10 +5,12 @@
 name: reuse_annotate
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # This should run *after* creation of files has been done by
+  # other workflow actions.
+  # Otherwise, new files might miss the annotation.
+  workflow_run:
+    workflows: [ "third_party_license_file_generation" ]
+    types: [ completed ]
 
 jobs:
   annotate:
