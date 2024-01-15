@@ -1,3 +1,7 @@
+# © 2024 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # This configuration file is used by PyCrunch, a PyCharm extension that shows
 # pytest coverage in the PyCharm code editor
 
