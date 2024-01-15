@@ -13,13 +13,19 @@ import re
 
 def main(directory_to_check="."):
     folders_to_exclude = [
+        "doc",
+        "LICENSES",
         ".git",
         ".idea",
         ".pytest_cache",
         ".vscode",
         "__pycache__",
     ]
-    file_names_to_exclude = ["Dockerfile"]
+    file_names_to_exclude = [
+        "Dockerfile",
+        "README.md",
+        "THIRDPARTY.md",
+    ]
     check_folders_and_files_to_be_in_snake_case(
         directory_to_check,
         folders_to_exclude,

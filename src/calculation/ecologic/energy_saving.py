@@ -11,6 +11,7 @@ def energy_saving(primary_energy_saving_by_action_type):
     return aggregated_saving
 
 
+# pylint: disable=duplicate-code
 def energy_saving_by_final_energy_carrier(
     final_energy_saving_by_action_type,
     data_source,

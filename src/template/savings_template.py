@@ -123,6 +123,7 @@ def _improvement_header_validator():
     }
 
 
+# pylint: disable=duplicate-code
 def _year_header_validator():
     return {
         'validate': 'integer',

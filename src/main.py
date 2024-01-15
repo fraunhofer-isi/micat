@@ -16,6 +16,7 @@ from utils import settings as micat_settings
 def main(arguments):
     if len(arguments) != 2:
         print("Usage: python main.py confidential_database_path")
+        return
 
     # workaround to fix issue with relative path to python in PyCharm for debugging
     # Also see

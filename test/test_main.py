@@ -27,18 +27,26 @@ def back_end_init_mock(
     injected_flask,  # pylint: disable=unused-argument
     front_end_port,  # pylint: disable=unused-argument
     debug_mode,  # pylint: disable=unused-argument
-    front_end_path='../../front_end',  # pylint: disable=unused-argument
     database_path='../data/public.sqlite',  # pylint: disable=unused-argument
+    confidential_database_path='../data/confidential.sqlite',  # pylint: disable=unused-argument
 ):
     self.start = mocked_start
 
 
-@patch('utils.settings.load', MagicMock(return_value=mocked_settings))
-@patch('main._open_browser_if_enabled', MagicMock())
-@patch.object(BackEnd, '__init__', back_end_init_mock)
-def test_main():
-    main()
-    assert mocked_start.mock_calls[0] == call(host='localhost', application_port=5000)
+class TestMain:
+    @patch('utils.settings.load', MagicMock(return_value=mocked_settings))
+    @patch('main._open_browser_if_enabled', MagicMock())
+    @patch.object(BackEnd, '__init__', back_end_init_mock)
+    def test_with_arguments(self):
+        arguments = ['mocked_file_path', 'mocked_confidential_database_path']
+        main(arguments)
+        assert mocked_start.mock_calls[0] == call(host='localhost', application_port=5000)
+
+    def test_without_extra_argument(self):
+        arguments = ['mocked_file_path']
+        with patch('builtins.print') as patched_print:
+            main(arguments)
+            patched_print.assert_called()
 
 
 @patch('main._front_end_url', MagicMock())

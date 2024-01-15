@@ -257,6 +257,7 @@ def _front_end_arguments(http_request):
     }
 
 
+# pylint: disable=duplicate-code
 def _interim_data(
     final_energy_saving_by_action_type,
     data_source,
