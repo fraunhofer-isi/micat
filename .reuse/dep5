@@ -4,6 +4,10 @@ Files: *.xlsx
 Copyright: 2024 Fraunhofer-Gesellschaft e.V., München
 License: AGPL-3.0-or-later
 
+Files: *.json
+Copyright: 2024 Fraunhofer-Gesellschaft e.V., München
+License: AGPL-3.0-or-later
+
 Files: *.png
 Copyright: 2024 Fraunhofer-Gesellschaft e.V., München
 License: AGPL-3.0-or-later
