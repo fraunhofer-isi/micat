@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-
 def measure_specific_lifetime(
     final_energy_saving_by_action_type,
     data_source,
