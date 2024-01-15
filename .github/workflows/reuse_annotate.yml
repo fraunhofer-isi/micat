@@ -24,7 +24,7 @@ jobs:
         with:
           # also see https://reuse.readthedocs.io/en/v2.1.0/usage.html
           # copyright style follows the one used at https://www.fraunhofer.de/en/publishing-notes.html
-          args: annotate --copyright="Fraunhofer-Gesellschaft e.V., München" --copyright-style=symbol --merge-copyrights --license=AGPL-3.0-or-later --skip-unrecognised --recursive .
+          args: annotate --copyright="Fraunhofer-Gesellschaft e.V., München" --copyright-style=symbol --merge-copyrights --license=AGPL-3.0-or-later --skip-unrecognised --recursive src test doc
       - name: push changes made by reuse annotate
         # also see https://github.com/stefanzweifel/git-auto-commit-action
         uses: stefanzweifel/git-auto-commit-action@v4

@@ -19,10 +19,7 @@ def main(directory_to_check="."):
         ".vscode",
         "__pycache__",
     ]
-    file_names_to_exclude = [
-        "Dockerfile",
-        "THIRDPARTY.md",
-    ]
+    file_names_to_exclude = ["Dockerfile"]
     check_folders_and_files_to_be_in_snake_case(
         directory_to_check,
         folders_to_exclude,

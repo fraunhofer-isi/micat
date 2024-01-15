@@ -1,0 +1,7 @@
+# © 2024 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+RewriteEngine on
+RewriteRule ^$ https://micatool.eu/ [L,R=301]  # redirects the bas urls https://micatool-dev.eu and https://micatool-dev.eu/
+RewriteRule ^(.*)$ http://127.0.0.1:5000/$1 [L,P,QSA]  # changes the port of child urls like https://micatool-dev.eu/id_indicator

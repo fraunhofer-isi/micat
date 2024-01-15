@@ -1,0 +1,27 @@
+# © 2024 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+import pandas as pd
+from config import import_config
+
+from data_import.database_import import DatabaseImport
+from table.table import Table
+
+
+def main():
+    public_database_path, raw_data_path = import_config.get_paths()
+
+    import_path = raw_data_path + '/cbre'
+    file_path = import_path + "/capitalization_rate.xlsx"
+
+    database_import = DatabaseImport(public_database_path)
+    raw_parameters = pd.read_excel(file_path)
+
+    table = Table(raw_parameters)
+    table = table.insert_index_column('id_parameter', 1, 46)  # Capitalization rate
+    database_import.write_to_sqlite(table, 'cbre_parameters')
+
+
+if __name__ == "__main__":
+    main()

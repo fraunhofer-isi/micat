@@ -1,4 +1,4 @@
-# © 2024 Fraunhofer-Gesellschaft e.V., München
+# © 2023 - 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -9,7 +9,7 @@ from pylint.config import find_default_config_files
 
 
 def init():
-    with open('../pylint.log', 'w') as pylint_log:
+    with open('pylint.log', 'w') as pylint_log:
         pylint_log.write("Initializing pylint with init-hook from pyproject.toml...\\n")
         config_paths = list(find_default_config_files())
 
@@ -44,7 +44,7 @@ def init():
 
             back_end_path = "./back_end"
             if working_directory.endswith("back_end"):
-                back_end_path = "../import"
+                back_end_path = "."
 
             # for console
             sys.path.append(back_end_path)

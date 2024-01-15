@@ -1,0 +1,8 @@
+# © 2024 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+paths:
+  public_database: "../src/data/public.sqlite"
+  confidential_database: "../src/data/confidential.sqlite"
+  raw_data: "./raw_data"
