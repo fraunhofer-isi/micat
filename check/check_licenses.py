@@ -11,8 +11,13 @@ from licensecheck.types import JOINS, License, PackageInfo
 
 def main():
     using = 'PEP631'
-    ignore_packages = []
+
+    ignore_packages = [
+        'reuse',  # combined license is not recognized: "Apache-2.0 AND CC0-1.0 AND CC-BY-SA-4.0 AND GPL-3.0-or-later"
+    ]
+
     fail_packages = []
+
     ignore_licenses = [
         # work around for bug in licensecheck for apache
         'Apache Software License',
@@ -21,6 +26,7 @@ def main():
         # work around for bug in licensecheck for dual license
         'MIT License;; Academic Free License (AFL)',
     ]
+
     fail_licenses = []
 
     is_using_license_scanner = True
@@ -34,12 +40,7 @@ def main():
         requirements = get_deps.getReqs(using)
 
     project_license, dependencies = _license_and_dependencies(
-        using,
-        ignore_packages,
-        fail_packages,
-        ignore_licenses,
-        fail_licenses,
-        requirements
+        using, ignore_packages, fail_packages, ignore_licenses, fail_licenses, requirements
     )
 
     ansi_format = formatter.formatMap['ansi']
@@ -59,7 +60,7 @@ def _license_and_dependencies(  # pylint: disable=too-many-arguments
     fail_packages: list[str],
     ignore_licenses: list[str],
     fail_licenses: list[str],
-    requirements: set[str] = None
+    requirements: set[str] = None,
 ) -> tuple[License, set[PackageInfo]]:
     if requirements is None:
         requirements = get_deps.getReqs(using)
