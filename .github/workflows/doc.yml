@@ -31,8 +31,7 @@ jobs:
         with:
           python-version: 3.11
       - name: install python dependencies
-        run: |
-          cd back_end       
+        run: |   
           # also see settings in pyproject.toml
           pip install .[doc]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems        
       - name: build html doc
