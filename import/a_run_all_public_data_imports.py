@@ -4,7 +4,7 @@
 
 import os
 
-from data_import.database_import import DatabaseImport
+from micat.data_import.database_import import DatabaseImport
 
 
 def import_public_data():

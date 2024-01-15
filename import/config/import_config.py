@@ -8,7 +8,8 @@ import yaml
 
 
 def get_config():
-    with open(os.path.dirname(os.path.realpath(__file__)) + '/config.yaml', 'r', encoding='utf8') as file:
+    file_path = os.path.dirname(os.path.realpath(__file__)) + '/config.yaml'
+    with open(file_path, 'r', encoding='utf8') as file:
         config = yaml.safe_load(file)
     return config
 

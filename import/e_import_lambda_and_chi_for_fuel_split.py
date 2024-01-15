@@ -9,9 +9,9 @@ import warnings
 import pandas as pd
 from config import import_config
 
-from data_import.database_import import DatabaseImport
-from input.database import Database
-from table.table import Table
+from micat.data_import.database_import import DatabaseImport
+from micat.input.database import Database
+from micat.table.table import Table
 
 pd.options.mode.chained_assignment = None  # default='warn'
 

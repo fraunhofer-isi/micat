@@ -4,8 +4,8 @@
 
 from config import import_config
 
-from data_import.database_import import DatabaseImport
-from utils.file import delete_file_if_exists
+from micat.data_import.database_import import DatabaseImport
+from micat.utils.file import delete_file_if_exists
 
 
 def main():

@@ -3,6 +3,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 paths:
-  public_database: "../src/data/public.sqlite"
-  confidential_database: "../src/data/confidential.sqlite"
+  public_database: "../src/micat/data/public.sqlite"
   raw_data: "./raw_data"

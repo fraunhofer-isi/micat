@@ -5,11 +5,11 @@
 import pandas as pd
 from config import import_config
 
-from data_import.database_import import DatabaseImport
-from data_import.population_utils import PopulationUtils
-from input.database import Database
-from table.table import Table
-from table.value_table import ValueTable
+from micat.data_import.database_import import DatabaseImport
+from micat.data_import.population_utils import PopulationUtils
+from micat.input.database import Database
+from micat.table.table import Table
+from micat.table.value_table import ValueTable
 
 
 def main():

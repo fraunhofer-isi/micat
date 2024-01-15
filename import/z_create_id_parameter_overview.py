@@ -4,7 +4,7 @@
 
 from config import import_config
 
-from input.database import Database
+from micat.input.database import Database
 
 
 def main():

@@ -9,10 +9,10 @@ import pandas as pd
 import requests
 from config import import_config
 
-from data_import.conversion_coefficients import conversion_coefficients
-from data_import.database_import import DatabaseImport
-from input.database import Database
-from table.table import Table
+from micat.data_import.conversion_coefficients import conversion_coefficients
+from micat.data_import.database_import import DatabaseImport
+from micat.input.database import Database
+from micat.table.table import Table
 
 
 # pylint: disable=too-many-locals

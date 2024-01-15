@@ -8,10 +8,10 @@ import warnings
 import pandas as pd
 from config import import_config
 
-from data_import import conversion_energy
-from data_import.database_import import DatabaseImport
-from input.database import Database
-from table.table import Table
+from micat.data_import import conversion_energy
+from micat.data_import.database_import import DatabaseImport
+from micat.input.database import Database
+from micat.table.table import Table
 
 
 def main():  # pylint: disable=too-many-locals

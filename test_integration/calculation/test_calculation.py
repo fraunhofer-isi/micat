@@ -8,9 +8,9 @@ import os
 from mock import MagicMock, patch
 from test_utils import assertion
 
-from calculation import calculation
-from input.database import Database
-from table.table import Table
+from micat.calculation import calculation
+from micat.input.database import Database
+from micat.table.table import Table
 
 
 def determine_database_directory():
