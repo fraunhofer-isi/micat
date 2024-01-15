@@ -1,6 +1,7 @@
 # © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
+
 from micat.calculation import extrapolation, social
 from micat.calculation.economic import investment
 from micat.calculation.social import energy_poverty_national
