@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# pylint: disable=duplicate-code
 import pandas as pd
 from config import import_config
 

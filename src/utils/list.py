@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+
 def string_to_integer(string_list):
     integer_list = list(map(int, string_list))
     return integer_list

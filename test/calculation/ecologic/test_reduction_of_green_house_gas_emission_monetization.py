@@ -11,6 +11,7 @@ from calculation.ecologic import reduction_of_green_house_gas_emission_monetizat
 from table.table import Table
 
 
+# pylint: disable=duplicate-code
 @patch(
     reduction_of_green_house_gas_emission_monetization._monetization_factors,
     2,

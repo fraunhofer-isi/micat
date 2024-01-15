@@ -32,6 +32,7 @@ def test_technology_parameters():
     assert result == 'mocked_result'
 
 
+# pylint: disable=duplicate-code
 def test_primary_parameters_raw():
     data_source_mock = Mock()
     data_source_mock.table = Mock('mocked_table')

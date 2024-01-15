@@ -10,6 +10,7 @@ from table.abstract_table import AbstractTable
 from table.id_table import IdTable
 
 
+# pylint: disable=duplicate-code
 def mocked_data_frame():
     data_frame = Mock()
     data_frame.set_index = Mock()
