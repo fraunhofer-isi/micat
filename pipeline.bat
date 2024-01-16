@@ -24,6 +24,12 @@ pylint import --recursive=true
 echo "Running unit tests and determining test coverage..."
 pytest --cov
 
+echo "Creating reuse annotations"
+python -m reuse annotate --copyright="Fraunhofer-Gesellschaft e.V., München" --copyright-style=symbol --merge-copyrights --license=AGPL-3.0-or-later --skip-unrecognised --recursive src test doc THIRDPARTY.md
+
+echo "Checking REUSE Compliance"
+python -m reuse lint
+
 if (%1==skip_pause) (
  echo "Finished back_end commands."
 ) else (
