@@ -1,6 +1,7 @@
 # © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
+import os
 
 # -*- coding: utf-8 -*-
 import sys
@@ -13,9 +14,10 @@ from micat.development import Development
 from micat.utils import settings as micat_settings
 
 
-def main(arguments):
-    if len(arguments) != 2:
-        print("Usage: python main.py confidential_database_path")
+def main(arguments=None):
+    confidential_database_path = _confidential_database_path(arguments)
+    if confidential_database_path is None:
+        print('Usage: main.py confidential_database_path')
         return
 
     # workaround to fix issue with relative path to python in PyCharm for debugging
@@ -36,9 +38,7 @@ def main(arguments):
         settings,
     )
 
-    # file_name = arguments[0]
-
-    confidential_database_path = arguments[1]
+    database_path = _database_path()
 
     debug_mode = settings['debugMode']
     back_end = BackEnd(
@@ -46,10 +46,41 @@ def main(arguments):
         flask,
         front_end_port,
         debug_mode,
+        database_path=database_path,
         confidential_database_path=confidential_database_path,
     )
 
     back_end.start(host=host, application_port=port)
+
+
+def _database_path():
+    # we use a relative path from this main file instead of
+    # using the working directory, so that the file can also be found
+    # when this project is used as python package
+    current_folder = os.path.dirname(__file__)
+    database_path = os.path.join(
+        current_folder,
+        'data',
+        'public.sqlite',
+    )
+    return database_path
+
+
+def _confidential_database_path(arguments):
+    if arguments is None:
+        confidential_database_path = './data/confidential.sqlite'
+    else:
+        if len(arguments) != 2:
+            return None
+        else:
+            # file_name = arguments[0]
+            confidential_database_path = arguments[1]
+
+    if os.path.exists(confidential_database_path):
+        return confidential_database_path
+    else:
+        print('Could not find path to confidential database "' + confidential_database_path + '"')
+        return None
 
 
 def _open_browser_if_enabled(

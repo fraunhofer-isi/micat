@@ -37,16 +37,40 @@ class TestMain:
     @patch(utils.settings.load, mocked_settings)
     @patch(main._open_browser_if_enabled)
     @patch.object(BackEnd, '__init__', back_end_init_mock)
+    @patch(main._confidential_database_path, 'mocked_confidential_database_path')
     def test_with_arguments(self):
         arguments = ['mocked_file_path', 'mocked_confidential_database_path']
         main.main(arguments)
         assert mocked_start.mock_calls[0] == call(host='localhost', application_port=5000)
 
-    def test_without_extra_argument(self):
-        arguments = ['mocked_file_path']
+    @patch(main._confidential_database_path, None)
+    def test_without_confidential_database(self):
         with patch_by_string('builtins.print', None) as patched_print:
-            main.main(arguments)
+            main.main()
             patched_print.assert_called()
+
+
+class TestConfidentialDatabasePath:
+    @patch_by_string('os.path.exists', True)
+    def test_without_arguments(self):
+        result = main._confidential_database_path(None)
+        assert result == './data/confidential.sqlite'
+
+    @patch_by_string('os.path.exists', True)
+    def test_with_missing_argument(self):
+        result = main._confidential_database_path(['mocked_file_path'])
+        assert result is None
+
+    @patch_by_string('os.path.exists', True)
+    def test_with_explicit_database_path(self):
+        result = main._confidential_database_path(['mocked_file_path', 'mocked_confidential_database_path'])
+        assert result == 'mocked_confidential_database_path'
+
+    @patch_by_string('os.path.exists', False)
+    @patch_by_string('builtins.print', None)
+    def test_with_non_existing_database_path(self):
+        result = main._confidential_database_path(['mocked_file_path', 'mocked_confidential_database_path'])
+        assert result is None
 
 
 @patch(main._front_end_url)
