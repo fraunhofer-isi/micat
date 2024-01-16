@@ -88,7 +88,7 @@ license = [
 dev = ['micat[lint, format, test, doc, data, license]']
 
 [tool.hatch.build.targets.wheel]
-packages = ['src/micat']
+packages = ['src/micat', 'static']
 
 [tool.hatch.build.targets.wheel.sources]
 'static' = 'micat/static'
