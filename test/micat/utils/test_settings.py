@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import json
+
 # pylint: disable=protected-access
 import os
 
@@ -27,18 +28,17 @@ def test_load():
 
 
 @patch(settings._parent_folder_of_this_file)
-@patch(settings._search_settings_path, 'mocked_settings_path')
 class TestSettingsPath:
-    @patch_by_string('os.path.exists', True)
+    @patch(settings._search_settings_path, 'mocked_settings_path')
     def test_with_direct_settings(self):
         result = settings._settings_path()
         assert result == 'mocked_settings_path'
 
-    @patch_by_string('os.path.exists', False)
     @patch(settings._working_directory, 'mocked_working_directory')
+    @patch(settings._search_settings_path, None)
     def test_without_user_settings(self):
         result = settings._settings_path()
-        assert result == 'mocked_settings_path'
+        assert result is None
 
 
 class TestSearchSettingsPath:

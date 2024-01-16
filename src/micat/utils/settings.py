@@ -17,7 +17,7 @@ def load():
 def _settings_path():
     project_root = _parent_folder_of_this_file()
     settings_path = _search_settings_path(project_root)
-    if os.path.exists(settings_path):
+    if settings_path is not None:
         return settings_path
     else:
         working_directory = _working_directory()
