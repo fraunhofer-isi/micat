@@ -5,12 +5,11 @@
 # pylint: disable=protected-access
 import os
 
-from mock import MagicMock, patch
-from test_utils import assertion
-
 from micat.calculation import calculation
 from micat.input.database import Database
 from micat.table.table import Table
+from micat.test_utils import assertion
+from micat.test_utils.isi_mock import Mock, patch
 
 
 def determine_database_directory():
@@ -47,10 +46,10 @@ def mocked_nuclear():
 
 
 def mocked_table():
-    mock = MagicMock()
-    mock.reduce = MagicMock(return_value='mocked_table')
-    mock.join_id_column = MagicMock(return_value=MagicMock())
-    mock.transpose = MagicMock(return_value='mocked_transposed_table')
+    mock = Mock()
+    mock.reduce = Mock('mocked_table')
+    mock.join_id_column = Mock(Mock())
+    mock.transpose = Mock('mocked_transposed_table')
     return mock
 
 
@@ -64,15 +63,13 @@ class TestPublicApi:
         return '1'
 
     @patch(
-        'calculation.calculation._front_end_arguments',
-        MagicMock(
-            return_value={
-                'id_mode': mocked_id_mode(),
-                'id_region': mocked_id_region(),
-                'final_energy_saving_by_action_type': mocked_savings(),
-                'parameters': {},
-            }
-        ),
+        calculation._front_end_arguments,
+        {
+            'id_mode': mocked_id_mode(),
+            'id_region': mocked_id_region(),
+            'final_energy_saving_by_action_type': mocked_savings(),
+            'parameters': {},
+        },
     )
     def test_for_debugging_calculate_indicator_data(self):
         http_request_mock = 'request_mock'

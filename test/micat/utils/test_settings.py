@@ -2,9 +2,13 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import json
 # pylint: disable=protected-access
-from mock import MagicMock, patch
+import os
 
+from mock import patch as original_patch
+
+from micat.test_utils.isi_mock import Mock, patch, patch_by_string
 from micat.utils import settings
 
 mocked_settings = {
@@ -14,104 +18,65 @@ mocked_settings = {
 }
 
 
-@patch('micat.utils.settings._settings_path', MagicMock(return_value='mocked_path'))
-@patch('builtins.open', MagicMock())
-@patch('json.load', MagicMock(return_value=mocked_settings))
+@patch(settings._settings_path, 'mocked_path')
+@patch_by_string('builtins.open', Mock())
+@patch(json.load, mocked_settings)
 def test_load():
     result = settings.load()
     assert result == 'mocked_api_settings'
 
 
-@patch('micat.utils.settings._parent_folder', MagicMock())
-@patch(
-    'micat.utils.settings._user_settings_path',
-    MagicMock(return_value='mocked_user_settings_path'),
-)
+@patch(settings._parent_folder_of_this_file)
+@patch(settings._search_settings_path, 'mocked_settings_path')
 class TestSettingsPath:
-    @patch('os.path.exists', MagicMock(return_value=True))
-    def test_with_user_settings(self):
+    @patch_by_string('os.path.exists', True)
+    def test_with_direct_settings(self):
         result = settings._settings_path()
-        assert result == 'mocked_user_settings_path'
+        assert result == 'mocked_settings_path'
 
-    @patch('os.path.exists', MagicMock(return_value=False))
-    @patch(
-        'micat.utils.settings._search_settings_path',
-        MagicMock(return_value='mocked_found_settings_path'),
-    )
+    @patch_by_string('os.path.exists', False)
+    @patch(settings._working_directory, 'mocked_working_directory')
     def test_without_user_settings(self):
         result = settings._settings_path()
-        assert result == 'mocked_found_settings_path'
+        assert result == 'mocked_settings_path'
 
 
-@patch(
-    'micat.utils.settings._local_user_settings_path',
-    MagicMock(return_value='mocked_local_user_settings_path'),
-)
 class TestSearchSettingsPath:
-    @patch('os.path.exists', MagicMock(return_value=True))
+    @patch(os.path.join, 'mocked_path')
+    @patch_by_string('os.path.exists', True)
     def test_with_local_user_settings(self):
         result = settings._search_settings_path('mocked_project_root')
-        assert result == 'mocked_local_user_settings_path'
+        assert result == 'mocked_path'
 
-    @patch('os.path.exists', MagicMock(return_value=False))
-    @patch(
-        'micat.utils.settings._search_default_settings_path',
-        MagicMock(return_value='mocked_found_settings_path'),
-    )
+    @staticmethod
+    def mocked_exist(path):
+        exists = path.endswith('default.json')
+        return exists
+
+    @staticmethod
+    def mocked_join(_path, _prefix, file_name):
+        return file_name
+
+    @original_patch('os.path.exists', mocked_exist)
+    @original_patch('os.path.join', mocked_join)
     def test_without_local_user_settings(self):
         result = settings._search_settings_path('mocked_project_root')
-        assert result == 'mocked_found_settings_path'
+        assert result == '.settings.default.json'
+
+    @patch(os.path.exists, False)
+    @patch(os.path.join, 'mocked_path')
+    def test_without_settings(self):
+        result = settings._search_settings_path('mocked_project_root')
+        assert result is None
 
 
-@patch(
-    'micat.utils.settings._default_settings_path',
-    MagicMock(return_value='mocked_default_user_settings_path'),
-)
-class TestSearchDefaultSettingsPath:
-    @patch('os.path.exists', MagicMock(return_value=True))
-    def test_with_local_user_settings(self):
-        result = settings._search_default_settings_path('mocked_project_root')
-        assert result == 'mocked_default_user_settings_path'
-
-    @patch('os.path.exists', MagicMock(return_value=False))
-    @patch(
-        'micat.utils.settings._local_default_settings_path',
-        MagicMock(return_value='mocked_found_settings_path'),
-    )
-    def test_without_local_user_settings(self):
-        result = settings._search_default_settings_path('mocked_project_root')
-        assert result == 'mocked_found_settings_path'
-
-
-@patch('os.path.dirname', MagicMock(return_value='mocked_result'))
-def test_parent_folder():
-    result = settings._parent_folder()
+@patch(os.path.dirname, 'mocked_result')
+def test_parent_folder_of_this_file():
+    result = settings._parent_folder_of_this_file()
     assert result == 'mocked_result'
 
 
-@patch('os.path.join', MagicMock(return_value='mocked_path'))
-@patch('os.path.abspath', MagicMock(return_value='mocked_result'))
-def test_user_settings_path():
-    result = settings._user_settings_path('mocked_project_root')
-    assert result == 'mocked_result'
-
-
-@patch('os.path.join', MagicMock(return_value='mocked_path'))
-@patch('os.path.abspath', MagicMock(return_value='mocked_result'))
-def test_local_user_settings_path():
-    result = settings._local_user_settings_path('mocked_project_root')
-    assert result == 'mocked_result'
-
-
-@patch('os.path.join', MagicMock(return_value='mocked_path'))
-@patch('os.path.abspath', MagicMock(return_value='mocked_result'))
-def test_default_settings_path():
-    result = settings._default_settings_path('mocked_project_root')
-    assert result == 'mocked_result'
-
-
-@patch('os.path.join', MagicMock(return_value='mocked_path'))
-@patch('os.path.abspath', MagicMock(return_value='mocked_result'))
-def test_local_default_settings_path():
-    result = settings._local_default_settings_path('mocked_project_root')
+@patch_by_string('os.getcwd', 'mocked_result')
+def test_working_directory():
+    result = settings._working_directory()
     assert result == 'mocked_result'
