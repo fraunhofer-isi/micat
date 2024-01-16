@@ -13,6 +13,7 @@ def main():
     using = 'PEP631'
 
     ignore_packages = [
+        'micat',  # version 2024 of licensecheck does not seem to ignore the main package
         'reuse',  # combined license is not recognized: "Apache-2.0 AND CC0-1.0 AND CC-BY-SA-4.0 AND GPL-3.0-or-later"
     ]
 
@@ -20,9 +21,9 @@ def main():
 
     ignore_licenses = [
         # work around for bug in licensecheck for apache
-        'Apache Software License',
+        'APACHE SOFTWARE LICENSE',
         # not know by licensecheck, yet
-        'Zope Public License',
+        'ZOPE PUBLIC LICENSE',
         # work around for bug in licensecheck for dual license
         'MIT License;; Academic Free License (AFL)',
     ]
