@@ -88,10 +88,11 @@ license = [
 dev = ['micat[lint, format, test, doc, data, license]']
 
 [tool.hatch.build.targets.wheel]
-packages = ['src/micat', 'static']
+packages = ['src/micat', 'static', 'test/micat/test_utils']
 
 [tool.hatch.build.targets.wheel.sources]
 'static' = 'micat/static'
+'test/micat/test_utils' = 'micat/test_utils'
 
 [tool.licensecheck]
 using = 'PEP631'
