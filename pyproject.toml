@@ -67,7 +67,7 @@ doc = [
     'myst-parser==2.0.0',
     'sphinx-rtd-theme==2.0.0',
     'sphinxcontrib-applehelp==1.0.8',
-    'sphinxcontrib-htmlhelp==2.0.5', 
+    'sphinxcontrib-htmlhelp==2.0.5',
     'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.101',
 ]
 
@@ -89,6 +89,9 @@ dev = ['micat[lint, format, test, doc, data, license]']
 
 [tool.hatch.build.targets.wheel]
 packages = ['src/micat']
+
+[tool.hatch.build.targets.wheel.sources]
+'static' = 'micat/static'
 
 [tool.licensecheck]
 using = 'PEP631'
