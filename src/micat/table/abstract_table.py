@@ -243,7 +243,10 @@ class AbstractTable:
     def to_sql(self, *args, **kwargs):
         connection = args[1]
         self._enable_foreign_key_constraints(connection)
-        data_frame = self._data_frame.reset_index()
+        data_frame = self._data_frame
+        if 'id' not in data_frame.index.names:
+            data_frame = data_frame.reset_index()
+
         try:
             data_frame.to_sql(*args, **kwargs)
         except IntegrityError as error:

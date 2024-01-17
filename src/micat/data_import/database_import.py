@@ -128,15 +128,18 @@ class DatabaseImport:
     def import_id_table(
         self,
         table_name,
-        directory,
+        directory_or_database,
         optional_explicit_columns_that_will_be_unique=None,
     ):
-        df = self._read_id_table_from_excel_file(directory, table_name)
+        if directory_or_database.endswith('.sqlite'):
+            df_or_table = self._read_id_table_from_database(directory_or_database, table_name)
+        else:
+            df_or_table = self._read_id_table_from_excel_file(directory_or_database, table_name)
 
         try:
-            self._check_labels(df)
+            self._check_labels(df_or_table)
         except Exception as exception:
-            print('File at ' + directory + '/' + table_name + '.xlsx contains NaN labels.')
+            print('Table ' + table_name + ' at ' + directory_or_database + ' contains NaN labels.')
             raise exception
 
         with sqlite3.connect(self._database_path) as target_connection:
@@ -146,7 +149,12 @@ class DatabaseImport:
             create_query = self._query_to_create_id_table(table_name, optional_explicit_columns_that_will_be_unique)
             target_cursor.execute(create_query)
 
-            df.to_sql(table_name, target_connection, index_label='id', if_exists='append')
+            df_or_table.to_sql(
+                table_name,
+                target_connection,
+                index_label='id',
+                if_exists='append',
+            )
 
     # pylint: disable=too-many-arguments
     def import_mapping_table(
@@ -306,6 +314,12 @@ class DatabaseImport:
         df = pd.read_excel(excel_file_path, index_col='id')
         df = df[['label', 'description']]
         return df
+
+    @staticmethod
+    def _read_id_table_from_database(database_path, table_name):
+        database = Database(database_path)
+        table = database.id_table(table_name)
+        return table
 
     @staticmethod
     def _read_mapping_table_from_excel_file(
