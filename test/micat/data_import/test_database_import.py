@@ -8,8 +8,6 @@ import sqlite3
 
 import pandas
 
-from mock import patch as original_patch, MagicMock
-
 from micat.data_import.database_import import DatabaseImport
 from micat.table.mapping_table import MappingTable
 from micat.test_utils.isi_mock import (
@@ -434,8 +432,8 @@ class TestPrivateApi:
 
     class TestREadIdTableFromDatabase:
         def mocked_database__init__(self, path):
-            self._path = path
-            self.id_table = Mock('mocked_table')
+            self._path = path  # pylint: disable=attribute-defined-outside-init
+            self.id_table = Mock('mocked_table')  # pylint: disable=attribute-defined-outside-init
 
         @patch(Database.__init__, mocked_database__init__)
         def test_read_id_table_from_database(self, sut):
