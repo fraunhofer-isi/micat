@@ -8,7 +8,9 @@ import os
 
 def load():
     settings_path = _settings_path()
-    with open(settings_path, 'r', encoding='utf-8') as file:
+    absolute_settings_path = os.path.abspath(settings_path)
+    print('Loading settings from ' + absolute_settings_path)
+    with open(absolute_settings_path, 'r', encoding='utf-8') as file:
         settings = json.load(file)
         api_settings = settings['backEnd']['api']
         return api_settings

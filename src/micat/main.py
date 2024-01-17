@@ -16,6 +16,9 @@ from micat.utils import settings as micat_settings
 
 
 def main(arguments=None):
+    # Optionally you can pass a path to the confidential database, for example
+    # ../../../micat_confidential/src/micat_confidential/data/confidential.sqlite
+    # or put the file at ./data/confidential.sqlite
     confidential_database_path = _confidential_database_path(arguments)
     if confidential_database_path is None:
         print('Usage: main.py confidential_database_path')
