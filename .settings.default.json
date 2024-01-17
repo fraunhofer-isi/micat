@@ -1,9 +1,5 @@
 {
   "backEnd": {
-    "sharepoint": {
-      "user": "foo.baa@isi.fraunhofer.de",
-      "password": "1234"
-    },
     "api": {
         "debugMode": false,
         "openBrowserWindow": true
