@@ -1,10 +1,7 @@
-<!--
-© 2024 Fraunhofer-Gesellschaft e.V., München
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
+span
 
 # MICAT
+
 [**MICAT**](https://micatool.eu) – **M**ultiple **I**mpacts **C**alculation **T**ool – is a project that develops a comprehensive approach to estimate Multiple Impacts of Energy Efficiency (MI-EE) by co-creating a free, easy-to-use, scientifically sound online tool.
 
 For more **open source** software provided by [**Fraunhofer ISI**](https://www.isi.fraunhofer.de/) see https://github.com/fraunhofer-isi.
@@ -12,18 +9,15 @@ For more **open source** software provided by [**Fraunhofer ISI**](https://www.i
 ## Documentation
 
 * Online: https://fraunhofer-isi.github.io/micat
-
 * As *.pdf: https://fraunhofer-isi.github.io/micat/latex/micat.pdf
-
 * Project: https://micatool.eu
-
 * Front-end: https://github.com/fraunhofer-isi/micat-vue
 
 ## Badges
 
 Click on some badge to navigate to the corresponding **quality assurance** workflow:
 
-### Documentation 
+### Documentation
 
 [![doc](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/doc.yml) Generates documentation with [Sphinx](https://www.sphinx-doc.org/)
 
@@ -34,7 +28,6 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 ### Test coverage
 
 [![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/fhg-isi/4bb6f7ce335564341b0181db14bdc98f/raw/micat_coverage.json)](https://github.com/fraunhofer-isi/micat/actions/workflows/coverage.yml) Determines test coverage with [pytest-cov](https://github.com/pytest-dev/pytest-cov)
-
 
 ### License compliance
 
@@ -55,3 +48,8 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 <p><a href="https://www.isi.fraunhofer.de/en/publishing-notes.html">PUBLISHING NOTES</a></p>
 
 <p><a href="https://github.com/fraunhofer-isi/micat/blob/main/LICENSES/AGPL-3.0-or-later.txt">LICENSE</a></p>
+
+![This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No. 101000132. ](https://micatool.eu/micat-project-wAssets/img/weblication/wThumbnails/eu-flag-2c3b0581-543393bb@97ll.png)
+
+This project has received funding from the European Union’s Horizon 2020  research and innovation programme under grant agreement No. 101000132.
+
