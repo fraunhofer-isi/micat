@@ -8,6 +8,8 @@ import sqlite3
 
 import pandas
 
+from mock import patch as original_patch, MagicMock
+
 from micat.data_import.database_import import DatabaseImport
 from micat.table.mapping_table import MappingTable
 from micat.test_utils.isi_mock import (
@@ -21,6 +23,8 @@ from micat.test_utils.isi_mock import (
     raises,
 )
 from micat.utils import file
+
+from micat.input.database import Database
 
 
 @fixture(name='sut')
@@ -193,6 +197,20 @@ class TestPublicApi:
                 sut.import_id_table(
                     'mocked_table_name',
                     'mocked_directory',
+                    'mocked_optional_explicit_columns_that_will_be_unique',
+                )
+
+        @patch(
+            DatabaseImport._check_labels,
+            Mock(side_effect=ValueError('mocked_error')),
+        )
+        @patch(print)
+        @patch(DatabaseImport._read_id_table_from_database)
+        def test_with_database_path(self, sut):
+            with raises(ValueError):
+                sut.import_id_table(
+                    'mocked_table_name',
+                    'mocked_database_path.sqlite',
                     'mocked_optional_explicit_columns_that_will_be_unique',
                 )
 
@@ -413,6 +431,16 @@ class TestPrivateApi:
             )
 
             assert result == 'mocked_result'
+
+    class TestREadIdTableFromDatabase:
+        def mocked_database__init__(self, path):
+            self._path = path
+            self.id_table = Mock('mocked_table')
+
+        @patch(Database.__init__, mocked_database__init__)
+        def test_read_id_table_from_database(self, sut):
+            result = sut._read_id_table_from_database('mocked_database_path', 'table_name')
+            assert result == 'mocked_table'
 
     # pylint: disable=attribute-defined-outside-init
     def mocked_mapping_table_init(self, df, name):

@@ -317,8 +317,8 @@ class DatabaseImport:
 
     @staticmethod
     def _read_id_table_from_database(database_path, table_name):
-        database = Database(database_path)
-        table = database.id_table(table_name)
+        sqlite_database = Database(database_path)
+        table = sqlite_database.id_table(table_name)
         return table
 
     @staticmethod
