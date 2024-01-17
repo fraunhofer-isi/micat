@@ -4,6 +4,7 @@
 
 import json
 import os
+from json import JSONDecodeError
 
 
 def load():
@@ -11,7 +12,14 @@ def load():
     absolute_settings_path = os.path.abspath(settings_path)
     print('Loading settings from ' + absolute_settings_path)
     with open(absolute_settings_path, 'r', encoding='utf-8') as file:
-        settings = json.load(file)
+        try:
+            settings = json.load(file)
+        except JSONDecodeError as error:
+            print('Could not load json file:')
+            for line in file:
+                print(line)
+
+            raise error
         api_settings = settings['backEnd']['api']
         return api_settings
 

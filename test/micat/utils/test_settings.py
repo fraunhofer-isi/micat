@@ -6,10 +6,11 @@ import json
 
 # pylint: disable=protected-access
 import os
+from json import JSONDecodeError
 
 from mock import patch as original_patch
 
-from micat.test_utils.isi_mock import Mock, patch, patch_by_string
+from micat.test_utils.isi_mock import Mock, patch, patch_by_string, raises, mock_open
 from micat.utils import settings
 
 mocked_settings = {
@@ -19,12 +20,23 @@ mocked_settings = {
 }
 
 
-@patch(settings._settings_path, 'mocked_path')
-@patch_by_string('builtins.open', Mock())
-@patch(json.load, mocked_settings)
-def test_load():
-    result = settings.load()
-    assert result == 'mocked_api_settings'
+class TestLoad:
+    @patch(settings._settings_path, 'mocked_path')
+    @patch_by_string('builtins.open', Mock())
+    @patch(json.load, mocked_settings)
+    def test_normal_usage(self):
+        result = settings.load()
+        assert result == 'mocked_api_settings'
+
+    mocked_file = Mock()
+
+    @patch(settings._settings_path, 'mocked_path')
+    @patch(json.load, Mock(side_effect=JSONDecodeError('foo', Mock(), Mock())))
+    @patch(print)
+    def test_with_error(self):
+        with original_patch('builtins.open', mock_open(read_data="mocked_file_line_data")):
+            with raises(JSONDecodeError):
+                settings.load()
 
 
 @patch(settings._parent_folder_of_this_file)
