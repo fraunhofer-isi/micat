@@ -1,4 +1,8 @@
-span
+<!--
+© 2024 Fraunhofer-Gesellschaft e.V., München
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 # MICAT
 
@@ -12,6 +16,36 @@ For more **open source** software provided by [**Fraunhofer ISI**](https://www.i
 * As *.pdf: https://fraunhofer-isi.github.io/micat/latex/micat.pdf
 * Project: https://micatool.eu
 * Front-end: https://github.com/fraunhofer-isi/micat-vue
+
+## Usage
+
+Install dependencies with
+
+```
+pip install .[dev]
+```
+
+Start MICAT back-end with
+
+```
+cd src/micat
+python main.py ./data/confidential_dummy.sqlite
+```
+
+Open a browser and enter some API route, for example
+
+```
+http://localhost:5000/id_region
+```
+
+You might want to adapt the
+
+* dummy values in the databse "confidential_dummy.sqlite" and the
+* default data in src/micat/date/public.sqlite
+
+to your needs.
+
+For informations about the front-end see [micat-vue](https://github.com/fraunhofer-isi/micat-vue)
 
 ## Badges
 
