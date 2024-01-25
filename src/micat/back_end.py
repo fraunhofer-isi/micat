@@ -311,7 +311,7 @@ class BackEnd:
         directory_path = os.path.abspath(app.static_folder)  # Path react build
         absolute_path = os.path.join(directory_path, path)
         if path != "" and os.path.exists(absolute_path):
-            # This is used for files existing in 'out' folder (if 'out' is the directory_path)
+            # This is used for files existing in 'static' folder (if 'static' is the directory_path)
             return flask.send_from_directory(os.path.join(directory_path), path)
         else:
             # Redirect to out/index.html (if 'out' is the directory_path)
