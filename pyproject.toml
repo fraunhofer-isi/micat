@@ -52,7 +52,7 @@ lint = [
 ]
 
 format = [
-    'black[d]==24.1.0',
+    'black[d]==24.1.1',
 ]
 
 test = [
