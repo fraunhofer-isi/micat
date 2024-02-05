@@ -32,7 +32,7 @@ dependencies = [
     'flask-cors==4.0.0',
     'flask-compress==1.14',
     'urllib3==2.2.0',
-    'waitress==2.1.2',
+    'waitress==3.0.0',
     'Werkzeug==3.0.1',
     'requests==2.31.0',
     'watchdog==3.0.0',
