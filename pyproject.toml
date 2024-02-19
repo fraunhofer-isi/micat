@@ -40,7 +40,7 @@ dependencies = [
     'pandas==2.2.0',
     'numpy==1.26.4',
     ## excel
-    'XlsxWriter==3.1.9',
+    'XlsxWriter==3.2.0',
     'openpyxl==3.1.2',
 ]
 
