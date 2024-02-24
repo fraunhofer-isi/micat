@@ -37,7 +37,7 @@ dependencies = [
     'requests==2.31.0',
     'watchdog==4.0.0',
     ## scientific calculus
-    'pandas==2.2.0',
+    'pandas==2.2.1',
     'numpy==1.26.4',
     ## excel
     'XlsxWriter==3.2.0',
