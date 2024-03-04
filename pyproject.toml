@@ -28,37 +28,37 @@ license = {text = 'GNU Affero General Public License v3 or later (AGPLv3+)'}
 
 dependencies = [
     ## web
-    'flask==3.0.1',
+    'flask==3.0.2',
     'flask-cors==4.0.0',
     'flask-compress==1.14',
-    'urllib3==2.1.0',
-    'waitress==2.1.2',
+    'urllib3==2.2.1',
+    'waitress==3.0.0',
     'Werkzeug==3.0.1',
     'requests==2.31.0',
-    'watchdog==3.0.0',
+    'watchdog==4.0.0',
     ## scientific calculus
-    'pandas==2.2.0',
-    'numpy==1.26.3',
+    'pandas==2.2.1',
+    'numpy==1.26.4',
     ## excel
-    'XlsxWriter==3.1.9',
+    'XlsxWriter==3.2.0',
     'openpyxl==3.1.2',
 ]
 
 [project.optional-dependencies]
 lint = [
-    'pylint==3.0.3',
+    'pylint==3.1.0',
     'pylint-exit==1.2.0',
-    'dill==0.3.7',
+    'dill==0.3.8',
 ]
 
 format = [
-    'black[d]==23.12.1',
+    'black[d]==24.2.0',
 ]
 
 test = [
-    'pytest==7.4.4',
+    'pytest==8.1.0',
     'pytest-cov==4.1.0',
-    'coverage==7.4.0',
+    'coverage==7.4.3',
     'mock==5.1.0',
 ]
 
@@ -73,14 +73,14 @@ doc = [
 
 data = [   
     'paramiko==3.4.0', # for uploading files to weblication
-    'xlwings==0.30.13; sys_platform == "win32"', # for excel automation to extract values in a loop
+    'xlwings==0.30.15; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
 
 license = [
     'licensecheck==2024',  
     'license_scanner==0.2.5',
     'reuse==3.0.1',
-    'pipreqs==0.4.13',
+    'pipreqs==0.5.0',
     'third-party-license-file-generator==2023.2.22'
 
 ]
