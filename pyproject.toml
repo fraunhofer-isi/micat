@@ -77,7 +77,7 @@ data = [
 ]
 
 license = [
-    'licensecheck==2024',  
+    'licensecheck==2024.1',  
     'license_scanner==0.2.5',
     'reuse==3.0.1',
     'pipreqs==0.5.0',
