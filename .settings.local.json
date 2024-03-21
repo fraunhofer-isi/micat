@@ -1,0 +1,8 @@
+{
+  "backEnd": {
+    "api": {
+        "debugMode": true,
+        "openBrowserWindow": true
+    }
+  }
+}

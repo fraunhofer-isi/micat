@@ -6,15 +6,20 @@ from micat.template import validators
 
 
 def column_names(database, table_name):
-    query = f'''pragma table_info({table_name})'''
+    query = f"""pragma table_info({table_name})"""
     where_clause = {}
     table_ = database.query(query, where_clause)
-    column_names_ = table_['name'].values
+    column_names_ = table_["name"].values
     return column_names_
 
 
-def filter_column_names_by_id_mode(column_names_, id_mode):
+def filter_column_names_by_id_mode(column_names_, id_mode, years=None):
     year_columns = _year_range(id_mode)
+    if years is not None:
+        year_columns = set(year_columns).intersection(years)
+        if len(year_columns) == 0:
+            # No valid years are selected, fall back to default
+            year_columns = _year_range(id_mode)
     filtered_column_names = list(
         filter(lambda column_name: _year_columns_filter(column_name, year_columns), column_names_),
     )
@@ -41,10 +46,10 @@ def table(database, table_name, column_names_=None, where_clause=None):
         or isinstance(column_names_, list)
         and len(column_names_) == 0
     ):
-        column_names_str = '*'
+        column_names_str = "*"
     else:
-        column_names_str = ', '.join('"' + name + '"' for name in column_names_)
-    query = f'SELECT {column_names_str} FROM {table_name}'
+        column_names_str = ", ".join('"' + name + '"' for name in column_names_)
+    query = f"SELECT {column_names_str} FROM {table_name}"
     if where_clause is None:
         where_clause = {}
     table_ = database.query(query, where_clause)

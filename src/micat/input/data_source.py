@@ -41,7 +41,7 @@ class DataSource:
     @staticmethod
     def row_table(id_measure, years, value):
         row_entry = {
-            'id_measure': int(id_measure),
+            "id_measure": int(id_measure),
         }
         for year in years:
             row_entry[str(year)] = value
@@ -112,14 +112,14 @@ class DataSource:
         if measure_final_parameters is None:
             return None
         else:
-            final_parameters = measure_final_parameters.query('id_measure==' + str(id_measure))
+            final_parameters = measure_final_parameters.query("id_measure==" + str(id_measure))
             if final_parameters is None:
                 message = (
-                    'Could not find measure specific final parameter data for id_measure='
+                    "Could not find measure specific final parameter data for id_measure="
                     + str(id_measure)
-                    + '. Please check the format of the user data that has been send to the back-end.'
-                    + 'If measures include parameter data, all of them need to be filled: '
-                    + 'constants, parameters and parameters depending on id_final_energy_carrier.'
+                    + ". Please check the format of the user data that has been send to the back-end."
+                    + "If measures include parameter data, all of them need to be filled: "
+                    + "constants, parameters and parameters depending on id_final_energy_carrier."
                 )
                 raise ValueError(message)
             extrapolated_final_parameters = extrapolation.extrapolate(final_parameters, years)
@@ -130,14 +130,14 @@ class DataSource:
         if measure_parameters is None:
             return None
         else:
-            parameters = measure_parameters.query('id_measure==' + str(id_measure))
+            parameters = measure_parameters.query("id_measure==" + str(id_measure))
             if parameters is None:
                 message = (
-                    'Could not find measure specific parameter data for id_measure='
+                    "Could not find measure specific parameter data for id_measure="
                     + str(id_measure)
-                    + '. Please check the format of the user data that has been send to the back-end.'
-                    + 'If measures include parameter data, all of them need to be filled: '
-                    + 'constants, parameters and parameters depending on id_final_energy_carrier.'
+                    + ". Please check the format of the user data that has been send to the back-end."
+                    + "If measures include parameter data, all of them need to be filled: "
+                    + "constants, parameters and parameters depending on id_final_energy_carrier."
                 )
                 raise ValueError(message)
             extrapolated_parameters = extrapolation.extrapolate(parameters, years)
@@ -148,14 +148,14 @@ class DataSource:
         if measure_constants is None:
             return None
         else:
-            constants = measure_constants.query('id_measure==' + str(id_measure))
+            constants = measure_constants.query("id_measure==" + str(id_measure))
             return constants
 
     @staticmethod
     def _create_global_table(json_array, entry):
         raw_table = Table(json_array)
 
-        data_column_names = ['value']
+        data_column_names = ["value"]
         years = raw_table.years
         if len(years) > 0:
             data_column_names = list(map(str, years))
@@ -163,21 +163,21 @@ class DataSource:
             raw_table = ValueTable(json_array)
         table = raw_table[data_column_names]  # removes extra, optional value columns
 
-        if 'normalization_column_names' in entry:
-            normalization_column_names = entry['normalization_column_names']
+        if "normalization_column_names" in entry:
+            normalization_column_names = entry["normalization_column_names"]
             table = table.normalize(normalization_column_names)
 
-        id_parameter = entry['id_parameter']
+        id_parameter = entry["id_parameter"]
         table = table.insert_index_column(
-            'id_parameter',
+            "id_parameter",
             0,
             id_parameter,
         )
 
-        if 'id_technology' in entry:
-            id_technology = entry['id_technology']
+        if "id_technology" in entry:
+            id_technology = entry["id_technology"]
             table = table.insert_index_column(
-                'id_technology',
+                "id_technology",
                 1,
                 id_technology,
             )
@@ -200,18 +200,18 @@ class DataSource:
             if len(data_array) > 0:
                 entries = DataSource._map_measure_specific_parameter_tables(data_name)
                 for entry in entries:
-                    table_name = entry['table_name']
-                    table_type = entry['table_type']
-                    if table_type == 'ValueTable':
+                    table_name = entry["table_name"]
+                    table_type = entry["table_type"]
+                    if table_type == "ValueTable":
                         table = ValueTable(data_array)
                     else:
                         table = Table(data_array)
 
-                    table = table.insert_index_column('id_measure', 0, int(id_measure))
+                    table = table.insert_index_column("id_measure", 0, int(id_measure))
 
                     if table_name in tables:
                         existing_table = tables[table_name]
-                        if table_type == 'ValueTable':
+                        if table_type == "ValueTable":
                             table = ValueTable.concat([existing_table, table])
                         else:
                             table = Table.concat([existing_table, table])
@@ -227,11 +227,11 @@ class DataSource:
         id_action_type,
         years=None,
     ):
-        table = parameter_table.query('id_measure==' + str(id_measure))
+        table = parameter_table.query("id_measure==" + str(id_measure))
         if years is not None:
             table = extrapolation.extrapolate(table, years)
-        table = table.insert_index_column('id_subsector', 1, id_subsector)
-        table = table.insert_index_column('id_action_type', 2, id_action_type)
+        table = table.insert_index_column("id_subsector", 1, id_subsector)
+        table = table.insert_index_column("id_action_type", 2, id_action_type)
         return table
 
     @staticmethod
@@ -262,7 +262,7 @@ class DataSource:
         measure_specific_table = measure_specific_table.sort()
 
         _id_column_names, _year_column_names, value_column_names = measure_specific_table.column_names
-        if 'value' in value_column_names:
+        if "value" in value_column_names:
             return ValueTable.from_table(measure_specific_table)
         else:
             return measure_specific_table
@@ -297,7 +297,7 @@ class DataSource:
         measure_specific_table = measure_specific_table.sort()
 
         _id_column_names, _year_column_names, value_column_names = measure_specific_table.column_names
-        if 'value' in value_column_names:
+        if "value" in value_column_names:
             return ValueTable.from_table(measure_specific_table)
         else:
             return measure_specific_table
@@ -305,9 +305,9 @@ class DataSource:
     @staticmethod
     def _map_measure_specific_parameter_tables(data_name):
         mapping = {
-            'parameters': [{'table_name': 'measure_parameters', 'table_type': 'Table'}],
-            'finalParameters': [{'table_name': 'measure_final_parameters', 'table_type': 'Table'}],
-            'constants': [{'table_name': 'measure_constants', 'table_type': 'ValueTable'}],
+            "parameters": [{"table_name": "measure_parameters", "table_type": "Table"}],
+            "finalParameters": [{"table_name": "measure_final_parameters", "table_type": "Table"}],
+            "constants": [{"table_name": "measure_constants", "table_type": "ValueTable"}],
         }
         if data_name not in mapping:
             message = 'Parameter data name "' + data_name + '" is not yet implemented!'
@@ -317,94 +317,94 @@ class DataSource:
     @staticmethod
     def _map_global_parameter_tables(sheet_name):
         mapping = {  # sheet_name => (table_name, id_parameter)
-            'FuelSplitCoefficient': [
+            "FuelSplitCoefficient": [
                 {
-                    'table_name': 'eurostat_final_sector_parameters',
-                    'id_parameter': 11,
+                    "table_name": "eurostat_final_sector_parameters",
+                    "id_parameter": 11,
                 },
                 {
-                    'table_name': 'primes_final_sector_parameters',
-                    'id_parameter': 11,
+                    "table_name": "primes_final_sector_parameters",
+                    "id_parameter": 11,
                 },
             ],
-            'EnergyPrice': [  # TO DO #233
+            "EnergyPrice": [  # TO DO #233
                 {
-                    'table_name': 'error',
-                    'id_parameter': -999,
+                    "table_name": "error",
+                    "id_parameter": -999,
                 }
             ],
-            'HeatGeneration': [
+            "HeatGeneration": [
                 {
-                    'table_name': 'eurostat_primary_parameters',
-                    'id_parameter': 20,
-                    'normalization_column_names': [],
+                    "table_name": "eurostat_primary_parameters",
+                    "id_parameter": 20,
+                    "normalization_column_names": [],
                 }
             ],
-            'ElectricityGeneration': [
+            "ElectricityGeneration": [
                 {
-                    'table_name': 'eurostat_primary_parameters',
-                    'id_parameter': 21,
-                    'normalization_column_names': [],
+                    "table_name": "eurostat_primary_parameters",
+                    "id_parameter": 21,
+                    "normalization_column_names": [],
                 }
             ],
-            'MonetisationFactors': [
+            "MonetisationFactors": [
                 {
-                    'mapping': {
-                        'key_column_name': 'Monetisation factor',
-                        'entries': {
-                            'Value of statistical life [€]': [
+                    "mapping": {
+                        "key_column_name": "Monetisation factor",
+                        "entries": {
+                            "Value of statistical life [€]": [
                                 {
-                                    'table_name': 'who_parameters',
-                                    'id_parameter': 37,
+                                    "table_name": "who_parameters",
+                                    "id_parameter": 37,
                                 }
                             ],
-                            'Value of a life year [€]': [
+                            "Value of a life year [€]": [
                                 {
-                                    'table_name': 'who_parameters',
-                                    'id_parameter': 56,
+                                    "table_name": "who_parameters",
+                                    "id_parameter": 56,
                                 }
                             ],
-                            'Value of a lost work day [€]': [
+                            "Value of a lost work day [€]": [
                                 {
-                                    'table_name': 'iiasa_lost_working_days_monetization_factors',
-                                    'id_parameter': 19,
+                                    "table_name": "iiasa_lost_working_days_monetization_factors",
+                                    "id_parameter": 19,
                                 }
                             ],
-                            'Cost per ton of emitted CO2 [€/tCO2]': [
+                            "Cost per ton of emitted CO2 [€/tCO2]": [
                                 {
-                                    'table_name': 'iiasa_greenhouse_gas_emission_monetization_factors',
-                                    'id_parameter': 42,
+                                    "table_name": "iiasa_greenhouse_gas_emission_monetization_factors",
+                                    "id_parameter": 42,
                                 }
                             ],
-                            'Cost of statistical transfer of RES [€/ktoe]': [
+                            "Cost of statistical transfer of RES [€/ktoe]": [
                                 {
-                                    'table_name': 'fraunhofer_constant_parameters',
-                                    'id_parameter': 61,
-                                    'column_names': ['Value'],
+                                    "table_name": "fraunhofer_constant_parameters",
+                                    "id_parameter": 61,
+                                    "column_names": ["Value"],
                                 }
                             ],
-                            'Investment costs of PV [€/MWh]': [
+                            "Investment costs of PV [€/MWh]": [
                                 {
-                                    'table_name': 'irena_technology_parameters',
-                                    'id_parameter': 4,
-                                    'id_technology': 3,
-                                    'column_names': ['Value'],
+                                    "table_name": "irena_technology_parameters",
+                                    "id_parameter": 4,
+                                    "id_technology": 3,
+                                    "column_names": ["Value"],
                                 }
                             ],
-                            'Investment costs of onshore wind [€/MWh]': [
+                            "Investment costs of onshore wind [€/MWh]": [
                                 {
-                                    'table_name': 'irena_technology_parameters',
-                                    'id_parameter': 44,
-                                    'id_technology': 1,
-                                    'column_names': ['Value'],
+                                    "table_name": "irena_technology_parameters",
+                                    "id_parameter": 44,
+                                    "id_technology": 1,
+                                    "column_names": ["Value"],
                                 }
                             ],
-                            'Investment costs of offshore wind [€/MWh]': [
+                            "Investment costs of offshore wind [€/MWh]": [
                                 {
-                                    'table_name': 'irena_technology_parameters',
-                                    'id_parameter': 37,
-                                    'id_technology': 2,
-                                    'column_names': ['Value'],
+                                    "table_name": "irena_technology_parameters",
+                                    "id_parameter": 37,
+                                    "id_technology": 2,
+                                    "column_names": ["Value"],
                                 }
                             ],
                         },
@@ -421,15 +421,15 @@ class DataSource:
     def _parameter_query_from_where_clause(where_clause):
         constraints = []
         for key, value in where_clause.items():
-            if key == 'id_region':
+            if key == "id_region":
                 continue
 
             if isinstance(value, str):
-                constraint = key + ' == ' + value
+                constraint = key + " == " + value
             else:
-                constraint = key + ' in ' + str(value)
+                constraint = key + " in " + str(value)
             constraints.append(constraint)
-        query = ' and '.join(constraints)
+        query = " and ".join(constraints)
         return query
 
     @staticmethod
@@ -442,12 +442,12 @@ class DataSource:
         years=None,
     ):
         entry = {
-            'id_measure': id_measure,
-            'id_subsector': id_subsector,
-            'id_action_type': id_action_type,
+            "id_measure": id_measure,
+            "id_subsector": id_subsector,
+            "id_action_type": id_action_type,
         }
         if years is None:
-            entry['value'] = provide_default(id_measure, id_subsector, id_action_type, savings)
+            entry["value"] = provide_default(id_measure, id_subsector, id_action_type, savings)
             default_table = ValueTable([entry])
         else:
             for year in years:
@@ -475,11 +475,11 @@ class DataSource:
     def _row_to_json_array(row, key_column_name):
         data = row.copy()
         del data[key_column_name]
-        if 'index' in data:
-            del data['index']
-        if 'Value' in data:
-            data['value'] = data['Value']
-            del data['Value']
+        if "index" in data:
+            del data["index"]
+        if "Value" in data:
+            data["value"] = data["Value"]
+            del data["Value"]
         json_array = [data]
         return json_array
 
@@ -525,15 +525,15 @@ class DataSource:
     ):
         id_values = set()
         if measure_final_parameters is not None:
-            id_values_final_parameters = measure_final_parameters.unique_index_values('id_measure')
+            id_values_final_parameters = measure_final_parameters.unique_index_values("id_measure")
             id_values.update(id_values_final_parameters)
 
         if measure_parameters is not None:
-            id_values_parameters = measure_parameters.unique_index_values('id_measure')
+            id_values_parameters = measure_parameters.unique_index_values("id_measure")
             id_values.update(id_values_parameters)
 
         if measure_constants is not None:
-            id_values_constants = measure_constants.unique_index_values('id_measure')
+            id_values_constants = measure_constants.unique_index_values("id_measure")
             id_values.update(id_values_constants)
 
         return list(id_values)
@@ -585,7 +585,7 @@ class DataSource:
     def annual_series_from_value(self, value_table_name, years, where_clause):
         value_table = self.table(value_table_name, where_clause)
         if value_table.values.shape != (1, 1):
-            raise ValueError('Too many values to create an annual series. Please check your where clause.')
+            raise ValueError("Too many values to create an annual series. Please check your where clause.")
         _annual_series_ = DataSource.value_to_annual_series(value_table.values[0][0], years)
         return _annual_series_
 
@@ -608,9 +608,9 @@ class DataSource:
         # measure_specific_parameter
         # instead.
 
-        measure_final_parameters = self.table('measure_final_parameters')
-        measure_parameters = self.table('measure_parameters')
-        measure_constants = self.table('measure_constants')
+        measure_final_parameters = self.table("measure_final_parameters")
+        measure_parameters = self.table("measure_parameters")
+        measure_constants = self.table("measure_constants")
         has_no_measure_specific_parameters = (
             measure_final_parameters is None and measure_parameters is None and measure_constants is None
         )
@@ -658,8 +658,8 @@ class DataSource:
         # id_subsector etc. If that changes, we also need to read corresponding tables
         # 'measure_final_parameters' etc.
 
-        annual_table = self.table('measure_parameters', {'id_parameter': str(id_parameter)})
-        constant_table = self.table('measure_constants', {'id_parameter': str(id_parameter)})
+        annual_table = self.table("measure_parameters", {"id_parameter": str(id_parameter)})
+        constant_table = self.table("measure_constants", {"id_parameter": str(id_parameter)})
         if annual_table is None and constant_table is None:
             # No measure specific data is available
             measure_specific_table = DataSource._loop_over_measures_and_collect_parameters(
@@ -672,14 +672,14 @@ class DataSource:
             return measure_specific_table
         else:
             if constant_table is None:
-                parameter_table = annual_table.reduce('id_parameter', [id_parameter])
+                parameter_table = annual_table.reduce("id_parameter", [id_parameter])
             else:
-                parameter_table = constant_table.reduce('id_parameter', [id_parameter])
-            del parameter_table['id_parameter']
+                parameter_table = constant_table.reduce("id_parameter", [id_parameter])
+            del parameter_table["id_parameter"]
 
-            if parameter_table.has_index_column('id_measure'):
+            if parameter_table.has_index_column("id_measure"):
                 # Measure specific data has been specified by users
-                measure_ids_for_which_extra_data_exists = parameter_table.unique_index_values('id_measure')
+                measure_ids_for_which_extra_data_exists = parameter_table.unique_index_values("id_measure")
                 measure_specific_table = DataSource._loop_over_measures_and_collect_parameters(
                     final_energy_saving_by_action_type,
                     measure_ids_for_which_extra_data_exists,
@@ -696,7 +696,7 @@ class DataSource:
                 # In that case it would not make sense to include id_measure in the database tables. The
                 # fallback values might be the same for all measures or could be mapped using
                 # id_subsector and id_action_type.
-                raise ValueError('Not yet implemented')
+                raise ValueError("Not yet implemented")
 
     def measure_specific_parameter_using_default_table(
         self,
@@ -705,7 +705,7 @@ class DataSource:
         parameter_default_values,
     ):
         years = final_energy_saving_by_action_type.years
-        default_values = parameter_default_values.reduce('id_parameter', id_parameter)
+        default_values = parameter_default_values.reduce("id_parameter", id_parameter)
         extrapolated_default_values = extrapolation.extrapolate_series(default_values, years)
 
         def provide_default_value(_id_measure, _id_subsector, _id_action_type, year, _saving):
@@ -728,15 +728,15 @@ class DataSource:
     ):
         where_clause = {}
         if id_region is not None:
-            where_clause['id_region'] = str(id_region)
+            where_clause["id_region"] = str(id_region)
         parameter_table = self.table(table_name, where_clause)
-        raw_parameter = parameter_table.reduce('id_parameter', id_parameter)
+        raw_parameter = parameter_table.reduce("id_parameter", id_parameter)
 
         if isinstance(raw_parameter, ValueTable):
             return raw_parameter
 
         if years is None:
-            message = 'Please specify the years if you want to query an annual parameter table.'
+            message = "Please specify the years if you want to query an annual parameter table."
             raise AttributeError(message)
 
         parameter = extrapolation.extrapolate(raw_parameter, years)
@@ -764,9 +764,9 @@ class DataSource:
         json_entry,
         entry,
     ):
-        mapping = entry['mapping']
-        key_column_name = mapping['key_column_name']
-        entries = mapping['entries']
+        mapping = entry["mapping"]
+        key_column_name = mapping["key_column_name"]
+        entries = mapping["entries"]
         for row in json_entry:
             key = row[key_column_name]
             mapping_entries = entries[key]
@@ -781,8 +781,8 @@ class DataSource:
         json_entry,
         entry,
     ):
-        table_name = entry['table_name']
-        if table_name == 'error':
+        table_name = entry["table_name"]
+        if table_name == "error":
             print("Not yet implemented")
             return tables
 
@@ -801,19 +801,19 @@ class DataSource:
     def _read_default_table(self, table_name, entry):
         table = self._table_from_database(table_name, {})
         if table is None:
-            raise KeyError('Could not find table ' + table_name)
+            raise KeyError("Could not find table " + table_name)
         id_column_names, _, _ = table.column_names
 
-        if 'id_parameter' not in id_column_names:
-            raise KeyError('Database table ' + table_name + ' does not include id_parameter.')
+        if "id_parameter" not in id_column_names:
+            raise KeyError("Database table " + table_name + " does not include id_parameter.")
 
-        if 'id_technology' in entry:
-            if 'id_technology' not in id_column_names:
-                raise KeyError('Database table ' + table_name + ' does not include id_technology.')
+        if "id_technology" in entry:
+            if "id_technology" not in id_column_names:
+                raise KeyError("Database table " + table_name + " does not include id_technology.")
 
-        if 'id_region' in id_column_names:
-            table = table.reduce('id_region', [self._id_region])
-            del table['id_region']
+        if "id_region" in id_column_names:
+            table = table.reduce("id_region", [self._id_region])
+            del table["id_region"]
 
         return table
 
@@ -823,7 +823,7 @@ class DataSource:
             if len(json_entry) > 0:
                 entries = DataSource._map_global_parameter_tables(sheet_name)
                 for entry in entries:
-                    if 'mapping' in entry:
+                    if "mapping" in entry:
                         tables = self._add_global_tables_from_mapping(
                             tables,
                             json_entry,
@@ -855,7 +855,7 @@ class DataSource:
                     return None
 
     def _default_annual_parameters(self, parameter_table_name, id_parameter, years):
-        where_clause = {'id_parameter': str(id_parameter)}
+        where_clause = {"id_parameter": str(id_parameter)}
         raw_default_parameters = self.table(parameter_table_name, where_clause)
         default_parameters = extrapolation.extrapolate(raw_default_parameters, years)
         return default_parameters

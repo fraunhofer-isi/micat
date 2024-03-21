@@ -10,17 +10,17 @@ from json import JSONDecodeError
 def load():
     settings_path = _settings_path()
     absolute_settings_path = os.path.abspath(settings_path)
-    print('Loading settings from ' + absolute_settings_path)
-    with open(absolute_settings_path, 'r', encoding='utf-8') as file:
+    print("Loading settings from " + absolute_settings_path)
+    with open(absolute_settings_path, "r", encoding="utf-8") as file:
         try:
             settings = json.load(file)
         except JSONDecodeError as error:
-            print('Could not load json file:')
+            print("Could not load json file:")
             for line in file:
                 print(line)
 
             raise error
-        api_settings = settings['backEnd']['api']
+        api_settings = settings["backEnd"]["api"]
         return api_settings
 
 
@@ -35,13 +35,16 @@ def _settings_path():
 
 
 def _search_settings_path(reference_folder):
-    prefixes = ['', '..', '../..', '../../..', '../../../..']
+    prefixes = ["", "..", "../..", "../../..", "../../../.."]
     for prefix in prefixes:
-        settings_path = os.path.join(reference_folder, prefix, '.settings.json')
+        settings_path = os.path.join(reference_folder, prefix, ".settings.json")
         if os.path.exists(settings_path):
             return settings_path
 
-        default_settings_path = os.path.join(reference_folder, prefix, '.settings.default.json')
+        local_settings_path = os.path.join(reference_folder, prefix, ".settings.local.json")
+        if os.path.exists(local_settings_path):  # pragma: no cover
+            return local_settings_path
+        default_settings_path = os.path.join(reference_folder, prefix, ".settings.default.json")
         if os.path.exists(default_settings_path):
             return default_settings_path
 

@@ -30,8 +30,8 @@ class BackEnd:
         injected_flask,
         _front_end_port,
         debug_mode=False,
-        database_path='./data/public.sqlite',
-        confidential_database_path='./data/confidential.sqlite',
+        database_path="./data/public.sqlite",
+        confidential_database_path="./data/confidential.sqlite",
     ):
         self._serve = injected_serve
         self._flask = injected_flask
@@ -39,7 +39,7 @@ class BackEnd:
         self._cache = {}
         self._database = Database(database_path)
         self._confidential_database = Database(confidential_database_path)
-        self._static_path = './static'
+        self._static_path = "../../static"
         self._app = self.create_application()
         # allowed_origins = [
         #    "http://127.0.0.1:" + str(front_end_port),
@@ -48,8 +48,8 @@ class BackEnd:
         # ]
         CORS(self._app, resources={r"/*": {"origins": "*"}})  # allowed_origins}})
 
-    def start(self, host='127.0.0.1', application_port=5000):
-        print('Starting flask application at ', host, ':', application_port)
+    def start(self, host="127.0.0.1", application_port=8000):
+        print("Starting flask application at ", host, ":", application_port)
         if self._debug_mode:
             self._app.run(host=host, port=application_port, debug=True)
         else:
@@ -67,7 +67,7 @@ class BackEnd:
 
         # Reraise exceptions for easier bug finding, also see
         # https://flask.palletsprojects.com/en/2.0.x/config/#PROPAGATE_EXCEPTIONS
-        app.config['PROPAGATE_EXCEPTIONS'] = True
+        app.config["PROPAGATE_EXCEPTIONS"] = True
 
         # For CORS settings / cross-origin access, see function _create_response_from_string
 
@@ -77,51 +77,51 @@ class BackEnd:
             # Also see
             # https://javascript.info/fetch-crossorigin
             # https://github.com/corydolphin/flask-cors/issues/292#issuecomment-883929183
-            if self._flask.request.method.lower() == 'options':
-                response = self._create_response_from_string('')
+            if self._flask.request.method.lower() == "options":
+                response = self._create_response_from_string("")
                 return response
             else:
                 return None
 
         # API routes for id tables
 
-        @app.route('/id_mode')
+        @app.route("/id_mode")
         def id_mode():
-            return self._get_table('id_mode', self._flask.request)
+            return self._get_table("id_mode", self._flask.request)
 
-        @app.route('/id_region')
+        @app.route("/id_region")
         def id_region():
-            return self._get_table('id_region', self._flask.request)
+            return self._get_table("id_region", self._flask.request)
 
-        @app.route('/id_subsector')
+        @app.route("/id_subsector")
         def id_subsector():
-            return self._get_table('id_subsector', self._flask.request)
+            return self._get_table("id_subsector", self._flask.request)
 
-        @app.route('/id_action_type')
+        @app.route("/id_action_type")
         def id_action_type():
-            return self._get_table('id_action_type', self._flask.request)
+            return self._get_table("id_action_type", self._flask.request)
 
-        @app.route('/id_final_energy_carrier')
+        @app.route("/id_final_energy_carrier")
         def id_final_energy_carrier():
-            return self._get_table('id_final_energy_carrier', self._flask.request)
+            return self._get_table("id_final_energy_carrier", self._flask.request)
 
-        @app.route('/id_indicator_group')
+        @app.route("/id_indicator_group")
         def id_indicator_group():
-            return self._get_table('id_indicator_group', self._flask.request)
+            return self._get_table("id_indicator_group", self._flask.request)
 
-        @app.route('/id_indicator')
+        @app.route("/id_indicator")
         def id_indicator():
-            return self._get_table('id_indicator', self._flask.request)
+            return self._get_table("id_indicator", self._flask.request)
 
         # API route for mapping table
 
-        @app.route('/mapping__subsector__action_type')
+        @app.route("/mapping__subsector__action_type")
         def mapping__subsector__action_type():
-            return self._get_table('mapping__subsector__action_type', self._flask.request)
+            return self._get_table("mapping__subsector__action_type", self._flask.request)
 
         # API routes for calculations and templates
 
-        @app.route('/single_description')
+        @app.route("/single_description")
         def single_description():
             # Example query:
             # https://micatool-dev.eu/description?key=foo
@@ -130,7 +130,7 @@ class BackEnd:
             json_string = self._flask.json.dumps(json_or_string_result)
             return self._create_response_from_string(json_string)
 
-        @app.route('/descriptions')
+        @app.route("/descriptions")
         def descriptions():
             # Example query:
             # https://micatool-dev.eu/descriptions
@@ -138,7 +138,7 @@ class BackEnd:
             json_string = self._flask.json.dumps(json_result)
             return self._create_response_from_string(json_string)
 
-        @app.route('/indicator_data', methods=['POST'])
+        @app.route("/indicator_data", methods=["POST"])
         def indicator_data():
             # Example query:
             # URL: https://micatool-dev.eu/indicator_data?id_mode=1&id_region=2
@@ -174,7 +174,7 @@ class BackEnd:
             response = self._create_response_from_string(json_string)
             return response
 
-        @app.route('/parameters')
+        @app.route("/parameters")
         def parameters():
             # Returns the global parameter template as Excel file.
             # Example query:
@@ -183,7 +183,7 @@ class BackEnd:
             parameter_bytes = parameters_template.parameters_template(request, self._database)
             return self.create_excel_file_response(parameter_bytes, request)
 
-        @app.route('/json_parameters')
+        @app.route("/json_parameters")
         def json_parameters():
             # Returns the global parameter template as json
             # Example query:
@@ -195,7 +195,7 @@ class BackEnd:
             parameter_bytes = parameters_template.parameters_template(request, self._database)
             return self.create_json_parameters_response(parameter_bytes, request)
 
-        @app.route('/measure', methods=['POST'])
+        @app.route("/measure", methods=["POST"])
         def measure():
             # Returns the measure specific parameter template as Excel file; also includes the passed savings.
             # Example query:
@@ -235,9 +235,9 @@ class BackEnd:
                 self._database,
                 self._confidential_database,
             )
-            return self.create_excel_file_response(measure_bytes, request, 'filename')
+            return self.create_excel_file_response(measure_bytes, request, "filename")
 
-        @app.route('/json_measure', methods=['POST'])
+        @app.route("/json_measure", methods=["POST"])
         def json_measure():
             # Returns the measure specific parameter template as json; also includes the passed savings.
             # Example query:
@@ -257,7 +257,7 @@ class BackEnd:
 
         # Deprecated API routes
 
-        @app.route('/savings', methods=['POST'])
+        @app.route("/savings", methods=["POST"])
         def savings():
             # Example query:
             # https://micatool-dev.eu/savings?id_mode=1&id_region=0&
@@ -272,7 +272,7 @@ class BackEnd:
             savings_bytes = savings_template.savings_template(request, self._database)
             return self.create_excel_file_response(savings_bytes, request)
 
-        @app.route('/<path:path>')
+        @app.route("/<path:path>")
         def catch_all(path):
             response = BackEnd._catch_all(path, self._app, self._flask)
             return response
@@ -305,8 +305,8 @@ class BackEnd:
 
     @staticmethod
     def _catch_all(path, app, flask):
-        if 'index.html' in path:
-            path = 'index.html'
+        if "index.html" in path:
+            path = "index.html"
 
         directory_path = os.path.abspath(app.static_folder)  # Path react build
         absolute_path = os.path.join(directory_path, path)
@@ -315,16 +315,16 @@ class BackEnd:
             return flask.send_from_directory(os.path.join(directory_path), path)
         else:
             # Redirect to out/index.html (if 'out' is the directory_path)
-            return flask.send_from_directory(os.path.join(directory_path), 'index.html')
+            return flask.send_from_directory(os.path.join(directory_path), "index.html")
 
     @staticmethod
     def create_json_parameters_response(parameter_bytes, request):
-        orient = request.args.get('orient', 'records')
-        allowed_orients = ['split', 'records', 'index', 'columns', 'values', 'table']
+        orient = request.args.get("orient", "records")
+        allowed_orients = ["split", "records", "index", "columns", "values", "table"]
         # for the meaning of orients also see
         # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_json.html
         if orient not in allowed_orients:
-            orient = 'records'
+            orient = "records"
         df_dict = pd.read_excel(parameter_bytes, sheet_name=None)
         for sheet_name in df_dict:
             df_dict[sheet_name] = json.loads(df_dict[sheet_name].to_json(orient=orient))
@@ -335,33 +335,33 @@ class BackEnd:
         class_name = exception.__class__.__qualname__
         stack_trace = traceback.format_exc()
         error = {
-            'type': class_name,
-            'stackTrace': stack_trace,
+            "type": class_name,
+            "stackTrace": stack_trace,
         }
 
         args = exception.args
         if len(args) > 0:
             index = 0
             for arg in args:
-                key = 'arg' + str(index)
+                key = "arg" + str(index)
                 error[key] = str(arg)
                 index += 1
-        if hasattr(exception, 'name'):
-            error['name'] = exception.name
-        if hasattr(exception, 'description'):
-            error['description'] = exception.description
-        if hasattr(exception, 'code'):
-            error['code'] = exception.code
+        if hasattr(exception, "name"):
+            error["name"] = exception.name
+        if hasattr(exception, "description"):
+            error["description"] = exception.description
+        if hasattr(exception, "code"):
+            error["code"] = exception.code
 
-        json_object = {'error': error}
+        json_object = {"error": error}
         return json_object
 
     @staticmethod
     def _log_json_exception(exception_as_json):
-        error = exception_as_json['error']
-        logging.error('## Exception occurred while handling request ##')
-        logging.error(error['type'])
-        logging.error(error['stackTrace'])
+        error = exception_as_json["error"]
+        logging.error("## Exception occurred while handling request ##")
+        logging.error(error["type"])
+        logging.error(error["stackTrace"])
 
     def _get_table(self, table_name, http_request):
         key = table_name + str(http_request.query_string)
@@ -377,7 +377,7 @@ class BackEnd:
 
     def _get_table_directly(self, table_name, http_request):
         where_clause = self._parse_request(http_request)
-        query = 'SELECT * FROM `' + table_name + '`'
+        query = "SELECT * FROM `" + table_name + "`"
         return self._database.json_string(query, where_clause)
 
     def _empty_cache_if_is_full(self):
@@ -394,7 +394,7 @@ class BackEnd:
 
     def _create_response_from_string(self, json_string):
         response = self._flask.Response(json_string)
-        response.content_type = 'application/json'
+        response.content_type = "application/json"
         # Add the list of allowed hosts that are allowed to query the API into the "origins" list.
         # Use '*' if you want to allow all hosts during development or to allow
         # accessing the API for all IPs (perhaps a security issue).
@@ -402,17 +402,17 @@ class BackEnd:
         # We do not need the extra dependency flask_cors.
         # Also see
         # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/66
-        response.headers.set('Access-Control-Allow-Origin', '*')
-        response.headers.set('Content-Type', 'application/json')
-        response.headers.set('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
-        response.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        response.headers.set('Access-Control-Expose-Headers', '*')
+        response.headers.set("Access-Control-Allow-Origin", "*")
+        response.headers.set("Content-Type", "application/json")
+        response.headers.set("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS")
+        response.headers.set("Access-Control-Allow-Headers", "Content-Type,Authorization")
+        response.headers.set("Access-Control-Expose-Headers", "*")
         return response
 
     def create_excel_file_response(self, excel_bytes, request, file_name=None):
         if not file_name:
-            file_name = request.args['file_name']
+            file_name = request.args["file_name"]
         output = self._flask.make_response(excel_bytes.getvalue())
-        output.headers['Content-Disposition'] = 'attachment; filename=' + file_name
-        output.headers['Content-type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        output.headers["Content-Disposition"] = "attachment; filename=" + file_name
+        output.headers["Content-type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         return output

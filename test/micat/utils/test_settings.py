@@ -10,7 +10,7 @@ from json import JSONDecodeError
 
 from mock import patch as original_patch
 
-from micat.test_utils.isi_mock import Mock, patch, patch_by_string, raises, mock_open
+from micat.test_utils.isi_mock import Mock, mock_open, patch, patch_by_string, raises
 from micat.utils import settings
 
 mocked_settings = {

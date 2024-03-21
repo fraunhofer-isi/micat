@@ -9,6 +9,7 @@ import sqlite3
 import pandas
 
 from micat.data_import.database_import import DatabaseImport
+from micat.input.database import Database
 from micat.table.mapping_table import MappingTable
 from micat.test_utils.isi_mock import (
     Mock,
@@ -21,8 +22,6 @@ from micat.test_utils.isi_mock import (
     raises,
 )
 from micat.utils import file
-
-from micat.input.database import Database
 
 
 @fixture(name='sut')

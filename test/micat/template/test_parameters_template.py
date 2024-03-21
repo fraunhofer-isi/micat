@@ -21,38 +21,38 @@ from micat.template import (
 from micat.test_utils.isi_mock import Mock, patch
 
 mocked_database_in_args = mocks.mocked_database()
-mocked_columns = ['id', 'label', 'description']
-mocked_row = ['mocked_id', 'mocked_label', 'mocked_description']
+mocked_columns = ["id", "label", "description"]
+mocked_row = ["mocked_id", "mocked_label", "mocked_description"]
 mocked_template_args = mocks.mocked_template_args()
 
 
 @patch(
     parameters_template._template_args,
-    'mocked_template_args',
+    "mocked_template_args",
 )
 @patch(
     parameters_template._parameters_template,
-    'mocked_result',
+    "mocked_result",
 )
 def test_parameters_template():
     result = parameters_template.parameters_template(
-        'mocked_request',
-        'mocked_database',
+        "mocked_request",
+        "mocked_database",
     )
-    assert result == 'mocked_result'
+    assert result == "mocked_result"
 
 
 @patch(
     utils.api.parse_request,
-    {'id_mode': '1', 'id_region': '2'},
+    {"id_mode": "1", "id_region": "2"},
 )
 def test_template_args():
-    result = parameters_template._template_args('mocked_request')
-    assert result['id_mode'] == 1
-    assert result['id_region'] == 2
+    result = parameters_template._template_args(Mock())
+    assert result["id_mode"] == 1
+    assert result["id_region"] == 2
 
 
-@patch(io.BytesIO, 'mocked_io')
+@patch(io.BytesIO, "mocked_io")
 @patch(
     xlsx_utils.empty_workbook,
     mocks.mocked_workbook(),
@@ -64,7 +64,7 @@ def test_template_args():
 class TestParametersTemplate:
     def test_true_condition(self):
         mocked_args = {
-            'coefficient_sheets': ['FuelSplitCoefficient', 'ElectricityGeneration', 'MonetisationFactors'],
+            "coefficient_sheets": ["FuelSplitCoefficient", "ElectricityGeneration", "MonetisationFactors"],
         }
         mocked_database = Mock()
         mocked_database.id_table = Mock()
@@ -73,11 +73,11 @@ class TestParametersTemplate:
             mocked_args,
             mocked_database,
         )
-        assert output == 'mocked_io'
+        assert output == "mocked_io"
 
     def test_false_condition(self):
         mocked_args = {
-            'coefficient_sheets': ['mocked_sheet_name3', 'mocked_sheet_name4'],
+            "coefficient_sheets": ["mocked_sheet_name3", "mocked_sheet_name4"],
         }
         mocked_database = Mock()
         mocked_database.id_table = Mock()
@@ -86,7 +86,7 @@ class TestParametersTemplate:
             mocked_args,
             mocked_database,
         )
-        assert output != 'not_mocked_io'
+        assert output != "not_mocked_io"
 
 
 @patch(parameters_template._add_parameters_header)
@@ -98,28 +98,28 @@ def test_monetization_create_parameter_sheet():
     with patch(parameters_template._monetization_parameters_table) as mocked_monetization_parameter_table:
         parameters_template._monetization_create_parameter_sheet(
             mocked_workbook,
-            'MonetizationParameters',
+            "MonetizationParameters",
             mocked_template_args,
-            'mocked_database',
+            "mocked_database",
         )
         mocked_monetization_parameter_table.assert_called_once()
 
 
 mocked_dataframe = Mock()
-mocked_dataframe.fillna = Mock(return_value='mocked_monetization_parameter_table')
+mocked_dataframe.fillna = Mock(return_value="mocked_monetization_parameter_table")
 
 
-@patch(database_utils.parameter_table, 'mocked_parameter_table')
+@patch(database_utils.parameter_table, "mocked_parameter_table")
 @patch(parameters_template._construct_monetization_parameter_table, Mock(return_value=mocked_dataframe))
 def test_monetization_parameters_table():
-    result = parameters_template._monetization_parameters_table('mocked_database', 0, 0)
-    assert result == 'mocked_monetization_parameter_table'
+    result = parameters_template._monetization_parameters_table("mocked_database", 0, 0)
+    assert result == "mocked_monetization_parameter_table"
 
 
 def test_construct_monetization_parameter_table():
     def _mocked_monetization_parameter_table(value):
         mocked_monetization_parameter_table = pd.DataFrame(
-            [{'Parameter': 'mocked_parameter_' + str(value), 'value': value}]
+            [{"Parameter": "mocked_parameter_" + str(value), "value": value}]
         )
         return mocked_monetization_parameter_table
 
@@ -128,12 +128,12 @@ def test_construct_monetization_parameter_table():
         side_effect=[_mocked_monetization_parameter_table(1), _mocked_monetization_parameter_table(2)]
     )
     mocked_parameter_tables = {
-        'mocked_parameter_1': mocked_table,
-        'mocked_parameter_2': mocked_table,
+        "mocked_parameter_1": mocked_table,
+        "mocked_parameter_2": mocked_table,
     }
     result = parameters_template._construct_monetization_parameter_table(mocked_parameter_tables)
-    assert result.loc[0, 'Value'] == 1
-    assert result.loc[1, 'Value'] == 2
+    assert result.loc[0, "Value"] == 1
+    assert result.loc[1, "Value"] == 2
 
 
 @patch(parameters_template._add_parameters_header)
@@ -144,11 +144,11 @@ def test_subsector_final_create_parameter_sheet():
     with patch(parameters_template._subsector_final_add_parameter_data) as mocked_add_data:
         parameters_template._subsector_final_create_parameter_sheet(
             mocked_workbook,
-            'mocked_sheet_name',
+            "mocked_sheet_name",
             mocked_template_args,
-            'mocked_database',
-            'mocked_id_subsector_table',
-            'mocked_id_final_energy_carrier_table',
+            "mocked_database",
+            "mocked_id_subsector_table",
+            "mocked_id_final_energy_carrier_table",
         )
 
         mocked_add_data.assert_called_once()
@@ -164,10 +164,10 @@ class TestPrimaryCreateParameterSheet:
         with patch(parameters_template._primary_add_parameter_data) as mocked_add_data:
             parameters_template._primary_create_parameter_sheet(
                 mocked_workbook,
-                'ElectricityGeneration',
+                "ElectricityGeneration",
                 mocked_template_args,
-                'mocked_database',
-                'mocked_id_primary_energy_carrier_table',
+                "mocked_database",
+                "mocked_id_primary_energy_carrier_table",
             )
             mocked_add_data.assert_called_once()
 
@@ -179,10 +179,10 @@ class TestPrimaryCreateParameterSheet:
         with patch(parameters_template._primary_add_parameter_data) as mocked_add_data:
             parameters_template._primary_create_parameter_sheet(
                 mocked_workbook,
-                'HeatGeneration',
+                "HeatGeneration",
                 mocked_template_args,
-                'mocked_database',
-                'mocked_id_primary_energy_carrier_table',
+                "mocked_database",
+                "mocked_id_primary_energy_carrier_table",
             )
 
             mocked_add_data.assert_called_once()
@@ -213,7 +213,7 @@ def test_add_parameters_header():
     mocked_workbook = mocks.mocked_workbook()
 
     with patch(parameters_template._header_format) as mocked_header_format:
-        parameters_template._add_parameters_header(mocked_parameters_sheet, mocked_workbook, ['mocked_header_column'])
+        parameters_template._add_parameters_header(mocked_parameters_sheet, mocked_workbook, ["mocked_header_column"])
         assert mocked_header_format.called
         assert mocked_workbook.add_format.called
         assert mocked_parameters_sheet.set_row.called
@@ -230,10 +230,10 @@ def test_subsector_final_add_parameters_data_validation(*args):
 
     parameters_template._subsector_final_add_parameters_data_validation(
         mocked_parameters_sheet,
-        'mocked_sheet_name',
-        'mocked_id_mode',
-        'mocked_id_subsectors_table',
-        'mocked_id_final_energy_carriers_table',
+        "mocked_sheet_name",
+        "mocked_id_mode",
+        "mocked_id_subsectors_table",
+        "mocked_id_final_energy_carriers_table",
     )
 
     assert mocked_parameters_sheet.data_validation.call_count == 6
@@ -251,13 +251,13 @@ def test_subsector_final_add_parameter_data(*args):  # pylint: disable=unused-ar
 
     result = parameters_template._subsector_final_add_parameter_data(
         mocked_sheet,
-        'mocked_database',
-        'mocked_table_name',
-        'mocked_id_mode',
-        'mocked_id_region',
-        'mocked_id_parameter',
-        'mocked_id_subsector_table',
-        'mocked_id_final_energy_carrier_table',
+        "mocked_database",
+        "mocked_table_name",
+        "mocked_id_mode",
+        "mocked_id_region",
+        "mocked_id_parameter",
+        "mocked_id_subsector_table",
+        "mocked_id_final_energy_carrier_table",
     )
 
     assert result is not None
@@ -272,9 +272,9 @@ def test_primary_add_parameters_data_validation(*args):
 
     parameters_template._primary_add_parameters_data_validation(
         mocked_parameters_sheet,
-        'mocked_sheet_name',
-        'mocked_id_mode',
-        'mocked_id_primary_energy_carriers_table',
+        "mocked_sheet_name",
+        "mocked_id_mode",
+        "mocked_id_primary_energy_carriers_table",
     )
 
     assert mocked_parameters_sheet.data_validation.call_count == 4
@@ -290,7 +290,7 @@ def test_monetization_add_parameters_data_validation(*args):
 
     parameters_template._monetization_add_parameters_data_validation(
         mocked_parameters_sheet,
-        'mocked_id_mode',
+        "mocked_id_mode",
     )
 
     assert mocked_parameters_sheet.data_validation.call_count == 4
@@ -308,12 +308,12 @@ def test_primary_add_parameter_data(*args):  # pylint: disable=unused-argument
 
     result = parameters_template._primary_add_parameter_data(
         mocked_sheet,
-        'mocked_database',
-        'mocked_table_name',
-        'mocked_id_mode',
-        'mocked_id_region',
-        'mocked_id_parameter',
-        'mocked_id_primary_energy_carrier_table',
+        "mocked_database",
+        "mocked_table_name",
+        "mocked_id_mode",
+        "mocked_id_region",
+        "mocked_id_parameter",
+        "mocked_id_primary_energy_carrier_table",
     )
 
     assert result is not None

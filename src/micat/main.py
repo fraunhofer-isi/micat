@@ -21,18 +21,18 @@ def main(arguments=None):
     # or put the file at ./data/confidential.sqlite
     confidential_database_path = _confidential_database_path(arguments)
     if confidential_database_path is None:
-        print('Usage: main.py confidential_database_path')
+        print("Usage: main.py confidential_database_path")
         return
 
     # workaround to fix issue with relative path to python in PyCharm for debugging
     # Also see
     # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/363
-    sys.executable = sys.executable.replace('micat\\App', 'micat\\..\\..\\App')
+    sys.executable = sys.executable.replace("micat\\App", "micat\\..\\..\\App")
 
-    host = 'localhost'
+    host = "localhost"
     front_end_host = host  # 'frontend.micat-project.eu'  # host
-    front_end_route = '/'  # ''
-    port = 5000
+    front_end_route = "/"  # ''
+    port = 8000
     front_end_port = 3000  # 80
     settings = micat_settings.load()
     _open_browser_if_enabled(
@@ -44,7 +44,7 @@ def main(arguments=None):
 
     database_path = _database_path()
 
-    debug_mode = settings['debugMode']
+    debug_mode = settings["debugMode"]
     back_end = BackEnd(
         serve,
         flask,
@@ -64,15 +64,15 @@ def _database_path():
     current_folder = os.path.dirname(__file__)
     database_path = os.path.join(
         current_folder,
-        'data',
-        'public.sqlite',
+        "data",
+        "public.sqlite",
     )
     return database_path
 
 
 def _confidential_database_path(arguments):
     if arguments is None:
-        confidential_database_path = './data/confidential.sqlite'
+        confidential_database_path = "./data/confidential.sqlite"
     else:
         if len(arguments) != 2:
             return None
@@ -93,7 +93,7 @@ def _open_browser_if_enabled(
     front_end_route,
     settings,
 ):
-    open_browser_window = settings['openBrowserWindow']
+    open_browser_window = settings["openBrowserWindow"]
     if open_browser_window:
         front_end_url = _front_end_url(
             host,
@@ -108,10 +108,10 @@ def _front_end_url(
     front_end_port,
     front_end_route,
 ):
-    front_end_prefix = 'http:/' + host + ':' + str(front_end_port)
+    front_end_prefix = "http:/" + host + ":" + str(front_end_port)
     url = front_end_prefix + front_end_route
     return url
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":  # pragma: no cover
     main(sys.argv)

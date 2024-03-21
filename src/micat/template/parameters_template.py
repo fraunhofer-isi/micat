@@ -21,35 +21,36 @@ def parameters_template(request, database):
 
 def _template_args(request):
     query = api.parse_request(request)
-    id_mode = int(query['id_mode'])
-    id_region = int(query['id_region'])
-
+    id_mode = int(query["id_mode"])
+    id_region = int(query["id_region"])
     args = {
-        'coefficient_sheets': [
-            'FuelSplitCoefficient',
-            'EnergyPrice',
-            'ElectricityGeneration',
-            'HeatGeneration',
-            'MonetisationFactors',
+        "coefficient_sheets": [
+            "FuelSplitCoefficient",
+            "EnergyPrice",
+            "ElectricityGeneration",
+            "HeatGeneration",
+            "MonetisationFactors",
         ],
-        'id_mode': id_mode,
-        'id_region': id_region,
-        'sheet_password': 'micat',
-        'options_sheet_name': 'Options',
+        "id_mode": id_mode,
+        "id_region": id_region,
+        "sheet_password": "micat",
+        "options_sheet_name": "Options",
     }
+    if request.args.getlist("years"):
+        args["years"] = request.args.getlist("years")
     return args
 
 
 def _parameters_template(template_args, database):
-    id_subsector_table = database.id_table('id_subsector')
-    id_final_energy_carrier_table = database.id_table('id_final_energy_carrier')
-    id_primary_energy_carrier_table = database.id_table('id_primary_energy_carrier')
+    id_subsector_table = database.id_table("id_subsector")
+    id_final_energy_carrier_table = database.id_table("id_final_energy_carrier")
+    id_primary_energy_carrier_table = database.id_table("id_primary_energy_carrier")
 
     template_bytes = io.BytesIO()
     workbook = xlsx_utils.empty_workbook(template_bytes)
 
-    for sheet_name in template_args['coefficient_sheets']:
-        if sheet_name in ('FuelSplitCoefficient', 'EnergyPrice'):
+    for sheet_name in template_args["coefficient_sheets"]:
+        if sheet_name in ("FuelSplitCoefficient", "EnergyPrice"):
             # TO DO : fix/implement reading of energy prices #229
             _subsector_final_create_parameter_sheet(
                 workbook,
@@ -60,7 +61,7 @@ def _parameters_template(template_args, database):
                 id_final_energy_carrier_table,
             )
 
-        elif sheet_name in ('ElectricityGeneration', 'HeatGeneration'):
+        elif sheet_name in ("ElectricityGeneration", "HeatGeneration"):
             _primary_create_parameter_sheet(
                 workbook,
                 sheet_name,
@@ -68,7 +69,7 @@ def _parameters_template(template_args, database):
                 database,
                 id_primary_energy_carrier_table,
             )
-        elif sheet_name in ['MonetisationFactors']:
+        elif sheet_name in ["MonetisationFactors"]:
             _monetization_create_parameter_sheet(
                 workbook,
                 sheet_name,
@@ -93,11 +94,11 @@ def _monetization_create_parameter_sheet(
     template_args,
     database,
 ):
-    id_mode = template_args['id_mode']
-    id_region = template_args['id_region']
+    id_mode = template_args["id_mode"]
+    id_region = template_args["id_region"]
 
     sheet = workbook.add_worksheet(sheet_name)
-    sheet = _add_parameters_header(sheet, workbook, ['id_parameter', 'Parameter', 'Value'])
+    sheet = _add_parameters_header(sheet, workbook, ["id_parameter", "Parameter", "Value"])
     sheet = _monetization_add_parameters_data_validation(
         sheet,
         id_mode,
@@ -113,43 +114,43 @@ def _monetization_create_parameter_sheet(
 
 def _monetization_parameters_table(database, id_mode, id_region):
     value_of_statistical_life = database_utils.parameter_table(
-        database, id_mode, 'who_parameters', {'id_region': str(id_region), 'id_parameter': str(37)}
+        database, id_mode, "who_parameters", {"id_region": str(id_region), "id_parameter": str(37)}
     )
     value_of_a_life_year = database_utils.parameter_table(
-        database, id_mode, 'who_parameters', {'id_region': str(id_region), 'id_parameter': str(56)}
+        database, id_mode, "who_parameters", {"id_region": str(id_region), "id_parameter": str(56)}
     )
     value_of_a_lost_workday = database_utils.parameter_table(
-        database, id_mode, 'iiasa_lost_working_days_monetization_factors', {'id_region': str(id_region)}
+        database, id_mode, "iiasa_lost_working_days_monetization_factors", {"id_region": str(id_region)}
     )
     cost_per_ton_of_emitted_co2 = database_utils.parameter_table(
-        database, id_mode, 'iiasa_greenhouse_gas_emission_monetization_factors', {'id_region': str(id_region)}
+        database, id_mode, "iiasa_greenhouse_gas_emission_monetization_factors", {"id_region": str(id_region)}
     )
     cost_of_statistical_transfer_of_res = database_utils.parameter_table(
-        database, id_mode, 'fraunhofer_constant_parameters', {'id_region': str(id_region), 'id_parameter': str(61)}
+        database, id_mode, "fraunhofer_constant_parameters", {"id_region": str(id_region), "id_parameter": str(61)}
     )
     investment_costs_of_pv = database_utils.parameter_table(
-        database, id_mode, 'irena_technology_parameters', {'id_parameter': str(44), 'id_technology': str(3)}
+        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(3)}
     )
     investment_costs_of_onshore_wind = database_utils.parameter_table(
-        database, id_mode, 'irena_technology_parameters', {'id_parameter': str(44), 'id_technology': str(1)}
+        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(1)}
     )
     investment_costs_of_offshore_wind = database_utils.parameter_table(
-        database, id_mode, 'irena_technology_parameters', {'id_parameter': str(44), 'id_technology': str(2)}
+        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(2)}
     )
 
     parameter_tables = {
-        'Value of statistical life [€]': value_of_statistical_life,
-        'Value of a life year [€]': value_of_a_life_year,
-        'Value of a lost work day [€]': value_of_a_lost_workday,
-        'Cost per ton of emitted CO2 [€/tCO2]': cost_per_ton_of_emitted_co2,
-        'Cost of statistical transfer of RES [€/ktoe]': cost_of_statistical_transfer_of_res,
-        'Investment costs of PV [€/MWh]': investment_costs_of_pv,
-        'Investment costs of onshore wind [€/MWh]': investment_costs_of_onshore_wind,
-        'Investment costs of offshore wind [€/MWh]': investment_costs_of_offshore_wind,
+        "Value of statistical life [€]": value_of_statistical_life,
+        "Value of a life year [€]": value_of_a_life_year,
+        "Value of a lost work day [€]": value_of_a_lost_workday,
+        "Cost per ton of emitted CO2 [€/tCO2]": cost_per_ton_of_emitted_co2,
+        "Cost of statistical transfer of RES [€/ktoe]": cost_of_statistical_transfer_of_res,
+        "Investment costs of PV [€/MWh]": investment_costs_of_pv,
+        "Investment costs of onshore wind [€/MWh]": investment_costs_of_onshore_wind,
+        "Investment costs of offshore wind [€/MWh]": investment_costs_of_offshore_wind,
     }
 
     monetization_parameter_table = _construct_monetization_parameter_table(parameter_tables)
-    monetization_parameter_table = monetization_parameter_table.fillna('')
+    monetization_parameter_table = monetization_parameter_table.fillna("")
 
     return monetization_parameter_table
 
@@ -158,13 +159,13 @@ def _construct_monetization_parameter_table(parameter_tables):
     rows = []
     for parameter_table_name in parameter_tables.keys():
         parameter_table = parameter_tables[parameter_table_name]
-        data = parameter_table.to_data_frame().to_dict(orient='records')
+        data = parameter_table.to_data_frame().to_dict(orient="records")
         for row in data:
-            row['Monetisation factor'] = parameter_table_name
+            row["Monetisation factor"] = parameter_table_name
             rows.append(row)
     monetization_parameter_table = pd.DataFrame(rows)
     monetization_parameter_table = monetization_parameter_table.rename(columns=str.capitalize)
-    first_columns = ['Monetisation factor', 'Value']
+    first_columns = ["Monetisation factor", "Value"]
     ordered_columns = first_columns + monetization_parameter_table.columns.drop(first_columns).to_list()
     # pylint: disable=unsubscriptable-object
     monetization_parameter_table = monetization_parameter_table[ordered_columns]
@@ -180,16 +181,17 @@ def _subsector_final_create_parameter_sheet(
     id_subsector_table,
     id_final_energy_carrier_table,
 ):
-    id_mode = template_args['id_mode']
-    id_region = template_args['id_region']
+    id_mode = template_args["id_mode"]
+    id_region = template_args["id_region"]
+    years = template_args.get("years")
 
     sheet = workbook.add_worksheet(sheet_name)
     sheet = _add_parameters_header(
-        sheet, workbook, ['id_subsector', 'id_final_energy_carrier', 'Subsector', 'Final energy carrier']
+        sheet, workbook, ["id_subsector", "id_final_energy_carrier", "Subsector", "Final energy carrier"]
     )
     sheet = _subsector_final_add_parameters_data_validation(
         sheet,
-        template_args['options_sheet_name'],
+        template_args["options_sheet_name"],
         id_mode,
         id_subsector_table,
         id_final_energy_carrier_table,
@@ -200,12 +202,13 @@ def _subsector_final_create_parameter_sheet(
     sheet = _subsector_final_add_parameter_data(
         sheet,
         database,
-        'eurostat_final_sector_parameters',
+        "eurostat_final_sector_parameters",
         id_mode,
         id_region,
         id_parameter,
         id_subsector_table,
         id_final_energy_carrier_table,
+        years,
     )
 
     sheet.set_column(first_col=0, last_col=constants.MAX_COLS, width=30)
@@ -218,42 +221,45 @@ def _primary_create_parameter_sheet(
     database,
     id_primary_energy_carrier_table,
 ):
-    id_mode = template_args['id_mode']
-    id_region = template_args['id_region']
+    id_mode = template_args["id_mode"]
+    id_region = template_args["id_region"]
+    years = template_args.get("years")
 
     sheet = workbook.add_worksheet(sheet_name)
     sheet = _add_parameters_header(
-        sheet, workbook, ['id_subsector', 'id_final_energy_carrier', 'Subsector', 'Final energy carrier']
+        sheet, workbook, ["id_subsector", "id_final_energy_carrier", "Subsector", "Final energy carrier"]
     )
     sheet = _primary_add_parameters_data_validation(
         sheet,
-        template_args['options_sheet_name'],
+        template_args["options_sheet_name"],
         id_mode,
         id_primary_energy_carrier_table,
     )
 
-    if sheet_name == 'ElectricityGeneration':
+    if sheet_name == "ElectricityGeneration":
         id_parameter = 21
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            'eurostat_primary_parameters',
+            "eurostat_primary_parameters",
             id_mode,
             id_region,
             id_parameter,
             id_primary_energy_carrier_table,
+            years,
         )
 
-    elif sheet_name == 'HeatGeneration':
+    elif sheet_name == "HeatGeneration":
         id_parameter = 20
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            'eurostat_primary_parameters',
+            "eurostat_primary_parameters",
             id_mode,
             id_region,
             id_parameter,
             id_primary_energy_carrier_table,
+            years,
         )
 
     sheet.set_column(first_col=0, last_col=constants.MAX_COLS, width=30)
@@ -266,20 +272,20 @@ def _create_options_sheet(
     id_final_energy_carrier_table,
     id_primary_energy_carrier_table,
 ):
-    options_sheet_name = template_args['options_sheet_name']
+    options_sheet_name = template_args["options_sheet_name"]
     options_sheet = workbook.add_worksheet(options_sheet_name)
 
-    subsectors = id_subsector_table['label'].values
+    subsectors = id_subsector_table["label"].values
     options_sheet.write_column(row=0, col=0, data=subsectors)
 
-    final_energy_carriers = id_final_energy_carrier_table['label'].values
+    final_energy_carriers = id_final_energy_carrier_table["label"].values
     options_sheet.write_column(row=0, col=1, data=final_energy_carriers)
 
-    primary_energy_carriers = id_primary_energy_carrier_table['label'].values
+    primary_energy_carriers = id_primary_energy_carrier_table["label"].values
     options_sheet.write_column(row=0, col=0, data=primary_energy_carriers)
 
     options_sheet.set_column(first_col=0, last_col=constants.MAX_COLS, width=30)
-    password = template_args['sheet_password']
+    password = template_args["sheet_password"]
     xlsx_utils.protect_sheet(options_sheet, password, True)
 
     return options_sheet
@@ -304,14 +310,14 @@ def _subsector_final_add_parameters_data_validation(
         first_col=0,
         last_row=0,
         last_col=0,
-        options=validators.exact_string_validator('Subsector', 0, 0, 0, 0),
+        options=validators.exact_string_validator("Subsector", 0, 0, 0, 0),
     )
     sheet.data_validation(
         first_row=0,
         first_col=1,
         last_row=0,
         last_col=1,
-        options=validators.exact_string_validator('Final energy carrier', 0, 1, 0, 1),
+        options=validators.exact_string_validator("Final energy carrier", 0, 1, 0, 1),
     )
     sheet.data_validation(
         first_row=0,
@@ -357,7 +363,7 @@ def _primary_add_parameters_data_validation(
         first_col=0,
         last_row=0,
         last_col=0,
-        options=validators.exact_string_validator('Primary energy carrier', 0, 0, 0, 0),
+        options=validators.exact_string_validator("Primary energy carrier", 0, 0, 0, 0),
     )
     sheet.data_validation(
         first_row=0,
@@ -394,14 +400,14 @@ def _monetization_add_parameters_data_validation(
         first_col=0,
         last_row=0,
         last_col=0,
-        options=validators.exact_string_validator('Monetisation factor', 0, 1, 0, 1),
+        options=validators.exact_string_validator("Monetisation factor", 0, 1, 0, 1),
     )
     sheet.data_validation(
         first_row=0,
         first_col=1,
         last_row=0,
         last_col=1,
-        options=validators.exact_string_validator('Value', 0, 1, 0, 1),
+        options=validators.exact_string_validator("Value", 0, 1, 0, 1),
     )
     sheet.data_validation(
         first_row=0,
@@ -430,26 +436,27 @@ def _subsector_final_add_parameter_data(
     id_parameter,
     id_subsector_table,
     id_final_energy_carrier_table,
+    years=None,
 ):
     column_names = database_utils.column_names(database, table_name)
-    filtered_column_names = database_utils.filter_column_names_by_id_mode(column_names, id_mode)
+    filtered_column_names = database_utils.filter_column_names_by_id_mode(column_names, id_mode, years)
     where_clause = {
-        'id_region': str(id_region),
-        'id_parameter': str(id_parameter),
+        "id_region": str(id_region),
+        "id_parameter": str(id_parameter),
     }
 
     data_table = database_utils.table(database, table_name, filtered_column_names, where_clause)
-    data_table = data_table.reduce('id_parameter', id_parameter)
+    data_table = data_table.reduce("id_parameter", id_parameter)
 
     data_table = data_table.join_id_column(
         id_subsector_table,
-        'subsector',
+        "subsector",
         is_keeping_id_column=True,
     )
 
     data_table = data_table.join_id_column(
         id_final_energy_carrier_table,
-        'final_energy_carrier',
+        "final_energy_carrier",
         is_keeping_id_column=True,
     )
 
@@ -466,20 +473,21 @@ def _primary_add_parameter_data(
     id_region,
     id_parameter,
     id_primary_energy_carrier_table,
+    years=None,
 ):
     column_names = database_utils.column_names(database, table_name)
-    filtered_column_names = database_utils.filter_column_names_by_id_mode(column_names, id_mode)
+    filtered_column_names = database_utils.filter_column_names_by_id_mode(column_names, id_mode, years)
     where_clause = {
-        'id_region': str(id_region),
-        'id_parameter': str(id_parameter),
+        "id_region": str(id_region),
+        "id_parameter": str(id_parameter),
     }
 
     data_table = database_utils.table(database, table_name, filtered_column_names, where_clause)
-    data_table = data_table.reduce('id_parameter', id_parameter)
+    data_table = data_table.reduce("id_parameter", id_parameter)
 
     data_table = data_table.join_id_column(
         id_primary_energy_carrier_table,
-        'primary_energy_carrier',
+        "primary_energy_carrier",
         is_keeping_id_column=True,
     )
 
@@ -490,12 +498,12 @@ def _primary_add_parameter_data(
 
 def _subsector_final_reorder_and_rename_columns(data_table):
     columns = data_table.columns
-    columns.insert(0, columns.pop(columns.index('subsector')))
-    columns.insert(1, columns.pop(columns.index('final_energy_carrier')))
+    columns.insert(0, columns.pop(columns.index("subsector")))
+    columns.insert(1, columns.pop(columns.index("final_energy_carrier")))
     data_table = data_table[columns]
     columns_mapping = {
-        'subsector': 'Subsector',
-        'final_energy_carrier': 'Final energy carrier',
+        "subsector": "Subsector",
+        "final_energy_carrier": "Final energy carrier",
     }
     data_table.rename(columns=columns_mapping, inplace=True)
     return data_table
@@ -503,10 +511,10 @@ def _subsector_final_reorder_and_rename_columns(data_table):
 
 def _primary_reorder_and_rename_columns(data_table):
     columns = data_table.columns
-    columns.insert(0, columns.pop(columns.index('primary_energy_carrier')))
+    columns.insert(0, columns.pop(columns.index("primary_energy_carrier")))
     data_table = data_table[columns]
     columns_mapping = {
-        'primary_energy_carrier': 'Primary energy carrier',
+        "primary_energy_carrier": "Primary energy carrier",
     }
     data_table.rename(columns=columns_mapping, inplace=True)
     return data_table
@@ -522,7 +530,7 @@ def _write_data_to_sheet(sheet, data_table):
 
 def _header_format():
     return {
-        'bg_color': '#C0C0C0',
-        'bold': True,
-        'locked': False,
+        "bg_color": "#C0C0C0",
+        "bold": True,
+        "locked": False,
     }

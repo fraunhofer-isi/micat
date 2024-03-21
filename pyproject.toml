@@ -85,7 +85,10 @@ license = [
 
 ]
 
-dev = ['micat[lint, format, test, doc, data, license]']
+dev = [
+    'micat[lint, format, test, doc, data, license]',
+    'ipdb==0.13.13',
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ['src/micat', 'static', 'test/micat/test_utils']
@@ -132,7 +135,6 @@ source = ['src']
 fail_under = 100
 show_missing = true
 include_namespace_packages = true
-exclude_lines = ['if __name__ == .__main__.:']
 
 [tool.coverage.html]
 directory = '.coverage'
