@@ -73,7 +73,7 @@ doc = [
 
 data = [   
     'paramiko==3.4.0', # for uploading files to weblication
-    'xlwings==0.30.16; sys_platform == "win32"', # for excel automation to extract values in a loop
+    'xlwings==0.31.0; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
 
 license = [
