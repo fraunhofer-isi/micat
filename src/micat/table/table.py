@@ -36,7 +36,7 @@ class Table(AbstractTable):
         for data_frame in data_frames:
             current_id_names = list(data_frame.index.names)
             if current_id_names != id_names:
-                raise KeyError('Order of index column names must be equal for concatenation')
+                raise KeyError("Order of index column names must be equal for concatenation")
                 # Also see
                 # https://stackoverflow.com/questions/75434950/how-to-correctly-consider-multi-index-column-names-for-pandas-concat
 
@@ -54,19 +54,19 @@ class Table(AbstractTable):
     @staticmethod
     def from_json(custom_json, where_clause={}):  # pylint: disable=dangerous-default-value
         data_frame = AbstractTable._data_frame_from_json(custom_json)
-        data_frame = AbstractTable._drop_if_exists(data_frame, 'id')
-        if 'id_region' in where_clause:
-            data_frame = AbstractTable._drop_if_exists(data_frame, 'id_region')
-        data_frame = AbstractTable._drop_if_exists(data_frame, 'id_unit')
+        data_frame = AbstractTable._drop_if_exists(data_frame, "id")
+        if "id_region" in where_clause:
+            data_frame = AbstractTable._drop_if_exists(data_frame, "id_region")
+        data_frame = AbstractTable._drop_if_exists(data_frame, "id_unit")
         return Table._create(data_frame)
 
     @staticmethod
     def from_json_string(json_string):
         rows = json.loads(json_string)
         data_frame = pd.DataFrame(rows)
-        details = data_frame['details']  # pylint: disable=unused-variable
+        details = data_frame["details"]  # pylint: disable=unused-variable
         # TO DO : handle details
-        del data_frame['details']
+        del data_frame["details"]
         data_frame = Table._fix_integer_year_columns(data_frame)
         table = Table._create(data_frame)
         return table
@@ -127,7 +127,7 @@ class Table(AbstractTable):
     #     return key_column_names
 
     @staticmethod
-    def handle_division_by_zero(table: 'Table'):
+    def handle_division_by_zero(table: "Table"):
         # pylint: disable = protected-access
         table._data_frame = table._data_frame.replace([np.inf, -np.inf], np.nan)
         table._data_frame = table._data_frame.fillna(0)
@@ -142,13 +142,13 @@ class Table(AbstractTable):
     @staticmethod
     def _parent_id_column_names(id_column_names, id_column_name):
         if id_column_name not in id_column_names:
-            message = 'The id column ' + id_column_name + ' does not exist.'
+            message = "The id column " + id_column_name + " does not exist."
             raise KeyError(message)
 
         index = id_column_names.index(id_column_name)
 
         if index != (len(id_column_names) - 1):
-            message = 'The id column ' + id_column_name + ' has to be the last id column.'
+            message = "The id column " + id_column_name + " has to be the last id column."
             raise KeyError(message)
 
         parent_names = id_column_names[:index]
@@ -292,17 +292,17 @@ class Table(AbstractTable):
         data_frame = self._data_frame
         includes_negative_values = (data_frame < 0).any().any()
         if includes_negative_values:
-            Logger.error('Interpolation of negative values is not yet implemented.')
+            Logger.error("Interpolation of negative values is not yet implemented.")
 
         _, year_column_names, _ = self.column_names
         year_column_names.sort()
         sorted_data_frame = self._data_frame[year_column_names]
 
-        interpolated_data_frame = sorted_data_frame.interpolate(method='linear', axis=1, s=0, limit_direction='both')
+        interpolated_data_frame = sorted_data_frame.interpolate(method="linear", axis=1, s=0, limit_direction="both")
 
         interpolated_data_includes_negative_values = (interpolated_data_frame < 0).any().any()
         if interpolated_data_includes_negative_values:
-            Logger.warn('Replacing negative values of extrapolated data with zeros.')
+            Logger.warn("Replacing negative values of extrapolated data with zeros.")
             # We do not allow negative values, also see #125
             interpolated_data_frame.clip(lower=0, inplace=True)
 
@@ -329,17 +329,17 @@ class Table(AbstractTable):
         return self._create(data_frame)
 
     def join_id_column(self, id_table, new_column_name, is_keeping_id_column=False):
-        id_column_name = 'id_' + new_column_name
+        id_column_name = "id_" + new_column_name
         # noinspection PyProtectedMember
         id_data_frame = id_table._data_frame  # pylint: disable=protected-access
         result_data_frame = self._data_frame.merge(
             id_data_frame,
-            how='left',
+            how="left",
             left_on=id_column_name,
             right_index=True,
         )
 
-        labels_contain_nan = result_data_frame['label'].isna().any()
+        labels_contain_nan = result_data_frame["label"].isna().any()
         if labels_contain_nan:
             raise KeyError("Table contains unknown values for " + id_column_name)
 
@@ -347,8 +347,8 @@ class Table(AbstractTable):
 
         if not is_keeping_id_column:
             del result_data_frame[id_column_name]
-        del result_data_frame['description']
-        result_data_frame.rename({'label': new_column_name}, axis=1, inplace=True)
+        del result_data_frame["description"]
+        result_data_frame.rename({"label": new_column_name}, axis=1, inplace=True)
         return self._create(result_data_frame)
 
     def map(self, mapping_function):
@@ -374,10 +374,10 @@ class Table(AbstractTable):
             id_column_names = []
 
         if self.contains_nan():
-            raise ValueError('This function does not support handling of NaN input values.')
+            raise ValueError("This function does not support handling of NaN input values.")
 
         if self.contains_object():
-            raise ValueError('This function does not support handling of object input values.')
+            raise ValueError("This function does not support handling of object input values.")
 
         if len(id_column_names) > 0:
             groups = self._data_frame.groupby(level=id_column_names)
@@ -486,9 +486,9 @@ class Table(AbstractTable):
     def to_custom_json(self):
         id_column_names, year_column_names, _ = self.column_names
         custom_json = {
-            'idColumnNames': id_column_names,
-            'yearColumnNames': year_column_names,
-            'rows': self.rows,
+            "idColumnNames": id_column_names,
+            "yearColumnNames": year_column_names,
+            "rows": self.rows,
         }
         return custom_json
 
@@ -519,8 +519,8 @@ class Table(AbstractTable):
         indexed_df = self._data_frame.set_index(column_for_new_column_names)
         indexed_df = Table._fix_integer_year_columns(indexed_df)
         transposed_df = indexed_df.transpose()
-        transposed_df.columns.name = ''
-        transposed_df.index.name = 'year'
+        transposed_df.columns.name = ""
+        transposed_df.index.name = "year"
         return self._create(transposed_df)
 
     def unique_index_values(self, index_column_name):
@@ -536,7 +536,7 @@ class Table(AbstractTable):
 
     def update(self, table):
         # noinspection PyProtectedMember
-        all_entries = pd.concat([self._data_frame, table._data_frame])  # pylint: disable=protected-access
+        all_entries = pd.concat([self._data_frame, table._data_frame.reorder_levels(self._data_frame.index.names)])  # pylint: disable=protected-access
         unique_entries = all_entries.query('~index.duplicated(keep="last")')
         table = self._create(unique_entries)
         sorted_table = table.sort()
@@ -611,11 +611,11 @@ class Table(AbstractTable):
 
     def _join_and_multiply(self, factor_table):
         if self.contains_nan():
-            raise ValueError('Table must not include NaN values before multiplication.')
+            raise ValueError("Table must not include NaN values before multiplication.")
 
         self._validate_factor_table_for_multiplication(factor_table)
 
-        dummy_column_name = 'id_dummy__'
+        dummy_column_name = "id_dummy__"
         left_table = self.insert_index_column(dummy_column_name, 0, 0)
         right_table = factor_table.insert_index_column(dummy_column_name, 0, 0)
         product_table = left_table * right_table
@@ -629,7 +629,7 @@ class Table(AbstractTable):
         join_column_names = self._join_column_names(value_table)
         data_frame = self._data_frame
         if len(join_column_names) < 1:
-            dummy_column_name = 'id_dummy__'
+            dummy_column_name = "id_dummy__"
             data_frame = self.insert_index_column(  # pylint: disable=protected-access
                 dummy_column_name,
                 0,
@@ -640,17 +640,17 @@ class Table(AbstractTable):
         # noinspection PyProtectedMember
         value_frame = value_table._data_frame  # pylint: disable=protected-access
 
-        merged_frame = data_frame.join(value_frame, validate='one_to_many')
+        merged_frame = data_frame.join(value_frame, validate="one_to_many")
 
         contains_nan = AbstractTable._contains_nan(merged_frame)
         if contains_nan:
-            message = 'Value tables misses some entries. => Product would include NaN values which is not allowed.'
+            message = "Value tables misses some entries. => Product would include NaN values which is not allowed."
             raise KeyError(message)
 
-        value_series = value_table['value']
+        value_series = value_table["value"]
 
         product = merged_frame.multiply(value_series, axis=0)
-        del product['value']
+        del product["value"]
 
         if len(join_column_names) < 1:
             del value_table[dummy_column_name]
@@ -673,7 +673,7 @@ class Table(AbstractTable):
     def _reduce_data_frame_by_id(self, id_name, id_value):
         existing_values = self.unique_index_values(id_name)
         if id_value in existing_values:
-            query = id_name + ' == ' + str(id_value)
+            query = id_name + " == " + str(id_value)
             reduced_data_frame = self._data_frame.query(query)
             index_size = len(reduced_data_frame.index.names)
             if index_size > 1:
@@ -687,7 +687,7 @@ class Table(AbstractTable):
         existing_values = self.unique_index_values(id_name)
         contains_value = Table._contains_any_value(id_array, existing_values)
         if contains_value:
-            query = id_name + ' in @id_array'
+            query = id_name + " in @id_array"
             reduced_data_frame = self._data_frame.query(query)
             return reduced_data_frame
         else:
@@ -705,7 +705,7 @@ class Table(AbstractTable):
 
     def _validate_value_table_for_multiplication(self, value_table):
         if value_table.contains_nan():
-            raise ValueError('Factor table must not include NaN values.')
+            raise ValueError("Factor table must not include NaN values.")
 
         join_column_names = self._join_column_names(value_table)
         if len(join_column_names) > 0:
@@ -713,7 +713,7 @@ class Table(AbstractTable):
             value_index_tuples = value_table.unique_multi_index_tuples(join_column_names)
             for index_tuple in value_index_tuples:
                 if index_tuple not in data_index_tuples:
-                    message = 'Not all entries of the value table are used for multiplication: ' + str(index_tuple)
+                    message = "Not all entries of the value table are used for multiplication: " + str(index_tuple)
                     Logger.warn(message)
 
     def _join_column_names(self, other_table):
@@ -724,29 +724,29 @@ class Table(AbstractTable):
 
     def _validate_factor_table_for_multiplication(self, factor_table):
         if factor_table.contains_nan():
-            raise ValueError('Factor table must not include NaN values.')
+            raise ValueError("Factor table must not include NaN values.")
 
         index_column_names, year_column_names, value_column_names = self.column_names
         factor_index_column_names, factor_year_column_names, factor_value_column_names = factor_table.column_names
         if factor_year_column_names != year_column_names:
-            raise ValueError('Factor table must have the same year columns.')
+            raise ValueError("Factor table must have the same year columns.")
 
         if factor_value_column_names != value_column_names:
-            raise ValueError('Factor table must have the same value columns.')
+            raise ValueError("Factor table must have the same value columns.")
 
         common_columns = list_utils.intersection(index_column_names, factor_index_column_names)
         if len(common_columns) > 0:
             message = (
-                'Factor table must not have same index column(s). '
-                + 'You might want to use normal multiplication using * operator or '
-                + 'specify a factor_column_name.'
+                "Factor table must not have same index column(s). "
+                + "You might want to use normal multiplication using * operator or "
+                + "specify a factor_column_name."
             )
             raise ValueError(message)
 
-        if 'id_dummy' in index_column_names:
+        if "id_dummy" in index_column_names:
             raise KeyError('Table must not contain column "id_dummy" because it it used internally.')
 
-        if 'id_dummy' in factor_index_column_names:
+        if "id_dummy" in factor_index_column_names:
             raise KeyError('Factor table must not contain column "id_dummy" because it it used internally.')
 
     @property
