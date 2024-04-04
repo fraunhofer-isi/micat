@@ -49,6 +49,8 @@ class BackEnd:
         CORS(self._app, resources={r"/*": {"origins": "*"}})  # allowed_origins}})
 
     def start(self, host="127.0.0.1", application_port=8000):
+        # if you adapt the port, also consider port forwarding setting in .htaccess 
+        # file of this project / on web server
         print("Starting flask application at ", host, ":", application_port)
         if self._debug_mode:
             self._app.run(host=host, port=application_port, debug=True)

@@ -32,7 +32,8 @@ def main(arguments=None):
     host = "localhost"
     front_end_host = host  # 'frontend.micat-project.eu'  # host
     front_end_route = "/"  # ''
-    port = 8000
+    port = 8000            # if you adapt the port, also consider port forwarding 
+                           # setting in .htaccess file of this project / on web server
     front_end_port = 3000  # 80
     settings = micat_settings.load()
     _open_browser_if_enabled(
