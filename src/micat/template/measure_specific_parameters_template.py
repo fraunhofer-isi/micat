@@ -37,7 +37,7 @@ def _measure_specific_template(
     database,
     confidential_database,
 ):
-    workbook = openpyxl.load_workbook('template/measure_specific_parameters_template.xlsx')
+    workbook = openpyxl.load_workbook("template/measure_specific_parameters_template.xlsx")
     _fill_measure_specific_template(
         workbook,
         template_args,
@@ -57,23 +57,23 @@ def _fill_measure_specific_template(
     database,
     confidential_database,
 ):
-    main_sheet = workbook['main']
-    fuel_switch_sheet = workbook['fuelSwitch']
-    residential_sheet = workbook['residential']
-    context_sheet = workbook['context']
+    main_sheet = workbook["main"]
+    fuel_switch_sheet = workbook["fuelSwitch"]
+    residential_sheet = workbook["residential"]
+    context_sheet = workbook["context"]
 
-    measure = template_args['measure']
+    measure = template_args["measure"]
     population_of_municipality = population.population_of_municipality(measure)
 
-    id_region = int(template_args['id_region'])
+    id_region = int(template_args["id_region"])
 
     context = {
-        'id_mode': int(template_args['id_mode']),
-        'id_region': id_region,
-        'id_subsector': int(measure['subsector']['id']),
-        'id_action_type': int(measure['action_type']['id']),
-        'unit': measure['unit'],
-        'population_of_municipality': population_of_municipality,
+        "id_mode": int(template_args["id_mode"]),
+        "id_region": id_region,
+        "id_subsector": int(measure["subsector"]["id"]),
+        "id_action_type": int(measure["action_type"]["id"]),
+        "unit": measure["unit"],
+        "population_of_municipality": population_of_municipality,
     }
 
     final_energy_saving_by_action_type = _final_energy_saving_by_action_type(measure, context)
@@ -113,8 +113,8 @@ def _wuppertal_parameters(
     final_energy_saving_by_action_type,
     data_source,
 ):
-    id_region = context['id_region']
-    wuppertal_parameters_raw = data_source.table('wuppertal_parameters', {'id_region': str(id_region)})
+    id_region = context["id_region"]
+    wuppertal_parameters_raw = data_source.table("wuppertal_parameters", {"id_region": str(id_region)})
 
     years = final_energy_saving_by_action_type.years
     wuppertal_parameters = extrapolation.extrapolate(wuppertal_parameters_raw, years)
@@ -194,16 +194,16 @@ def _fill_context_sheet(
     sheet,
     context,
 ):
-    id_region = context['id_region']
+    id_region = context["id_region"]
     sheet.cell(column=2, row=1, value=id_region)
 
-    id_subsector = context['id_subsector']
+    id_subsector = context["id_subsector"]
     sheet.cell(column=2, row=2, value=id_subsector)
 
-    id_action_type = context['id_action_type']
+    id_action_type = context["id_action_type"]
     sheet.cell(column=2, row=3, value=id_action_type)
 
-    population_of_municipality = context['population_of_municipality']
+    population_of_municipality = context["population_of_municipality"]
     sheet.cell(column=2, row=4, value=population_of_municipality)
 
 
@@ -225,8 +225,8 @@ def _cell_style(cell):
 
 def _cell_value(cell):
     value = cell.value
-    if value == '=NA()':
-        return float('NaN')
+    if value == "=NA()":
+        return float("NaN")
     else:
         return value
 
@@ -273,7 +273,7 @@ def _fill_annual_data(
         cell_style = cell_styles[row_index + 1]
         for value in row:
             cell = sheet.cell(row=row_index + 2, column=column_index)
-            cell.value = value
+            cell.value = round(value, 2)
             cell._style = cell_style  # pylint: disable=protected-access
             column_index += 1
 
@@ -297,7 +297,7 @@ def _fill_annual_series(
     column_index = start_column_index
     for value in values:
         cell = sheet.cell(column=column_index, row=row_index)
-        cell.value = value
+        cell.value = round(value, 2)
         column_index += 1
 
 
@@ -312,7 +312,7 @@ def _fill_table(
         column_index = start_column_index
         for value in row.values:
             cell = sheet.cell(column=column_index, row=row_index)
-            cell.value = value
+            cell.value = round(value, 2)
             column_index += 1
         row_index += 1
 
@@ -323,8 +323,8 @@ def _fill_dwelling_stock(
     final_energy_saving_by_action_type,
     data_source,
 ):
-    id_region = context['id_region']
-    population_of_municipality = context['population_of_municipality']
+    id_region = context["id_region"]
+    population_of_municipality = context["population_of_municipality"]
 
     dwelling_stock = dwelling.dwelling_stock(
         final_energy_saving_by_action_type,
@@ -337,22 +337,22 @@ def _fill_dwelling_stock(
 
 
 def _fill_average_hh_per_building(sheet, wuppertal_parameters):
-    average_hh_per_building = wuppertal_parameters.reduce('id_parameter', 31)
+    average_hh_per_building = wuppertal_parameters.reduce("id_parameter", 31)
     _fill_annual_series(sheet, 5, 6, average_hh_per_building)
 
 
 def _fill_average_rent(sheet, wuppertal_parameters):
-    average_rent = wuppertal_parameters.reduce('id_parameter', 29)
+    average_rent = wuppertal_parameters.reduce("id_parameter", 29)
     _fill_annual_series(sheet, 5, 7, average_rent)
 
 
 def _fill_rent_premium(sheet, wuppertal_parameters):
-    rent_premium = wuppertal_parameters.reduce('id_parameter', 34)
+    rent_premium = wuppertal_parameters.reduce("id_parameter", 34)
     _fill_annual_series(sheet, 5, 8, rent_premium)
 
 
 def _fill_energy_poverty_targeteness(sheet, wuppertal_parameters):
-    energy_poverty_targeteness = wuppertal_parameters.reduce('id_parameter', 25)
+    energy_poverty_targeteness = wuppertal_parameters.reduce("id_parameter", 25)
     _fill_annual_series(sheet, 5, 3, energy_poverty_targeteness)
 
 
@@ -375,12 +375,12 @@ def _fill_lifetime(sheet, context, database):
 
 
 def _lifetime(context, database):
-    id_subsector = context['id_subsector']
-    id_action_type = context['id_action_type']
+    id_subsector = context["id_subsector"]
+    id_action_type = context["id_action_type"]
     wuppertal_sector_parameters = database.table(
-        'wuppertal_sector_parameters', {'id_subsector': str(id_subsector), 'id_action_type': str(id_action_type)}
+        "wuppertal_sector_parameters", {"id_subsector": str(id_subsector), "id_action_type": str(id_action_type)}
     )
-    lifetime = wuppertal_sector_parameters.reduce('id_parameter', 36)
+    lifetime = wuppertal_sector_parameters.reduce("id_parameter", 36)
     return lifetime
 
 
@@ -390,9 +390,9 @@ def _fill_share_affected(
     final_energy_saving_by_action_type,
     data_source,
 ):
-    id_mode = context['id_mode']
-    id_region = context['id_region']
-    id_subsector = context['id_subsector']
+    id_mode = context["id_mode"]
+    id_region = context["id_region"]
+    id_subsector = context["id_subsector"]
     subsector_ids = [id_subsector]
 
     share_affected = fuel_split.fuel_split_by_action_type(
@@ -407,7 +407,7 @@ def _fill_share_affected(
 
 
 def _fill_subsidy_rate(sheet, wuppertal_parameters):
-    subsidy_rate = wuppertal_parameters.reduce('id_parameter', 35)
+    subsidy_rate = wuppertal_parameters.reduce("id_parameter", 35)
     _fill_annual_series(sheet, 7, 4, subsidy_rate)
 
 
@@ -418,8 +418,8 @@ def _fill_number_of_affected_dwellings(
     final_energy_saving_by_action_type,
     data_source,
 ):
-    id_region = context['id_region']
-    population_of_municipality = context['population_of_municipality']
+    id_region = context["id_region"]
+    population_of_municipality = context["population_of_municipality"]
 
     number_of_affected_dwellings = dwelling.number_of_affected_dwellings(
         final_energy_saving_by_action_type,
@@ -431,9 +431,9 @@ def _fill_number_of_affected_dwellings(
 
 
 def _fill_unit(sheet, context):
-    unit_object = context['unit']
-    unit = unit_object['symbol']
-    sheet['D2'] = unit
+    unit_object = context["unit"]
+    unit = unit_object["symbol"]
+    sheet["D2"] = unit
     return sheet
 
 
@@ -450,9 +450,9 @@ def _interpolate_annual_data(sheet, years):
 
 def _final_energy_saving_by_action_type(measure, context):
     annual_data = {key: value for key, value in measure.items() if key.isdigit()}
-    annual_data['id_measure'] = measure['id']
-    annual_data['id_subsector'] = context['id_subsector']
-    annual_data['id_action_type'] = context['id_action_type']
+    annual_data["id_measure"] = measure["id"]
+    annual_data["id_subsector"] = context["id_subsector"]
+    annual_data["id_action_type"] = context["id_action_type"]
 
     savings = Table([annual_data])
     return savings
@@ -474,19 +474,19 @@ def _split_sheet(sheet):
 
 def _template_args(request):
     query_dict = api.parse_request(request)
-    measure = query_dict['json']
+    measure = query_dict["json"]
     args = {
-        'measure': measure,
-        'id_mode': query_dict['id_mode'],
-        'id_region': query_dict['id_region'],
-        'parameter_table_names': [
-            'eurostat_final_parameters',
-            'eurostat_final_sector_parameters',
-            'eurostat_primary_parameters',
-            'iiasa_final_subsector_parameters',
-            'mixed_final_constant_parameters',
-            'primes_parameters',
-            'primes_primary_parameters',
+        "measure": measure,
+        "id_mode": query_dict["id_mode"],
+        "id_region": query_dict["id_region"],
+        "parameter_table_names": [
+            "eurostat_final_parameters",
+            "eurostat_final_sector_parameters",
+            "eurostat_primary_parameters",
+            "iiasa_final_subsector_parameters",
+            "mixed_final_constant_parameters",
+            "primes_parameters",
+            "primes_primary_parameters",
         ],
     }
     return args

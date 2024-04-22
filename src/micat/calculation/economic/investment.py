@@ -42,14 +42,15 @@ def investment_cost_in_euro(
             id_action_type,
             year,
         )
-        return default_investment
+        # Round to 2 decimal places and convert to million euros
+        return round(default_investment / 1000000, 2)
 
     investment = data_source.measure_specific_parameter(
         final_energy_saving_by_action_type,
         40,  # id_parameter for investment cost
         _provide_default_investment,
     )
-    del investment['id_subsector']
+    del investment["id_subsector"]
     return investment
 
 
@@ -93,14 +94,14 @@ def _specific_investment_cost(
     id_action_type,
     year,
 ):
-    specific_investment_cost_series = investment_cost_per_ktoe.reduce('id_action_type', id_action_type)
+    specific_investment_cost_series = investment_cost_per_ktoe.reduce("id_action_type", id_action_type)
     specific_investment_cost = specific_investment_cost_series[str(year)]
     return specific_investment_cost
 
 
 def _investment_cost_per_ktoe(data_source, years):
-    e3m_global_parameters = data_source.table('e3m_global_parameters', {})
-    investment_cost_per_ktoe_raw = e3m_global_parameters.reduce('id_parameter', 41)
+    e3m_global_parameters = data_source.table("e3m_global_parameters", {})
+    investment_cost_per_ktoe_raw = e3m_global_parameters.reduce("id_parameter", 41)
 
     investment_cost_per_ktoe = extrapolation.extrapolate(investment_cost_per_ktoe_raw, years)
     return investment_cost_per_ktoe

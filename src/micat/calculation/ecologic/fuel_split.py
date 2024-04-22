@@ -35,7 +35,7 @@ def fuel_split_by_action_type(
         ),
     )
 
-    action_type_ids = final_energy_saving_by_action_type.unique_index_values('id_action_type')
+    action_type_ids = final_energy_saving_by_action_type.unique_index_values("id_action_type")
 
     basic_chi = _basic_chi(
         data_source,
@@ -65,6 +65,10 @@ def fuel_split_by_action_type(
         measure_specific_lambda,
         measure_specific_chi,
     )
+    # Transform into percentage
+    for index, row in fuel_split.iterrows():
+        for year in years:
+            row[str(year)] = round(row[str(year)], 2)
     return fuel_split
 
 
@@ -75,13 +79,13 @@ def _basic_chi(
     action_type_ids,
 ):
     where_clause = {
-        'id_region': str(id_region),
-        'id_parameter': '12',  # Chi
-        'id_subsector': subsector_ids,
-        'id_action_type': action_type_ids,
+        "id_region": str(id_region),
+        "id_parameter": "12",  # Chi
+        "id_subsector": subsector_ids,
+        "id_action_type": action_type_ids,
     }
-    table = data_source.table('mixed_final_constant_parameters', where_clause)
-    chi = table.reduce('id_parameter', 12)
+    table = data_source.table("mixed_final_constant_parameters", where_clause)
+    chi = table.reduce("id_parameter", 12)
     return chi
 
 
@@ -129,10 +133,10 @@ def _determine_chi_for_measure(
     # for which we use the basic_chi data.
     # Also see https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/264
 
-    query = 'id_subsector==' + str(id_subsector) + ' & id_action_type==' + str(id_action_type)
+    query = "id_subsector==" + str(id_subsector) + " & id_action_type==" + str(id_action_type)
     chi = basic_chi.query(query)
-    chi = chi.insert_index_column('id_measure', 0, id_measure)
-    chi['value'] = 1
+    chi = chi.insert_index_column("id_measure", 0, id_measure)
+    chi["value"] = 1
     return chi
 
 
@@ -162,14 +166,14 @@ def _energy_consumption_difference(
 
 
 def _eta_ante(extrapolated_final_parameters, lambda_ante):
-    eta_ante_input = extrapolated_final_parameters.reduce('id_parameter', 14)
+    eta_ante_input = extrapolated_final_parameters.reduce("id_parameter", 14)
     eta_times_lambda_ante = eta_ante_input * lambda_ante
     eta_ante = eta_times_lambda_ante.sum()
     return eta_ante
 
 
 def _eta_post(extrapolated_final_parameters, lambda_post):
-    eta_post_input = extrapolated_final_parameters.reduce('id_parameter', 15)
+    eta_post_input = extrapolated_final_parameters.reduce("id_parameter", 15)
     eta_times_lambda_post = eta_post_input * lambda_post
     eta_post = eta_times_lambda_post.sum()
     return eta_post
@@ -179,8 +183,8 @@ def _lambda_for_measure_with_effected_action_type(
     id_subsector,
     extrapolated_final_parameters,
 ):
-    lambda_ = extrapolated_final_parameters.reduce('id_parameter', 16)
-    lambda_ = lambda_.insert_index_column('id_subsector', 1, id_subsector)
+    lambda_ = extrapolated_final_parameters.reduce("id_parameter", 16)
+    lambda_ = lambda_.insert_index_column("id_subsector", 1, id_subsector)
     return lambda_
 
 
@@ -189,10 +193,10 @@ def _lambda_for_measure_with_non_effected_action_type(
     energy_saving,
     extrapolated_final_parameters,
 ):
-    lambda_ante_input = extrapolated_final_parameters.reduce('id_parameter', 17)
+    lambda_ante_input = extrapolated_final_parameters.reduce("id_parameter", 17)
     lambda_ante = lambda_ante_input.normalize()
 
-    lambda_post_input = extrapolated_final_parameters.reduce('id_parameter', 18)
+    lambda_post_input = extrapolated_final_parameters.reduce("id_parameter", 18)
     lambda_post = lambda_post_input.normalize()
 
     energy_consumption = _energy_consumption(
@@ -210,13 +214,13 @@ def _lambda_for_measure_with_non_effected_action_type(
     )
 
     lambda_ = energy_consumption_difference.normalize()
-    lambda_ = lambda_.insert_index_column('id_subsector', 1, id_subsector)
+    lambda_ = lambda_.insert_index_column("id_subsector", 1, id_subsector)
     return lambda_
 
 
 def _measure_specific_fuel_split(lambda_, chi):
     product = lambda_ * chi
-    fuel_split = product.normalize(['id_measure', 'id_subsector', 'id_action_type'])
+    fuel_split = product.normalize(["id_measure", "id_subsector", "id_action_type"])
     return fuel_split
 
 
@@ -227,9 +231,9 @@ def _provide_default_lambda(
     _savings,
     basic_lambda,
 ):
-    query = 'id_subsector==' + str(id_subsector)
+    query = "id_subsector==" + str(id_subsector)
     _lambda = basic_lambda.query(query)
-    _lambda = _lambda.insert_index_column('id_measure', 0, id_measure)
+    _lambda = _lambda.insert_index_column("id_measure", 0, id_measure)
     return _lambda
 
 
@@ -240,9 +244,9 @@ def _provide_default_chi(
     _savings,
     basic_chi,
 ):
-    query = 'id_subsector==' + str(id_subsector) + '& id_action_type==' + str(id_action_type)
+    query = "id_subsector==" + str(id_subsector) + "& id_action_type==" + str(id_action_type)
     chi = basic_chi.query(query)
-    chi = chi.insert_index_column('id_measure', 0, id_measure)
+    chi = chi.insert_index_column("id_measure", 0, id_measure)
     return chi
 
 
@@ -253,18 +257,18 @@ def _raw_lambda(
     subsector_ids,
 ):
     where_clause = {
-        'id_region': str(id_region),
-        'id_parameter': '11',  # 11: Lambda
-        'id_subsector': subsector_ids,
+        "id_region": str(id_region),
+        "id_parameter": "11",  # 11: Lambda
+        "id_subsector": subsector_ids,
     }
 
     if mode.is_eurostat_mode(id_mode):
-        table = data_source.table('eurostat_final_sector_parameters', where_clause)
+        table = data_source.table("eurostat_final_sector_parameters", where_clause)
     else:
-        table = data_source.table('primes_final_sector_parameters', where_clause)
+        table = data_source.table("primes_final_sector_parameters", where_clause)
 
     if table is None:
-        raise NotImplementedError('Need to handle case of missing confidential database')  # TO DO #428
+        raise NotImplementedError("Need to handle case of missing confidential database")  # TO DO #428
 
-    lambda_ = table.reduce('id_parameter', 11)
+    lambda_ = table.reduce("id_parameter", 11)
     return lambda_

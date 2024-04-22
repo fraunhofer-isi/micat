@@ -25,17 +25,25 @@ def calculate_indicator_data(
     database,
     confidential_database,
 ):
-    print('Calculating indicator data for request')
+    print("Calculating indicator data for request")
     print(http_request)
 
     arguments = _front_end_arguments(http_request)
 
-    id_mode = arguments['id_mode']
-    id_region = arguments['id_region']
+    id_mode = arguments["id_mode"]
+    id_region = arguments["id_region"]
 
-    measure_specific_parameters = arguments['measure_specific_parameters']
-    parameters = arguments['parameters']
-    population_of_municipality = arguments['population_of_municipality']
+    # Multiply investment cost by 1,000,000, since investment costs are converted beforehand
+    # (see investment.py -> investment_cost_in_euro())
+    for k, v in arguments["measure_specific_parameters"].items():
+        for param in v["parameters"]:
+            if param["id_parameter"] == 40:
+                for year, value in param.items():
+                    if year != "id_parameter":
+                        param[year] = value * 1000000
+    measure_specific_parameters = arguments["measure_specific_parameters"]
+    parameters = arguments["parameters"]
+    population_of_municipality = arguments["population_of_municipality"]
 
     data_source = DataSource(
         database,
@@ -45,7 +53,7 @@ def calculate_indicator_data(
         parameters,
     )
 
-    final_energy_saving_by_action_type = arguments['final_energy_saving_by_action_type']
+    final_energy_saving_by_action_type = arguments["final_energy_saving_by_action_type"]
     years = final_energy_saving_by_action_type.years
 
     interim_data = _interim_data(
@@ -166,16 +174,16 @@ def _extra_nuclear_table(
     id_primary_energy_carrier_other = 6
 
     base_entry = {
-        'id_measure': id_measure,
-        'id_subsector': id_subsector,
-        'id_action_type': id_action_type,
+        "id_measure": id_measure,
+        "id_subsector": id_subsector,
+        "id_action_type": id_action_type,
     }
     for year in columns:
         base_entry[year] = 0
     renewables_entry = base_entry.copy()
-    renewables_entry['id_primary_energy_carrier'] = id_primary_energy_carrier_renewables
+    renewables_entry["id_primary_energy_carrier"] = id_primary_energy_carrier_renewables
     other_entry = base_entry.copy()
-    other_entry['id_primary_energy_carrier'] = id_primary_energy_carrier_other
+    other_entry["id_primary_energy_carrier"] = id_primary_energy_carrier_other
     extra_nuclear_table = Table([renewables_entry, other_entry])
     return extra_nuclear_table
 
@@ -196,28 +204,28 @@ def _additional_primary_energy_saving(
 
 
 def _check_request_parameters(query_parameters):
-    if 'id_mode' not in query_parameters.keys():
+    if "id_mode" not in query_parameters.keys():
         raise AttributeError('Query parameters must include "id_mode"')
 
-    id_mode = query_parameters['id_mode']
+    id_mode = query_parameters["id_mode"]
 
-    if (id_mode is None) or (id_mode == 'undefined'):
+    if (id_mode is None) or (id_mode == "undefined"):
         raise AttributeError('Query parameters must include "id_mode"')
 
-    if 'id_region' not in query_parameters.keys():
+    if "id_region" not in query_parameters.keys():
         raise AttributeError('Query parameters must include "id_region"')
 
-    id_region = query_parameters['id_region']
+    id_region = query_parameters["id_region"]
 
-    if (id_region is None) or (id_region == 'undefined'):
+    if (id_region is None) or (id_region == "undefined"):
         raise AttributeError('Query parameters must include "id_region"')
 
-    if 'savings' not in query_parameters.keys():
+    if "savings" not in query_parameters.keys():
         raise AttributeError('Query parameters must include "savings"')
 
-    savings = query_parameters['savings']
+    savings = query_parameters["savings"]
 
-    if (savings is None) or (savings == 'undefined'):
+    if (savings is None) or (savings == "undefined"):
         raise AttributeError('Query parameters must include "savings"')
 
 
@@ -230,11 +238,11 @@ def _extract_details_from_measures(measures):
     details = {}
     measures_without_detail = []
     for measure in measures:
-        id_measure = measure['id_measure']
-        detail = measure['details']
+        id_measure = measure["id_measure"]
+        detail = measure["details"]
         if detail != {}:
             details[id_measure] = detail
-        del measure['details']
+        del measure["details"]
         measures_without_detail.append(measure)
     return details, measures_without_detail
 
@@ -242,23 +250,23 @@ def _extract_details_from_measures(measures):
 def _front_end_arguments(http_request):
     query_parameters = _parse_request(http_request)
     _check_request_parameters(query_parameters)
-    id_mode = int(query_parameters['id_mode'])
-    id_region = int(query_parameters['id_region'])
-    measures = query_parameters['savings']
+    id_mode = int(query_parameters["id_mode"])
+    id_region = int(query_parameters["id_region"])
+    measures = query_parameters["savings"]
     measure_specific_parameters, measures = _extract_details_from_measures(measures)
     final_energy_saving_by_action_type = Table(measures)
 
-    json = query_parameters['json']
-    parameters = json.get('parameters', {})
+    json = query_parameters["json"]
+    parameters = json.get("parameters", {})
     population_of_municipality = population.population_of_municipality(json)
 
     return {
-        'id_mode': id_mode,
-        'id_region': id_region,
-        'final_energy_saving_by_action_type': final_energy_saving_by_action_type,
-        'population_of_municipality': population_of_municipality,
-        'parameters': parameters,
-        'measure_specific_parameters': measure_specific_parameters,
+        "id_mode": id_mode,
+        "id_region": id_region,
+        "final_energy_saving_by_action_type": final_energy_saving_by_action_type,
+        "population_of_municipality": population_of_municipality,
+        "parameters": parameters,
+        "measure_specific_parameters": measure_specific_parameters,
     }
 
 
@@ -270,7 +278,7 @@ def _interim_data(
     id_region,
     years,
 ):
-    subsector_ids = final_energy_saving_by_action_type.unique_index_values('id_subsector')
+    subsector_ids = final_energy_saving_by_action_type.unique_index_values("id_subsector")
 
     eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
 
@@ -315,31 +323,31 @@ def _interim_data(
     )
 
     return {
-        'additional_primary_energy_saving': additional_primary_energy_saving,
-        'air_pollution_parameters': air_pollution_parameters,
-        'energy_saving_by_final_energy_carrier': energy_saving_by_final_energy_carrier,
-        'eurostat_primary_parameters': eurostat_primary_parameters,
-        'reduction_of_energy_cost': reduction_of_energy_cost,
-        'total_primary_energy_saving': total_primary_energy_saving,
+        "additional_primary_energy_saving": additional_primary_energy_saving,
+        "air_pollution_parameters": air_pollution_parameters,
+        "energy_saving_by_final_energy_carrier": energy_saving_by_final_energy_carrier,
+        "eurostat_primary_parameters": eurostat_primary_parameters,
+        "reduction_of_energy_cost": reduction_of_energy_cost,
+        "total_primary_energy_saving": total_primary_energy_saving,
     }
 
 
 def _mapping_from_final_to_primary_energy_carrier(database):
-    mapping_table = database.mapping_table('mapping__final_energy_carrier__primary_energy_carrier')
+    mapping_table = database.mapping_table("mapping__final_energy_carrier__primary_energy_carrier")
     return mapping_table
 
 
 def _mocked_h2():
     coefficient_h2 = Table(
         [
-            {'id_primary_energy_carrier': 1, '2020': 1.5, '2025': 1.5, '2030': 1.5},
-            {'id_primary_energy_carrier': 2, '2020': 1.5, '2025': 1.5, '2030': 1.5},
-            {'id_primary_energy_carrier': 3, '2020': 1.5, '2025': 1.5, '2030': 1.5},
-            {'id_primary_energy_carrier': 4, '2020': 1.5, '2025': 1.5, '2030': 1.5},
-            {'id_primary_energy_carrier': 5, '2020': 1.5, '2025': 1.5, '2030': 1.5},
-            {'id_primary_energy_carrier': 6, '2020': 1.5, '2025': 1.5, '2030': 1.5},
-            {'id_primary_energy_carrier': 7, '2020': 1.5, '2025': 1.5, '2030': 1.5},
-            {'id_primary_energy_carrier': 8, '2020': 1.5, '2025': 1.5, '2030': 1.5},
+            {"id_primary_energy_carrier": 1, "2020": 1.5, "2025": 1.5, "2030": 1.5},
+            {"id_primary_energy_carrier": 2, "2020": 1.5, "2025": 1.5, "2030": 1.5},
+            {"id_primary_energy_carrier": 3, "2020": 1.5, "2025": 1.5, "2030": 1.5},
+            {"id_primary_energy_carrier": 4, "2020": 1.5, "2025": 1.5, "2030": 1.5},
+            {"id_primary_energy_carrier": 5, "2020": 1.5, "2025": 1.5, "2030": 1.5},
+            {"id_primary_energy_carrier": 6, "2020": 1.5, "2025": 1.5, "2030": 1.5},
+            {"id_primary_energy_carrier": 7, "2020": 1.5, "2025": 1.5, "2030": 1.5},
+            {"id_primary_energy_carrier": 8, "2020": 1.5, "2025": 1.5, "2030": 1.5},
         ]
     )
     return coefficient_h2
@@ -349,14 +357,14 @@ def _parse_request(http_request):
     query_string = http_request.query_string
     query_parameters = dict(parse_qs(query_string.decode()))
     query_dict = {k: v[0] for k, v in query_parameters.items()}
-    if http_request.content_type == 'application/json':
-        query_dict['json'] = http_request.json
-        if 'measures' in http_request.json:
-            query_dict['savings'] = [measure['savings'] for measure in http_request.json['measures']]
+    if http_request.content_type == "application/json":
+        query_dict["json"] = http_request.json
+        if "measures" in http_request.json:
+            query_dict["savings"] = [measure["savings"] for measure in http_request.json["measures"]]
         else:
-            raise AttributeError('Query must include the measures in the JSON body')
+            raise AttributeError("Query must include the measures in the JSON body")
     else:
-        raise AttributeError('Unknown content type:' + http_request.content_type)
+        raise AttributeError("Unknown content type:" + http_request.content_type)
     return query_dict
 
 
@@ -383,11 +391,11 @@ def _translate_result(key, table, data_source):
     if isinstance(table, AnnualSeries):
         message = 'Argument for key "' + key + '" is an AnnualSeries. Please pass a table instead.'
         raise ValueError(message)
-    translated_table = _translate_id_if_exists(table, 'id_parameter', data_source)
-    translated_table = _translate_id_if_exists(translated_table, 'id_sector', data_source)
-    translated_table = _translate_id_if_exists(translated_table, 'id_final_energy_carrier', data_source)
-    translated_table = _translate_id_if_exists(translated_table, 'id_primary_energy_carrier', data_source)
-    translated_table = _translate_id_if_exists(translated_table, 'id_technology', data_source)
+    translated_table = _translate_id_if_exists(table, "id_parameter", data_source)
+    translated_table = _translate_id_if_exists(translated_table, "id_sector", data_source)
+    translated_table = _translate_id_if_exists(translated_table, "id_final_energy_carrier", data_source)
+    translated_table = _translate_id_if_exists(translated_table, "id_primary_energy_carrier", data_source)
+    translated_table = _translate_id_if_exists(translated_table, "id_technology", data_source)
     _validate_remaining_index_column_names(translated_table)
 
     return translated_table
@@ -401,24 +409,24 @@ def _translate_result_tables(result_tables, data_source):
 def _validate_data(tables):
     for table_name, table in tables.items():
         if table.contains_nan():
-            message = 'Table ' + table_name + ' contains NaN values!'
+            message = "Table " + table_name + " contains NaN values!"
             raise ValueError(message)
 
         if table.contains_inf():
-            message = 'Table ' + table_name + ' contains infinite values!'
+            message = "Table " + table_name + " contains infinite values!"
             raise ValueError(message)
 
 
 def _validate_remaining_index_column_names(table):
     id_column_names, _year_column_names, _ = table.column_names
     for column_name in id_column_names:
-        if column_name == 'id_measure':
+        if column_name == "id_measure":
             continue
-        if column_name.startswith('id_'):
+        if column_name.startswith("id_"):
             message = (
                 'Translated table must not include index column "'
                 + column_name
                 + '". '
-                + 'Please translate or remove the column.'
+                + "Please translate or remove the column."
             )
             raise KeyError(message)
