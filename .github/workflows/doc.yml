@@ -40,7 +40,7 @@ jobs:
           make html
       - name: install latex
         run: |          
-          sudo apt-get -o Acquire::Retries=3 update -y
+          sudo apt-get update -y || true
           sudo apt-get install -y latexmk
           sudo apt-get install -y texlive-latex-extra  # otherwise LaTeX Error: File `cmap.sty' not found
           # for possible required latex packages also see
