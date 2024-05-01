@@ -1,7 +1,7 @@
 # © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
+import io
 import json
 import logging
 import os
@@ -9,6 +9,7 @@ import traceback
 from urllib.parse import parse_qs
 
 import pandas as pd
+import xlsxwriter
 from flask_compress import Compress
 from flask_cors import CORS
 
@@ -49,7 +50,7 @@ class BackEnd:
         CORS(self._app, resources={r"/*": {"origins": "*"}})  # allowed_origins}})
 
     def start(self, host="127.0.0.1", application_port=8000):
-        # if you adapt the port, also consider port forwarding setting in .htaccess 
+        # if you adapt the port, also consider port forwarding setting in .htaccess
         # file of this project / on web server
         print("Starting flask application at ", host, ":", application_port)
         if self._debug_mode:
@@ -256,6 +257,99 @@ class BackEnd:
                 self._confidential_database,
             )
             return self.create_json_parameters_response(measure_bytes, request)
+
+        @app.route("/export-results", methods=["POST"])
+        def export_results():
+            request = self._flask.request
+            data = request.json
+            file_name = f"MICAT_results.xlsx"
+            output = io.BytesIO()
+            workbook = xlsxwriter.workbook.Workbook(output)
+            bold = workbook.add_format({"bold": True})
+            for key, category in data["categories"].items():
+                if key not in ["quantification", "monetization"]:
+                    continue
+                worksheet = workbook.add_worksheet(category["title"])
+                row_idx = 0
+                for measurement in category["measurements"]:
+                    if row_idx > 0:
+                        row_idx += 1
+                    title = (
+                        f"[{measurement['subcategory']}] {measurement['title']}"
+                        if measurement.get("subcategory")
+                        else measurement["title"]
+                    )
+                    worksheet.write(row_idx, 0, title, bold)
+                    row_idx += 1
+                    result = data["results"][measurement["identifier"]]
+                    for year_idx, year in enumerate(result["yearColumnNames"]):
+                        worksheet.write(row_idx, year_idx + 1, year, bold)
+                    row_idx += 1
+                    col_idx = 0
+                    for row in result["rows"]:
+                        for idx, entry in enumerate(row):
+                            try:
+                                column_name = result["idColumnNames"][idx]
+                            except IndexError:
+                                if col_idx == 0:
+                                    col_idx += 1
+                                worksheet.write(row_idx, col_idx, entry)
+                            else:
+                                if column_name == "id_measure":
+                                    continue
+                                else:
+                                    worksheet.write(row_idx, col_idx, entry)
+                            col_idx += 1
+                        row_idx += 1
+                        col_idx = 0
+                    row_idx += 1
+
+            # CBA
+            cbaData = data["cbaData"]
+            years = cbaData.pop("years")
+            del cbaData["supportingYears"]
+            for key, charts in cbaData.items():
+                row_idx = 0
+                worksheet = workbook.add_worksheet(f"CBA - {key}"[:30])
+                for chart_key, chart in charts.items():
+                    worksheet.write(row_idx, 0, chart_key, bold)
+                    row_idx += 1
+                    col_idx = 1 if key == "marginalCostCurves" else 0
+                    for year in years:
+                        worksheet.write(row_idx, col_idx, year)
+                        col_idx += 1
+                    row_idx += 1
+                    col_idx = 0
+                    for row in chart:
+                        if key == "marginalCostCurves":
+                            legend = {
+                                "x": "Totally generated energy savings"
+                                if chart_key == "marginalEnergySavingsCostCurves"
+                                else "Totally generated CO2 savings",
+                                "y": "Totally saved energy savings"
+                                if chart_key == "marginalEnergySavingsCostCurves"
+                                else "Totally saved CO2 savings",
+                            }
+                            worksheet.write(row_idx, col_idx, legend["x"])
+                            row_idx += 1
+                            worksheet.write(row_idx, col_idx, legend["y"])
+                            row_idx -= 1
+                            col_idx += 1
+                        for year, value in row["data"].items():
+                            if key == "marginalCostCurves":
+                                worksheet.write(row_idx, col_idx, value["x"])
+                                row_idx += 1
+                                worksheet.write(row_idx, col_idx, value["y"])
+                                row_idx -= 1
+                            else:
+                                worksheet.write(row_idx, col_idx, value)
+                            col_idx += 1
+                    row_idx += 2
+            workbook.close()
+            response = self._flask.make_response(output.getvalue())
+            response.headers["Content-Disposition"] = "attachment; filename=" + file_name
+            response.headers["Content-type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            return response
 
         # Deprecated API routes
 
