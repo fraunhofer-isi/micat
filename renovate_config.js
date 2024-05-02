@@ -17,6 +17,7 @@ module.exports = {
   "forkProcessing": "enabled",
   "dryRun": null, //"full",  // use full to only log messages instead of creating pull requests
   "autodiscover": true,
+  "dependencyDashboard": false,
   "packageRules": [
     {
      "description": "lockFileMaintenance",
