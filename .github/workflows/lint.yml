@@ -40,7 +40,7 @@ jobs:
         echo "PYLINT_SCORE=$PYLINT_SCORE" >> $GITHUB_ENV
         echo "Pylint score is $PYLINT_SCORE"
     - name: badge
-      uses: schneegans/dynamic-badges-action@v1.6.0
+      uses: schneegans/dynamic-badges-action@v1.7.0
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: ${{ secrets.GIST_ID }}
