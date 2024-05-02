@@ -35,6 +35,6 @@ module.exports = {
      "ignoreTests": true, // set to false if you want updates only to be installed if tests pass
      "dependencyDashboardApproval": false,
      "minimumReleaseAge": null
-    },
+    }
   ]
 };
