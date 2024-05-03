@@ -12,11 +12,11 @@
        id: python_version
        run: |
          python_version=$(python -c '
-           import toml; 
-           from packaging import version; 
-           pyproject = toml.load("pyproject.toml"); 
-           python_version = pyproject["project"]["requires-python"]; 
+           import toml
+           from packaging import version
+           pyproject = toml.load("pyproject.toml")
+           python_version = pyproject["project"]["requires-python"]
            print(str(version.parse(python_version)))
          ')
-         echo "$python_version" >> $GITHUB_ENV
+         echo "python_version=$python_version" >> $GITHUB_ENV
        shell: bash

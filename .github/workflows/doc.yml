@@ -26,7 +26,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - uses: ./.github/actions/extract-python-version
+      - name: Extract Python version
+        uses: ./.github/actions/extract-python-version
       - name: setup python
         uses: actions/setup-python@v5
         with:
