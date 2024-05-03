@@ -15,6 +15,7 @@
     ":disableDependencyDashboard"
   ],
   "forkProcessing": "enabled",
+  "autodiscover": true,
   "packageRules": [
     {
      "description": "lockFileMaintenance",
