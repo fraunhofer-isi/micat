@@ -20,7 +20,7 @@ jobs:
         pwd
     - name: Extract Python version
       id: extract_python_version
-      uses: ./.github/actions/extract-python-version/action.yml
+      uses: .github/actions/extract-python-version
     - name: setup python
       uses: actions/setup-python@v5
       with:

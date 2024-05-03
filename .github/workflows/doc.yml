@@ -26,12 +26,12 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: Print current working directory
+      - name: Print current directory content
         run: |
-          pwd
+          ls -a
       - name: Extract Python version
         id: extract_python_version
-        uses: ./.github/actions/extract-python-version
+        uses: .github/actions/extract-python-version/
       - name: setup python
         uses: actions/setup-python@v5
         with:
