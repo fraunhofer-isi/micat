@@ -23,7 +23,7 @@ build-backend = "hatchling.build"
 [project]
 name = 'micat'
 version = '0.0.1'
-requires-python = '>=3.9.2' # Old Python version on our Hetzner server
+requires-python = '>=3.11.2' # Old python version on Hetzner
 license = {text = 'GNU Affero General Public License v3 or later (AGPLv3+)'}
 
 dependencies = [

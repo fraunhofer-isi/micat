@@ -26,10 +26,13 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      - name: Extract Python version
+        id: extract_python_version
+        uses: ./.github/actions/extract-python-version
       - name: setup python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: install python dependencies
         run: |   
           # also see settings in pyproject.toml
