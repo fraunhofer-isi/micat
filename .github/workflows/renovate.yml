@@ -24,3 +24,5 @@ jobs:
         with:
           token: ${{ secrets.RENOVATE_TOKEN }}
           configurationFile: ./.github/renovate.json5
+        env:
+          RENOVATE_AUTODISCOVER: true
