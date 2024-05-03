@@ -8,6 +8,10 @@ author: Stefan Eidelloth
 runs:
   using: "composite"
   steps:
+    - name: Install Python dependencies for current python version (assumes python is already available)
+      run: |
+        pip install toml
+      shell: bash
     - name: Extract Python version from pyproject.toml
       id: python_version
       run: |
