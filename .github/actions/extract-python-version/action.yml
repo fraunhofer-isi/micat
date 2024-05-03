@@ -7,6 +7,9 @@
  author: Stefan Eidelloth
  runs:
    using: "composite"
+   defaults:
+     run:
+       shell: bash
    steps:
      - name: Extract Python version from pyproject.toml
        id: python_version
