@@ -1,7 +1,7 @@
 # © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
+import csv
 import io
 import json
 import logging
@@ -263,7 +263,6 @@ class BackEnd:
         def export_results():
             request = self._flask.request
             data = request.json
-            file_name = f"MICAT_results.xlsx"
             output = io.BytesIO()
             workbook = xlsxwriter.workbook.Workbook(output)
             bold = workbook.add_format({"bold": True})
@@ -348,8 +347,33 @@ class BackEnd:
                     row_idx += 2
             workbook.close()
             response = self._flask.make_response(output.getvalue())
-            response.headers["Content-Disposition"] = "attachment; filename=" + file_name
+            response.headers["Content-Disposition"] = "attachment; filename=MICAT_results.xlsx"
             response.headers["Content-type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            return response
+
+        @app.route("/export-input", methods=["POST"])
+        def export_input():
+            request = self._flask.request
+            data = request.json
+            output = io.StringIO()
+            writer = csv.DictWriter(
+                output,
+                fieldnames=["time_frame", "region", "unit", "municipality", "inhabitants", "years"],
+            )
+            writer.writeheader()
+            writer.writerow(
+                {
+                    "time_frame": "ex_ante" if data["future"] else "ex_post",
+                    "region": data["region"],
+                    "unit": data["unit"],
+                    "municipality": data["municipality"],
+                    "inhabitants": data["inhabitants"],
+                    "years": ",".join(str(y) for y in data["years"]),
+                }
+            )
+            response = self._flask.make_response(output.getvalue())
+            response.headers["Content-Disposition"] = "attachment; filename=MICAT_inputs.csv"
+            response.headers["Content-type"] = "text/csv"
             return response
 
         # Deprecated API routes
