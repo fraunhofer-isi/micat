@@ -20,6 +20,7 @@ def main(directory_to_check="."):
         ".pytest_cache",
         ".vscode",
         "__pycache__",
+        "import/raw_data",
     ]
     file_names_to_exclude = [
         "Dockerfile",
