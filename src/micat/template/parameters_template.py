@@ -461,6 +461,13 @@ def _subsector_final_add_parameter_data(
     )
 
     data_table = _subsector_final_reorder_and_rename_columns(data_table)
+
+    # Add empty columns for years that are not present in the database
+    if years is not None:
+        for year in years:
+            if year not in data_table.columns:
+                data_table[year] = ""
+
     sheet = _write_data_to_sheet(sheet, data_table)
     return sheet
 
