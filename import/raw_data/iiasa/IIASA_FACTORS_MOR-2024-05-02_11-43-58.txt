@@ -1,3 +1,8 @@
+<!--
+© 2024 Fraunhofer-Gesellschaft e.V., München
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 LABEL_REGION,YEAR,MICAT_SECTOR,MICAT_FUEL,Indicator,FACTOR
 Austria,2000,Average agriculture,Biomass and Waste,AP_DEATHS,3.99743009
 Austria,2000,Average agriculture,Coal,AP_DEATHS,1.757041748
