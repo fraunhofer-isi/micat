@@ -34,7 +34,7 @@ dependencies = [
     'urllib3==2.2.1',
     'waitress==3.0.0',
     'Werkzeug==3.0.3',
-    'requests==2.32.2',
+    'requests==2.32.3',
     'watchdog==4.0.1',
     ## scientific calculus
     'pandas==2.2.2',
