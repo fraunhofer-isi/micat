@@ -46,6 +46,11 @@ def _parameters_template(template_args, database):
     id_final_energy_carrier_table = database.id_table("id_final_energy_carrier")
     id_primary_energy_carrier_table = database.id_table("id_primary_energy_carrier")
 
+    # If there is no year below or equal to 2020, add a dummy value; otherwise a table cannot be created
+    if not any([y for y in template_args["years"] if int(y) <= 2020]):
+        template_args["years"].append("2020")
+        template_args["ignore_years"] = ["2020"]
+
     template_bytes = io.BytesIO()
     workbook = xlsx_utils.empty_workbook(template_bytes)
 
@@ -184,6 +189,7 @@ def _subsector_final_create_parameter_sheet(
     id_mode = template_args["id_mode"]
     id_region = template_args["id_region"]
     years = template_args.get("years")
+    ignore_years = template_args.get("ignore_years", [])
 
     sheet = workbook.add_worksheet(sheet_name)
     sheet = _add_parameters_header(
@@ -209,6 +215,7 @@ def _subsector_final_create_parameter_sheet(
         id_subsector_table,
         id_final_energy_carrier_table,
         years,
+        ignore_years,
     )
 
     sheet.set_column(first_col=0, last_col=constants.MAX_COLS, width=30)
@@ -224,6 +231,8 @@ def _primary_create_parameter_sheet(
     id_mode = template_args["id_mode"]
     id_region = template_args["id_region"]
     years = template_args.get("years")
+    years = template_args.get("years")
+    ignore_years = template_args.get("ignore_years", [])
 
     sheet = workbook.add_worksheet(sheet_name)
     sheet = _add_parameters_header(
@@ -247,6 +256,7 @@ def _primary_create_parameter_sheet(
             id_parameter,
             id_primary_energy_carrier_table,
             years,
+            ignore_years,
         )
 
     elif sheet_name == "HeatGeneration":
@@ -260,6 +270,7 @@ def _primary_create_parameter_sheet(
             id_parameter,
             id_primary_energy_carrier_table,
             years,
+            ignore_years,
         )
 
     sheet.set_column(first_col=0, last_col=constants.MAX_COLS, width=30)
@@ -437,6 +448,7 @@ def _subsector_final_add_parameter_data(
     id_subsector_table,
     id_final_energy_carrier_table,
     years=None,
+    ignore_years=[],
 ):
     column_names = database_utils.column_names(database, table_name)
     filtered_column_names = database_utils.filter_column_names_by_id_mode(column_names, id_mode, years)
@@ -462,10 +474,13 @@ def _subsector_final_add_parameter_data(
 
     data_table = _subsector_final_reorder_and_rename_columns(data_table)
 
+    if len(ignore_years) > 0:
+        data_table = data_table.drop(columns=ignore_years)
+
     # Add empty columns for years that are not present in the database
     if years is not None:
         for year in years:
-            if year not in data_table.columns:
+            if year not in ignore_years and year not in data_table.columns:
                 data_table[year] = ""
 
     sheet = _write_data_to_sheet(sheet, data_table)
@@ -481,6 +496,7 @@ def _primary_add_parameter_data(
     id_parameter,
     id_primary_energy_carrier_table,
     years=None,
+    ignore_years=[],
 ):
     column_names = database_utils.column_names(database, table_name)
     filtered_column_names = database_utils.filter_column_names_by_id_mode(column_names, id_mode, years)
@@ -499,6 +515,16 @@ def _primary_add_parameter_data(
     )
 
     data_table = _primary_reorder_and_rename_columns(data_table)
+
+    if len(ignore_years) > 0:
+        data_table = data_table.drop(columns=ignore_years)
+
+    # Add empty columns for years that are not present in the database
+    if years is not None:
+        for year in years:
+            if year not in ignore_years and year not in data_table.columns:
+                data_table[year] = ""
+
     sheet = _write_data_to_sheet(sheet, data_table)
     return sheet
 
