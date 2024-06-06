@@ -8,14 +8,15 @@ import io
 
 import pandas as pd
 
+from micat.calculation import mode
 from micat.table import table
 from micat.template import constants, database_utils, validators, xlsx_utils
 from micat.utils import api
 
 
-def parameters_template(request, database):
+def parameters_template(request, database, confidential_database=None):
     template_args = _template_args(request)
-    template_bytes = _parameters_template(template_args, database)
+    template_bytes = _parameters_template(template_args, database, confidential_database)
     return template_bytes
 
 
@@ -41,7 +42,7 @@ def _template_args(request):
     return args
 
 
-def _parameters_template(template_args, database):
+def _parameters_template(template_args, database, confidential_database=None):
     id_subsector_table = database.id_table("id_subsector")
     id_final_energy_carrier_table = database.id_table("id_final_energy_carrier")
     id_primary_energy_carrier_table = database.id_table("id_primary_energy_carrier")
@@ -61,7 +62,7 @@ def _parameters_template(template_args, database):
                 workbook,
                 sheet_name,
                 template_args,
-                database,
+                database if mode.is_eurostat_mode(template_args["id_mode"]) else confidential_database,
                 id_subsector_table,
                 id_final_energy_carrier_table,
             )
@@ -208,7 +209,7 @@ def _subsector_final_create_parameter_sheet(
     sheet = _subsector_final_add_parameter_data(
         sheet,
         database,
-        "eurostat_final_sector_parameters",
+        "eurostat_final_sector_parameters" if mode.is_eurostat_mode(id_mode) else "primes_final_sector_parameters",
         id_mode,
         id_region,
         id_parameter,
@@ -246,11 +247,11 @@ def _primary_create_parameter_sheet(
     )
 
     if sheet_name == "ElectricityGeneration":
-        id_parameter = 21
+        id_parameter = 21 if mode.is_eurostat_mode(id_mode) else 1
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            "eurostat_primary_parameters",
+            "eurostat_primary_parameters" if mode.is_eurostat_mode(id_mode) else "primes_primary_parameters",
             id_mode,
             id_region,
             id_parameter,
@@ -260,11 +261,11 @@ def _primary_create_parameter_sheet(
         )
 
     elif sheet_name == "HeatGeneration":
-        id_parameter = 20
+        id_parameter = 20 if mode.is_eurostat_mode(id_mode) else 2
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            "eurostat_primary_parameters",
+            "eurostat_primary_parameters" if mode.is_eurostat_mode(id_mode) else "primes_primary_parameters",
             id_mode,
             id_region,
             id_parameter,

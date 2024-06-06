@@ -17,6 +17,9 @@ class Database:
     def __init__(self, database_path):
         self.database_path = database_path
 
+    def __str__(self) -> str:
+        return self.database_path
+
     def id_table(self, id_table_name):
         query = "SELECT *  FROM `" + id_table_name + "`"
         where_clause = {}

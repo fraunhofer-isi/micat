@@ -197,7 +197,11 @@ class BackEnd:
             # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_json.html
             # also see
             request = self._flask.request
-            parameter_bytes = parameters_template.parameters_template(request, self._database)
+            parameter_bytes = parameters_template.parameters_template(
+                request,
+                self._database,
+                self._confidential_database,
+            )
             return self.create_json_parameters_response(parameter_bytes, request)
 
         @app.route("/measure", methods=["POST"])
