@@ -69,7 +69,7 @@ doc = [
     'sphinx-rtd-theme==2.0.0',
     'sphinxcontrib-applehelp==1.0.8',
     'sphinxcontrib-htmlhelp==2.0.5',
-    'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.101',
+    'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.102',
 ]
 
 data = [   
