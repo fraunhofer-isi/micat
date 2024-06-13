@@ -72,7 +72,7 @@ def _parameters_template(template_args, database, confidential_database=None):
                 workbook,
                 sheet_name,
                 template_args,
-                database,
+                database if mode.is_eurostat_mode(template_args["id_mode"]) else confidential_database,
                 id_primary_energy_carrier_table,
             )
         elif sheet_name in ["MonetisationFactors"]:
@@ -247,11 +247,13 @@ def _primary_create_parameter_sheet(
     )
 
     if sheet_name == "ElectricityGeneration":
-        id_parameter = 21 if mode.is_eurostat_mode(id_mode) else 1
+        id_parameter = 21
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            "eurostat_primary_parameters" if mode.is_eurostat_mode(id_mode) else "primes_primary_parameters",
+            "eurostat_primary_parameters"
+            if mode.is_eurostat_mode(id_mode)
+            else "primes_primary_parameters_confidential",
             id_mode,
             id_region,
             id_parameter,
@@ -261,11 +263,13 @@ def _primary_create_parameter_sheet(
         )
 
     elif sheet_name == "HeatGeneration":
-        id_parameter = 20 if mode.is_eurostat_mode(id_mode) else 2
+        id_parameter = 20
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            "eurostat_primary_parameters" if mode.is_eurostat_mode(id_mode) else "primes_primary_parameters",
+            "eurostat_primary_parameters"
+            if mode.is_eurostat_mode(id_mode)
+            else "primes_primary_parameters_confidential",
             id_mode,
             id_region,
             id_parameter,

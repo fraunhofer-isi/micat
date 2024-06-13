@@ -671,8 +671,8 @@ class Table(AbstractTable):
             return self._reduce_data_frame_by_id(id_name, id_value)
 
     def _reduce_data_frame_by_id(self, id_name, id_value):
-        existing_values = self.unique_index_values(id_name)
-        if id_value in existing_values:
+        existing_values = [str(v) for v in self.unique_index_values(id_name)]
+        if str(id_value) in existing_values:
             query = id_name + " == " + str(id_value)
             reduced_data_frame = self._data_frame.query(query)
             index_size = len(reduced_data_frame.index.names)
