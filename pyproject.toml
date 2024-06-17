@@ -31,7 +31,7 @@ dependencies = [
     'flask==3.0.3',
     'flask-cors==4.0.1',
     'flask-compress==1.15',
-    'urllib3==2.2.1',
+    'urllib3==2.2.2',
     'waitress==3.0.0',
     'Werkzeug==3.0.3',
     'requests==2.32.3',
