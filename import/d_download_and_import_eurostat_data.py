@@ -61,7 +61,7 @@ def main():
 
     print("Reading eurostat data...")
     original_data_frame = pd.read_csv(file_path, sep="\t")
-    original_data_frame.rename(columns={"geo\TIME_PERIOD": "geo"}, inplace=True)
+    original_data_frame.rename(columns={"geo\\TIME_PERIOD": "geo"}, inplace=True)
     year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
 
     cleaned_data_frame = clean_and_remove_redundant_rows(original_data_frame, siec_relations)
