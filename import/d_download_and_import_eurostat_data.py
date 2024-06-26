@@ -61,10 +61,15 @@ def main():
 
     print("Reading eurostat data...")
     original_data_frame = pd.read_csv(file_path, sep="\t")
-    year_column_names = original_data_frame.columns.to_list()[4:][::-1]
+    original_data_frame.rename(columns={"geo\TIME_PERIOD": "geo"}, inplace=True)
+    year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
 
     cleaned_data_frame = clean_and_remove_redundant_rows(original_data_frame, siec_relations)
+
     regional_data_frame = join_region(cleaned_data_frame, database_import, import_folder)
+
+    regional_data_frame = regional_data_frame[regional_data_frame["freq"] == "A"]
+    del regional_data_frame["freq"]
 
     print("Creating and importing data...")
     _create_data_for_final_energy_carrier(
@@ -132,6 +137,7 @@ def _create_data_for_final_energy_carrier(
     # During summation existing NaN values (might come for example from :z not applicable values) become
     # zero values.
     sector_id_columns = ["id_region", "id_subsector", "id_final_energy_carrier"]
+
     aggregated_sector_data_frame = sector_data_frame.groupby(sector_id_columns)[year_column_names].sum().reset_index()
     sector_table = Table(aggregated_sector_data_frame)
 

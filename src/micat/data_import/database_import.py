@@ -32,7 +32,7 @@ class DatabaseImport:
             os.path.join(path_to_import_scripts, file)
             for file in os.listdir(path_to_import_scripts)
             if os.path.isfile(os.path.join(path_to_import_scripts, file))
-            and os.path.splitext(file)[-1].lower() == '.py'
+            and os.path.splitext(file)[-1].lower() == ".py"
         ]
 
         if excluded_scripts is not None:
@@ -42,15 +42,15 @@ class DatabaseImport:
 
         for file_name in file_names:
             print(
-                'Running file '
+                "Running file "
                 + str(file_names.index(file_name) + 1)
-                + ' of '
+                + " of "
                 + str(len(file_names))
-                + ': '
+                + ": "
                 + file_name
-                + '\n'
+                + "\n"
             )
-            subprocess.run('python ' + file_name, shell=True, check=False, cwd=path_to_import_scripts)
+            subprocess.run("python " + file_name, shell=True, check=False, cwd=path_to_import_scripts)
 
     @staticmethod
     def write_missing_entries_as_excel_file(  # pylint: disable=too-many-arguments, dangerous-default-value
@@ -62,13 +62,13 @@ class DatabaseImport:
         exclusions={},
     ):
         file_utils.delete_file_if_exists(file_path)
-        file_utils.delete_file_if_exists('indexed_' + file_path)
+        file_utils.delete_file_if_exists("indexed_" + file_path)
 
         if len(missing_entries) > 0:
             rows = []
             for entry in missing_entries:
-                if 'year' in entry:
-                    year = entry['year']
+                if "year" in entry:
+                    year = entry["year"]
                     row = DatabaseImport._create_missing_row(entry, column_mapping, year, value, exclusions)
                     if DatabaseImport._is_extra_row(row, rows):
                         rows.append(row)
@@ -83,9 +83,9 @@ class DatabaseImport:
             df.to_excel(file_path)
 
             column_names = list(column_mapping.keys())
-            column_names.remove('FACTOR')
+            column_names.remove("FACTOR")
             df.set_index(column_names, inplace=True, verify_integrity=True)
-            df.to_excel('indexed_' + file_path)
+            df.to_excel("indexed_" + file_path)
 
     @staticmethod
     def _create_missing_row(
@@ -123,7 +123,7 @@ class DatabaseImport:
         self._table_validator.validate(table)
         self._check_if_table_exists(table_name)
         with sqlite3.connect(self._database_path) as connection:
-            table.to_sql(table_name, connection, index_label='id', if_exists='append')
+            table.to_sql(table_name, connection, index_label="id", if_exists="append")
 
     def import_id_table(
         self,
@@ -131,7 +131,7 @@ class DatabaseImport:
         directory_or_database,
         optional_explicit_columns_that_will_be_unique=None,
     ):
-        if directory_or_database.endswith('.sqlite'):
+        if directory_or_database.endswith(".sqlite"):
             df_or_table = self._read_id_table_from_database(directory_or_database, table_name)
         else:
             df_or_table = self._read_id_table_from_excel_file(directory_or_database, table_name)
@@ -139,7 +139,7 @@ class DatabaseImport:
         try:
             self._check_labels(df_or_table)
         except Exception as exception:
-            print('Table ' + table_name + ' at ' + directory_or_database + ' contains NaN labels.')
+            print("Table " + table_name + " at " + directory_or_database + " contains NaN labels.")
             raise exception
 
         with sqlite3.connect(self._database_path) as target_connection:
@@ -152,8 +152,8 @@ class DatabaseImport:
             df_or_table.to_sql(
                 table_name,
                 target_connection,
-                index_label='id',
-                if_exists='append',
+                index_label="id",
+                if_exists="append",
             )
 
     # pylint: disable=too-many-arguments
@@ -184,7 +184,7 @@ class DatabaseImport:
             target_cursor.execute(create_query)
 
             # hint: to_sql must not use if_exists='replace' but 'append'; otherwise table structure is lost
-            mapping_table.to_sql(target_table_name, target_connection, index=False, if_exists='append')
+            mapping_table.to_sql(target_table_name, target_connection, index=False, if_exists="append")
 
     def read_mapping_table(
         self,
@@ -212,20 +212,20 @@ class DatabaseImport:
         with sqlite3.connect(self._database_path) as connection:
             DatabaseImport._recreate_data_table(table_name, sorted_table, connection)
             # hint: to_sql must not use if_exists='replace' but 'append'; otherwise table structure is lost
-            sorted_table.to_sql(table_name, connection, index_label='id', if_exists='append')
+            sorted_table.to_sql(table_name, connection, index_label="id", if_exists="append")
 
     @staticmethod
     def _check_labels(df):
-        label_values = df['label'].values
+        label_values = df["label"].values
         for label in label_values:
             if not isinstance(label, str):
                 if math.isnan(label):
-                    raise ValueError('Labels must not contain NaN values.')
+                    raise ValueError("Labels must not contain NaN values.")
             string_label = str(label)
             stripped_label = string_label.strip()
             if stripped_label != string_label:
                 message = (
-                    'Labels must not start or end with whitespaces.'
+                    "Labels must not start or end with whitespaces."
                     + 'Please fix the raw data entry in sharepoint "'
                     + string_label
                     + '"'
@@ -234,14 +234,14 @@ class DatabaseImport:
 
     @staticmethod
     def _delete_table_if_exists(table_name, target_cursor):
-        delete_query = 'DROP TABLE IF EXISTS `' + table_name + '`'
+        delete_query = "DROP TABLE IF EXISTS `" + table_name + "`"
         target_cursor.execute(delete_query)
 
     @staticmethod
     def _determine_column_entry(dictionary, target, year, value):
-        if target == 'year':
+        if target == "year":
             return year
-        elif target == 'value':
+        elif target == "value":
             return value
         else:
             id_entry = dictionary[target]
@@ -250,7 +250,7 @@ class DatabaseImport:
 
     @staticmethod
     def _key_column_names(id_column_names):
-        key_column_names = list(filter(lambda id_column_name: id_column_name != 'id_unit', id_column_names))
+        key_column_names = list(filter(lambda id_column_name: id_column_name != "id_unit", id_column_names))
         return key_column_names
 
     @staticmethod
@@ -258,25 +258,25 @@ class DatabaseImport:
         table_name,
         optional_explicit_columns_that_will_be_unique=None,
     ):
-        unique_columns = ['label']
+        unique_columns = ["label"]
         if optional_explicit_columns_that_will_be_unique is not None:
             unique_columns = optional_explicit_columns_that_will_be_unique
 
         create_query = (
-            'CREATE TABLE `' + table_name + '` (' + 'id integer PRIMARY KEY NOT NULL, ' + 'label text NOT NULL'
+            "CREATE TABLE `" + table_name + "` (" + "id integer PRIMARY KEY NOT NULL, " + "label text NOT NULL"
         )
 
         # In some special cases one might want to allow that
         # the label is not unique. Then you should pass ['description']
         # as unique columns instead of the default value ['label']
-        if 'label' in unique_columns:
-            create_query += ' UNIQUE'
+        if "label" in unique_columns:
+            create_query += " UNIQUE"
 
-        create_query += ', description text'
-        if 'description' in unique_columns:
-            create_query += ' UNIQUE'
+        create_query += ", description text"
+        if "description" in unique_columns:
+            create_query += " UNIQUE"
 
-        create_query += ')'
+        create_query += ")"
         return create_query
 
     @staticmethod
@@ -286,33 +286,33 @@ class DatabaseImport:
         target_table_name,
     ):
         create_query = (
-            'CREATE TABLE `'
+            "CREATE TABLE `"
             + target_table_name
-            + '` ('
-            + 'id integer PRIMARY KEY NOT NULL, '
+            + "` ("
+            + "id integer PRIMARY KEY NOT NULL, "
             + left_id_name
-            + ' integer NOT NULL, '
+            + " integer NOT NULL, "
             + right_id_name
-            + ' integer NOT NULL, '
-            + 'FOREIGN KEY ('
+            + " integer NOT NULL, "
+            + "FOREIGN KEY ("
             + left_id_name
-            + ') REFERENCES '
+            + ") REFERENCES "
             + left_id_name
-            + '(id), '
-            + 'FOREIGN KEY ('
+            + "(id), "
+            + "FOREIGN KEY ("
             + right_id_name
-            + ') REFERENCES '
+            + ") REFERENCES "
             + right_id_name
-            + '(id)'
-            + ')'
+            + "(id)"
+            + ")"
         )
         return create_query
 
     @staticmethod
     def _read_id_table_from_excel_file(directory, table_name):
-        excel_file_path = directory + '/' + table_name + '.xlsx'
-        df = pd.read_excel(excel_file_path, index_col='id')
-        df = df[['label', 'description']]
+        excel_file_path = directory + "/" + table_name + ".xlsx"
+        df = pd.read_excel(excel_file_path, index_col="id")
+        df = df[["label", "description"]]
         return df
 
     @staticmethod
@@ -328,8 +328,8 @@ class DatabaseImport:
         target_id_name,
         data_directory,
     ):
-        file_path = data_directory + '/' + table_name + '.xlsx'
-        df = pd.read_excel(file_path, index_col='id')
+        file_path = data_directory + "/" + table_name + ".xlsx"
+        df = pd.read_excel(file_path, index_col="id")
         df = df[[source_column_name, target_id_name]]
         return MappingTable(df, table_name)
 
@@ -339,27 +339,27 @@ class DatabaseImport:
 
         cursor = connection.cursor()
 
-        delete_query = 'DROP TABLE IF EXISTS `' + table_name + '`'
+        delete_query = "DROP TABLE IF EXISTS `" + table_name + "`"
         cursor.execute(delete_query)
 
-        create_query = 'CREATE TABLE `' + table_name + '` (' + 'id integer PRIMARY KEY NOT NULL, '
+        create_query = "CREATE TABLE `" + table_name + "` (" + "id integer PRIMARY KEY NOT NULL, "
 
         for column_name in id_column_names:
-            create_query += column_name + ' integer NOT NULL, '
+            create_query += column_name + " integer NOT NULL, "
 
         for column_name in year_column_names:
-            create_query += '`' + str(column_name) + '` real NOT NULL, '
+            create_query += "`" + str(column_name) + "` real NOT NULL, "
 
         for column_name in value_column_names:
-            create_query += '`' + str(column_name) + '` real NOT NULL, '
+            create_query += "`" + str(column_name) + "` real NOT NULL, "
 
         for column_name in id_column_names:
-            create_query += 'FOREIGN KEY (' + column_name + ') REFERENCES ' + column_name + '(id), '
+            create_query += "FOREIGN KEY (" + column_name + ") REFERENCES " + column_name + "(id), "
 
         key_column_names = id_column_names  # table.key_column_names
-        create_query += 'UNIQUE (' + ', '.join(key_column_names) + ')'
+        create_query += "UNIQUE (" + ", ".join(key_column_names) + ")"
 
-        create_query += ')'
+        create_query += ")"
 
         cursor.execute(create_query)
 
@@ -370,7 +370,7 @@ class DatabaseImport:
     def _table_exists(self, table_name):
         with sqlite3.connect(self._database_path) as connection:
             cursor = connection.cursor()
-            query = 'SELECT name FROM sqlite_master WHERE type=\'table\' AND name=\'' + table_name + '\''
+            query = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + table_name + "'"
             cursor.execute(query)
             result = cursor.fetchall()
             table_exists = len(result) > 0
