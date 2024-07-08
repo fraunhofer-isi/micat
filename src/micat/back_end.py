@@ -271,6 +271,7 @@ class BackEnd:
             output = io.BytesIO()
             workbook = xlsxwriter.workbook.Workbook(output)
             bold = workbook.add_format({"bold": True})
+            italic = workbook.add_format({"italic": True})
             aggregation_measurements = []
             for key, category in data["categories"].items():
                 if key not in ["quantification", "monetization"]:
@@ -282,12 +283,16 @@ class BackEnd:
                         aggregation_measurements.append(measurement)
                     if row_idx > 0:
                         row_idx += 1
+                    # title
                     title = (
                         f"[{measurement['subcategory']}] {measurement['title']}"
                         if measurement.get("subcategory")
                         else measurement["title"]
                     )
                     worksheet.write(row_idx, 0, title, bold)
+                    row_idx += 1
+                    # unit
+                    worksheet.write(row_idx, 0, measurement["yAxis"], italic)
                     row_idx += 1
                     result = data["results"][measurement["identifier"]]
                     for year_idx, year in enumerate(result["yearColumnNames"]):
@@ -351,6 +356,8 @@ class BackEnd:
                     worksheet.write(row_idx, 0, chart_key, bold)
                     row_idx += 1
                     col_idx = 1 if key == "marginalCostCurves" else 0
+                    worksheet.write(row_idx, 0, "€", italic)
+                    row_idx += 1
                     for year in years:
                         worksheet.write(row_idx, col_idx, year)
                         col_idx += 1
