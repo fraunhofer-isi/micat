@@ -272,6 +272,29 @@ class BackEnd:
             workbook = xlsxwriter.workbook.Workbook(output)
             bold = workbook.add_format({"bold": True})
             italic = workbook.add_format({"italic": True})
+
+            # Inputs
+            worksheet = workbook.add_worksheet("Inputs")
+            row_idx = 0
+            for program in data["programs"]:
+                worksheet.write(row_idx, 0, "Program")
+                worksheet.write(row_idx, 1, program["name"], bold)
+                row_idx += 1
+                worksheet.write(row_idx, 0, "Subsector")
+                worksheet.write(row_idx, 1, program.get("subsectorName", program["subsector"]), bold)
+                row_idx += 2
+                for improvement in program["improvements"]:
+                    worksheet.write(row_idx, 0, improvement.get("name", improvement["id"]), italic)
+                    row_idx += 1
+                    col_idx = 0
+                    for key, value in improvement["values"].items():
+                        worksheet.write(row_idx, col_idx, key, bold)
+                        worksheet.write(row_idx + 1, col_idx, value, bold)
+                        col_idx += 1
+                    row_idx += 2
+                row_idx += 5
+
+            # Outputs
             aggregation_measurements = []
             for key, category in data["categories"].items():
                 if key not in ["quantification", "monetization"]:
