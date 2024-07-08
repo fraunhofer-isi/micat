@@ -80,7 +80,7 @@ data = [
 license = [
     'licensecheck==2024.2',  
     'license_scanner==0.2.6',
-    'reuse==4.0.2',
+    'reuse==4.0.3',
     'pipreqs==0.5.0',
     'third-party-license-file-generator==2023.2.22'
 
