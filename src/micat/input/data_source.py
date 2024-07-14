@@ -383,7 +383,7 @@ class DataSource:
                                     "column_names": ["Value"],
                                 }
                             ],
-                            "Investment costs of PV [€/MWh]": [
+                            "Investment costs of PV [€/MW]": [
                                 {
                                     "table_name": "irena_technology_parameters",
                                     "id_parameter": 4,
@@ -391,7 +391,7 @@ class DataSource:
                                     "column_names": ["Value"],
                                 }
                             ],
-                            "Investment costs of onshore wind [€/MWh]": [
+                            "Investment costs of onshore wind [€/MW]": [
                                 {
                                     "table_name": "irena_technology_parameters",
                                     "id_parameter": 44,
@@ -399,7 +399,7 @@ class DataSource:
                                     "column_names": ["Value"],
                                 }
                             ],
-                            "Investment costs of offshore wind [€/MWh]": [
+                            "Investment costs of offshore wind [€/MW]": [
                                 {
                                     "table_name": "irena_technology_parameters",
                                     "id_parameter": 37,

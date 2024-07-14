@@ -150,9 +150,9 @@ def _monetization_parameters_table(database, id_mode, id_region):
         "Value of a lost work day [€]": value_of_a_lost_workday,
         "Cost per ton of emitted CO2 [€/tCO2]": cost_per_ton_of_emitted_co2,
         "Cost of statistical transfer of RES [€/ktoe]": cost_of_statistical_transfer_of_res,
-        "Investment costs of PV [€/MWh]": investment_costs_of_pv,
-        "Investment costs of onshore wind [€/MWh]": investment_costs_of_onshore_wind,
-        "Investment costs of offshore wind [€/MWh]": investment_costs_of_offshore_wind,
+        "Investment costs of PV [€/MW]": investment_costs_of_pv,
+        "Investment costs of onshore wind [€/MW]": investment_costs_of_onshore_wind,
+        "Investment costs of offshore wind [€/MW]": investment_costs_of_offshore_wind,
     }
 
     monetization_parameter_table = _construct_monetization_parameter_table(parameter_tables)
