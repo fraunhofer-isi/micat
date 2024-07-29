@@ -67,7 +67,7 @@ doc = [
     'Sphinx==7.4.7',
     'myst-parser==3.0.1',
     'sphinx-rtd-theme==2.0.0',
-    'sphinxcontrib-applehelp==1.0.8',
+    'sphinxcontrib-applehelp==2.0.0',
     'sphinxcontrib-htmlhelp==2.1.0',
     'rst2pdf[aafiguresupport,mathsupport,plantumlsupport,rawhtmlsupport,sphinx,svgsupport]==0.102',
 ]
