@@ -65,7 +65,7 @@ test = [
 
 doc = [
     'Sphinx==8.0.2',
-    'myst-parser==3.0.1',
+    'myst-parser==4.0.0',
     'sphinx-rtd-theme==2.0.0',
     'sphinxcontrib-applehelp==2.0.0',
     'sphinxcontrib-htmlhelp==2.1.0',
