@@ -13,7 +13,13 @@ def main():
     database_import = DatabaseImport(public_database_path)
 
     import_path = raw_data_path + "/e3m/"
-    data_path = import_path + "/e3m_parameters_updated.xlsx"
 
-    data = Table.read_excel(data_path)
+    # Import e3m_parameters
+    e3m_parameters_path = import_path + "/e3m_parameters_updated.xlsx"
+    data = Table.read_excel(e3m_parameters_path)
     database_import.write_to_sqlite(data, "e3m_parameters")
+
+    # Import e3m_global_parameters
+    e3m_global_parameters_path = import_path + "/investments_per_ktoe_updated.xlsx"
+    data = Table.read_excel(e3m_global_parameters_path)
+    database_import.write_to_sqlite(data, "e3m_global_parameters")
