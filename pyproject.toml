@@ -33,7 +33,7 @@ dependencies = [
     'flask-compress==1.15',
     'urllib3==2.2.2',
     'waitress==3.0.0',
-    'Werkzeug==3.0.3',
+    'Werkzeug==3.0.4',
     'requests==2.32.3',
     'watchdog==4.0.2',
     ## scientific calculus
