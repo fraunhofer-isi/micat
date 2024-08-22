@@ -20,37 +20,99 @@ def main():  # pylint: disable=too-many-locals
     database = Database(public_database_path)
     database_import = DatabaseImport(public_database_path)
 
-    import_folder = raw_data_path + '/iiasa'
+    import_folder = raw_data_path + "/iiasa"
 
-    id_region_table = database.id_table('id_region')
-    id_parameter_table = database.id_table('id_parameter')
-    id_subsector_table = database.id_table('id_subsector')
-    id_final_energy_carrier_table = database.id_table('id_final_energy_carrier')
+    id_region_table = database.id_table("id_region")
+    id_parameter_table = database.id_table("id_parameter")
+    id_subsector_table = database.id_table("id_subsector")
+    id_final_energy_carrier_table = database.id_table("id_final_energy_carrier")
 
-    print('Reading input files...')
+    print("Reading input files...")
 
     # air pollution factors are specified in kt/PJ
-    raw_air_pollution_factor = pd.read_excel(import_folder + '/air_pollutant.xlsx', engine='openpyxl')
+    raw_air_pollution_factor = pd.read_excel(import_folder + "/air_pollutant_updated.xlsx", engine="openpyxl")
+    raw_air_pollution_factor = raw_air_pollution_factor.rename(
+        columns={
+            "Pollutant": "Parameter",
+            "EM_FACTOR": "FACTOR",
+        }
+    )
 
-    _warn_for_dummy_values(raw_air_pollution_factor, 'air_pollution')
+    # raw_air_pollution_factor.append([df_try]*5, ignore_index=True)
 
     # morbidity factors are specified in 1/PJ
-    raw_morbidity_factor = pd.read_excel(import_folder + '/morbidity.xlsx', engine='openpyxl')
+    raw_morbidity_factor = pd.read_excel(import_folder + "/morbidity_updated.xlsx", engine="openpyxl")
+    # Rename columns
+    raw_morbidity_factor = raw_morbidity_factor.rename(
+        columns={
+            "Indicator": "Parameter",
+        }
+    )
+    # Rename countries
+    raw_morbidity_factor.LABEL_REGION = raw_morbidity_factor.LABEL_REGION.replace(
+        {
+            "European Union27": "European Union",
+        },
+    )
+    # Rename parameters
+    raw_morbidity_factor.Parameter = raw_morbidity_factor.Parameter.replace(
+        {
+            "AP_DEATHS": "Mortality_AP",
+            "Hospital admissions": "Morbidity_AP",
+            "Labor force WLD": "Lost work days",
+        }
+    )
 
-    _warn_for_dummy_values(raw_morbidity_factor, 'morbidity')
+    # Replicate entries for different subsectors values
+    sector_value_mapping = {
+        "Average industry": [7, 8, 9, 10, 12, 13, 14],
+        "Not elsewhere specified in transport": [23],
+    }
+    for identifier, new_sectors in sector_value_mapping.items():
+        replicates = raw_air_pollution_factor.loc[raw_air_pollution_factor["MICAT_SECTOR"] == identifier]
+        for index in new_sectors:
+            subsector = id_subsector_table._data_frame.loc[index]["label"]
+            replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({identifier: subsector})
+            raw_air_pollution_factor = pd.concat([raw_air_pollution_factor, replicates])
+            replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({subsector: identifier})
+    for identifier, new_sectors in sector_value_mapping.items():
+        replicates = raw_morbidity_factor.loc[raw_morbidity_factor["MICAT_SECTOR"] == identifier]
+        for index in new_sectors:
+            subsector = id_subsector_table._data_frame.loc[index]["label"]
+            replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({identifier: subsector})
+            raw_morbidity_factor = pd.concat([raw_morbidity_factor, replicates])
+            replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({subsector: identifier})
+    # Replicate entries for different energy carriers
+    carrier_value_mapping = {
+        "Gas": [7],
+    }
+    for identifier, new_carriers in carrier_value_mapping.items():
+        replicates = raw_air_pollution_factor.loc[raw_air_pollution_factor["MICAT_FUEL"] == identifier]
+        for index in new_carriers:
+            carrier = id_final_energy_carrier_table._data_frame.loc[index]["label"]
+            replicates.MICAT_FUEL = replicates.MICAT_FUEL.replace({identifier: carrier})
+            raw_air_pollution_factor = pd.concat([raw_air_pollution_factor, replicates])
+            replicates.MICAT_FUEL = replicates.MICAT_FUEL.replace({carrier: identifier})
+    for identifier, new_carriers in carrier_value_mapping.items():
+        replicates = raw_morbidity_factor.loc[raw_morbidity_factor["MICAT_FUEL"] == identifier]
+        for index in new_carriers:
+            carrier = id_final_energy_carrier_table._data_frame.loc[index]["label"]
+            replicates.MICAT_FUEL = replicates.MICAT_FUEL.replace({identifier: carrier})
+            raw_morbidity_factor = pd.concat([raw_morbidity_factor, replicates])
+            replicates.MICAT_FUEL = replicates.MICAT_FUEL.replace({carrier: identifier})
 
     column_mapping = {
-        'LABEL_REGION': 'id_region',
-        'YEAR': 'year',
-        'MICAT_SECTOR': 'id_subsector',
-        'MICAT_FUEL': 'id_final_energy_carrier',
-        'Parameter': 'id_parameter',
-        'FACTOR': 'value',
+        "LABEL_REGION": "id_region",
+        "YEAR": "year",
+        "MICAT_SECTOR": "id_subsector",
+        "MICAT_FUEL": "id_final_energy_carrier",
+        "Parameter": "id_parameter",
+        "FACTOR": "value",
     }
 
-    pj_to_ktoe = conversion_energy.conversion_coefficient('PJ', 'ktoe')
+    pj_to_ktoe = conversion_energy.conversion_coefficient("PJ", "ktoe")
 
-    print('Translating iiasa air pollution data...')
+    print("Translating iiasa air pollution data...")
 
     air_pollution_factor_in_kt_per_pj, missing_entries = _translate_iiasa_table(
         raw_air_pollution_factor,
@@ -59,22 +121,21 @@ def main():  # pylint: disable=too-many-locals
         id_subsector_table,
         id_final_energy_carrier_table,
     )
-
     air_pollution_factor_in_kt_per_ktoe = air_pollution_factor_in_kt_per_pj * 1 / pj_to_ktoe
 
-    print('Including air pollution data for europe...')
+    print("Including air pollution data for europe...")
     air_pollution_factor_with_europe = _add_europe_data(air_pollution_factor_in_kt_per_ktoe)
 
-    print('Validating data...')
+    print("Validating data...")
     missing_entries = database_import.validate_table(air_pollution_factor_with_europe, missing_entries)
     years = _extract_years(raw_air_pollution_factor)
-    exclusions = {'id_region': 0}  # we exclude european values because they are calculated
+    exclusions = {"id_region": 0}  # we exclude european values because they are calculated
     dummy_value_for_missing_entries = -999
 
     if len(missing_entries) > 0:
-        print('Writing missing entries...')
+        print("Writing missing entries...")
         database_import.write_missing_entries_as_excel_file(
-            'missing_entries_air_pollution.xlsx',
+            "missing_entries_air_pollution.xlsx",
             missing_entries,
             column_mapping,
             years,
@@ -82,7 +143,8 @@ def main():  # pylint: disable=too-many-locals
             exclusions,
         )
 
-    print('Translating iiasa morbidity data...')
+    print("Translating iiasa morbidity data...")
+
     morbidity_factor, missing_entries = _translate_iiasa_table(
         raw_morbidity_factor,
         id_region_table,
@@ -93,17 +155,17 @@ def main():  # pylint: disable=too-many-locals
 
     morbidity_factor_in_1_over_ktoe = morbidity_factor * 1 / pj_to_ktoe
 
-    print('Including morbidity data for europe...')
+    print("Including morbidity data for europe...")
     morbidity_factor_with_europe = _add_europe_data(morbidity_factor_in_1_over_ktoe)
 
-    print('Validating data...')
+    print("Validating data...")
     missing_entries = database_import.validate_table(morbidity_factor_with_europe, missing_entries)
     years = _extract_years(raw_morbidity_factor)
 
     if len(missing_entries) > 0:
-        print('Writing missing entries...')
+        print("Writing missing entries...")
         database_import.write_missing_entries_as_excel_file(
-            'missing_entries_morbidity.xlsx',
+            "missing_entries_morbidity.xlsx",
             missing_entries,
             column_mapping,
             years,
@@ -112,32 +174,27 @@ def main():  # pylint: disable=too-many-locals
         )
 
     factors = Table.concat([air_pollution_factor_with_europe, morbidity_factor_with_europe])
+    # Remove duplicated rows, since somehow pivot_table creates duplicates
+    factors = factors[~factors.index.duplicated(keep="first")]
 
-    print('Writing data to sqlite...')
-    database_import.write_to_sqlite(factors, 'iiasa_final_subsector_parameters')
+    print("Writing data to sqlite...")
 
-    print('Finished!')
+    database_import.write_to_sqlite(factors, "iiasa_final_subsector_parameters")
 
-
-def _warn_for_dummy_values(data_frame, label):
-    dummy_value = -0.00001
-    number_of_dummy_values = data_frame['FACTOR'].value_counts()[dummy_value]
-    if number_of_dummy_values > 0:
-        message = label + ' includes ' + str(number_of_dummy_values) + ' dummy values (' + str(dummy_value) + ')!'
-        warnings.warn(message)
+    print("Finished!")
 
 
 def _extract_years(df):
-    years = list(set(df['YEAR']))
+    years = list(set(df["YEAR"]))
     years.sort()
     return years
 
 
 def _add_europe_data(factors):
-    id_columns = ['id_parameter', 'id_subsector', 'id_final_energy_carrier']
+    id_columns = ["id_parameter", "id_subsector", "id_final_energy_carrier"]
     europe_data = factors.aggregate_by_mean_to(id_columns)
     # note: if you want to change the default value of 0, be aware of the different units
-    europe_data = europe_data.insert_index_column('id_region', 0, 0)
+    europe_data = europe_data.insert_index_column("id_region", 0, 0)
     extended_factors = Table.concat([factors, europe_data])
     return extended_factors
 
@@ -149,21 +206,21 @@ def _translate_iiasa_table(
     id_subsector_table,
     id_final_energy_carrier_table,
 ):
-    df['YEAR'] = df['YEAR'].astype(str)
+    df["YEAR"] = df["YEAR"].astype(str)
 
-    translated_df = id_region_table.label_to_id(df, 'LABEL_REGION')
-    translated_df = id_parameter_table.label_to_id(translated_df, 'Parameter')
-    translated_df = id_subsector_table.label_to_id(translated_df, 'MICAT_SECTOR')
-    translated_df = id_final_energy_carrier_table.label_to_id(translated_df, 'MICAT_FUEL')
+    translated_df = id_region_table.label_to_id(df, "LABEL_REGION")
+    translated_df = id_parameter_table.label_to_id(translated_df, "Parameter")
+    translated_df = id_subsector_table.label_to_id(translated_df, "MICAT_SECTOR")
+    translated_df = id_final_energy_carrier_table.label_to_id(translated_df, "MICAT_FUEL")
 
     contains_nan_values = translated_df.isna().any().any()
     if contains_nan_values:
-        raise ValueError('Data contains rows with missing values')
+        raise ValueError("Data contains rows with missing values")
 
     result = translated_df.pivot_table(
-        values='FACTOR',
-        index=['id_region', 'id_parameter', 'id_subsector', 'id_final_energy_carrier'],
-        columns='YEAR',
+        values="FACTOR",
+        index=["id_region", "id_parameter", "id_subsector", "id_final_energy_carrier"],
+        columns="YEAR",
     )
 
     missing_entries = []
@@ -223,26 +280,26 @@ def _create_missing_entry(  # pylint: disable=too-many-arguments
     id_subsector_table,
     id_final_energy_carrier_table,
 ):
-    entry = {'year': year}
+    entry = {"year": year}
 
-    id_region = int(df_row['id_region'])
+    id_region = int(df_row["id_region"])
     region_label = id_region_table.label(id_region)
-    entry['id_region'] = (id_region, region_label)
+    entry["id_region"] = (id_region, region_label)
 
-    id_parameter = int(df_row['id_parameter'])
+    id_parameter = int(df_row["id_parameter"])
     parameter_label = id_parameter_table.label(id_parameter)
-    entry['id_parameter'] = (id_parameter, parameter_label)
+    entry["id_parameter"] = (id_parameter, parameter_label)
 
-    id_subsector = int(df_row['id_subsector'])
+    id_subsector = int(df_row["id_subsector"])
     subsector_label = id_subsector_table.label(id_subsector)
-    entry['id_subsector'] = (id_subsector, subsector_label)
+    entry["id_subsector"] = (id_subsector, subsector_label)
 
-    id_final_energy_carrier = int(df_row['id_final_energy_carrier'])
+    id_final_energy_carrier = int(df_row["id_final_energy_carrier"])
     final_energy_carrier_label = id_final_energy_carrier_table.label(id_final_energy_carrier)
-    entry['id_final_energy_carrier'] = (id_final_energy_carrier, final_energy_carrier_label)
+    entry["id_final_energy_carrier"] = (id_final_energy_carrier, final_energy_carrier_label)
 
     return entry
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
