@@ -38,8 +38,6 @@ def main():  # pylint: disable=too-many-locals
         }
     )
 
-    # raw_air_pollution_factor.append([df_try]*5, ignore_index=True)
-
     # morbidity factors are specified in 1/PJ
     raw_morbidity_factor = pd.read_excel(import_folder + "/morbidity_updated.xlsx", engine="openpyxl")
     # Rename columns
