@@ -44,7 +44,7 @@ def main():
     )
     monetization_factors.MORB_IND = monetization_factors.MORB_IND.replace(
         {
-            "Hospital admissions": "Test",
+            "Hospital admissions": "Hospitalisation monetisation",
             "Labor force WLD": "Value of lost work days",
         }
     )
