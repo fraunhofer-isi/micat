@@ -29,7 +29,7 @@ license = {text = 'GNU Affero General Public License v3 or later (AGPLv3+)'}
 dependencies = [
     ## web
     'flask==3.0.3',
-    'flask-cors==4.0.2',
+    'flask-cors==5.0.0',
     'flask-compress==1.15',
     'urllib3==2.2.2',
     'waitress==3.0.0',
