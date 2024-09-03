@@ -18,7 +18,7 @@ def energy_intensity(
     energy_intensity_table_baseline = _intensity_table(
         sum_series_baseline,
         gross_domestic_product_baseline,
-        'Baseline',
+        'Without savings',
     )
 
     additional_gross_domestic_product = additional_gross_domestic_product.insert_index_column('id_parameter', 0, 10)
@@ -35,7 +35,7 @@ def energy_intensity(
     energy_intensity_table = _intensity_table(
         sum_series,
         gross_domestic_product,
-        'Including saving',
+        'With saving',
     )
 
     result = Table.concat([energy_intensity_table_baseline, energy_intensity_table])

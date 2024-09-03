@@ -9,6 +9,7 @@ from micat.calculation.social import (
     health_impacts_monetization,
     indoor_health,
     lost_working_days_monetization,
+    hospitalization_monetization
 )
 
 
@@ -41,6 +42,14 @@ def social_indicators(
 
     lost_working_days_monetization_table = (
         lost_working_days_monetization.monetization_of_lost_working_days_due_to_air_pollution(
+            reduction_of_lost_work_days_table,
+            data_source,
+            id_region,
+        )
+    )
+
+    hospitalization_monetization_table = (
+        hospitalization_monetization.monetization_of_hospitalizations_due_to_air_pollution(
             reduction_of_lost_work_days_table,
             data_source,
             id_region,
