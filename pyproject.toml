@@ -35,10 +35,10 @@ dependencies = [
     'waitress==3.0.0',
     'Werkzeug==3.0.4',
     'requests==2.32.3',
-    'watchdog==5.0.1',
+    'watchdog==5.0.2',
     ## scientific calculus
     'pandas==2.2.2',
-    'numpy==2.1.0',
+    'numpy==2.1.1',
     ## excel
     'XlsxWriter==3.2.0',
     'openpyxl==3.1.5',
@@ -74,7 +74,7 @@ doc = [
 
 data = [   
     'paramiko==3.4.1', # for uploading files to weblication
-    'xlwings==0.32.1; sys_platform == "win32"', # for excel automation to extract values in a loop
+    'xlwings==0.32.2; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
 
 license = [
