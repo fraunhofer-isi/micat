@@ -112,7 +112,8 @@ def _extract_macroeconomic_data(sheets, id_region_table, id_parameter):
         df['id_region'] = id_region
         df.set_index(['id_region', 'id_parameter'], inplace=True)
         df.columns = years
-        df = df * 1e6  # convert from M€ to € and M to 1, respectively
+        df.loc[df.index.get_level_values('id_parameter') == 'GDP'] *= 1e9  # convert from B€ (1000 M€) to €
+        df.loc[df.index.get_level_values('id_parameter') == 'Population'] *= 1e6  # convert from M to 1
         region_table = Table(df)
         region_tables.append(region_table)
 

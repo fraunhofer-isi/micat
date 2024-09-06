@@ -24,13 +24,13 @@ def avoided_excess_cold_weather_mortality_due_to_indoor_cold(
         final_energy_saving_by_action_type, data_source, id_region
     )
 
-    energy_poverty_targetedness_factor = data_source.annual_parameters_per_measure(
+    energy_poverty_targetedness_factor = 0.01 * data_source.annual_parameters_per_measure(
         final_energy_saving_by_action_type,
         'wuppertal_parameters',
         25,
         _provide_default_energy_poverty_targetedness_factor,
         id_region,
-    )
+    ) #0.01 to account for %
 
     where_clause = {'id_parameter': '53', 'id_region': str(id_region)}
 
