@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import numpy as np
 # pylint: disable=protected-access
 import pandas as pd
 
@@ -57,6 +58,24 @@ class TestExtrapolate:
         result = extrapolation.extrapolate(support_point, years)
         assert result == 'mocked_result'
 
+    def test_full_usage(self):
+        support_point = Table(
+            [
+                {'id_parameter': 1, 'id_final_energy_carrier': 1, '2011': 18993114, '2012': 17507752, '2013': 16914282, '2014': 16672871, '2015': 15301375},
+            ]
+        )
+
+        years = range(2016, 2022)
+
+        result = extrapolation.extrapolate(support_point, years)
+        assert result[2016][1][1] != 15301375
+
+    def test_pandas_interpolate(self):
+
+        df = pd.DataFrame([{2011: 18993114, 2012: 17507752, 2013: 16914282, 2014: 16672871, 2015: 15301375, 2016: np.nan, 2017: np.nan, 2018: np.nan, 2019: np.nan, 2020: np.nan}])
+
+        result = df.interpolate(method="spline", axis=1, order=1, s=0, limit_direction="both")
+        assert result[2016] != 15301375
 
 extrapolated_series = pd.Series([1, 2, 3], index=[2010, 2020, 2030])
 mocked_extrapolated_series = AnnualSeries(extrapolated_series)
