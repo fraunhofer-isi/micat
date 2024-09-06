@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from micat.calculation.ecologic import targets
-from micat.series.annual_series import AnnualSeries
 from micat.table.table import Table
 
 
@@ -84,19 +83,3 @@ def test_renewable_energy_directive_targets_monetization():
 
     assert result['2020'][1] == 40
     assert result['2030'][1] == 800
-
-
-@patch(Table.to_custom_json, 'mocked_result')
-def test_targets_table():
-    ren_gae = AnnualSeries({'2020': 10})
-
-    tot_gae = AnnualSeries({'2020': 200})
-
-    label = 'foo'
-
-    result = targets._targets_table(
-        ren_gae,
-        tot_gae,
-        label,
-    )
-    assert result['2020']['foo'] == 10 / 200

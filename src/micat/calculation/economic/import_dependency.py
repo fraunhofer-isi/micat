@@ -4,9 +4,6 @@
 
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/23
 
-from micat.table.table import Table
-
-
 
 # pylint: disable=too-many-locals
 def impact_on_import_dependency(
@@ -26,7 +23,6 @@ def impact_on_import_dependency(
         filtered_primary_production,
         filtered_gross_available_energy,
         filtered_primary_non_energy_use,
-        'Without savings'
     )
 
     table = _import_dependency_with_savings(
@@ -34,10 +30,10 @@ def impact_on_import_dependency(
         filtered_gross_available_energy,
         filtered_primary_non_energy_use,
         filtered_primary_energy_saving_by_action_type,
-        'With savings'
     )
-    result = Table.concat([reference_table, table])
-    return result
+    difference = reference_table - table
+
+    return difference
 
 
 def _filter_for_relevant_primary_energy_carriers(table):
@@ -53,9 +49,8 @@ def _filter_for_relevant_primary_energy_carriers(table):
     return filtered_df
 
 
-def _import_dependency(primary_production, gross_available_energy, primary_non_energy_use, label):
-    dependency_result = 1 - primary_production / (gross_available_energy - primary_non_energy_use)
-    result = dependency_result.transpose(label, 'label')
+def _import_dependency(primary_production, gross_available_energy, primary_non_energy_use):
+    result = 1 - primary_production / (gross_available_energy - primary_non_energy_use)
     return result
 
 
@@ -64,12 +59,10 @@ def _import_dependency_with_savings(
     gross_available_energy,
     primary_non_energy_use,
     primary_energy_saving_by_action_type,
-    label
 ):
     primary_energy_saving_by_action_type = primary_energy_saving_by_action_type.aggregate_to(
         ['id_measure', 'id_primary_energy_carrier'],
     )
     reduced_gross_available_energy = gross_available_energy - primary_energy_saving_by_action_type
-    dependency_result = 1 - primary_production / (reduced_gross_available_energy - primary_non_energy_use)
-    result = dependency_result.transpose('label', label)
+    result = 1 - primary_production / (reduced_gross_available_energy - primary_non_energy_use)
     return result

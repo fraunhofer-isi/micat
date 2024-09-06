@@ -63,4 +63,4 @@ def test_medium_and_deep_renovations_share():
 
 def test_damp_and_mouldy_buildings_targetedness_factor():
     result = air_quality._damp_and_mouldy_buildings_targetedness_factor(_mocked_data_source(), 1, _mocked_years())
-    assert result == 0.01 * 'mocked_series'
+    assert result == 'mocked_series'

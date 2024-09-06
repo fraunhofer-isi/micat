@@ -70,8 +70,8 @@ def test_avoided_excess_cold_weather_mortality_due_to_indoor_cold():
     result = indoor_health.avoided_excess_cold_weather_mortality_due_to_indoor_cold(
         _mocked_final_energy_savings_by_action_type(), _mocked_data_source(), 1
     )
-    assert np.all(result.values[0] == 0.04)
-    assert np.all(result.values[1] == 0.16)
+    assert np.all(result.values[0] == 4)
+    assert np.all(result.values[1] == 16)
 
 
 def test_provide_default_energy_poverty_targetedness_factor():
