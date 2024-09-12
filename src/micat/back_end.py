@@ -8,6 +8,7 @@ import json
 import logging
 import os
 import traceback
+from decimal import Decimal
 from urllib.parse import parse_qs
 
 import pandas as pd
@@ -458,6 +459,27 @@ class BackEnd:
             request = self._flask.request
             savings_bytes = savings_template.savings_template(request, self._database)
             return self.create_excel_file_response(savings_bytes, request)
+
+        @app.route("/odyssee")
+        def get_odyssee_data():
+            request = self._flask.request
+            ODYSSEE_CATEGORIES = {
+                2: "savrescum",  # Household
+                3: "savindcum",  # Industry
+                4: "savtercum",  # Services
+                5: "savtracum",  # Transport
+            }
+            category = ODYSSEE_CATEGORIES.get(int(request.args.get("category", 2)))
+            region = request.args.get("region", "European Unoion")
+            df = pd.read_csv("../../import/raw_data/ODYSSEE/Enerdata_Odyssee_240911_170909.csv")
+            df = df.loc[(df["Item Code"] == category) & (df["Zone Name"] == region)]
+            df.sort_values("Year", inplace=True)
+            data = {}
+            previous_value = 0
+            for year, value in df[["Year", "Value"]].values.tolist():
+                data[year] = float((Decimal(value) - previous_value) * Decimal(1000))  # Convert from mtoe to ktoe
+                previous_value = Decimal(value)
+            return data
 
         @app.route("/<path:path>")
         def catch_all(path):
