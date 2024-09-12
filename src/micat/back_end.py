@@ -471,7 +471,7 @@ class BackEnd:
             }
             category = ODYSSEE_CATEGORIES.get(int(request.args.get("category", 2)))
             region = request.args.get("region", "European Unoion")
-            df = pd.read_csv("../../import/raw_data/ODYSSEE/Enerdata_Odyssee_240911_170909.csv")
+            df = pd.read_csv("./data_import/ODYSSEE/Enerdata_Odyssee_240911_170909.csv")
             df = df.loc[(df["Item Code"] == category) & (df["Zone Name"] == region)]
             df.sort_values("Year", inplace=True)
             data = {}
