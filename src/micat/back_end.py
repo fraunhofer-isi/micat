@@ -471,6 +471,8 @@ class BackEnd:
             }
             category = ODYSSEE_CATEGORIES.get(int(request.args.get("category", 2)))
             region = request.args.get("region", "European Unoion")
+            start = int(request.args.get("start", "2000"))
+            end = int(request.args.get("end", "2022"))
             df = pd.read_csv(os.path.join(os.getcwd(), "data/enerdata_odyssee_240911_170909.csv"))
             df = df.loc[(df["Item Code"] == category) & (df["Zone Name"] == region)]
             df.sort_values("Year", inplace=True)
@@ -479,7 +481,7 @@ class BackEnd:
             for year, value in df[["Year", "Value"]].values.tolist():
                 data[year] = float((Decimal(value) - previous_value) * Decimal(1000))  # Convert from mtoe to ktoe
                 previous_value = Decimal(value)
-            return data
+            return {k: v for k, v in data.items() if int(k) >= start and int(k) <= end}
 
         @app.route("/<path:path>")
         def catch_all(path):
