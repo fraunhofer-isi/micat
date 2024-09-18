@@ -70,7 +70,7 @@ def _damp_and_mouldy_buildings_targetedness_factor(
     years,
 ):
     where_clause = {'id_region': str(id_region), 'id_parameter': '54'}
-    damp_and_mouldy_buildings_targetedness_factor = data_source.annual_series_from_value(
+    damp_and_mouldy_buildings_targetedness_factor = 0.01 * data_source.annual_series_from_value(
         'wuppertal_health_parameters',
         years,
         where_clause,
