@@ -478,10 +478,19 @@ class BackEnd:
             df.sort_values("Year", inplace=True)
             data = {}
             previous_value = 0
+            # Deaggregate to get the yearly values
             for year, value in df[["Year", "Value"]].values.tolist():
                 data[year] = float((Decimal(value) - previous_value) * Decimal(1000))  # Convert from mtoe to ktoe
                 previous_value = Decimal(value)
-            return {k: v for k, v in data.items() if int(k) >= start and int(k) <= end}
+            # Filter years
+            filtered_data = {k: v for k, v in data.items() if int(k) >= start and int(k) <= end}
+            # Aggregate again
+            data = {}
+            previous_value = 0
+            for year, value in filtered_data.items():
+                data[year] = value + previous_value
+                previous_value = value + previous_value
+            return data
 
         @app.route("/<path:path>")
         def catch_all(path):
