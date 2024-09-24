@@ -66,7 +66,6 @@ def _fill_measure_specific_template(
     population_of_municipality = population.population_of_municipality(measure)
 
     id_region = int(template_args["id_region"])
-
     context = {
         "id_mode": int(template_args["id_mode"]),
         "id_region": id_region,
@@ -79,6 +78,8 @@ def _fill_measure_specific_template(
     final_energy_saving_by_action_type = _final_energy_saving_by_action_type(measure, context)
 
     data_source = DataSource(database, id_region, confidential_database)
+    df = data_source.mapping_table("mapping__subsector__sector")._data_frame
+    id_sector = df.loc[df["id_subsector"] == int(template_args["id_subsector"])]["id_sector"].item()
 
     wuppertal_parameters = _wuppertal_parameters(
         context,
@@ -95,7 +96,7 @@ def _fill_measure_specific_template(
     )
 
     years = final_energy_saving_by_action_type.years
-    _fill_fuel_switch_sheet(fuel_switch_sheet, years)
+    _fill_fuel_switch_sheet(fuel_switch_sheet, years, id_sector)
 
     _fill_residential_sheet(
         residential_sheet,
@@ -153,7 +154,15 @@ def _fill_main_sheet(
     )
 
 
-def _fill_fuel_switch_sheet(sheet, years):
+def _fill_fuel_switch_sheet(sheet, years, id_sector):
+    # Remove rows, which doesn't match the sector
+    rows_to_delete = []
+    for idx, row in enumerate(sheet.iter_rows(min_row=2)):
+        if row[1].value != id_sector:
+            rows_to_delete.append(idx)
+    for idx in reversed(rows_to_delete):
+        sheet.delete_rows(idx + 2, 1)
+    # Interpolate the annual data
     _interpolate_annual_data(sheet, years)
 
 
@@ -479,6 +488,7 @@ def _template_args(request):
         "measure": measure,
         "id_mode": query_dict["id_mode"],
         "id_region": query_dict["id_region"],
+        "id_subsector": query_dict["id_subsector"],
         "parameter_table_names": [
             "eurostat_final_parameters",
             "eurostat_final_sector_parameters",
