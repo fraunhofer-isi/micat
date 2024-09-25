@@ -42,8 +42,8 @@ def investment_cost_in_euro(
             id_action_type,
             year,
         )
-        # Round to 2 decimal places and convert to million euros
-        return round(default_investment / 1000000, 2)
+        # Round to 2 decimal places (not anymore: and convert to million euros)
+        return round(default_investment, 2)
 
     investment = data_source.measure_specific_parameter(
         final_energy_saving_by_action_type,
