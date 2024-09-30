@@ -20,9 +20,9 @@ def ecologic_indicators(
     id_mode,
     id_region,
 ):
-    air_pollution_parameters = interim_data['air_pollution_parameters']
-    energy_saving_by_final_energy_carrier = interim_data['energy_saving_by_final_energy_carrier']
-    total_primary_energy_saving = interim_data['total_primary_energy_saving']
+    air_pollution_parameters = interim_data["air_pollution_parameters"]
+    energy_saving_by_final_energy_carrier = interim_data["energy_saving_by_final_energy_carrier"]
+    total_primary_energy_saving = interim_data["total_primary_energy_saving"]
 
     energy_saving_table = energy_saving.energy_saving(total_primary_energy_saving)
 
@@ -55,16 +55,16 @@ def ecologic_indicators(
         )
     )
 
-    eurostat_primary_parameters = interim_data['eurostat_primary_parameters']
-    gross_available_energy = eurostat_primary_parameters.reduce('id_parameter', 2)
+    eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
+    gross_available_energy = eurostat_primary_parameters.reduce("id_parameter", 2)
 
     renewable_energy_directive_targets = targets.impact_on_res_targets(
         gross_available_energy,
         total_primary_energy_saving,
     )
 
-    fraunhofer_constant_parameters = data_source.table('fraunhofer_constant_parameters', {'id_region': str(id_region)})
-    cost_of_res_statistical_transfer = fraunhofer_constant_parameters.reduce('id_parameter', 61)
+    fraunhofer_constant_parameters = data_source.table("fraunhofer_constant_parameters", {"id_region": str(id_region)})
+    cost_of_res_statistical_transfer = fraunhofer_constant_parameters.reduce("id_parameter", 61)
 
     impact_on_res_targets_monetization = targets.impact_on_res_targets_monetization(
         renewable_energy_directive_targets,
@@ -73,8 +73,8 @@ def ecologic_indicators(
         cost_of_res_statistical_transfer,
     )
 
-    final_energy_saving_electricity = energy_saving_by_final_energy_carrier.reduce('id_final_energy_carrier', [1])
-    del final_energy_saving_electricity['id_final_energy_carrier']
+    final_energy_saving_electricity = energy_saving_by_final_energy_carrier.reduce("id_final_energy_carrier", [1])
+    del final_energy_saving_electricity["id_final_energy_carrier"]
 
     reduction_of_additional_capacities_in_grid = grid.reduction_of_additional_capacities_in_grid(
         final_energy_saving_electricity,
@@ -84,13 +84,13 @@ def ecologic_indicators(
     )
 
     return {
-        'energySaving': energy_saving_table,
-        'impactOnResTargetsMonetization': impact_on_res_targets_monetization,
-        'reductionOfAdditionalCapacitiesInGrid': reduction_of_additional_capacities_in_grid,
-        'reductionOfMortalityMorbidity': reduction_of_mortality_morbidity_table,
-        'reductionOfMortalityMorbidityMonetization': reduction_of_mortality_morbidity_monetization_table,
-        'reductionOfAirPollution': reduction_of_air_pollution_table,
-        'reductionOfGreenHouseGasEmission': reduction_of_green_house_gas_emission_table,
-        'reductionOfGreenHouseGasEmissionMonetization': reduction_of_green_house_gas_emission_monetization_table,
-        'renewableEnergyDirectiveTargets': renewable_energy_directive_targets,
+        "energySaving": energy_saving_table,
+        "impactOnResTargetsMonetization": impact_on_res_targets_monetization,
+        "reductionOfAdditionalCapacitiesInGrid": reduction_of_additional_capacities_in_grid,
+        "reductionOfMortalityMorbidity": reduction_of_mortality_morbidity_table,
+        "reductionOfMortalityMorbidityMonetization": reduction_of_mortality_morbidity_monetization_table,
+        "reductionOfAirPollution": reduction_of_air_pollution_table,
+        "reductionOfGreenHouseGasEmission": reduction_of_green_house_gas_emission_table,
+        "reductionOfGreenHouseGasEmissionMonetization": reduction_of_green_house_gas_emission_monetization_table,
+        "renewableEnergyDirectiveTargets": renewable_energy_directive_targets,
     }

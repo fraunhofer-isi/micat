@@ -65,6 +65,7 @@ def fuel_split_by_action_type(
         measure_specific_lambda,
         measure_specific_chi,
     )
+
     # Transform into percentage
     for index, row in fuel_split.iterrows():
         for year in years:

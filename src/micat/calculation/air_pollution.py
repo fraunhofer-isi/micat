@@ -15,7 +15,7 @@ def reduction_of_air_pollution(
     iiasa_parameters,
     energy_saving_by_final_energy_carrier,
 ):
-    air_pollution_factor_in_kt_per_ktoe = iiasa_parameters.reduce('id_parameter', [5, 6, 7])
+    air_pollution_factor_in_kt_per_ktoe = iiasa_parameters.reduce("id_parameter", [5, 6, 7])
     reduction_in_kt = _factorial_reduction(air_pollution_factor_in_kt_per_ktoe, energy_saving_by_final_energy_carrier)
     return reduction_in_kt
 
@@ -24,13 +24,13 @@ def reduction_of_green_house_gas_emission(
     iiasa_parameters,
     energy_saving_by_final_energy_carrier,
 ):
-    ghg_factor_in_kt_per_ktoe = iiasa_parameters.query('id_parameter==4')
+    ghg_factor_in_kt_per_ktoe = iiasa_parameters.query("id_parameter==4")
     reduction_in_kt = _factorial_reduction(
         ghg_factor_in_kt_per_ktoe,
         energy_saving_by_final_energy_carrier,
     )
-    reduction_in_kt = reduction_in_kt.reduce('id_parameter', [4])
-    del reduction_in_kt['id_parameter']
+    reduction_in_kt = reduction_in_kt.reduce("id_parameter", [4])
+    del reduction_in_kt["id_parameter"]
     return reduction_in_kt
 
 
@@ -38,7 +38,7 @@ def reduction_of_mortality_morbidity(  # = id_indicator 4, human_health_I
     iiasa_parameters,
     energy_saving_by_final_energy_carrier,
 ):
-    mortality_morbidity_factor = iiasa_parameters.reduce('id_parameter', [8, 9])
+    mortality_morbidity_factor = iiasa_parameters.reduce("id_parameter", [8, 9])
     reduction = _factorial_reduction(
         mortality_morbidity_factor,
         energy_saving_by_final_energy_carrier,
@@ -55,11 +55,12 @@ def reduction_of_mortality_morbidity_monetization(
 ):
     years = reduction_of_mortality_morbidity_table.years
 
-    who_parameters = data_source.table('who_parameters', {'id_region': str(id_region)})
-    value_of_statistical_life = who_parameters.reduce('id_parameter', 37)
+    who_parameters = data_source.table("who_parameters", {"id_region": str(id_region)})
+
+    value_of_statistical_life = who_parameters.reduce("id_parameter", 37)
     extrapolated_value_of_statistical_life = extrapolation.extrapolate_series(value_of_statistical_life, years)
     health_costs = reduction_of_mortality_morbidity_table * extrapolated_value_of_statistical_life
-    del health_costs['id_parameter']
+    del health_costs["id_parameter"]
     return health_costs
 
 
@@ -67,13 +68,13 @@ def reduction_of_lost_work_days(
     iiasa_parameters,
     energy_saving_by_final_energy_carrier,
 ):
-    lost_work_days_factor = iiasa_parameters.query('id_parameter==23')
+    lost_work_days_factor = iiasa_parameters.query("id_parameter==23")
     reduction = _factorial_reduction(
         lost_work_days_factor,
         energy_saving_by_final_energy_carrier,
     )
-    reduction = reduction.reduce('id_parameter', [23])
-    del reduction['id_parameter']
+    reduction = reduction.reduce("id_parameter", [23])
+    del reduction["id_parameter"]
     return reduction
 
 
@@ -83,10 +84,10 @@ def subsector_parameters(
     subsector_ids,
 ):
     where_clause = {
-        'id_region': str(id_region),
-        'id_subsector': subsector_ids,
+        "id_region": str(id_region),
+        "id_subsector": subsector_ids,
     }
-    table = data_source.table('iiasa_final_subsector_parameters', where_clause)
+    table = data_source.table("iiasa_final_subsector_parameters", where_clause)
     return table
 
 
@@ -99,9 +100,9 @@ def _factorial_reduction(
     output = energy_saving_by_final_energy_carrier * extrapolated_factor
     if output.contains_nan():
         message = (
-            'Result of multiplication contains NaN values. ' + 'Factors need to be provided for all energy carriers.'
+            "Result of multiplication contains NaN values. " + "Factors need to be provided for all energy carriers."
         )
         raise KeyError(message)
 
-    table = output.aggregate_to(['id_measure', 'id_parameter'])
+    table = output.aggregate_to(["id_measure", "id_parameter"])
     return table

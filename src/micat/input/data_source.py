@@ -165,6 +165,7 @@ class DataSource:
 
         if "normalization_column_names" in entry:
             normalization_column_names = entry["normalization_column_names"]
+            table = table.fillna(0)
             table = table.normalize(normalization_column_names)
 
         id_parameter = entry["id_parameter"]
@@ -474,9 +475,10 @@ class DataSource:
     @staticmethod
     def _row_to_json_array(row, key_column_name):
         data = row.copy()
-        del data[key_column_name]
         if "index" in data:
             del data["index"]
+        if "identifier" in data:
+            del data["identifier"]
         if "Value" in data:
             data["value"] = data["Value"]
             del data["Value"]
@@ -768,8 +770,7 @@ class DataSource:
         key_column_name = mapping["key_column_name"]
         entries = mapping["entries"]
         for row in json_entry:
-            key = row[key_column_name]
-            mapping_entries = entries[key]
+            mapping_entries = entries[row["identifier"]]
             json_array = DataSource._row_to_json_array(row, key_column_name)
             for mapping_entry in mapping_entries:
                 tables = self._add_table_entry(tables, json_array, mapping_entry)
@@ -799,7 +800,10 @@ class DataSource:
         return tables
 
     def _read_default_table(self, table_name, entry):
-        table = self._table_from_database(table_name, {})
+        where_clause = {}
+        # if "id_parameter" in entry:
+        #     where_clause["id_parameter"] = str(entry["id_parameter"])
+        table = self._table_from_database(table_name, where_clause)
         if table is None:
             raise KeyError("Could not find table " + table_name)
         id_column_names, _, _ = table.column_names

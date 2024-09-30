@@ -27,8 +27,8 @@ def economic_indicators(  # pylint: disable=too-many-locals
     id_region,
     years,
 ):
-    total_primary_energy_saving = interim_data['total_primary_energy_saving']
-    energy_saving_by_final_energy_carrier = interim_data['energy_saving_by_final_energy_carrier']
+    total_primary_energy_saving = interim_data["total_primary_energy_saving"]
+    energy_saving_by_final_energy_carrier = interim_data["energy_saving_by_final_energy_carrier"]
 
     scaled_gross_available_energy = gross_available_energy.gross_available_energy(
         data_source,
@@ -45,9 +45,9 @@ def economic_indicators(  # pylint: disable=too-many-locals
         years,
     )
 
-    additional_primary_energy_saving = interim_data['additional_primary_energy_saving']
+    additional_primary_energy_saving = interim_data["additional_primary_energy_saving"]
 
-    reduction_of_energy_cost = interim_data['reduction_of_energy_cost']
+    reduction_of_energy_cost = interim_data["reduction_of_energy_cost"]
 
     reduction_of_energy_cost_by_final_energy_carrier = energy_cost.reduction_of_energy_cost_by_final_energy_carrier(
         reduction_of_energy_cost,
@@ -73,8 +73,8 @@ def economic_indicators(  # pylint: disable=too-many-locals
     )
 
     # TO DO: use different sources for non_energy_use, depending on id_mode? #268
-    eurostat_primary_parameters = interim_data['eurostat_primary_parameters']
-    primary_non_energy_use = eurostat_primary_parameters.reduce('id_parameter', 3)
+    eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
+    primary_non_energy_use = eurostat_primary_parameters.reduce("id_parameter", 3)
 
     energy_intensity_table = energy_intensity.energy_intensity(
         scaled_gross_available_energy,
@@ -117,7 +117,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
         data_source,
     )
 
-    reduction_of_additional_capacities_in_grid = ecologic_indicators['reductionOfAdditionalCapacitiesInGrid']
+    reduction_of_additional_capacities_in_grid = ecologic_indicators["reductionOfAdditionalCapacitiesInGrid"]
 
     monetization_of_reduction_of_additional_capacities_in_grid = (
         grid.monetization_of_reduction_of_additional_capacities_in_grid(
@@ -135,14 +135,14 @@ def economic_indicators(  # pylint: disable=too-many-locals
     )
 
     return {
-        'addedAssetValueOfBuildings': added_asset_value_of_buildings,
-        'additionalEmployment': additional_employment,
-        'changeInUnitCostsOfProduction': change_in_unit_costs_of_production,
-        'changeInSupplierDiversityByEnergyEfficiencyImpact': change_in_supplier_diversity_by_energy_efficiency_impact,
-        'energyIntensity': energy_intensity_table,
-        'impactOnGrossDomesticProduct': impact_on_gross_domestic_product,
-        'reductionOfAdditionalCapacitiesInGridMonetization': monetization_of_reduction_of_additional_capacities_in_grid,
-        'reductionOfEnergyCost': reduction_of_energy_cost_by_final_energy_carrier,
-        'reductionOfImportDependency': reduction_of_import_dependency_table,
-        'turnoverOfEnergyEfficiencyGoods': turnover_of_energy_efficiency_goods,
+        "addedAssetValueOfBuildings": added_asset_value_of_buildings,
+        "additionalEmployment": additional_employment,
+        "changeInUnitCostsOfProduction": change_in_unit_costs_of_production,
+        "changeInSupplierDiversityByEnergyEfficiencyImpact": change_in_supplier_diversity_by_energy_efficiency_impact,
+        "energyIntensity": energy_intensity_table,
+        "impactOnGrossDomesticProduct": impact_on_gross_domestic_product,
+        "reductionOfAdditionalCapacitiesInGridMonetization": monetization_of_reduction_of_additional_capacities_in_grid,
+        "reductionOfEnergyCost": reduction_of_energy_cost_by_final_energy_carrier,
+        "reductionOfImportDependency": reduction_of_import_dependency_table,
+        "turnoverOfEnergyEfficiencyGoods": turnover_of_energy_efficiency_goods,
     }

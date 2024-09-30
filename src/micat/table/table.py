@@ -536,7 +536,10 @@ class Table(AbstractTable):
 
     def update(self, table):
         # noinspection PyProtectedMember
-        all_entries = pd.concat([self._data_frame, table._data_frame.reorder_levels(self._data_frame.index.names)])  # pylint: disable=protected-access
+        if isinstance(self._data_frame.index, pd.MultiIndex):
+            all_entries = pd.concat([self._data_frame, table._data_frame.reorder_levels(self._data_frame.index.names)])  # pylint: disable=protected-access
+        else:
+            all_entries = pd.concat([self._data_frame, table._data_frame])
         unique_entries = all_entries.query('~index.duplicated(keep="last")')
         table = self._create(unique_entries)
         sorted_table = table.sort()
