@@ -371,6 +371,12 @@ class DataSource:
                                     "id_parameter": 19,
                                 }
                             ],
+                            "Hospitalisation monetisation [€]": [
+                                {
+                                    "table_name": "iiasa_lost_working_days_monetization_factors",
+                                    "id_parameter": 63,
+                                }
+                            ],
                             "Cost per ton of emitted CO2 [€/tCO2]": [
                                 {
                                     "table_name": "iiasa_greenhouse_gas_emission_monetization_factors",

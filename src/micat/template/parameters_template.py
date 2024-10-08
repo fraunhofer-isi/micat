@@ -126,7 +126,16 @@ def _monetization_parameters_table(database, id_mode, id_region):
         database, id_mode, "who_parameters", {"id_region": str(id_region), "id_parameter": str(56)}
     )
     value_of_a_lost_workday = database_utils.parameter_table(
-        database, id_mode, "iiasa_lost_working_days_monetization_factors", {"id_region": str(id_region)}
+        database,
+        id_mode,
+        "iiasa_lost_working_days_monetization_factors",
+        {"id_parameter": str(19), "id_region": str(id_region)},
+    )
+    hospitalisation_monetisation = database_utils.parameter_table(
+        database,
+        id_mode,
+        "iiasa_lost_working_days_monetization_factors",
+        {"id_parameter": str(63), "id_region": str(id_region)},
     )
     cost_per_ton_of_emitted_co2 = database_utils.parameter_table(
         database, id_mode, "iiasa_greenhouse_gas_emission_monetization_factors", {"id_region": str(id_region)}
@@ -148,6 +157,7 @@ def _monetization_parameters_table(database, id_mode, id_region):
         "Value of statistical life [€]": value_of_statistical_life,
         "Value of a life year [€]": value_of_a_life_year,
         "Value of a lost work day [€]": value_of_a_lost_workday,
+        "Hospitalisation monetisation [€]": hospitalisation_monetisation,
         "Cost per ton of emitted CO2 [€/tCO2]": cost_per_ton_of_emitted_co2,
         "Cost of statistical transfer of RES [€/ktoe]": cost_of_statistical_transfer_of_res,
         "Investment costs of PV [€/MW]": investment_costs_of_pv,
