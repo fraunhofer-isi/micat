@@ -374,6 +374,8 @@ def _fill_investment_cost(
         final_energy_saving_by_action_type,
         data_source,
     )
+    # Convert to million euros to display the advanced parameter investment cost in mio. €
+    investment_cost._data_frame = investment_cost._data_frame.select_dtypes(exclude=["object", "datetime"]) / 1_000_000
     _fill_annual_series(sheet, 7, 3, investment_cost)
 
 

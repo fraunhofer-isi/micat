@@ -15,6 +15,7 @@ def annual_investment_cost_in_euro(final_energy_saving_by_action_type, data_sour
         final_energy_saving_by_action_type,
         data_source,
     )
+
     years = final_energy_saving_by_action_type.years
     annual_years = _annual_years(years)
     interpolated_cumulated_investment_cost = extrapolation.extrapolate(cumulated_investment_cost, annual_years)
@@ -50,6 +51,7 @@ def investment_cost_in_euro(
         40,  # id_parameter for investment cost
         _provide_default_investment,
     )
+
     del investment["id_subsector"]
     return investment
 
@@ -86,7 +88,8 @@ def _default_investment(
 ):
     specific_investment_cost = _specific_investment_cost(investment_cost_per_ktoe, id_action_type, year)
     investment = saving * specific_investment_cost
-    return investment
+    # Convert to million euros, otherwise the results will be displayed in mio. €
+    return investment * 1_000_000
 
 
 def _specific_investment_cost(

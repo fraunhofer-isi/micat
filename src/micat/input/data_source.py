@@ -665,7 +665,6 @@ class DataSource:
         # Currently, this function uses parameters that do not depend on id_final_energy_carrier.
         # id_subsector etc. If that changes, we also need to read corresponding tables
         # 'measure_final_parameters' etc.
-
         annual_table = self.table("measure_parameters", {"id_parameter": str(id_parameter)})
         constant_table = self.table("measure_constants", {"id_parameter": str(id_parameter)})
         if annual_table is None and constant_table is None:
