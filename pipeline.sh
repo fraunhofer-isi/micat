@@ -3,7 +3,7 @@
 
 # This shell file can be used to run some of the pipline commands locally
 # Run it with the command ./pipeline.sh.
-# Also see .gitlab.ci.yml in the root directory
+# Also see GitHub workflows
 
 
 echo "Installing python requirements..."

@@ -63,6 +63,10 @@ test = [
     'mock==5.1.0',
 ]
 
+debug = [
+	'ipdb==0.13.13',
+]
+
 doc = [
     'Sphinx==8.1.3',
     'myst-parser==4.0.0',
@@ -87,8 +91,7 @@ license = [
 ]
 
 dev = [
-    'micat[lint, format, test, doc, data, license]',
-    'ipdb==0.13.13',
+    'micat[lint, format, test, debug, doc, data, license]',    
 ]
 
 [tool.hatch.build.targets.wheel]

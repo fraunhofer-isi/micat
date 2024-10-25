@@ -27,7 +27,7 @@ def init():
             test_path = config_dir + "/test"
             sys.path.append(test_path)
 
-            import_path = config_dir + "/test"
+            import_path = config_dir + "/import"
             sys.path.append(import_path)
 
             pylint_log.write("Checking file names...\\n")
@@ -42,15 +42,7 @@ def init():
             pylint_log.write("Current working directory:\\n")
             pylint_log.write(working_directory + "\\n")
 
-            back_end_path = "./back_end"
-            if working_directory.endswith("back_end"):
-                back_end_path = "."
-
-            # for console
-            sys.path.append(back_end_path)
-            sys.path.append(back_end_path + "/src")
-            sys.path.append(back_end_path + "/test")
-            pylint_log.write("Added hard coded paths.\\n")
+            # maybe manually adapt sys.path here, depending on your specific project structure
 
             pylint_log.write("Checking file names...\\n")
             from check.check_file_names import main as check_file_names
