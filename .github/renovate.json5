@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// This is the configuration ofr renovate but, referenced from
+// This is the configuration for renovate bot, referenced from
 // github workflow .github/workflows/renovate.yml
 // Also see
 // https://github.com/renovatebot/github-action
