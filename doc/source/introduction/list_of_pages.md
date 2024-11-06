@@ -76,7 +76,7 @@ Indicator equations
 
 [](../ecologic_indicators/energy_cost.md)
 
-[](../ecologic_indicators/Impact_RES_targets.md)
+[](../ecologic_indicators/impact_res_targets)
 
 [](../ecologic_indicators/reduction_AP.md)
 

@@ -43,7 +43,7 @@ The main assumption for this indicator is that energy savings merely displace fo
 Assuming that savings occur proportionally to energy carriers' prevalence in the energy mix would have resulted in them not contributing at all to RES targets.
 The reality effectively lies between those two approaches, with savings predominantly but not exclusively replacing fossil fuels. Thus, this indicator can be read as the potential to better reach RES targets utilising energy efficiency.
 
-The equations can be found [here](./Impact_RES_targets.md), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Environmental-impact-impacts-on-RES-targets.pdf).
+The equations can be found [here](./impact_res_targets), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Environmental-impact-impacts-on-RES-targets.pdf).
 
 Greenhouse gas savings
 -
