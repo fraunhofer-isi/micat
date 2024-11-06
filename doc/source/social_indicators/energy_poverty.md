@@ -44,41 +44,41 @@ Determination of IF (share of energy poor population affected by a specific meas
 
 ### For id_action_type 1, 2, and 3
 
-<a name = "Determination of IF for id_action_type 1, 2, and 3"></a>
 
+The impact factor describes the share of the population in a decile where $`\Delta DI_{tenant/owner}`$ is higher than the decile's $`EPG_{\mathrm{M2}, tenant/owner, d, y}`$:
 
-The impact factor describes the share of the population in a decile where $\Delta DI_{tenant/owner}$ is higher than the decile's $EPG_{tenant/owner, d, y}$: 
+$`IF = (\rm{number\,of\,deciles\,where\,} \Delta DI > EPG_{\mathrm{M2}, d, y})/10`$
 
-$IF = (\rm{number\,of\,deciles\,where\,} \Delta DI > EPG_{d, y})/10$ 
+(Could alternatively be calculated as $`(\rm{highest\,decile\,where\,} \Delta DI > EPG_{d, y})/10`$)
 
-(Could alternatively be calculated as $(\rm{highest\,decile\,where\,} \Delta DI > EPG_{d, y})/10$)
+$`\Delta DI_{tenant} = ( EC_{ss, a, y} / EQC_{M2} - RRP / 100 \cdot REP ) / N`$
 
-$\Delta DI_{tenant} = EC_{ss, a, y}/N - RRP / 100 \cdot REP$
+$`\Delta DI_{owner} = ( EC_{ss, a, y} / EQC_{M2} - I_{ss, a, y} / EQC_{M2} / IAL \cdot (100 - SR) / 100 ) / N`$
 
-$\Delta DI_{owner} = EC_{ss, a, y}/N - I_{ss, a, y}/IAL \cdot (100 - SR) / 100$
+$`REP`$ = average rent of energy poor households (id_parameter = 29, table wuppertal_parameters **and** measure specific parameters table, tab residential)
 
-$REP$ = average rent of energy poor households (id_parameter = 29, table wuppertal_parameters **and** measure specific parameters table, tab residential)
+$`RRP`$ = average renovation rent premium as percent of rent (id_parameter = 34, table wuppertal_parameters **and** measure specific parameters table, tab residential )
 
-$RRP$ = average renovation rent premium as percent of rent (id_parameter = 34, table wuppertal_parameters **and** measure specific parameters table, tab residential )
+$`IAL`$ = lifetitem ("Lifetime of improvement actions", "Average technology lifetime") (id_parameter = 36, table wuppertal_sector_parameters **and** measure specific parameter table, tab main)
 
-$IAL$ = lifetime ("Lifetime of improvement actions", "Average technology lifetime") (id_parameter = 36, table wuppertal_sector_parameters **and** measure specific parameter table, tab main)
+$`SR`$ = subsidy rate covered by any given scheme in percent of investments costs (id_parameter = 35, table wuppertal_parameters)
 
-$SR$ = subsidy rate covered by any given scheme in percent of investments costs (id_parameter = 35, table wuppertal_parameters)
+$`EPG_{\mathrm{M2}, d, y}`$ = energy poverty gap (id_parameter = 27 for owner-occupiers and 28 for tenants, table wuppertal_decile_parameters)
 
-$EPG_{d, y}$ = energy poverty gap (id_parameter = 27 for owner-occupiers and 28 for tenants, table wuppertal_decile_parameters)
+$`EC_{ss, a, y}`$ = energy cost savings as calculated in #34
 
-$EC_{ss, a, y}$ = energy cost savings as calculated in #34 
+$`I_{ss, a, y}`$ = investments for a given row in the front end (id_parameter=40, calculated in #38)
 
-$I_{ss, a, y}$ = investments for a given row in the front end (id_parameter=40, calculated in the module [investments](../modules/investments.md))
+$`EQC_{M2}`$ = OECD equivalence coefficient, in order to convert household expenditures into personal expenditures and account for the lower per capita costs of larger households (id_parameter = 59, source: OECD, wuppertal/energy_poverty.xlsx)
 
 ### For id_action_type 4
 
-The impact factor describes the share of the population in a decile where $\Delta DI_{tenant/owner}$ is higher than the decile's $EPG_{tenant/owner, d, y}$: 
+The impact factor describes the share of the population in a decile where $`\Delta DI_{tenant/owner}`$ is higher than the decile's $`EPG_{tenant/owner, d, y}`$:
 
-$IF = (\rm{number\,of\,deciles\,where\,} \Delta DI > EPG_{d, y})/10$ 
+$`IF = (\rm{number\,of\,deciles\,where\,} \Delta DI > EPG_{d, y})/10`$
 
-$\Delta DI_{tenant/owner, ss, a, y} = EC_{ss, a, y}/N - I_{ss, a, y}/IAL \cdot (100 - SR) / 100$
+$`\Delta DI_{tenant/owner, ss, a, y} = (EC_{ss, a, y}/ EQC_{M2} - I_{ss, a, y}/ EQC_{M2} / IAL \cdot (100 - SR) / 100) / N`$
 
 ### For other values of id_action_type and other subsectors
 
-$IF = 0$
+$`IF = 0`$

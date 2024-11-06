@@ -37,6 +37,14 @@ The fact sheet is available as a [PDF](https://micatool.eu/seed-micat-project-wA
 Impact on RES targets
 -
 
+Energy savings have an impact on Renewables Energy Source (RES) targets, which are defined in the Renewable Energy Directive (RED), by reducing the total consumption. These RES targets are specified as share of total national consumption.
+
+The main assumption for this indicator is that energy savings merely displace fossil fuels in the energy generation. 
+Assuming that savings occur proportionally to energy carriers' prevalence in the energy mix would have resulted in them not contributing at all to RES targets.
+The reality effectively lies between those two approaches, with savings predominantly but not exclusively replacing fossil fuels. Thus, this indicator can be read as the potential to better reach RES targets utilising energy efficiency.
+
+The equations can be found [here](./Impact_RES_targets.md), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Environmental-impact-impacts-on-RES-targets.pdf).
+
 Greenhouse gas savings
 -
 
