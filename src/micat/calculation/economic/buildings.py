@@ -49,8 +49,9 @@ def added_asset_value_of_buildings(
     capitalization_rate = _capitalization_rate(data_source, id_region)
 
     added_asset_value_in_euro = sector_cost_in_euro / capitalization_rate
+    added_asset_value_in_mio_euro = added_asset_value_in_euro / 1000000
 
-    return added_asset_value_in_euro
+    return added_asset_value_in_mio_euro
 
 
 def _sector_cost(data_source, relevant_cost, relevant_sector_ids, years):

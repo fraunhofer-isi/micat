@@ -29,7 +29,8 @@ def impact_on_gross_domestic_product(
     gdp_coefficient_in_euro_per_euro = e3m_parameters.reduce("id_parameter", 38)
 
     additional_gdp_in_euro = annual_investment_in_euro * gdp_coefficient_in_euro_per_euro
-    del additional_gdp_in_euro["id_action_type"]
+    additional_gdp_in_mio_euro = additional_gdp_in_euro / 1000000
+    del additional_gdp_in_mio_euro["id_action_type"]
 
     return additional_gdp_in_euro
 
@@ -42,9 +43,10 @@ def gross_domestic_product(
 ):
     primes_parameters_raw = primes.parameters(data_source, id_region, years)
     gross_domestic_product_raw = primes_parameters_raw.reduce("id_parameter", 10)
+    gross_domestic_product_raw_in_mio_euro = gross_domestic_product_raw / 1000000
 
     scaled_gross_domestic_product = population.scale_by_population(
-        gross_domestic_product_raw,
+        gross_domestic_product_raw_in_mio_euro,
         population_of_municipality,
         data_source,
         id_region,
@@ -61,9 +63,10 @@ def gross_domestic_product_2015(
     primes_parameters = primes.parameters(data_source, id_region, [2015])
     raw_gross_domestic_product = primes_parameters.reduce("id_parameter", 10)
     gross_domestic_product_2015_raw = raw_gross_domestic_product["2015"]
+    gross_domestic_product_2015_raw_in_mio_euro = gross_domestic_product_2015_raw / 1000000
 
     scaled_gross_domestic_product_2015 = population.scale_by_population(
-        gross_domestic_product_2015_raw,
+        gross_domestic_product_2015_raw_in_mio_euro,
         population_of_municipality,
         data_source,
         id_region,

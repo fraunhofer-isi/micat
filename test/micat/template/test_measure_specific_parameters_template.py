@@ -110,6 +110,7 @@ def test_fill_fuel_switch_sheet():
         measure_specific_parameters_template._fill_fuel_switch_sheet(
             'mocked_sheet',
             'mocked_years',
+            17,
         )
         mocked_interpolate.assert_called_once()
 
