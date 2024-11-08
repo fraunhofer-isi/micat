@@ -547,10 +547,14 @@ class Table(AbstractTable):
 
     def validate_input_for_division(self):
         if self._data_frame.isnull().any().any():
-            raise ValueError("Input for division contains NaN values")
+            raise ValueError(
+                f"Data frame ({self._data_frame.index.names}) contains null values and cannot be processed. Please get in touch."
+            )
 
         if not np.isfinite(self._data_frame).all().all():
-            raise ValueError("Input for division contains infinite values")
+            raise ValueError(
+                f"Data frame ({self._data_frame.index.names}) contains infinite values and cannot be processed. Please get in touch."
+            )
 
     def where(self, condition_table, fallback_value_table):
         condition = AbstractTable._other_value(condition_table)
