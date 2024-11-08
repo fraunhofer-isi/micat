@@ -32,10 +32,18 @@ line with expected prices). Since this database is neither public nor does it al
 values are kept in the confidential database.
 
 Here are the equations for the [quantification](./PEC_FEC_savings.md) and the [monetisation](./energy_cost.md). 
-The fact sheet is available as a [PDF](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Environmental-impact-Energy-cost-savings.pdf).
+The fact sheet is available as a [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Environmental-impact-Energy-cost-savings.pdf).
 
 Impact on RES targets
 -
+
+Energy savings have an impact on Renewables Energy Source (RES) targets, which are defined in the Renewable Energy Directive (RED), by reducing the total consumption. These RES targets are specified as share of total national consumption.
+
+The main assumption for this indicator is that energy savings merely displace fossil fuels in the energy generation. 
+Assuming that savings occur proportionally to energy carriers' prevalence in the energy mix would have resulted in them not contributing at all to RES targets.
+The reality effectively lies between those two approaches, with savings predominantly but not exclusively replacing fossil fuels. Thus, this indicator can be read as the potential to better reach RES targets utilising energy efficiency.
+
+The equations can be found [here](./impact_res_targets), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Environmental-impact-impacts-on-RES-targets.pdf).
 
 Greenhouse gas savings
 -
@@ -52,7 +60,7 @@ for in GHG calculations.
 The monetisation uses the societal costs of carbon, taking costs for the environment and citizens (for instance in 
 terms of health) into account. These are provided by the German Federal Environmental Agency.
 
-The equations can be found [here](./reduction_GHG.md), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Environmental-impact-GHG-savings-savings-of-direct-carbon-emissions.pdf).
+The equations can be found [here](./reduction_GHG.md), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Environmental-impact-GHG-savings-savings-of-direct-carbon-emissions.pdf).
 
 Reduction in air pollutants
 -
@@ -60,7 +68,7 @@ Reduction in air pollutants
 The calculation of air pollutants is identical to GHG savings. Thus, the same caveats apply as well. However, the
 monetisation of air pollutants takes place within the indicator "Health effects due to air pollution".
 
-The equations can be found [here](./reduction_AP.md), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/micat-project-wAssets/docs/publications/factsheets/Social-impact-Human-health-due-to-reduced-air-pollution.pdf).
+The equations can be found [here](./reduction_AP.md), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Social-impact-Human-health-due-to-reduced-air-pollution.pdf).
 
 
 
