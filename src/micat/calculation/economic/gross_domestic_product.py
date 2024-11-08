@@ -29,10 +29,11 @@ def impact_on_gross_domestic_product(
     gdp_coefficient_in_euro_per_euro = e3m_parameters.reduce("id_parameter", 38)
 
     additional_gdp_in_euro = annual_investment_in_euro * gdp_coefficient_in_euro_per_euro
+
     additional_gdp_in_mio_euro = additional_gdp_in_euro / 1000000
     del additional_gdp_in_mio_euro["id_action_type"]
 
-    return additional_gdp_in_euro
+    return additional_gdp_in_mio_euro
 
 
 def gross_domestic_product(
