@@ -45,8 +45,8 @@ def test_impact_on_gross_domestic_product():
         'mocked_id_region',
     )
 
-    assert result['2020'][1] == 0.01 * 10000 / 1000000
-    assert result['2030'][1] == 0.01 * 20000 / 1000000
+    assert result['2020'][1] == 0.01 * 10000
+    assert result['2030'][1] == 0.01 * 20000
 
 
 @patch(primes.parameters)
