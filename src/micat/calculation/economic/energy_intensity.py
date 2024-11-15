@@ -23,8 +23,9 @@ def energy_intensity(
 
     additional_gross_domestic_product = additional_gross_domestic_product.insert_index_column('id_parameter', 0, 10)
     additional_gross_domestic_product_all_measures = additional_gross_domestic_product.aggregate_to('id_parameter')
+    additional_gross_domestic_product_all_measures_in_bio = additional_gross_domestic_product_all_measures / 1000000000
 
-    gross_domestic_product = gross_domestic_product_baseline + additional_gross_domestic_product_all_measures
+    gross_domestic_product = gross_domestic_product_baseline + additional_gross_domestic_product_all_measures_in_bio
 
     additional_primary_energy_saving_all_measures = additional_primary_energy_saving.aggregate_to(
         ['id_primary_energy_carrier']
