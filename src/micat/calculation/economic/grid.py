@@ -33,7 +33,7 @@ def monetization_of_reduction_of_additional_capacities_in_grid(
     data_source,
 ):
     investment_costs_of_renewable_energy_system_technologies = data_source.parameter(
-        'irena_technology_parameters',
+        '44_avoided_capacity_monetisation',
         None,
         44,
     )

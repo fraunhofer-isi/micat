@@ -31,7 +31,7 @@ def main():
         id_parameter,
     )
 
-    database_import.write_to_sqlite(monetization_factors, "iiasa_greenhouse_gas_emission_monetization_factors")
+    database_import.write_to_sqlite(monetization_factors, "42_GHG_cost")
 
     # Import lost working days and (?) monetization factors
     id_region_table = database.id_table("id_region")
@@ -57,7 +57,7 @@ def main():
         columns="YEAR",
     )
     table = Table(result)
-    database_import.write_to_sqlite(table, "iiasa_lost_working_days_monetization_factors")
+    database_import.write_to_sqlite(table, "19_63_LWD_hospitalisation_monetisation")
 
 
 def _to_table(raw_factors):

@@ -89,6 +89,6 @@ def _output_2015(
         'id_region': str(id_region),
         'id_subsector': subsector_ids,
     }
-    eurostat_sector_parameters = data_source.table('eurostat_sector_parameters', where_clause)
+    eurostat_sector_parameters = data_source.table('50_output_at_basic_prices', where_clause)
     output_2015 = eurostat_sector_parameters.reduce('id_parameter', 50)
     return output_2015

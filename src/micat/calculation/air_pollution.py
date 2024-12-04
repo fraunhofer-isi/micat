@@ -55,7 +55,7 @@ def reduction_of_mortality_morbidity_monetization(
 ):
     years = reduction_of_mortality_morbidity_table.years
 
-    who_parameters = data_source.table("who_parameters", {"id_region": str(id_region)})
+    who_parameters = data_source.table("37_56_VSL_VOLY_monetisation", {"id_region": str(id_region)})
 
     value_of_statistical_life = who_parameters.reduce("id_parameter", 37)
     extrapolated_value_of_statistical_life = extrapolation.extrapolate_series(value_of_statistical_life, years)
@@ -87,7 +87,7 @@ def subsector_parameters(
         "id_region": str(id_region),
         "id_subsector": subsector_ids,
     }
-    table = data_source.table("iiasa_final_subsector_parameters", where_clause)
+    table = data_source.table("4_5_6_7_8_9_air_pollution_coefficients", where_clause)
     return table
 
 

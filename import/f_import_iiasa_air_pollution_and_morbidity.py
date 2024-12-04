@@ -175,9 +175,9 @@ def main():  # pylint: disable=too-many-locals
     # Remove duplicated rows, since somehow pivot_table creates duplicates
     factors = factors[~factors.index.duplicated(keep="first")]
 
-    print("Writing data to sqlite...")
+    print("Writing 4_5_6_7_8_9_air_pollution_coefficients to sqlite...")
 
-    database_import.write_to_sqlite(factors, "iiasa_final_subsector_parameters")
+    database_import.write_to_sqlite(factors, "4_5_6_7_8_9_air_pollution_coefficients")
 
     print("Finished!")
 

@@ -46,9 +46,9 @@ def added_asset_value_of_buildings(
         years,
     )
 
-    capitalization_rate = _capitalization_rate(data_source, id_region)
+    capitalisation_rate = _capitalisation_rate(data_source, id_region)
 
-    added_asset_value_in_euro = sector_cost_in_euro / capitalization_rate
+    added_asset_value_in_euro = sector_cost_in_euro / capitalisation_rate
 
     return added_asset_value_in_euro
 
@@ -62,10 +62,10 @@ def _sector_cost(data_source, relevant_cost, relevant_sector_ids, years):
     return sector_cost
 
 
-def _capitalization_rate(data_source, id_region):
-    cbre_parameters = data_source.table('cbre_parameters', {'id_region': str(id_region)})
-    capitalization_rate = cbre_parameters.reduce('id_parameter', 46)
-    return capitalization_rate
+def _capitalisation_rate(data_source, id_region):
+    capitalisation_rate_CBRE = data_source.table('46_capitalisation_rate', {'id_region': str(id_region)})
+    capitalisation_rate = capitalisation_rate_CBRE.reduce('id_parameter', 46)
+    return capitalisation_rate
 
 
 def _create_zero_result(

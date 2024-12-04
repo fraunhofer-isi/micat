@@ -23,7 +23,7 @@ def main():
     id_parameter = 49  # Turnover per unit of energy saved
     turnover = turnover.insert_index_column('id_parameter', 0, id_parameter)
 
-    database_import.write_to_sqlite(turnover, 'irena_parameters')
+    database_import.write_to_sqlite(turnover, '49_turnover_per_ktoe')
 
     investment_file_path = import_path + '/investment_costs_of_renewable_energy_system_technologies.xlsx'
     raw_investment = pd.read_excel(investment_file_path)
@@ -31,7 +31,7 @@ def main():
     id_parameter = 44  # Investment costs of renewable energy system technologies
     investment = investment.insert_index_column('id_parameter', 0, id_parameter)
 
-    database_import.write_to_sqlite(investment, 'irena_technology_parameters')
+    database_import.write_to_sqlite(investment, '44_avoided_capacity_monetisation')
 
 
 if __name__ == "__main__":

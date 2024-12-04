@@ -30,7 +30,7 @@ def main():
     id_region_table = database.id_table('id_region')
     id_parameter_table = database.id_table('id_parameter')
 
-    print('# importing primes_parameters...')
+    print('# importing 10_24_GDP_population_primes...')
     macroeconomic_data = _extract_macroeconomic_data(
         sheets,
         id_region_table,
@@ -39,9 +39,9 @@ def main():
     # includes following values of id_parameter:
     # 10: GDP, Gross domestic product
     # 24: Population
-    database_import.write_to_sqlite(macroeconomic_data, 'primes_parameters')
+    database_import.write_to_sqlite(macroeconomic_data, '10_24_GDP_population_primes')
 
-    print('# importing primes_primary_parameters...')
+    print('# importing 1_2_GAE_PP_primes...')
     primary_parameters = _determine_primary_parameters(
         sheets,
         id_region_table,
@@ -51,9 +51,9 @@ def main():
     # includes following values of id_parameter:
     # 1: PP, Primary production
     # 2: GAE, Gross available energy
-    database_import.write_to_sqlite(primary_parameters, 'primes_primary_parameters')
+    database_import.write_to_sqlite(primary_parameters, '1_2_GAE_PP_primes')
 
-    print('# importing primes_technology_parameters')
+    print('# importing 47_RES_utilisation_primes')
     _import_utilization(utilization_file_path, database_import)
 
 
@@ -62,7 +62,7 @@ def _import_utilization(file_path, database_import):
     utilization = Table(utilization_frame)
     utilization = utilization.insert_index_column('id_parameter', 0, 47)
 
-    database_import.write_to_sqlite(utilization, 'primes_technology_parameters')
+    database_import.write_to_sqlite(utilization, '47_RES_utilisation_primes')
 
 
 def _clean_sheets(raw_sheets):

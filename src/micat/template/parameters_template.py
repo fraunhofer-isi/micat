@@ -120,37 +120,37 @@ def _monetization_create_parameter_sheet(
 
 def _monetization_parameters_table(database, id_mode, id_region):
     value_of_statistical_life = database_utils.parameter_table(
-        database, id_mode, "who_parameters", {"id_region": str(id_region), "id_parameter": str(37)}
+        database, id_mode, "37_56_VSL_VOLY_monetisation", {"id_region": str(id_region), "id_parameter": str(37)}
     )
     value_of_a_life_year = database_utils.parameter_table(
-        database, id_mode, "who_parameters", {"id_region": str(id_region), "id_parameter": str(56)}
+        database, id_mode, "37_56_VSL_VOLY_monetisation", {"id_region": str(id_region), "id_parameter": str(56)}
     )
     value_of_a_lost_workday = database_utils.parameter_table(
         database,
         id_mode,
-        "iiasa_lost_working_days_monetization_factors",
+        "19_63_LWD_hospitalisation_monetisation",
         {"id_parameter": str(19), "id_region": str(id_region)},
     )
     hospitalisation_monetisation = database_utils.parameter_table(
         database,
         id_mode,
-        "iiasa_lost_working_days_monetization_factors",
+        "19_63_LWD_hospitalisation_monetisation",
         {"id_parameter": str(63), "id_region": str(id_region)},
     )
     cost_per_ton_of_emitted_co2 = database_utils.parameter_table(
-        database, id_mode, "iiasa_greenhouse_gas_emission_monetization_factors", {"id_region": str(id_region)}
+        database, id_mode, "42_GHG_cost", {"id_region": str(id_region)}
     )
     cost_of_statistical_transfer_of_res = database_utils.parameter_table(
-        database, id_mode, "fraunhofer_constant_parameters", {"id_region": str(id_region), "id_parameter": str(61)}
+        database, id_mode, "61_cost_of_RES_statistical_transfers", {"id_region": str(id_region), "id_parameter": str(61)}
     )
     investment_costs_of_pv = database_utils.parameter_table(
-        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(3)}
+        database, id_mode, "44_avoided_capacity_monetisation", {"id_parameter": str(44), "id_technology": str(3)}
     )
     investment_costs_of_onshore_wind = database_utils.parameter_table(
-        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(1)}
+        database, id_mode, "44_avoided_capacity_monetisation", {"id_parameter": str(44), "id_technology": str(1)}
     )
     investment_costs_of_offshore_wind = database_utils.parameter_table(
-        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(2)}
+        database, id_mode, "44_avoided_capacity_monetisation", {"id_parameter": str(44), "id_technology": str(2)}
     )
 
     parameter_tables = {
@@ -219,7 +219,7 @@ def _subsector_final_create_parameter_sheet(
     sheet = _subsector_final_add_parameter_data(
         sheet,
         database,
-        "eurostat_final_sector_parameters" if mode.is_eurostat_mode(id_mode) else "primes_final_sector_parameters",
+        "11_subsectoral_energy_mix_share" if mode.is_eurostat_mode(id_mode) else "primes_final_sector_parameters",
         id_mode,
         id_region,
         id_parameter,
@@ -261,7 +261,7 @@ def _primary_create_parameter_sheet(
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            "eurostat_primary_parameters"
+            "1_2_3_20_21_GAE_PP_NEU_k-coefficients"
             if mode.is_eurostat_mode(id_mode)
             else "primes_primary_parameters_confidential",
             id_mode,
@@ -277,7 +277,7 @@ def _primary_create_parameter_sheet(
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            "eurostat_primary_parameters"
+            "1_2_3_20_21_GAE_PP_NEU_k-coefficients"
             if mode.is_eurostat_mode(id_mode)
             else "primes_primary_parameters_confidential",
             id_mode,

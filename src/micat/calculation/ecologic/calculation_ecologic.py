@@ -55,7 +55,7 @@ def ecologic_indicators(
         )
     )
 
-    eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
+    eurostat_primary_parameters = interim_data["1_2_3_20_21_GAE_PP_NEU_k-coefficients"]
     gross_available_energy = eurostat_primary_parameters.reduce("id_parameter", 2)
 
     renewable_energy_directive_targets = targets.impact_on_res_targets(
@@ -63,7 +63,7 @@ def ecologic_indicators(
         total_primary_energy_saving,
     )
 
-    fraunhofer_constant_parameters = data_source.table("fraunhofer_constant_parameters", {"id_region": str(id_region)})
+    fraunhofer_constant_parameters = data_source.table("61_cost_of_RES_statistical_transfers", {"id_region": str(id_region)})
     cost_of_res_statistical_transfer = fraunhofer_constant_parameters.reduce("id_parameter", 61)
 
     impact_on_res_targets_monetization = targets.impact_on_res_targets_monetization(

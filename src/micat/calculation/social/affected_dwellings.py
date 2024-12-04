@@ -23,7 +23,7 @@ def determine_number_of_affected_dwellings(final_energy_saving_by_action_type, d
 
     national_dwelling_stock = data_source.annual_parameters_per_measure(
         final_energy_saving_by_action_type,
-        'wuppertal_parameters',
+        '25_29_30_31_32_33_34_35_energy_poverty_coefficients',
         32,
         _provide_default_national_dwelling_stock,
         id_region,
@@ -31,7 +31,7 @@ def determine_number_of_affected_dwellings(final_energy_saving_by_action_type, d
 
     number_of_affected_dwellings_per_ktoe = data_source.annual_parameters_per_measure(
         final_energy_saving_by_action_type,
-        'e3m_global_parameters',
+        '41_48_investments_and_actions_per_ktoe',
         48,
         _provide_default_number_of_affected_dwellings_per_ktoe,
     )
@@ -97,7 +97,7 @@ def _number_of_affected_dwellings_per_ktoe(
     final_energy_saving_by_action_type,
     data_source,
 ):
-    e3m_global_parameters = data_source.table('e3m_global_parameters', {})
+    e3m_global_parameters = data_source.table('41_48_investments_and_actions_per_ktoe', {})
     years = final_energy_saving_by_action_type.years
     extrapolated_e3m_global_parameters = extrapolation.extrapolate(e3m_global_parameters, years)
     number_of_affected_dwellings_per_ktoe = extrapolated_e3m_global_parameters.reduce('id_parameter', 48)
@@ -222,7 +222,7 @@ def _national_dwelling_stock(
     id_region,
     years,
 ):
-    wuppertal_parameters = data_source.table('wuppertal_parameters', {'id_region': str(id_region)})
+    wuppertal_parameters = data_source.table('25_29_30_31_32_33_34_35_energy_poverty_coefficients', {'id_region': str(id_region)})
     extrapolated_wuppertal_parameters = extrapolation.extrapolate(wuppertal_parameters, years)
     national_dwelling_stock = extrapolated_wuppertal_parameters.reduce('id_parameter', 32)
 

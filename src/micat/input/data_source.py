@@ -320,7 +320,7 @@ class DataSource:
         mapping = {  # sheet_name => (table_name, id_parameter)
             "FuelSplitCoefficient": [
                 {
-                    "table_name": "eurostat_final_sector_parameters",
+                    "table_name": "11_subsectoral_energy_mix_share",
                     "id_parameter": 11,
                 },
                 {
@@ -336,14 +336,14 @@ class DataSource:
             ],
             "HeatGeneration": [
                 {
-                    "table_name": "eurostat_primary_parameters",
+                    "table_name": "1_2_3_20_21_GAE_PP_NEU_k-coefficients",
                     "id_parameter": 20,
                     "normalization_column_names": [],
                 }
             ],
             "ElectricityGeneration": [
                 {
-                    "table_name": "eurostat_primary_parameters",
+                    "table_name": "1_2_3_20_21_GAE_PP_NEU_k-coefficients",
                     "id_parameter": 21,
                     "normalization_column_names": [],
                 }
@@ -355,44 +355,44 @@ class DataSource:
                         "entries": {
                             "Value of statistical life [€]": [
                                 {
-                                    "table_name": "who_parameters",
+                                    "table_name": "37_56_VSL_VOLY_monetisation",
                                     "id_parameter": 37,
                                 }
                             ],
                             "Value of a life year [€]": [
                                 {
-                                    "table_name": "who_parameters",
+                                    "table_name": "37_56_VSL_VOLY_monetisation",
                                     "id_parameter": 56,
                                 }
                             ],
                             "Value of a lost work day [€]": [
                                 {
-                                    "table_name": "iiasa_lost_working_days_monetization_factors",
+                                    "table_name": "19_63_LWD_hospitalisation_monetisation",
                                     "id_parameter": 19,
                                 }
                             ],
                             "Hospitalisation monetisation [€]": [
                                 {
-                                    "table_name": "iiasa_lost_working_days_monetization_factors",
+                                    "table_name": "19_63_LWD_hospitalisation_monetisation",
                                     "id_parameter": 63,
                                 }
                             ],
                             "Cost per ton of emitted CO2 [€/tCO2]": [
                                 {
-                                    "table_name": "iiasa_greenhouse_gas_emission_monetization_factors",
+                                    "table_name": "42_GHG_cost",
                                     "id_parameter": 42,
                                 }
                             ],
                             "Cost of statistical transfer of RES [€/ktoe]": [
                                 {
-                                    "table_name": "fraunhofer_constant_parameters",
+                                    "table_name": "61_cost_of_RES_statistical_transfers",
                                     "id_parameter": 61,
                                     "column_names": ["Value"],
                                 }
                             ],
                             "Investment costs of PV [€/MW]": [
                                 {
-                                    "table_name": "irena_technology_parameters",
+                                    "table_name": "44_avoided_capacity_monetisation",
                                     "id_parameter": 4,
                                     "id_technology": 3,
                                     "column_names": ["Value"],
@@ -400,7 +400,7 @@ class DataSource:
                             ],
                             "Investment costs of onshore wind [€/MW]": [
                                 {
-                                    "table_name": "irena_technology_parameters",
+                                    "table_name": "44_avoided_capacity_monetisation",
                                     "id_parameter": 44,
                                     "id_technology": 1,
                                     "column_names": ["Value"],
@@ -408,7 +408,7 @@ class DataSource:
                             ],
                             "Investment costs of offshore wind [€/MW]": [
                                 {
-                                    "table_name": "irena_technology_parameters",
+                                    "table_name": "44_avoided_capacity_monetisation",
                                     "id_parameter": 37,
                                     "id_technology": 2,
                                     "column_names": ["Value"],

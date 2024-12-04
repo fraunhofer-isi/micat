@@ -17,7 +17,7 @@ def main():
     # Import e3m_parameters
     e3m_parameters_path = import_path + "/e3m_parameters_updated.xlsx"
     data = Table.read_excel(e3m_parameters_path)
-    database_import.write_to_sqlite(data, "e3m_parameters")
+    database_import.write_to_sqlite(data, "38_39_GDP_employment_coefficients")
 
     # Import e3m_global_parameters
     investments_per_ktoe_path = import_path + "/investments_per_ktoe_updated.xlsx"
@@ -26,4 +26,4 @@ def main():
     nia_per_ktoe_path = import_path + "/nia_per_ktoe_updated.xlsx"
     nia_per_ktoe = Table.read_excel(nia_per_ktoe_path)
     data = Table.concat([investments_in_mio_per_ktoe, nia_per_ktoe])
-    database_import.write_to_sqlite(data, "e3m_global_parameters")
+    database_import.write_to_sqlite(data, "41_48_investments_and_actions_per_ktoe")

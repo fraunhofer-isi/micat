@@ -21,7 +21,7 @@ $`WDIH_c`$ = excess cold weather deaths attributable to indoor cold per househol
 
 $`N_{c, m, y}`$ = number of affected buildings (#419)
 
-$`PTF_{c, y}`$ = energy poverty targetedness factor, percentage of improvement actions implemented among energy poor households (id_parameter = 25, table wuppertal_parameters, by default national share of population unable to keep home warm)
+$`PTF_{c, y}`$ = energy poverty targetedness factor, percentage of improvement actions implemented among energy poor households (id_parameter = 25, table 25_29_30_31_32_33_34_35_energy_poverty_coefficients, by default national share of population unable to keep home warm)
 
 $`MDRS_c`$ = share of measures constituting medium and deep renovations (id_parameter = 53, source: Wuppertal, /public/Wuppertal/health.xlsx)
 

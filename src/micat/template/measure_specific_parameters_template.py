@@ -115,7 +115,7 @@ def _wuppertal_parameters(
     data_source,
 ):
     id_region = context["id_region"]
-    wuppertal_parameters_raw = data_source.table("wuppertal_parameters", {"id_region": str(id_region)})
+    wuppertal_parameters_raw = data_source.table("25_29_30_31_32_33_34_35_energy_poverty_coefficients", {"id_region": str(id_region)})
 
     years = final_energy_saving_by_action_type.years
     wuppertal_parameters = extrapolation.extrapolate(wuppertal_parameters_raw, years)
@@ -389,7 +389,7 @@ def _lifetime(context, database):
     id_subsector = context["id_subsector"]
     id_action_type = context["id_action_type"]
     wuppertal_sector_parameters = database.table(
-        "wuppertal_sector_parameters", {"id_subsector": str(id_subsector), "id_action_type": str(id_action_type)}
+        "36_action_lifetime", {"id_subsector": str(id_subsector), "id_action_type": str(id_action_type)}
     )
     lifetime = wuppertal_sector_parameters.reduce("id_parameter", 36)
     return lifetime
@@ -492,13 +492,13 @@ def _template_args(request):
         "id_region": query_dict["id_region"],
         "id_subsector": query_dict["id_subsector"],
         "parameter_table_names": [
-            "eurostat_final_parameters",
-            "eurostat_final_sector_parameters",
-            "eurostat_primary_parameters",
-            "iiasa_final_subsector_parameters",
-            "mixed_final_constant_parameters",
-            "primes_parameters",
-            "primes_primary_parameters",
+            "1_2_3_GAE_PP_non_energy_uses",
+            "11_subsectoral_energy_mix_share",
+            "1_2_3_20_21_GAE_PP_NEU_k-coefficients",
+            "4_5_6_7_8_9_air_pollution_coefficients",
+            "12_subsectoral_to_action_energy_mix_coefficient",
+            "10_24_GDP_population_primes",
+            "1_2_GAE_PP_primes",
         ],
     }
     return args

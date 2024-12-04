@@ -903,7 +903,7 @@ class TestPrivateApi:
         def test_with_existing_name(self):
             result = DataSource._map_global_parameter_tables("FuelSplitCoefficient")
             assert result == [
-                {"table_name": "eurostat_final_sector_parameters", "id_parameter": 11},
+                {"table_name": "11_subsectoral_energy_mix_share", "id_parameter": 11},
                 {"table_name": "primes_final_sector_parameters", "id_parameter": 11},
             ]
 

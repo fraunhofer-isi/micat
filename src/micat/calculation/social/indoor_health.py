@@ -17,7 +17,7 @@ def avoided_excess_cold_weather_mortality_due_to_indoor_cold(
     where_clause = {'id_parameter': '26', 'id_region': str(id_region)}
 
     cold_weather_deaths_to_indoor_cold_per_household = data_source.annual_series_from_value(
-        'wuppertal_health_parameters', years, where_clause
+        '26_53_54_55_excess_cold_weather_mortality_coefficients', years, where_clause
     )
 
     number_of_affected_buildings = affected_dwellings.determine_number_of_affected_dwellings(
@@ -26,7 +26,7 @@ def avoided_excess_cold_weather_mortality_due_to_indoor_cold(
 
     energy_poverty_targetedness_factor = 0.01 * data_source.annual_parameters_per_measure(
         final_energy_saving_by_action_type,
-        'wuppertal_parameters',
+        '25_29_30_31_32_33_34_35_energy_poverty_coefficients',
         25,
         _provide_default_energy_poverty_targetedness_factor,
         id_region,
@@ -35,7 +35,7 @@ def avoided_excess_cold_weather_mortality_due_to_indoor_cold(
     where_clause = {'id_parameter': '53', 'id_region': str(id_region)}
 
     medium_and_deep_renovations_share = data_source.annual_series_from_value(
-        'wuppertal_health_parameters', years, where_clause
+        '26_53_54_55_excess_cold_weather_mortality_coefficients', years, where_clause
     )
 
     avoided_excess_cold_weather_deaths = (

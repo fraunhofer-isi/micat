@@ -26,7 +26,7 @@ def main():
         id_parameter,
     )
 
-    database_import.write_to_sqlite(fraunhofer_constant_parameters, 'fraunhofer_constant_parameters')
+    database_import.write_to_sqlite(fraunhofer_constant_parameters, '61_cost_of_RES_statistical_transfers')
 
 
 if __name__ == "__main__":

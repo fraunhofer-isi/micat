@@ -32,15 +32,15 @@ def main():
 
     extended_parameters = PopulationUtils.extend_european_values(parameters, database)
 
-    database_import.write_to_sqlite(extended_decile_parameters, 'wuppertal_decile_parameters')
-    database_import.write_to_sqlite(sector_parameters, 'wuppertal_sector_parameters')
-    database_import.write_to_sqlite(constant_parameters, 'wuppertal_constant_parameters')
-    database_import.write_to_sqlite(extended_parameters, 'wuppertal_parameters')
+    database_import.write_to_sqlite(extended_decile_parameters, '27_28_57_58_energy_poverty_gaps')
+    database_import.write_to_sqlite(sector_parameters, '36_action_lifetime')
+    database_import.write_to_sqlite(constant_parameters, '59_60_M2_2M_equivalence_coefficients')
+    database_import.write_to_sqlite(extended_parameters, '25_29_30_31_32_33_34_35_energy_poverty_coefficients')
 
     file_path = import_path + '/health.xlsx'
     raw_health_parameters = pd.read_excel(file_path, engine='openpyxl', sheet_name=None)
     health_parameters = _read_health_tables(raw_health_parameters)
-    database_import.write_to_sqlite(health_parameters, 'wuppertal_health_parameters')
+    database_import.write_to_sqlite(health_parameters, '26_53_54_55_excess_cold_weather_mortality_coefficients')
 
 
 def _read_energy_poverty_tables(raw_energy_poverty_parameters):  # pylint: disable=too-many-locals

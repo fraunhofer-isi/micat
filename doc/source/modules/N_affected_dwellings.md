@@ -42,7 +42,7 @@ $N_{{\rm user\_input}, y}$ = user input "number of affected dwellings" on reside
 
 $ARR_{{\rm user\_input}, y}$ = "annual renovation rate" on residential tab in measure specific parameters template (id_parameter = 43)
 
-$DS$ = national dwelling stock (id_parameter = 32, table wuppertal_parameters **and** measure specific template file, residential tab)
+$DS$ = national dwelling stock (id_parameter = 32, table 25_29_30_31_32_33_34_35_energy_poverty_coefficients **and** measure specific template file, residential tab)
 
 $k_{NIA/\Delta E, a}$ = number of affected dwellings per ktoe (coefficient describing the average number of improvement actions per energy unit) (id_parameter = 48, source e3m, public/e3m/NIA_per_ktoe.xlsx)
 
