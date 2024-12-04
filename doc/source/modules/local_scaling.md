@@ -22,7 +22,7 @@ $X_{local}$ = scaled value for the municipality
 
 $pop_{\rm local}$ = local population value, specified for a municipality by user in front end
 
-$pop_c$ = national population related to $X_c$ (id_parameter = 24, "primes_parameters")
+$pop_c$ = national population related to $X_c$ (id_parameter = 24, "10_24_GDP_population_primes")
 
 *This is relevant for the following id_parameters:*
 

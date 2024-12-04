@@ -85,7 +85,7 @@ def _basic_chi(
         "id_subsector": subsector_ids,
         "id_action_type": action_type_ids,
     }
-    table = data_source.table("mixed_final_constant_parameters", where_clause)
+    table = data_source.table("12_subsectoral_to_action_energy_mix_coefficient", where_clause)
     chi = table.reduce("id_parameter", 12)
     return chi
 
@@ -264,7 +264,7 @@ def _raw_lambda(
     }
 
     if mode.is_eurostat_mode(id_mode):
-        table = data_source.table("eurostat_final_sector_parameters", where_clause)
+        table = data_source.table("11_subsectoral_energy_mix_share", where_clause)
     else:
         table = data_source.table("primes_final_sector_parameters", where_clause)
 

@@ -27,7 +27,7 @@ def _parameters_raw(data_source, id_region):
     where_clause = {
         'id_region': str(id_region),
     }
-    table = data_source.table('primes_parameters', where_clause)
+    table = data_source.table('10_24_GDP_population_primes', where_clause)
     return table
 
 
@@ -35,7 +35,7 @@ def _primary_parameters_raw(data_source, id_region):
     where_clause = {
         'id_region': str(id_region),
     }
-    table = data_source.table('primes_primary_parameters', where_clause)
+    table = data_source.table('1_2_GAE_PP_primes', where_clause)
     return table
 
 
@@ -43,5 +43,5 @@ def _technology_parameters_raw(data_source, id_region):
     where_clause = {
         'id_region': str(id_region),
     }
-    table = data_source.table('primes_technology_parameters', where_clause)
+    table = data_source.table('47_RES_utilisation_primes', where_clause)
     return table

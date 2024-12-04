@@ -64,7 +64,7 @@ def dwelling_stock(
     id_region,
     population_of_municipality,
 ):
-    wuppertal_parameters = data_source.table('wuppertal_parameters', {'id_region': str(id_region)})
+    wuppertal_parameters = data_source.table('25_29_30_31_32_33_34_35_energy_poverty_coefficients', {'id_region': str(id_region)})
 
     dwelling_stock_raw = data_source.measure_specific_parameter_using_default_table(
         final_energy_saving_by_action_type,
@@ -84,7 +84,7 @@ def dwelling_stock(
 
 
 def _improvement_actions_per_energy_unit(data_source, years):
-    e3m_global_parameters = data_source.table('e3m_global_parameters', {})
+    e3m_global_parameters = data_source.table('41_48_investments_and_actions_per_ktoe', {})
     raw_improvement_actions_per_energy_unit = e3m_global_parameters.reduce('id_parameter', 48)
     improvement_actions_per_energy_unit = extrapolation.extrapolate(raw_improvement_actions_per_energy_unit, years)
     return improvement_actions_per_energy_unit

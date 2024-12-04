@@ -36,7 +36,7 @@ def _default_lifetime(
         'id_subsector': subsector_ids,
         'id_action_type': action_type_ids,
     }
-    wuppertal_sector_parameters = data_source.table('wuppertal_sector_parameters', where_clause)
+    wuppertal_sector_parameters = data_source.table('36_action_lifetime', where_clause)
     lifetime = wuppertal_sector_parameters.reduce('id_parameter', [36])
     del lifetime['id_parameter']
     return lifetime

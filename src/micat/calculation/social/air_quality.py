@@ -47,7 +47,7 @@ def reduction_in_disability_adjusted_life_years(
 def _daly_per_damp_and_mouldy_building_ratio(data_source, id_region, years):
     where_clause = {'id_region': str(id_region), 'id_parameter': '55'}
     daly_per_damp_and_mouldy_building_ratio = data_source.annual_series_from_value(
-        'wuppertal_health_parameters',
+        '26_53_54_55_excess_cold_weather_mortality_coefficients',
         years,
         where_clause,
     )
@@ -57,7 +57,7 @@ def _daly_per_damp_and_mouldy_building_ratio(data_source, id_region, years):
 def _medium_and_deep_renovations_share(data_source, id_region, years):
     where_clause = {'id_region': str(id_region), 'id_parameter': '53'}
     medium_and_deep_renovations_share = data_source.annual_series_from_value(
-        'wuppertal_health_parameters',
+        '26_53_54_55_excess_cold_weather_mortality_coefficients',
         years,
         where_clause,
     )
@@ -71,7 +71,7 @@ def _damp_and_mouldy_buildings_targetedness_factor(
 ):
     where_clause = {'id_region': str(id_region), 'id_parameter': '54'}
     damp_and_mouldy_buildings_targetedness_factor = 0.01 * data_source.annual_series_from_value(
-        'wuppertal_health_parameters',
+        '26_53_54_55_excess_cold_weather_mortality_coefficients',
         years,
         where_clause,
     )

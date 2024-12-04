@@ -70,9 +70,9 @@ def alleviation_of_energy_poverty_on_eu_level(final_energy_saving_by_action_type
 
 def _population_table(final_energy_saving_by_action_type, data_source, id_mode):
     if id_mode == 3:
-        population_table = data_source.table('eurostat_parameters', {'id_parameter': '24'})
+        population_table = data_source.table('24_population', {'id_parameter': '24'})
     else:
-        population_table = data_source.table('primes_parameters', {'id_parameter': '24'})
+        population_table = data_source.table('10_24_GDP_population_primes', {'id_parameter': '24'})
     population_table = population_table.reduce('id_parameter', 24)
     joined_years = population_table.columns + list(
         set(final_energy_saving_by_action_type.columns) - set(population_table.columns)

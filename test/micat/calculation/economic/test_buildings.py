@@ -37,7 +37,7 @@ sectorial_cost = Table(
     ]
 )
 
-capitalization_rate = ValueTable(
+capitalisation_rate = ValueTable(
     [
         {'id_sector': 3, 'value': 0.5},
     ]
@@ -58,8 +58,8 @@ class TestAddedAssetValueOfBuildings:
         True,
     )
     @patch(
-        buildings._capitalization_rate,
-        capitalization_rate,
+        buildings._capitalisation_rate,
+        capitalisation_rate,
     )
     def test_with_relevant_action_types(self):
         reduction_of_energy_cost = Table(
@@ -105,14 +105,14 @@ class TestAddedAssetValueOfBuildings:
         assert result == 'mocked_result'
 
 
-def test_capitalization_rate():
+def test_capitalisation_rate():
     mocked_table = Mock()
     mocked_table.reduce = Mock('mocked_result')
 
     data_source = Mock()
     data_source.table = Mock(mocked_table)
 
-    result = buildings._capitalization_rate(
+    result = buildings._capitalisation_rate(
         data_source,
         'mocked_id_region',
     )

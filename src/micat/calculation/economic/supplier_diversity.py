@@ -54,7 +54,7 @@ def _average_monthly_imported_energy(data_source, id_region, years):
     where_clause = {
         'id_region': str(id_region),
     }
-    eurostat_partner_relation_parameters = data_source.table('eurostat_partner_relation_parameters', where_clause)
+    eurostat_partner_relation_parameters = data_source.table('51_imported_energy_from_partner', where_clause)
     raw_average_monthly_imported_energy = eurostat_partner_relation_parameters.reduce('id_parameter', 51)
     average_monthly_imported_energy = extrapolation.extrapolate(raw_average_monthly_imported_energy, years)
     return average_monthly_imported_energy

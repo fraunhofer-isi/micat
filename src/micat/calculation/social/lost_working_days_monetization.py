@@ -18,6 +18,6 @@ def monetization_of_lost_working_days_due_to_air_pollution(
 
 def _monetization_factors(data_source, id_region, years):
     where_clause = {"id_region": str(id_region), "id_parameter": "19"}
-    raw_monetization_factors = data_source.annual_series("iiasa_lost_working_days_monetization_factors", where_clause)
+    raw_monetization_factors = data_source.annual_series("19_63_LWD_hospitalisation_monetisation", where_clause)
     monetization_factors = extrapolation.extrapolate_series(raw_monetization_factors, years)
     return monetization_factors

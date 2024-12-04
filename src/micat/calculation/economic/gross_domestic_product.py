@@ -20,7 +20,7 @@ def impact_on_gross_domestic_product(
     action_type_ids = final_energy_saving_by_action_type.unique_index_values("id_action_type")
 
     e3m_parameters = data_source.table(
-        "e3m_parameters",
+        "38_39_GDP_employment_coefficients",
         {
             "id_region": str(id_region),
             "id_action_type": action_type_ids,

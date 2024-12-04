@@ -25,9 +25,9 @@ def alleviation_of_energy_poverty_on_national_level(
 
     measure_specific_lifetime = lifetime.measure_specific_lifetime(final_energy_saving_by_action_type, data_source)
 
-    wuppertal_parameters = data_source.table('wuppertal_parameters', {'id_region': str(id_region)})
+    wuppertal_parameters = data_source.table('25_29_30_31_32_33_34_35_energy_poverty_coefficients', {'id_region': str(id_region)})
 
-    wuppertal_constant_parameters = data_source.table('wuppertal_constant_parameters', {'id_region': str(id_region)})
+    wuppertal_constant_parameters = data_source.table('59_60_M2_2M_equivalence_coefficients', {'id_region': str(id_region)})
 
     if mode_2m:
         equivalence_coefficient = wuppertal_constant_parameters.reduce('id_parameter', 60)
@@ -108,7 +108,7 @@ def alleviation_of_energy_poverty_on_national_level(
 
 
 def _energy_poverty_gap(data_source, id_region, years, mode_2m=False):
-    wuppertal_decile_parameters = data_source.table('wuppertal_decile_parameters', {'id_region': str(id_region)})
+    wuppertal_decile_parameters = data_source.table('27_28_57_58_energy_poverty_gaps', {'id_region': str(id_region)})
     extrapolated_decile_parameters = extrapolation.extrapolate(wuppertal_decile_parameters, years)
     if mode_2m:
         energy_poverty_gap_owner = extrapolated_decile_parameters.reduce('id_parameter', 57)

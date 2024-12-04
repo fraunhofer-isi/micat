@@ -19,8 +19,8 @@ def turnover_of_energy_efficiency_goods(
 
 
 def _specific_turnover(data_source, action_type_ids, years):
-    irena_parameters = data_source.table('irena_parameters', {'id_action_type': action_type_ids})
-    raw_specific_turnover = irena_parameters.reduce('id_parameter', [49])
+    turnover_per_ktoe = data_source.table('49_turnover_per_ktoe', {'id_action_type': action_type_ids})
+    raw_specific_turnover = turnover_per_ktoe.reduce('id_parameter', [49])
     del raw_specific_turnover['id_parameter']
     specific_turnover = extrapolation.extrapolate(raw_specific_turnover, years)
     return specific_turnover

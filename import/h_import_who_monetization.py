@@ -22,7 +22,7 @@ def main():
 
     who_monetization = _read_who_monetization_tables(raw_monetization_factors)
 
-    database.write_to_sqlite(who_monetization, 'who_parameters')
+    database.write_to_sqlite(who_monetization, '37_56_VSL_VOLY_monetisation')
 
 
 def _to_table(raw_factors):

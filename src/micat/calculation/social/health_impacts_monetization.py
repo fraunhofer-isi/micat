@@ -15,7 +15,7 @@ def monetization_of_health_costs_linked_to_dampness_and_mould_related_asthma_cas
 
 def _value_of_life_years(data_source, id_region, years):
     where_clause = {'id_region': str(id_region), 'id_parameter': '56'}
-    value_of_life_years = data_source.extrapolated_annual_series('who_parameters', years, where_clause)
+    value_of_life_years = data_source.extrapolated_annual_series('37_56_VSL_VOLY_monetisation', years, where_clause)
     return value_of_life_years
 
 
@@ -36,5 +36,5 @@ def monetization_of_cold_weather_mortality(
 
 def _value_of_statistical_life(data_source, id_region, years):
     where_clause = {'id_region': str(id_region), 'id_parameter': '37'}
-    value_of_statistical_life = data_source.extrapolated_annual_series('who_parameters', years, where_clause)
+    value_of_statistical_life = data_source.extrapolated_annual_series('37_56_VSL_VOLY_monetisation', years, where_clause)
     return value_of_statistical_life

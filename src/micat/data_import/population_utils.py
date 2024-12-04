@@ -42,10 +42,10 @@ class PopulationUtils:
 
     @staticmethod
     def _population(database, years=None):
-        eurostat_parameters = database.table('eurostat_parameters', {})
+        eurostat_parameters = database.table('24_population', {})
         eurostat_population = eurostat_parameters.reduce('id_parameter', 24)
 
-        primes_parameters = database.table('primes_parameters', {})
+        primes_parameters = database.table('10_24_GDP_population_primes', {})
         primes_population = primes_parameters.reduce('id_parameter', 24)
         future_population = primes_population[['2025', '2030', '2035', '2040', '2045', '2050']]
         population = Table.concat_years([eurostat_population, future_population])

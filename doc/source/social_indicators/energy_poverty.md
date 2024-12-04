@@ -31,11 +31,11 @@ $\Delta EP = $ Energy poverty (the number of people lifted out of energy poverty
 
 $N$ = number of affected dwellings (id_parameter = 45), calculation in the [related module](../modules/N_affected_dwellings.md)
 
-$PTF$ = policy targetedness factor, percentage of improvement actions implemented among energy poor households (id_parameter = 25, table wuppertal_parameters)  
+$PTF$ = policy targetedness factor, percentage of improvement actions implemented among energy poor households (id_parameter = 25, table 25_29_30_31_32_33_34_35_energy_poverty_coefficients)  
 
 $SHH$ = average size of energy poor households (id_parameter = 30, table wuppertal_parameters)
 
-$OOR$ = owner-occupier rate among national population (id_parameter = 33, table wuppertal_parameters)
+$OOR$ = owner-occupier rate among national population (id_parameter = 33, table 25_29_30_31_32_33_34_35_energy_poverty_coefficients)
 
 $IF_{owner/tenant}$ = share of energy poor population affected by a specific measure among owner-occupiers and tenants, respectively. Calculation described below.
 
@@ -55,21 +55,21 @@ $`\Delta DI_{tenant} = ( EC_{ss, a, y} / EQC_{M2} - RRP / 100 \cdot REP ) / N`$
 
 $`\Delta DI_{owner} = ( EC_{ss, a, y} / EQC_{M2} - I_{ss, a, y} / EQC_{M2} / IAL \cdot (100 - SR) / 100 ) / N`$
 
-$`REP`$ = average rent of energy poor households (id_parameter = 29, table wuppertal_parameters **and** measure specific parameters table, tab residential)
+$`REP`$ = average rent of energy poor households (id_parameter = 29, table 25_29_30_31_32_33_34_35_energy_poverty_coefficients **and** measure specific parameters table, tab residential)
 
-$`RRP`$ = average renovation rent premium as percent of rent (id_parameter = 34, table wuppertal_parameters **and** measure specific parameters table, tab residential )
+$`RRP`$ = average renovation rent premium as percent of rent (id_parameter = 34, table 25_29_30_31_32_33_34_35_energy_poverty_coefficients **and** measure specific parameters table, tab residential )
 
-$`IAL`$ = lifetitem ("Lifetime of improvement actions", "Average technology lifetime") (id_parameter = 36, table wuppertal_sector_parameters **and** measure specific parameter table, tab main)
+$`IAL`$ = lifetitem ("Lifetime of improvement actions", "Average technology lifetime") (id_parameter = 36, table 36_action_lifetime **and** measure specific parameter table, tab main)
 
-$`SR`$ = subsidy rate covered by any given scheme in percent of investments costs (id_parameter = 35, table wuppertal_parameters)
+$`SR`$ = subsidy rate covered by any given scheme in percent of investments costs (id_parameter = 35, table 25_29_30_31_32_33_34_35_energy_poverty_coefficients)
 
-$`EPG_{\mathrm{M2}, d, y}`$ = energy poverty gap (id_parameter = 27 for owner-occupiers and 28 for tenants, table wuppertal_decile_parameters)
+$`EPG_{\mathrm{M2}, d, y}`$ = energy poverty gap (id_parameter = 27 for owner-occupiers and 28 for tenants, table 27_28_57_58_energy_poverty_gaps)
 
 $`EC_{ss, a, y}`$ = energy cost savings as calculated in #34
 
 $`I_{ss, a, y}`$ = investments for a given row in the front end (id_parameter=40, calculated in #38)
 
-$`EQC_{M2}`$ = OECD equivalence coefficient, in order to convert household expenditures into personal expenditures and account for the lower per capita costs of larger households (id_parameter = 59, source: OECD, wuppertal/energy_poverty.xlsx)
+$`EQC_{M2}`$ = OECD equivalence coefficient, in order to convert household expenditures into personal expenditures and account for the lower per capita costs of larger households (id_parameter = 59, source: OECD, table 59_60_M2_2M_equivalence_coefficients)
 
 ### For id_action_type 4
 

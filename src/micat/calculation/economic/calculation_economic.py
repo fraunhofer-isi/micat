@@ -73,7 +73,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
     )
 
     # TO DO: use different sources for non_energy_use, depending on id_mode? #268
-    eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
+    eurostat_primary_parameters = interim_data["1_2_3_20_21_GAE_PP_NEU_k-coefficients"]
     primary_non_energy_use = eurostat_primary_parameters.reduce("id_parameter", 3)
 
     energy_intensity_table = energy_intensity.energy_intensity(

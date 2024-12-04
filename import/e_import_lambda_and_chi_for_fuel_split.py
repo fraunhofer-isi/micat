@@ -26,7 +26,7 @@ def main():
 
     print('Importing lambda...')
     lambda_ = determine_lambda(database)
-    database_import.write_to_sqlite(lambda_, 'eurostat_final_sector_parameters')
+    database_import.write_to_sqlite(lambda_, '11_subsectoral_energy_mix_share')
 
     print('Importing chi...')
     id_region_table = database.id_table('id_region')
@@ -56,8 +56,8 @@ def main():
 
     # mixed: from several sources: forecast, primes
     # final_constant_parameters: these values are assumed to be independent of the year
-    print('# Writing  mixed_final_constant_parameters...')
-    database_import.write_to_sqlite(chi, 'mixed_final_constant_parameters')
+    print('# Writing  12_subsectoral_to_action_energy_mix_coefficient...')
+    database_import.write_to_sqlite(chi, '12_subsectoral_to_action_energy_mix_coefficient')
 
 
 def _write_missing_entries_as_excel_file(entries, file_path):
@@ -73,7 +73,7 @@ def _create_chi_row(entry):
 
 
 def determine_lambda(database):
-    final_energy_consumption = database.table('eurostat_final_energy_consumption', {})
+    final_energy_consumption = database.table('11_subsectoral_energy_mix_absolute', {})
     lambda_ = final_energy_consumption.normalize(['id_region', 'id_subsector'])
     lambda_ = lambda_.insert_index_column('id_parameter', 1, 11)
     return lambda_

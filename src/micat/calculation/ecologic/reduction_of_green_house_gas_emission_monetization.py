@@ -21,7 +21,7 @@ def monetize(
 def _monetization_factors(database, id_region, years):
     where_clause = {'id_region': str(id_region)}
     raw_monetization_factors = database.annual_series(
-        'iiasa_greenhouse_gas_emission_monetization_factors',
+        '42_GHG_cost',
         where_clause,
     )
     monetization_factors = extrapolation.extrapolate_series(raw_monetization_factors, years)

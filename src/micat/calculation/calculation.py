@@ -326,7 +326,7 @@ def _interim_data(
         "additional_primary_energy_saving": additional_primary_energy_saving,
         "air_pollution_parameters": air_pollution_parameters,
         "energy_saving_by_final_energy_carrier": energy_saving_by_final_energy_carrier,
-        "eurostat_primary_parameters": eurostat_primary_parameters,
+        "1_2_3_20_21_GAE_PP_NEU_k-coefficients": eurostat_primary_parameters,
         "reduction_of_energy_cost": reduction_of_energy_cost,
         "total_primary_energy_saving": total_primary_energy_saving,
     }

@@ -143,8 +143,8 @@ def _create_data_for_final_energy_carrier(
 
     sector_table = _fill_missing_values_for_final_energy_consumption(sector_table)
 
-    print("# Writing eurostat_final_energy_consumption...")
-    database_import.write_to_sqlite(sector_table, "eurostat_final_energy_consumption")
+    print("# Writing 11_subsectoral_energy_mix_absolute...")
+    database_import.write_to_sqlite(sector_table, "11_subsectoral_energy_mix_absolute")
 
     # b) map siec to parameter
     # note: join does not sum rows with same target ids => ids might not be unique
@@ -160,8 +160,8 @@ def _create_data_for_final_energy_carrier(
 
     parameter_table = _fill_missing_values_for_final_parameters(parameter_table)
 
-    print("# Writing eurostat_final_parameters...")
-    database_import.write_to_sqlite(parameter_table, "eurostat_final_parameters")
+    print("# Writing 1_2_3_GAE_PP_non_energy_uses...")
+    database_import.write_to_sqlite(parameter_table, "1_2_3_GAE_PP_non_energy_uses")
 
 
 def _create_data_for_primary_energy_carrier(
@@ -192,8 +192,8 @@ def _create_data_for_primary_energy_carrier(
 
     parameter_table = _fill_missing_values_for_primary_parameters(parameter_table)
 
-    print("# Writing eurostat_primary_parameters")
-    database_import.write_to_sqlite(parameter_table, "eurostat_primary_parameters")
+    print("# Writing 1_2_3_20_21_GAE_PP_NEU_k-coefficients")
+    database_import.write_to_sqlite(parameter_table, "1_2_3_20_21_GAE_PP_NEU_k-coefficients")
 
 
 def _import_population(
@@ -208,8 +208,8 @@ def _import_population(
     population = Table(population_frame)
     population = population.insert_index_column("id_parameter", 1, 24)
 
-    print("# Writing eurostat_parameters")
-    database_import.write_to_sqlite(population, "eurostat_parameters")
+    print("# Writing 24_population")
+    database_import.write_to_sqlite(population, "24_population")
 
 
 def _import_supplier_diversity(
@@ -221,8 +221,8 @@ def _import_supplier_diversity(
     risk_coefficient = Table(risk_coefficient_sheet)
     risk_coefficient = risk_coefficient.insert_index_column("id_parameter", 1, 52)
 
-    print("# Writing eurostat_partner_parameters")
-    database_import.write_to_sqlite(risk_coefficient, "eurostat_partner_parameters")
+    print("# Writing 52_risk_coefficient_of_partners")
+    database_import.write_to_sqlite(risk_coefficient, "52_risk_coefficient_of_partners")
 
     imported_energy_sheet = pd.read_excel(imported_energy_file_path)
     imported_energy = Table(imported_energy_sheet)
@@ -231,8 +231,8 @@ def _import_supplier_diversity(
     # we fill some dummy values to silence validation and to easier identify possible issues
     imported_energy.fill_missing_values("id_final_energy_carrier", [1, 5, 6, 7], -999)
 
-    print("# Writing eurostat_partner_relation_parameters")
-    database_import.write_to_sqlite(imported_energy, "eurostat_partner_relation_parameters")
+    print("# Writing 51_imported_energy_from_partner")
+    database_import.write_to_sqlite(imported_energy, "51_imported_energy_from_partner")
 
 
 def _clean_population_sheet(population_sheet):
@@ -255,8 +255,8 @@ def _import_utilization(file_path, database_import):
     utilization = Table(utilization_frame)
     utilization = utilization.insert_index_column("id_parameter", 0, 47)
 
-    print("# Writing eurostat_technology_parameters")
-    database_import.write_to_sqlite(utilization, "eurostat_technology_parameters")
+    print("# Writing 47_RES_utilisation")
+    database_import.write_to_sqlite(utilization, "47_RES_utilisation")
 
 
 def _import_output_source_at_basic_price_2015(
@@ -285,12 +285,12 @@ def _import_output_source_at_basic_price_2015(
 
     source_at_basic_price = source_at_basic_price.insert_index_column("id_parameter", 1, 50)
 
-    print("# Writing eurostat_sector_parameters")
-    database_import.write_to_sqlite(source_at_basic_price, "eurostat_sector_parameters")
+    print("# Writing 50_output_at_basic_prices")
+    database_import.write_to_sqlite(source_at_basic_price, "50_output_at_basic_prices")
 
 
 def _gross_domestic_product_2015(database):
-    primes_parameters = database.table("primes_parameters", {})
+    primes_parameters = database.table("10_24_GDP_population_primes", {})
     gross_domestic_product_in_euro = primes_parameters.reduce("id_parameter", 10)
     gross_domestic_product_2015 = gross_domestic_product_in_euro["2015"]
     return gross_domestic_product_2015

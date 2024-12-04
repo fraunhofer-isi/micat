@@ -38,7 +38,7 @@ def _default_subsidy_rate(
         'id_region': str(id_region),
         'id_parameter': '35',
     }
-    raw_subsidy_rate = data_source.annual_series('wuppertal_parameters', where_clause)
+    raw_subsidy_rate = data_source.annual_series('25_29_30_31_32_33_34_35_energy_poverty_coefficients', where_clause)
     subsidy_rate = extrapolation.extrapolate_series(raw_subsidy_rate, years)
     return subsidy_rate
 

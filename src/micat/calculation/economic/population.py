@@ -32,7 +32,7 @@ def _population_for_region(
     id_region,
     year_or_years,
 ):
-    primes_parameters = data_source.table('primes_parameters', {'id_region': str(id_region)})
+    primes_parameters = data_source.table('10_24_GDP_population_primes', {'id_region': str(id_region)})
     raw_population = primes_parameters.reduce('id_parameter', 24)
 
     if isinstance(year_or_years, list):
