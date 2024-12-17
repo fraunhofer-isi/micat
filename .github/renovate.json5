@@ -15,6 +15,7 @@
     ":disableDependencyDashboard"
   ],
   "forkProcessing": "enabled",
+  "autodiscoverFilter": ["fraunhofer-isi/micat"],
   "packageRules": [
     {
      "description": "lockFileMaintenance",
