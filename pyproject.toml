@@ -144,7 +144,7 @@ include_namespace_packages = true
 directory = '.coverage'
 
 
-[tool.pylint.'MASTER']
+[tool.pylint.main]
 # Also see
 # https://pylint.pycqa.org/en/latest/user_guide/run.html#command-line-options
 # https://github.com/PyCQA/pylint/issues/5883
@@ -200,7 +200,7 @@ suggestion-mode = true
 unsafe-load-any-extension = false
 
 
-[tool.pylint.'MESSAGES CONTROL']
+[tool.pylint.'messages control']
 
 # Only show warnings with the listed confidence levels. Leave empty to show
 # all. Valid levels: HIGH, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
@@ -311,7 +311,7 @@ disable = [
 enable = 'c-extension-no-member'
 
 
-[tool.pylint.'REPORTS']
+[tool.pylint.reports]
 
 # Python expression which should return a score less than or equal to 10. You
 # have access to the variables 'error', 'warning', 'refactor', and 'convention'
@@ -336,7 +336,7 @@ reports = false
 score = true
 
 
-[tool.pylint.'REFACTORING']
+[tool.pylint.refactoring]
 
 # Maximum number of nested blocks for function / method body
 max-nested-blocks = 5
@@ -348,7 +348,7 @@ max-nested-blocks = 5
 never-returning-functions = 'sys.exit'
 
 
-[tool.pylint.'BASIC']
+[tool.pylint.basic]
 
 # Naming style matching correct argument names.
 argument-naming-style = 'snake_case'
@@ -466,7 +466,7 @@ variable-naming-style = 'snake_case'
 #variable-rgx=''
 
 
-[tool.pylint.FORMAT]
+[tool.pylint.format]
 
 # Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
 expected-line-ending-format = 'LF'
@@ -496,7 +496,7 @@ single-line-class-stmt = false
 single-line-if-stmt = false
 
 
-[tool.pylint.'LOGGING']
+[tool.pylint.logging]
 
 # The type of string formatting that logging methods do. `old` means using %
 # formatting, `new` is for `{}` formatting.
@@ -507,7 +507,7 @@ logging-format-style = 'old'
 logging-modules = 'logging'
 
 
-[tool.pylint.'MISCELLANEOUS']
+[tool.pylint.miscellaneous]
 
 # List of note tags to take in consideration, separated by a comma.
 notes = ['FIXME',
@@ -518,7 +518,7 @@ notes = ['FIXME',
 #notes-rgx=''
 
 
-[tool.pylint.'SIMILARITIES']
+[tool.pylint.similarities]
 
 # Ignore comments when computing similarities.
 ignore-comments = true
@@ -533,7 +533,7 @@ ignore-imports = false
 min-similarity-lines = 4
 
 
-[tool.pylint.'SPELLING']
+[tool.pylint.spelling]
 
 # Limits count of emitted suggestions for spelling mistakes.
 max-spelling-suggestions = 4
@@ -553,7 +553,7 @@ spelling-private-dict-file = ''
 spelling-store-unknown-words = false
 
 
-[tool.pylint.'STRING']
+[tool.pylint.string]
 
 # This flag controls whether inconsistent-quotes generates a warning when the
 # character used as a quote delimiter is used inconsistently within a module.
@@ -564,7 +564,7 @@ check-quote-consistency = false
 check-str-concat-over-line-jumps = false
 
 
-[tool.pylint.'TYPECHECK']
+[tool.pylint.typecheck]
 
 # List of decorators that produce context managers, such as
 # contextlib.contextmanager. Add to this list to register other decorators that
@@ -619,7 +619,7 @@ missing-member-max-choices = 1
 signature-mutators = ''
 
 
-[tool.pylint.'VARIABLES']
+[tool.pylint.variables]
 
 # List of additional names supposed to be defined in builtins. Remember that
 # you should avoid defining new builtins when possible.
@@ -649,7 +649,7 @@ init-import = false
 redefining-builtins-modules = ['six.moves', 'past.builtins', 'future.builtins', 'builtins', 'io']
 
 
-[tool.pylint.'CLASSES']
+[tool.pylint.classes]
 
 # List of method names used to declare (i.e. assign) instance attributes.
 defining-attr-methods = ['__init__',
@@ -672,10 +672,9 @@ valid-classmethod-first-arg = 'cls'
 valid-metaclass-classmethod-first-arg = 'cls'
 
 
-[tool.pylint.'DESIGN']
-
-# Maximum number of arguments for function / method.
-max-args = 10
+[tool.pylint.design]
+max-args = 10 # Maximum number of arguments for function / method.
+max-positional-arguments = 10
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes = 7
@@ -705,7 +704,7 @@ max-statements = 50
 min-public-methods = 2
 
 
-[tool.pylint.'IMPORTS']
+[tool.pylint.imports]
 
 # List of modules that can be imported at any level, not just the top level
 # one.
@@ -745,7 +744,7 @@ known-third-party = 'enchant'
 preferred-modules = ''
 
 
-[tool.pylint.'EXCEPTIONS']
+[tool.pylint.exceptions]
 
 # Exceptions that will emit a warning when being caught. Defaults to
 # "BaseException, Exception".
