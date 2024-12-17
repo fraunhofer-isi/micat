@@ -78,6 +78,15 @@ def main():
         raw_data_path,
     )
 
+    database_import.import_id_table('id_start_year_usage', raw_data_path)
+
+    database_import.import_mapping_table(
+        'mapping__parameter__start_year_usage',
+        'id_parameter',
+        'id_start_year_usage',
+        raw_data_path,
+    )
+
 
 if __name__ == '__main__':
     main()
