@@ -479,7 +479,7 @@ class DataSource:
             return table
 
     @staticmethod
-    def _row_to_json_array(row, key_column_name):
+    def _row_to_json_array(row):
         data = row.copy()
         if "index" in data:
             del data["index"]
@@ -772,11 +772,10 @@ class DataSource:
         entry,
     ):
         mapping = entry["mapping"]
-        key_column_name = mapping["key_column_name"]
         entries = mapping["entries"]
         for row in json_entry:
             mapping_entries = entries[row["identifier"]]
-            json_array = DataSource._row_to_json_array(row, key_column_name)
+            json_array = DataSource._row_to_json_array(row)
             for mapping_entry in mapping_entries:
                 tables = self._add_table_entry(tables, json_array, mapping_entry)
         return tables

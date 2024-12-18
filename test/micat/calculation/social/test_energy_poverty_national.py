@@ -131,13 +131,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
             id_subsector,
             'mocked_id_action_type',
             'mocked_years',
-            'mocked_reduction_of_energy_cost',
-            'mocked_m2_equivalence_coefficient',
-            'mocked_number_of_affected_dwellings',
-            'mocked_investment_in_euro',
-            'mocked_lifetime',
-            'mocked_subsidy_rate',
-            'mocked_energy_poverty_gap_owner',
+            'mocked_share_input',
         )
         assert result == 'mocked_result'
 
@@ -164,13 +158,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
                     self.id_subsector,
                     id_action_type,
                     self.extrapolated_final_parameters,
-                    'mocked_reduction_of_energy_cost',
-                    'mocked_m2_equivalence_coefficient',
-                    'mocked_number_of_affected_dwellings',
-                    'mocked_investment_in_euro',
-                    'mocked_lifetime',
-                    'mocked_subsidy_rate',
-                    'mocked_energy_poverty_gap_owner',
+                    'mocked_share_input',
                 )
                 assert result == 'mocked_result'
 
@@ -190,13 +178,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
                     self.id_subsector,
                     id_action_type,
                     self.extrapolated_final_parameters,
-                    'mocked_reduction_of_energy_cost',
-                    'mocked_m2_equivalence_coefficient',
-                    'mocked_number_of_affected_dwellings',
-                    'mocked_investment_in_euro',
-                    'mocked_lifetime',
-                    'mocked_subsidy_rate',
-                    'mocked_energy_poverty_gap_owner',
+                    'mocked_share_input',
                 )
                 assert result == 'mocked_result'
 
@@ -209,13 +191,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
                 self.id_subsector,
                 id_action_type,
                 self.extrapolated_final_parameters,
-                'mocked_reduction_of_energy_cost',
-                'mocked_m2_equivalence_coefficient',
-                'mocked_number_of_affected_dwellings',
-                'mocked_investment_in_euro',
-                'mocked_lifetime',
-                'mocked_subsidy_rate',
-                'mocked_energy_poverty_gap_owner',
+                'mocked_share_input',
             )
             assert result == 'mocked_result'
 
@@ -229,13 +205,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
                     self.id_subsector,
                     id_action_type,
                     self.extrapolated_final_parameters,
-                    'mocked_reduction_of_energy_cost',
-                    'mocked_m2_equivalence_coefficient',
-                    'mocked_number_of_affected_dwellings',
-                    'mocked_investment_in_euro',
-                    'mocked_lifetime',
-                    'mocked_subsidy_rate',
-                    'mocked_energy_poverty_gap_owner',
+                    'mocked_share_input',
                 )
 
 
@@ -245,23 +215,17 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
 )
 def test_measure_specific_share_of_energy_poor_population_electric():
     mocked_series = AnnualSeries({'2000': 1})
-    energy_cost_savings = mocked_series
-    m2_equivalence_coefficient = 2
-    number_of_affected_dwellings = mocked_series
-    investment_in_euro = mocked_series
-    lifetime = mocked_series
-    subsidy_rate = mocked_series
-    energy_poverty_gap_owner = mocked_series
+    share_input = {
+        'reduction_of_energy_cost': mocked_series,
+        'm2_equivalence_coefficient': 2,
+        'number_of_affected_dwellings': mocked_series,
+        'investment_in_euro': mocked_series,
+        'lifetime': mocked_series,
+        'subsidy_rate': mocked_series,
+        'energy_poverty_gap': mocked_series,
+    }
 
-    result = energy_poverty_national._measure_specific_share_of_energy_poor_population_electric(
-        energy_cost_savings,
-        m2_equivalence_coefficient,
-        number_of_affected_dwellings,
-        investment_in_euro,
-        lifetime,
-        subsidy_rate,
-        energy_poverty_gap_owner,
-    )
+    result = energy_poverty_national._measure_specific_share_of_energy_poor_population_electric(share_input)
     assert result['2000'] == 0.5
 
 
@@ -271,23 +235,17 @@ def test_measure_specific_share_of_energy_poor_population_electric():
 )
 def test_measure_specific_share_of_energy_poor_population_owner_others():
     mocked_series = AnnualSeries({'2000': 1})
-    energy_cost_savings = mocked_series
-    m2_equivalence_coefficient = 2
-    number_of_affected_dwellings = mocked_series
-    investment_in_euro = mocked_series
-    lifetime = mocked_series
-    subsidy_rate = mocked_series
-    energy_poverty_gap_owner = mocked_series
+    share_input = {
+        'reduction_of_energy_cost': mocked_series,
+        'm2_equivalence_coefficient': 2,
+        'number_of_affected_dwellings': mocked_series,
+        'investment_in_euro': mocked_series,
+        'lifetime': mocked_series,
+        'subsidy_rate': mocked_series,
+        'energy_poverty_gap': mocked_series,
+    }
 
-    result = energy_poverty_national._measure_specific_share_of_energy_poor_population_owner_others(
-        energy_cost_savings,
-        m2_equivalence_coefficient,
-        number_of_affected_dwellings,
-        investment_in_euro,
-        lifetime,
-        subsidy_rate,
-        energy_poverty_gap_owner,
-    )
+    result = energy_poverty_national._measure_specific_share_of_energy_poor_population_owner_others(share_input)
     assert result['2000'] == 0.5
 
 
@@ -301,15 +259,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
             id_subsector,
             'mocked_id_action_type',
             'mocked_years',
-            'mocked_reduction_of_energy_cost',
-            'mocked_m2_equivalence_coefficient',
-            'mocked_number_of_affected_dwellings',
-            'mocked_investment_in_euro',
-            'mocked_lifetime',
-            'mocked_subsidy_rate',
-            'mocked_rent_premium',
-            'mocked_average_rent',
-            'mocked_energy_poverty_gap_tenant',
+            'mocked_share_input',
         )
         assert result == 'mocked_result'
 
@@ -336,15 +286,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
                 self.id_subsector,
                 id_action_type,
                 'mocked_years',
-                'mocked_reduction_of_energy_cost',
-                'mocked_m2_equivalence_coefficient',
-                'mocked_number_of_affected_dwellings',
-                'mocked_investment_in_euro',
-                'mocked_lifetime',
-                'mocked_subsidy_rate',
-                'mocked_rent_premium',
-                'mocked_average_rent',
-                'mocked_energy_poverty_gap_tenant',
+                'mocked_share_input',
             )
             assert result == 'mocked_result'
 
@@ -364,15 +306,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
                 self.id_subsector,
                 id_action_type,
                 'mocked_years',
-                'mocked_reduction_of_energy_cost',
-                'mocked_m2_equivalence_coefficient',
-                'mocked_number_of_affected_dwellings',
-                'mocked_investment_in_euro',
-                'mocked_lifetime',
-                'mocked_subsidy_rate',
-                'mocked_rent_premium',
-                'mocked_average_rent',
-                'mocked_energy_poverty_gap_tenant',
+                'mocked_share_input',
             )
             assert result == 'mocked_result'
 
@@ -385,15 +319,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
                 self.id_subsector,
                 id_action_type,
                 'mocked_years',
-                'mocked_reduction_of_energy_cost',
-                'mocked_m2_equivalence_coefficient',
-                'mocked_number_of_affected_dwellings',
-                'mocked_investment_in_euro',
-                'mocked_lifetime',
-                'mocked_subsidy_rate',
-                'mocked_rent_premium',
-                'mocked_average_rent',
-                'mocked_energy_poverty_gap_tenant',
+                'mocked_share_input',
             )
             assert result == 'mocked_result'
 
@@ -407,15 +333,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
                     self.id_subsector,
                     id_action_type,
                     'mocked_years',
-                    'mocked_reduction_of_energy_cost',
-                    'mocked_m2_equivalence_coefficient',
-                    'mocked_number_of_affected_dwellings',
-                    'mocked_investment_in_euro',
-                    'mocked_lifetime',
-                    'mocked_subsidy_rate',
-                    'mocked_rent_premium',
-                    'mocked_average_rent',
-                    'mocked_energy_poverty_gap_tenant',
+                    'mocked_share_input',
                 )
 
 
@@ -427,7 +345,7 @@ def test_measure_specific_share_of_energy_poor_population_tenant_others():
     rent_premium = 1
     average_rent = 2
 
-    result = energy_poverty_national._measure_specific_share_of_energy_poor_population_tenant_others(
+    result = energy_poverty_national._measure_specific_sh_of_energy_poor_population_tenant_others(
         energy_cost_savings,
         m2_equivalence_coefficient,
         number_of_affected_dwellings,

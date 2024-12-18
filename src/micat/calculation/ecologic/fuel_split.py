@@ -7,6 +7,7 @@
 from micat.calculation import extrapolation, mode
 
 
+# pylint: disable=too-many-locals
 def fuel_split_by_action_type(
     final_energy_saving_by_action_type,
     data_source,

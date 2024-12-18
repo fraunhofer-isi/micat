@@ -6,6 +6,7 @@
 from micat.table.table import Table
 
 
+# pylint: disable=too-many-locals
 def energy_intensity(
     gross_available_energy,
     gross_domestic_product_baseline,

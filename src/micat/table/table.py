@@ -6,7 +6,6 @@ import json
 
 import numpy as np
 import pandas as pd
-
 from micat.log.logger import Logger
 from micat.table.abstract_table import (
     AbstractTable,  # pylint: disable=import-error, no-name-in-module
@@ -421,6 +420,7 @@ class Table(AbstractTable):
         else:
             return self._create(reduced_data_frame)
 
+    # pylint: disable=too-many-positional-arguments
     def reindex(
         self,
         labels=None,
@@ -537,7 +537,9 @@ class Table(AbstractTable):
     def update(self, table):
         # noinspection PyProtectedMember
         if isinstance(self._data_frame.index, pd.MultiIndex):
-            all_entries = pd.concat([self._data_frame, table._data_frame.reorder_levels(self._data_frame.index.names)])  # pylint: disable=protected-access
+            all_entries = pd.concat(
+                [self._data_frame, table._data_frame.reorder_levels(self._data_frame.index.names)]
+            )  # pylint: disable=protected-access
         else:
             all_entries = pd.concat([self._data_frame, table._data_frame])
         unique_entries = all_entries.query('~index.duplicated(keep="last")')

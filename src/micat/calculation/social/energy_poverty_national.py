@@ -125,19 +125,12 @@ def _extrapolated_series(id_parameter, parameters, years):
     return extrapolated_series
 
 
-# pylint: disable = too-many-arguments
 def _measure_specific_share_of_energy_poor_population_owner(
     id_measure,
     id_subsector,
     id_action_type,
     years,
-    reduction_of_energy_cost,
-    m2_equivalence_coefficient,
-    number_of_affected_dwellings,
-    investment_in_euro,
-    measure_specific_lifetime,
-    subsidy_rate,
-    energy_poverty_gap_owner,
+    share_input,
 ):
     zero_table = DataSource.row_table(id_measure, years, 0)
     if id_subsector != 17:
@@ -147,27 +140,11 @@ def _measure_specific_share_of_energy_poor_population_owner(
         return zero_table
 
     if id_action_type in [1, 2, 3]:
-        annual_values = _measure_specific_share_of_energy_poor_population_owner_others(
-            reduction_of_energy_cost,
-            m2_equivalence_coefficient,
-            number_of_affected_dwellings,
-            investment_in_euro,
-            measure_specific_lifetime,
-            subsidy_rate,
-            energy_poverty_gap_owner,
-        )
+        annual_values = _measure_specific_share_of_energy_poor_population_owner_others(share_input)
         table = annual_values.transpose('id_measure', id_measure)
         return table
     elif id_action_type == 4:
-        annual_values = _measure_specific_share_of_energy_poor_population_electric(
-            reduction_of_energy_cost,
-            m2_equivalence_coefficient,
-            number_of_affected_dwellings,
-            investment_in_euro,
-            measure_specific_lifetime,
-            subsidy_rate,
-            energy_poverty_gap_owner,
-        )
+        annual_values = _measure_specific_share_of_energy_poor_population_electric(share_input)
         table = annual_values.transpose('id_measure', id_measure)
         return table
 
@@ -176,19 +153,20 @@ def _measure_specific_share_of_energy_poor_population_owner(
         raise KeyError(message)
 
 
-def _measure_specific_share_of_energy_poor_population_electric(
-    energy_cost_savings,
-    m2_equivalence_coefficient,
-    number_of_renovated_dwellings,
-    investment_in_euro,
-    measure_specific_lifetime,
-    subsidy_rate,
-    energy_poverty_gap,
-):
+def _measure_specific_share_of_energy_poor_population_electric(share_input):
+    reduction_of_energy_cost = share_input['reduction_of_energy_cost']
+    investment_in_euro = share_input['investment_in_euro']
+    m2_equivalence_coefficient = share_input['m2_equivalence_coefficient']
+    number_of_affected_dwellings = share_input['number_of_affected_dwellings']
+    measure_specific_lifetime = share_input['lifetime']
+    subsidy_rate = share_input['subsidy_rate']
+    energy_poverty_gap = share_input['energy_poverty_gap']
+
     delta_di = (
-        energy_cost_savings / m2_equivalence_coefficient
-        - investment_in_euro / m2_equivalence_coefficient / measure_specific_lifetime * (1 - subsidy_rate / 100)
-    ) / number_of_renovated_dwellings
+                   reduction_of_energy_cost / m2_equivalence_coefficient
+                   - investment_in_euro / m2_equivalence_coefficient / measure_specific_lifetime * (
+                           1 - subsidy_rate / 100)
+               ) / number_of_affected_dwellings
 
     def number_of_smaller_deciles(value, year):
         number_for_value = _number_of_smaller_deciles(value, year, energy_poverty_gap)
@@ -200,22 +178,23 @@ def _measure_specific_share_of_energy_poor_population_electric(
     return share
 
 
-def _measure_specific_share_of_energy_poor_population_owner_others(
-    energy_cost_savings,
-    m2_equivalence_coefficient,
-    number_of_affected_dwellings,
-    investment_in_euro,
-    measure_specific_lifetime,
-    subsidy_rate,
-    energy_poverty_gap_owner,
-):
+def _measure_specific_share_of_energy_poor_population_owner_others(share_input):
+    reduction_of_energy_cost = share_input['reduction_of_energy_cost']
+    investment_in_euro = share_input['investment_in_euro']
+    m2_equivalence_coefficient = share_input['m2_equivalence_coefficient']
+    number_of_affected_dwellings = share_input['number_of_affected_dwellings']
+    measure_specific_lifetime = share_input['lifetime']
+    subsidy_rate = share_input['subsidy_rate']
+    energy_poverty_gap = share_input['energy_poverty_gap']
+
     delta_di = (
-        energy_cost_savings / m2_equivalence_coefficient
-        - investment_in_euro / m2_equivalence_coefficient / measure_specific_lifetime * (1 - subsidy_rate / 100)
-    ) / number_of_affected_dwellings
+                   reduction_of_energy_cost / m2_equivalence_coefficient
+                   - investment_in_euro / m2_equivalence_coefficient / measure_specific_lifetime * (
+                           1 - subsidy_rate / 100)
+               ) / number_of_affected_dwellings
 
     def number_of_smaller_deciles(value, year):
-        number_for_value = _number_of_smaller_deciles(value, year, energy_poverty_gap_owner)
+        number_for_value = _number_of_smaller_deciles(value, year, energy_poverty_gap)
         return number_for_value
 
     number_of_deciles = delta_di.map(number_of_smaller_deciles)
@@ -223,21 +202,12 @@ def _measure_specific_share_of_energy_poor_population_owner_others(
     return share
 
 
-# pylint: disable = too-many-arguments
 def _measure_specific_share_of_energy_poor_population_tenant(
     id_measure,
     id_subsector,
     id_action_type,
     years,
-    reduction_of_energy_cost,
-    m2_equivalence_coefficient,
-    number_of_affected_dwellings,
-    investment_in_euro,
-    lifetime_for_measure,
-    subsidy_rate,
-    rent_premium,
-    average_rent,
-    energy_poverty_gap_tenant,
+    share_input,
 ):
     zero_row_table = DataSource.row_table(id_measure, years, 0)
     if id_subsector != 17:
@@ -247,26 +217,11 @@ def _measure_specific_share_of_energy_poor_population_tenant(
         return zero_row_table
 
     elif id_action_type in [1, 2, 3]:
-        annual_values = _measure_specific_share_of_energy_poor_population_tenant_others(
-            reduction_of_energy_cost,
-            m2_equivalence_coefficient,
-            number_of_affected_dwellings,
-            rent_premium,
-            average_rent,
-            energy_poverty_gap_tenant,
-        )
+        annual_values = _measure_specific_share_of_energy_poor_population_tenant_others(share_input)
         table = annual_values.transpose('id_measure', id_measure)
         return table
     elif id_action_type == 4:
-        annual_values = _measure_specific_share_of_energy_poor_population_electric(
-            reduction_of_energy_cost,
-            m2_equivalence_coefficient,
-            number_of_affected_dwellings,
-            investment_in_euro,
-            lifetime_for_measure,
-            subsidy_rate,
-            energy_poverty_gap_tenant,
-        )
+        annual_values = _measure_specific_share_of_energy_poor_population_electric(share_input)
         table = annual_values.transpose('id_measure', id_measure)
         return table
 
@@ -275,20 +230,20 @@ def _measure_specific_share_of_energy_poor_population_tenant(
         raise KeyError(message)
 
 
-def _measure_specific_share_of_energy_poor_population_tenant_others(
-    energy_cost_savings,
-    m2_equivalence_coefficient,
-    number_of_affected_dwellings,
-    rent_premium,
-    average_rent,
-    energy_poverty_gap_tenant,
-):
+def _measure_specific_share_of_energy_poor_population_tenant_others(share_input):
+    reduction_of_energy_cost = share_input['reduction_of_energy_cost']
+    m2_equivalence_coefficient = share_input['m2_equivalence_coefficient']
+    number_of_affected_dwellings = share_input['number_of_affected_dwellings']
+    rent_premium = share_input['rent_premium']
+    average_rent = share_input['average_rent']
+    energy_poverty_gap = share_input['energy_poverty_gap']
+
     delta_di = (
-        energy_cost_savings / m2_equivalence_coefficient - rent_premium / 100 * average_rent
-    ) / number_of_affected_dwellings
+                   reduction_of_energy_cost / m2_equivalence_coefficient - rent_premium / 100 * average_rent
+               ) / number_of_affected_dwellings
 
     def number_of_smaller_deciles(value, year):
-        number_for_value = _number_of_smaller_deciles(value, year, energy_poverty_gap_tenant)
+        number_for_value = _number_of_smaller_deciles(value, year, energy_poverty_gap)
         return number_for_value
 
     number_of_deciles = delta_di.map(number_of_smaller_deciles)
@@ -327,7 +282,7 @@ def _share_of_energy_poor_population_owner(
     m2_equivalence_coefficient,
     measure_specific_lifetime,
     subsidy_rate,
-    energy_poverty_gap_owner,
+    energy_poverty_gap,
     number_of_affected_dwellings,
     investment_in_euro,
     data_source,
@@ -350,18 +305,22 @@ def _share_of_energy_poor_population_owner(
         number_of_affected_dwellings_for_measure = number_of_affected_dwellings.reduce('id_measure', id_measure)
         investment_in_euro_for_measure = investment_in_euro.reduce('id_measure', id_measure)
 
+        share_input = {
+            'reduction_of_energy_cost': reduction_of_energy_cost_for_measure,
+            'm2_equivalence_coefficient': m2_equivalence_coefficient,
+            'number_of_affected_dwellings': number_of_affected_dwellings_for_measure,
+            'investment_in_euro': investment_in_euro_for_measure,
+            'lifetime': lifetime_for_measure,
+            'subsidy_rate': subsidy_rate,
+            'energy_poverty_gap': energy_poverty_gap,
+        }
+
         table = _measure_specific_share_of_energy_poor_population_owner(
             id_measure,
             id_subsector,
             id_action_type,
             years,
-            reduction_of_energy_cost_for_measure,
-            m2_equivalence_coefficient,
-            number_of_affected_dwellings_for_measure,
-            investment_in_euro_for_measure,
-            lifetime_for_measure,
-            subsidy_rate,
-            energy_poverty_gap_owner,
+            share_input,
         )
         return table
 
@@ -373,7 +332,7 @@ def _share_of_energy_poor_population_owner(
     return share
 
 
-# pylint: disable = too-many-arguments
+# pylint: disable = too-many-arguments, too-many-positional-arguments
 def _share_of_energy_poor_population_tenant(
     final_energy_saving_by_action_type,
     reduction_of_energy_cost,
@@ -382,7 +341,7 @@ def _share_of_energy_poor_population_tenant(
     subsidy_rate,
     rent_premium,
     average_rent,
-    energy_poverty_gap_tenant,
+    energy_poverty_gap,
     number_of_affected_dwellings,
     investment_in_euro,
     data_source,
@@ -399,30 +358,25 @@ def _share_of_energy_poor_population_tenant(
         _constants=None,
     ):
         reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce('id_measure', id_measure)
-        reduction_of_energy_cost_for_measure = reduction_of_energy_cost_by_energy_carrier.sum()
 
-        lifetime_for_measure = measure_specific_lifetime.reduce('id_measure', id_measure)
-
-        rent_premium_for_measure = rent_premium.reduce('id_measure', id_measure)
-        average_rent_for_measure = average_rent.reduce('id_measure', id_measure)
-
-        number_of_renovated_dwellings_for_measure = number_of_affected_dwellings.reduce('id_measure', id_measure)
-        investment_in_euro_for_measure = investment_in_euro.reduce('id_measure', id_measure)
+        share_input = {
+            'subsidy_rate': subsidy_rate,
+            'energy_poverty_gap': energy_poverty_gap,
+            'reduction_of_energy_cost': reduction_of_energy_cost_by_energy_carrier.sum(),
+            'm2_equivalence_coefficient': m2_equivalence_coefficient,
+            'number_of_affected_dwellings': number_of_affected_dwellings.reduce('id_measure', id_measure),
+            'investment_in_euro': investment_in_euro.reduce('id_measure', id_measure),
+            'lifetime': measure_specific_lifetime.reduce('id_measure', id_measure),
+            'rent_premium': rent_premium.reduce('id_measure', id_measure),
+            'average_rent': average_rent.reduce('id_measure', id_measure),
+        }
 
         table = _measure_specific_share_of_energy_poor_population_tenant(
             id_measure,
             id_subsector,
             id_action_type,
             years,
-            reduction_of_energy_cost_for_measure,
-            m2_equivalence_coefficient,
-            number_of_renovated_dwellings_for_measure,
-            investment_in_euro_for_measure,
-            lifetime_for_measure,
-            subsidy_rate,
-            rent_premium_for_measure,
-            average_rent_for_measure,
-            energy_poverty_gap_tenant,
+            share_input,
         )
         return table
 

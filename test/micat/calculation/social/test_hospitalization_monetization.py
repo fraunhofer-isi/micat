@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-# pylint: disable=protected-access
+# pylint: disable=protected-access, duplicate-code
 
 from micat.calculation import extrapolation
 from micat.calculation.social import hospitalization_monetization
