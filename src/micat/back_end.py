@@ -371,47 +371,58 @@ class BackEnd:
 
             # CBA
             cbaData = data["cbaData"]
-            years = cbaData.pop("years")
-            del cbaData["supportingYears"]
-            for key, charts in cbaData.items():
-                row_idx = 0
-                worksheet = workbook.add_worksheet(f"CBA - {key}"[:30])
-                for chart_key, chart in charts.items():
-                    worksheet.write(row_idx, 0, chart_key, bold)
-                    row_idx += 1
-                    col_idx = 1 if key == "marginalCostCurves" else 0
-                    worksheet.write(row_idx, 0, "€", italic)
-                    row_idx += 1
-                    for year in years:
-                        worksheet.write(row_idx, col_idx, year)
-                        col_idx += 1
-                    row_idx += 1
-                    col_idx = 0
-                    for row in chart:
-                        if key == "marginalCostCurves":
-                            legend = {
-                                "x": "Totally generated energy savings"
-                                if chart_key == "marginalEnergySavingsCostCurves"
-                                else "Totally generated CO2 savings",
-                                "y": "Totally saved energy savings"
-                                if chart_key == "marginalEnergySavingsCostCurves"
-                                else "Totally saved CO2 savings",
-                            }
-                            worksheet.write(row_idx, col_idx, legend["x"])
-                            row_idx += 1
-                            worksheet.write(row_idx, col_idx, legend["y"])
-                            row_idx -= 1
-                            col_idx += 1
-                        for year, value in row["data"].items():
-                            if key == "marginalCostCurves":
-                                worksheet.write(row_idx, col_idx, value["x"])
-                                row_idx += 1
-                                worksheet.write(row_idx, col_idx, value["y"])
-                                row_idx -= 1
-                            else:
-                                worksheet.write(row_idx, col_idx, value)
-                            col_idx += 1
-                    row_idx += 2
+            {
+                "annualMultipleImpacts": 76275556525.2398,
+                "annualEnergyCosts": 24900244715.592014,
+                "netPresentValue": 75488046926.65067,
+            }
+            worksheet = workbook.add_worksheet("CBA")
+            row_idx = 0
+            for key, result in cbaData.items():
+                worksheet.write(row_idx, 0, key, bold)
+                worksheet.write(row_idx, 1, result)
+                row_idx += 1
+            # years = cbaData.pop("years")
+            # del cbaData["supportingYears"]
+            # for key, charts in cbaData.items():
+            #     row_idx = 0
+            #     worksheet = workbook.add_worksheet(f"CBA - {key}"[:30])
+            #     for chart_key, chart in charts.items():
+            #         worksheet.write(row_idx, 0, chart_key, bold)
+            #         row_idx += 1
+            #         col_idx = 1 if key == "marginalCostCurves" else 0
+            #         worksheet.write(row_idx, 0, "€", italic)
+            #         row_idx += 1
+            #         for year in years:
+            #             worksheet.write(row_idx, col_idx, year)
+            #             col_idx += 1
+            #         row_idx += 1
+            #         col_idx = 0
+            #         for row in chart:
+            #             if key == "marginalCostCurves":
+            #                 legend = {
+            #                     "x": "Totally generated energy savings"
+            #                     if chart_key == "marginalEnergySavingsCostCurves"
+            #                     else "Totally generated CO2 savings",
+            #                     "y": "Totally saved energy savings"
+            #                     if chart_key == "marginalEnergySavingsCostCurves"
+            #                     else "Totally saved CO2 savings",
+            #                 }
+            #                 worksheet.write(row_idx, col_idx, legend["x"])
+            #                 row_idx += 1
+            #                 worksheet.write(row_idx, col_idx, legend["y"])
+            #                 row_idx -= 1
+            #                 col_idx += 1
+            #             for year, value in row["data"].items():
+            #                 if key == "marginalCostCurves":
+            #                     worksheet.write(row_idx, col_idx, value["x"])
+            #                     row_idx += 1
+            #                     worksheet.write(row_idx, col_idx, value["y"])
+            #                     row_idx -= 1
+            #                 else:
+            #                     worksheet.write(row_idx, col_idx, value)
+            #                 col_idx += 1
+            #         row_idx += 2
             workbook.close()
             response = self._flask.make_response(output.getvalue())
             response.headers["Content-Disposition"] = "attachment; filename=MICAT_results.xlsx"

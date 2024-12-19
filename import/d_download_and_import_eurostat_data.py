@@ -48,66 +48,76 @@ def main():
     except FileNotFoundError as exception:
         raise AttributeError("Could not find file. Please disable flag for skipping the download.") from exception
 
-    url = "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/nrg_bal_c/?format=TSV&compressed=true"
-    zip_file_path = import_folder + "/estat_nrg_bal_c.tsv.gz"
-    file_path = import_folder + "/estat_nrg_bal_c.tsv"
+    for dataset in [
+        {
+            "code": "nrg_bal_c",
+            "filter": {"unit": "KTOE", "siec": True},
+        },
+        # {
+        #     "code": "sdg_07_60",
+        #     "filter": {"siec": False},
+        # },
+    ]:
+        url = f"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/{dataset['code']}/?format=TSV&compressed=true"
+        zip_file_path = import_folder + f"/estat_{dataset['code']}.tsv.gz"
+        file_path = import_folder + f"/estat_{dataset['code']}.tsv"
 
-    if not is_skipping_download:
-        print("Downloading eurostat data...")
-        download_energy_balance_data(url, zip_file_path)
+        if not is_skipping_download:
+            print("Downloading eurostat data...")
+            download_energy_balance_data(url, zip_file_path)
 
-    print("Transforming eurostat data...")
-    unzip_and_transform_energy_balance_data(zip_file_path, file_path)
+        print("Transforming eurostat data...")
+        unzip_and_transform_energy_balance_data(zip_file_path, file_path)
 
-    print("Reading eurostat data...")
-    original_data_frame = pd.read_csv(file_path, sep="\t")
-    original_data_frame.rename(columns={"geo\\TIME_PERIOD": "geo"}, inplace=True)
-    year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
+        print("Reading eurostat data...")
+        original_data_frame = pd.read_csv(file_path, sep="\t")
+        original_data_frame.rename(columns={"geo\\TIME_PERIOD": "geo"}, inplace=True)
+        year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
 
-    cleaned_data_frame = clean_and_remove_redundant_rows(original_data_frame, siec_relations)
+        cleaned_data_frame = clean_and_remove_redundant_rows(dataset, original_data_frame, siec_relations)
 
-    regional_data_frame = join_region(cleaned_data_frame, database_import, import_folder)
+        regional_data_frame = join_region(cleaned_data_frame, database_import, import_folder)
 
-    regional_data_frame = regional_data_frame[regional_data_frame["freq"] == "A"]
-    del regional_data_frame["freq"]
+        regional_data_frame = regional_data_frame[regional_data_frame["freq"] == "A"]
+        del regional_data_frame["freq"]
 
-    print("Creating and importing data...")
-    _create_data_for_final_energy_carrier(
-        regional_data_frame,
-        database_import,
-        import_folder,
-        year_column_names,
-    )
+        print("Creating and importing data...")
+        _create_data_for_final_energy_carrier(
+            regional_data_frame,
+            database_import,
+            import_folder,
+            year_column_names,
+        )
 
-    _create_data_for_primary_energy_carrier(
-        regional_data_frame,
-        database_import,
-        import_folder,
-        year_column_names,
-    )
+        _create_data_for_primary_energy_carrier(
+            regional_data_frame,
+            database_import,
+            import_folder,
+            year_column_names,
+        )
 
-    _import_utilization(
-        utilization_file_path,
-        database_import,
-    )
+        _import_utilization(
+            utilization_file_path,
+            database_import,
+        )
 
-    _import_output_source_at_basic_price_2015(
-        output_at_basic_price_file_path,
-        database,
-        database_import,
-    )
+        _import_output_source_at_basic_price_2015(
+            output_at_basic_price_file_path,
+            database,
+            database_import,
+        )
 
-    _import_population(
-        import_folder,
-        population_file_path,
-        database_import,
-    )
+        _import_population(
+            import_folder,
+            population_file_path,
+            database_import,
+        )
 
-    _import_supplier_diversity(
-        risk_coefficient_file_path,
-        imported_energy_file_path,
-        database_import,
-    )
+        _import_supplier_diversity(
+            risk_coefficient_file_path,
+            imported_energy_file_path,
+            database_import,
+        )
 
 
 def _create_data_for_final_energy_carrier(
@@ -776,22 +786,18 @@ def unzip_and_transform_energy_balance_data(zip_file_path, file_path):
                 f_out.write(new_line)
 
 
-def clean_and_remove_redundant_rows(df, siec_relations):
-    df = rename_region_column(df)
-    df = filter_by_unit(df)
+def clean_and_remove_redundant_rows(dataset, df, siec_relations):
+    if dataset["filter"].get("unit"):
+        df = filter_by_unit(df, dataset["filter"]["unit"])
     df = remove_useless_columns(df)
     df = adapt_order_of_columns(df)
-    df = remove_redundant_siec_groups(df, siec_relations)
+    if dataset["filter"].get("siec"):
+        df = remove_redundant_siec_groups(df, siec_relations)
     return df
 
 
-def rename_region_column(df):
-    df.rename(columns={"geo\\time": "geo"}, inplace=True)
-    return df
-
-
-def filter_by_unit(df):
-    df = df[df["unit"] == "KTOE"]
+def filter_by_unit(df, unit):
+    df = df[df["unit"] == unit]
     return df
 
 
