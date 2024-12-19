@@ -77,13 +77,20 @@ Click on some badge to navigate to the corresponding **quality assurance** workf
 
 [![CodeQL](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/fraunhofer-isi/micat/actions/workflows/github-code-scanning/codeql) Discovers vulnerabilities with [CodeQL](https://codeql.github.com/)
 
+## Licenses
+
+This project is free and open source software:
+
+* It is licensed under the GNU Affero General Public License v3 or later (AGPLv3+) - see [LICENSE](./LICENSES/AGPL-3.0-or-later.txt).
+* It uses third-party open source modules, see 
+  * [pyproject.toml](./pyproject.toml)
+  * [THIRDPARTY.md](./THIRDPARTY.md)
+
 ## Notes
 
 <p><a href="https://www.isi.fraunhofer.de/en/publishing-notes.html">PUBLISHING NOTES</a></p>
 
-<p><a href="https://github.com/fraunhofer-isi/micat/blob/main/LICENSES/AGPL-3.0-or-later.txt">LICENSE</a></p>
-
-![This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No. 101000132. ](https://micatool.eu/micat-project-wAssets/img/weblication/wThumbnails/eu-flag-2c3b0581-543393bb@97ll.png)
-
 This project has received funding from the European Union’s Horizon 2020  research and innovation programme under grant agreement No. 101000132.
+
+<img src="https://raw.githubusercontent.com/fraunhofer-isi/.github/refs/heads/main/eu_flag.jpg" alt="eu_flag" width="100px"/> 
 
