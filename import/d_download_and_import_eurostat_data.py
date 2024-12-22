@@ -135,6 +135,7 @@ def main():
             regional_data_frame = regional_data_frame[sorted(regional_data_frame)]
             table = Table(regional_data_frame)
             table = table.insert_index_column("id_parameter", 1, 25)
+            # IMPORTANT: This action clears the whole table, hence the Wuppertal import must be run after this one
             database_import.write_to_sqlite(table, "wuppertal_parameters")
 
 

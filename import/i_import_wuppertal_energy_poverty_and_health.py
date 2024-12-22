@@ -1,7 +1,7 @@
 # © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
+import numpy as np
 import pandas as pd
 from config import import_config
 
@@ -37,6 +37,37 @@ def main():
     database_import.write_to_sqlite(extended_decile_parameters, "wuppertal_decile_parameters")
     database_import.write_to_sqlite(sector_parameters, "wuppertal_sector_parameters")
     database_import.write_to_sqlite(constant_parameters, "wuppertal_constant_parameters")
+    # We enhance the table only, since it's are already in the database due to d_download_and_import_eurostat_data.py
+    # We need to interpolate missing values though
+    for year in [
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018",
+        "2019",
+        "2021",
+        "2022",
+        "2023",
+    ]:
+        extended_parameters._data_frame.insert(1, year, np.nan)
+    extended_parameters._data_frame = extended_parameters._data_frame.interpolate(axis=1)
+    # Combine already existing entries
+    extended_parameters._data_frame = pd.concat(
+        [extended_parameters._data_frame, database.table("wuppertal_parameters", {})._data_frame],
+        ignore_index=False,
+        sort=False,
+    )
     database_import.write_to_sqlite(extended_parameters, "wuppertal_parameters")
 
     file_path = import_path + "/health.xlsx"
