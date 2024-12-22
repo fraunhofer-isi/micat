@@ -18,12 +18,12 @@ def main():
     database_import = DatabaseImport(public_database_path)
     database = Database(public_database_path)
 
-    import_path = raw_data_path + '/wuppertal'
+    import_path = raw_data_path + "/wuppertal"
 
-    database_import.import_id_table('id_decile', import_path)
+    database_import.import_id_table("id_decile", import_path)
 
-    file_path = import_path + '/energy_poverty.xlsx'
-    raw_energy_poverty_parameters = pd.read_excel(file_path, engine='openpyxl', sheet_name=None)
+    file_path = import_path + "/energy_poverty.xlsx"
+    raw_energy_poverty_parameters = pd.read_excel(file_path, engine="openpyxl", sheet_name=None)
 
     decile_parameters, sector_parameters, constant_parameters, parameters = _read_energy_poverty_tables(
         raw_energy_poverty_parameters
@@ -31,16 +31,18 @@ def main():
     extended_decile_parameters = PopulationUtils.extend_european_values(decile_parameters, database)
 
     extended_parameters = PopulationUtils.extend_european_values(parameters, database)
+    # Filter out parameter, since they are handled in d_download_and_import_eurostat_data.py
+    extended_parameters = extended_parameters[~extended_parameters.index.isin([25], level=1)]
 
-    database_import.write_to_sqlite(extended_decile_parameters, 'wuppertal_decile_parameters')
-    database_import.write_to_sqlite(sector_parameters, 'wuppertal_sector_parameters')
-    database_import.write_to_sqlite(constant_parameters, 'wuppertal_constant_parameters')
-    database_import.write_to_sqlite(extended_parameters, 'wuppertal_parameters')
+    database_import.write_to_sqlite(extended_decile_parameters, "wuppertal_decile_parameters")
+    database_import.write_to_sqlite(sector_parameters, "wuppertal_sector_parameters")
+    database_import.write_to_sqlite(constant_parameters, "wuppertal_constant_parameters")
+    database_import.write_to_sqlite(extended_parameters, "wuppertal_parameters")
 
-    file_path = import_path + '/health.xlsx'
-    raw_health_parameters = pd.read_excel(file_path, engine='openpyxl', sheet_name=None)
+    file_path = import_path + "/health.xlsx"
+    raw_health_parameters = pd.read_excel(file_path, engine="openpyxl", sheet_name=None)
     health_parameters = _read_health_tables(raw_health_parameters)
-    database_import.write_to_sqlite(health_parameters, 'wuppertal_health_parameters')
+    database_import.write_to_sqlite(health_parameters, "wuppertal_health_parameters")
 
 
 def _read_energy_poverty_tables(raw_energy_poverty_parameters):  # pylint: disable=too-many-locals
@@ -62,7 +64,7 @@ def _read_energy_poverty_tables(raw_energy_poverty_parameters):  # pylint: disab
         else:
             table = Table(data_frame)
             table = table.to_table_with_string_column_names()
-        table = table.insert_index_column('id_parameter', 1, id_parameter)
+        table = table.insert_index_column("id_parameter", 1, id_parameter)
 
         if id_parameter in decile_parameter_ids:
             decile_parameter_tables.append(table)
@@ -83,12 +85,12 @@ def _read_energy_poverty_tables(raw_energy_poverty_parameters):  # pylint: disab
 def _read_health_tables(raw_health_parameters):
     tables = []
     for _, data_frame in raw_health_parameters.items():
-        table = Table(data_frame.drop(columns=['id'], errors='ignore'))
+        table = Table(data_frame.drop(columns=["id"], errors="ignore"))
         table = table.to_table_with_string_column_names()
         tables.append(table)
     health_tables = Table.concat(tables)
     return health_tables
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

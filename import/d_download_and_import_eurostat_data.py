@@ -53,10 +53,10 @@ def main():
             "code": "nrg_bal_c",
             "filter": {"unit": "KTOE", "siec": True},
         },
-        # {
-        #     "code": "sdg_07_60",
-        #     "filter": {"siec": False},
-        # },
+        {
+            "code": "sdg_07_60",
+            "filter": {"siec": False},
+        },
     ]:
         url = f"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/{dataset['code']}/?format=TSV&compressed=true"
         zip_file_path = import_folder + f"/estat_{dataset['code']}.tsv.gz"
@@ -82,42 +82,60 @@ def main():
         del regional_data_frame["freq"]
 
         print("Creating and importing data...")
-        _create_data_for_final_energy_carrier(
-            regional_data_frame,
-            database_import,
-            import_folder,
-            year_column_names,
-        )
+        if dataset["code"] == "nrg_bal_c":
+            _create_data_for_final_energy_carrier(
+                regional_data_frame,
+                database_import,
+                import_folder,
+                year_column_names,
+            )
 
-        _create_data_for_primary_energy_carrier(
-            regional_data_frame,
-            database_import,
-            import_folder,
-            year_column_names,
-        )
+            _create_data_for_primary_energy_carrier(
+                regional_data_frame,
+                database_import,
+                import_folder,
+                year_column_names,
+            )
 
-        _import_utilization(
-            utilization_file_path,
-            database_import,
-        )
+            _import_utilization(
+                utilization_file_path,
+                database_import,
+            )
 
-        _import_output_source_at_basic_price_2015(
-            output_at_basic_price_file_path,
-            database,
-            database_import,
-        )
+            _import_output_source_at_basic_price_2015(
+                output_at_basic_price_file_path,
+                database,
+                database_import,
+            )
 
-        _import_population(
-            import_folder,
-            population_file_path,
-            database_import,
-        )
+            _import_population(
+                import_folder,
+                population_file_path,
+                database_import,
+            )
 
-        _import_supplier_diversity(
-            risk_coefficient_file_path,
-            imported_energy_file_path,
-            database_import,
-        )
+            _import_supplier_diversity(
+                risk_coefficient_file_path,
+                imported_energy_file_path,
+                database_import,
+            )
+        elif dataset["code"] == "sdg_07_60":
+            regional_data_frame = regional_data_frame[regional_data_frame["incgrp"] == "TOTAL"]
+            del regional_data_frame["hhtyp"]
+            del regional_data_frame["incgrp"]
+            regional_data_frame = regional_data_frame.fillna(0)
+            # Copy 2003 values to 2000
+            regional_data_frame["2000"] = regional_data_frame["2003"]
+            # Copy 2023 values to 2030
+            regional_data_frame["2030"] = regional_data_frame["2023"]
+            # Copy 2023 values to 2040
+            regional_data_frame["2040"] = regional_data_frame["2023"]
+            # Copy 2023 values to 2050
+            regional_data_frame["2050"] = regional_data_frame["2023"]
+            regional_data_frame = regional_data_frame[sorted(regional_data_frame)]
+            table = Table(regional_data_frame)
+            table = table.insert_index_column("id_parameter", 1, 25)
+            database_import.write_to_sqlite(table, "wuppertal_parameters")
 
 
 def _create_data_for_final_energy_carrier(
