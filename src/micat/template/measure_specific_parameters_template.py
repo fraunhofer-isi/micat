@@ -58,6 +58,7 @@ def _fill_measure_specific_template(
     confidential_database,
 ):
     main_sheet = workbook["main"]
+    affected_fuels_sheet = workbook["affectedFuels"]
     fuel_switch_sheet = workbook["fuelSwitch"]
     residential_sheet = workbook["residential"]
     context_sheet = workbook["context"]
@@ -87,8 +88,9 @@ def _fill_measure_specific_template(
         data_source,
     )
 
-    _fill_main_sheet(
+    _fill_main_and_fuel_sheet(
         main_sheet,
+        affected_fuels_sheet,
         context,
         final_energy_saving_by_action_type,
         wuppertal_parameters,
@@ -122,32 +124,34 @@ def _wuppertal_parameters(
     return wuppertal_parameters
 
 
-def _fill_main_sheet(
-    sheet,
+def _fill_main_and_fuel_sheet(
+    main_sheet,
+    affected_fuels_sheet,
     context,
     final_energy_saving_by_action_type,
     wuppertal_parameters,
     data_source,
 ):
     years = final_energy_saving_by_action_type.years
-    sheet = _interpolate_annual_data(sheet, years)
+    main_sheet = _interpolate_annual_data(main_sheet, years)
+    main_sheet = _fill_unit(main_sheet, context)
+    affected_fuels_sheet = _interpolate_annual_data(affected_fuels_sheet, years)
+    affected_fuels_sheet = _fill_unit(affected_fuels_sheet, context)
 
-    sheet = _fill_unit(sheet, context)
-
-    _fill_annual_savings(sheet, final_energy_saving_by_action_type)
+    _fill_annual_savings(main_sheet, final_energy_saving_by_action_type)
 
     _fill_investment_cost(
-        sheet,
+        main_sheet,
         final_energy_saving_by_action_type,
         data_source,
     )
 
-    _fill_subsidy_rate(sheet, wuppertal_parameters)
+    _fill_subsidy_rate(main_sheet, wuppertal_parameters)
 
-    _fill_lifetime(sheet, context, data_source)
+    _fill_lifetime(main_sheet, context, data_source)
 
     _fill_share_affected(
-        sheet,
+        affected_fuels_sheet,
         context,
         final_energy_saving_by_action_type,
         data_source,
@@ -414,7 +418,7 @@ def _fill_share_affected(
         subsector_ids,
     )
 
-    _fill_table(sheet, 7, 6, share_affected)
+    _fill_table(sheet, 7, 2, share_affected)
 
 
 def _fill_subsidy_rate(sheet, wuppertal_parameters):
