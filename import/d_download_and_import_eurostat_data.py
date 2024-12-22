@@ -123,7 +123,7 @@ def main():
             regional_data_frame = regional_data_frame[regional_data_frame["incgrp"] == "TOTAL"]
             del regional_data_frame["hhtyp"]
             del regional_data_frame["incgrp"]
-            regional_data_frame = regional_data_frame.fillna(0)
+            regional_data_frame = regional_data_frame.fillna(0).replace(r"[a-z]", "", regex=True)
             # Copy 2003 values to 2000
             regional_data_frame["2000"] = regional_data_frame["2003"]
             # Copy 2023 values to 2030
