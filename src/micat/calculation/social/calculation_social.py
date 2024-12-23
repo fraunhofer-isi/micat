@@ -21,9 +21,9 @@ def social_indicators(
     id_region,
 ):
     # pylint: disable-msg=too-many-locals
-    air_pollution_parameters = interim_data['air_pollution_parameters']
-    energy_saving_by_final_energy_carrier = interim_data['energy_saving_by_final_energy_carrier']
-    reduction_of_energy_cost = interim_data['reduction_of_energy_cost']
+    air_pollution_parameters = interim_data["air_pollution_parameters"]
+    energy_saving_by_final_energy_carrier = interim_data["energy_saving_by_final_energy_carrier"]
+    reduction_of_energy_cost = interim_data["reduction_of_energy_cost"]
 
     alleviation_of_energy_poverty_m2, alleviation_of_energy_poverty_2m = energy_poverty.alleviation_of_energy_poverty(
         final_energy_saving_by_action_type,
@@ -78,12 +78,12 @@ def social_indicators(
     )
 
     return {
-        'alleviationOfEnergyPovertyM2': alleviation_of_energy_poverty_m2,
-        'alleviationOfEnergyPoverty2M': alleviation_of_energy_poverty_2m,
-        'reductionOfLostWorkDays': reduction_of_lost_work_days_table,
-        'reductionOfLostWorkDaysMonetization': lost_working_days_monetization_table,
-        'reductionInDisabilityAdjustedLifeYears': reduction_in_disability_adjusted_life_years_table,
-        'reductionInDisabilityAdjustedLifeYearsMonetization': disability_adjusted_life_years_monetization_table,
-        'avoidedExcessColdWeatherMortality': avoided_excess_cold_weather_mortality_table,
-        'avoidedExcessColdWeatherMortalityMonetization': excess_cold_weather_mortality_monetization_table,
+        "alleviationOfEnergyPovertyM2": alleviation_of_energy_poverty_m2,
+        "alleviationOfEnergyPoverty2M": alleviation_of_energy_poverty_2m,
+        "reductionOfLostWorkDays": reduction_of_lost_work_days_table,
+        "reductionOfLostWorkDaysMonetization": lost_working_days_monetization_table,
+        "reductionInDisabilityAdjustedLifeYears": reduction_in_disability_adjusted_life_years_table,
+        "reductionInDisabilityAdjustedLifeYearsMonetization": disability_adjusted_life_years_monetization_table,
+        "avoidedExcessColdWeatherMortality": avoided_excess_cold_weather_mortality_table,
+        "avoidedExcessColdWeatherMortalityMonetization": excess_cold_weather_mortality_monetization_table,
     }

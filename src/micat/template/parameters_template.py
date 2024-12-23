@@ -57,7 +57,6 @@ def _parameters_template(template_args, database, confidential_database=None):
 
     for sheet_name in template_args["coefficient_sheets"]:
         if sheet_name in ("FuelSplitCoefficient", "EnergyPrice"):
-            # TO DO : fix/implement reading of energy prices #229
             _subsector_final_create_parameter_sheet(
                 workbook,
                 sheet_name,

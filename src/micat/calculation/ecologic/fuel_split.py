@@ -61,11 +61,7 @@ def fuel_split_by_action_type(
             basic_chi,
         ),
     )
-
-    fuel_split = _measure_specific_fuel_split(
-        measure_specific_lambda,
-        measure_specific_chi,
-    )
+    fuel_split = _measure_specific_fuel_split(measure_specific_lambda, measure_specific_chi)
 
     # Transform into percentage
     for index, row in fuel_split.iterrows():
@@ -105,7 +101,6 @@ def _determine_lambda_for_measure(
         10,  # Fuel switch
         17,  # Fuel switch
     ]
-
     if id_action_type in non_effected_action_type_ids:
         # Also see https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/264
 
