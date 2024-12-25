@@ -47,7 +47,7 @@ dependencies = [
 
 [project.optional-dependencies]
 lint = [
-    'pylint==3.3.2',
+    'pylint==3.3.3',
     'pylint-exit==1.2.0',
     'dill==0.3.9',
 ]
