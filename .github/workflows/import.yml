@@ -1,0 +1,35 @@
+# © 2024 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: coverage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: extract python version
+        uses: ./.github/actions/extract-python-version
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: install dependencies
+        run: |
+          # python -m pip install --upgrade pip
+          # also see settings in pyproject.toml
+          pip install .[dev]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
+      - name: import
+        run: |
+          python import/a_run_all_public_data_imports.py
+      - name: artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: import
+          path: src/micat/data/public.sqlite
