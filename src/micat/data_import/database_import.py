@@ -151,7 +151,10 @@ class DatabaseImport:
         return True
 
     def append_to_sqlite(self, table, table_name):
-        self._table_validator.validate(table)
+        details = {
+            "table": table_name,
+        }
+        self._table_validator.validate(table, details)
         self._check_if_table_exists(table_name)
         with sqlite3.connect(self._database_path) as connection:
             table.to_sql(table_name, connection, index_label="id", if_exists="append")
@@ -248,16 +251,20 @@ class DatabaseImport:
         )
         return df
 
-    def validate_table(self, table, missing_entries=[]):  # pylint: disable=dangerous-default-value
+    def validate_table(self, table, table_name, missing_entries=[]):  # pylint: disable=dangerous-default-value
         sorted_table = table.sort()
+        details = {
+            "table": table_name,
+        }
         missing_entries = self._table_validator.validate(
-            sorted_table, {}, missing_entries
+            sorted_table, details, missing_entries
         )
         return missing_entries
 
     def write_to_sqlite(self, table, table_name):
         sorted_table = table.sort()
-        self._table_validator.validate(sorted_table)
+        details = {"table": table_name}
+        self._table_validator.validate(sorted_table, details)
         with sqlite3.connect(self._database_path) as connection:
             DatabaseImport._recreate_data_table(table_name, sorted_table, connection)
             # hint: to_sql must not use if_exists='replace' but 'append'; otherwise table structure is lost

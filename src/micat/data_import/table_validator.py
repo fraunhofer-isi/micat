@@ -257,7 +257,10 @@ class TableValidator:
                     region_table = table.reduce("id_region", [id_region])
                     del region_table["id_region"]
                     label = id_region_table.label(id_region)
-                    details = {"id_region": (id_region, label)}
+
+                    details = parent_details.copy()
+                    details["id_region"] = (id_region, label)
+
                     missing_entries = self.validate(
                         region_table, details, missing_entries
                     )
