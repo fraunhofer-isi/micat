@@ -33,7 +33,7 @@ class DatabaseImport:
     ):
         if path_to_import_scripts is None:
             path_to_import_scripts = os.getcwd()
-        Logger.log_info(f"# Running import scripts in folder {path_to_import_scripts}")
+        Logger.info(f"# Running import scripts in folder {path_to_import_scripts}")
 
         file_names = DatabaseImport._file_names(
             excluded_scripts, path_to_import_scripts
@@ -43,14 +43,13 @@ class DatabaseImport:
         env["PYTHONPATH"] = src_path
 
         for file_name in file_names:
-            Logger.log_info(
+            Logger.info(
                 "## Running file "
                 + str(file_names.index(file_name) + 1)
                 + " of "
                 + str(len(file_names))
                 + ": "
                 + file_name
-                + "\n"
             )
 
             result = subprocess.run(
@@ -175,7 +174,7 @@ class DatabaseImport:
         try:
             self._check_labels(df_or_table)
         except Exception as exception:
-            Logger.log_error(
+            Logger.error(
                 "Table "
                 + table_name
                 + " at "
