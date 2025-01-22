@@ -29,7 +29,7 @@ jobs:
         run: |
           python import/a_run_all_public_data_imports.py
       - name: artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: import
           path: src/micat/data/public.sqlite
