@@ -27,7 +27,8 @@ jobs:
           pip install .[dev]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
       - name: import
         run: |
-          python import/a_run_all_public_data_imports.py
+          cd import
+          python a_run_all_public_data_imports.py
       - name: artifact
         uses: actions/upload-artifact@v4
         with:
