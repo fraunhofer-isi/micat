@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from micat.log.logger import Logger
 from micat.series.annual_series import AnnualSeries
 from micat.table.table import Table
 
@@ -21,23 +22,42 @@ class TableValidator:
         missing_id_entries = []
         existing_id_values = table.unique_index_values(id_name)
         if existing_id_values != available_id_values:
-            message = "Warning: Missing entries for " + id_name
-            if details != {}:
-                message += " under " + str(details) + ":"
-                print(message)
-            for existing_id_value in existing_id_values:
-                if existing_id_value not in available_id_values:
-                    message = "Unknown id value: " + str(existing_id_value)
-                    print(message)
-
-            for available_id_value in available_id_values:
-                if available_id_value not in existing_id_values:
-                    id_series = id_table.get(available_id_value)
-                    missing_id_entry = (id_series.name, id_series["label"])
-                    missing_id_entries.append(missing_id_entry)
-                    print(str(missing_id_entry))
+            missing_id_entries = TableValidator._missing_id_entries(
+                id_name,
+                available_id_values,
+                id_table,
+                details,
+                existing_id_values,
+            )
 
         return set(existing_id_values), missing_id_entries
+
+    @staticmethod
+    def _missing_id_entries(
+        id_name,
+        available_id_values,
+        id_table,
+        details,
+        existing_id_values,
+    ):
+        missing_id_entries = []
+        message = "Missing entries for " + id_name
+        if details != {}:
+            message += " under " + str(details) + ":\n"
+
+        for existing_id_value in existing_id_values:
+            if existing_id_value not in available_id_values:
+                message += "Unknown id value: " + str(existing_id_value) + "\n"
+
+        for available_id_value in available_id_values:
+            if available_id_value not in existing_id_values:
+                id_series = id_table.get(available_id_value)
+                missing_id_entry = (id_series.name, id_series["label"])
+                missing_id_entries.append(missing_id_entry)
+                message += str(missing_id_entry) + "\n"
+
+        Logger.warn(message)
+        return missing_id_entries
 
     @staticmethod
     def _include_missing_id_entries(
@@ -55,15 +75,25 @@ class TableValidator:
     def validate(self, table, details={}, missing_entries=[]):  # pylint: disable=dangerous-default-value
         id_column_names, _year_column_names, _ = table.column_names
         if "id_region" in id_column_names:
-            missing_entries = self._validate_id_region_and_below(table, details, missing_entries)
+            missing_entries = self._validate_id_region_and_below(
+                table, details, missing_entries
+            )
         elif "id_parameter" in id_column_names:
-            missing_entries = self._validate_id_parameter_and_below(table, details, missing_entries)
+            missing_entries = self._validate_id_parameter_and_below(
+                table, details, missing_entries
+            )
         elif "id_subsector" in id_column_names:
-            missing_entries = self._validate_id_subsector_and_below(table, details, missing_entries, id_column_names)
+            missing_entries = self._validate_id_subsector_and_below(
+                table, details, missing_entries, id_column_names
+            )
         elif "id_final_energy_carrier" in id_column_names:
-            missing_entries = self._validate_id_final_energy_carrier(table, details, missing_entries)
+            missing_entries = self._validate_id_final_energy_carrier(
+                table, details, missing_entries
+            )
         elif "id_primary_energy_carrier" in id_column_names:
-            missing_entries = self._validate_id_primary_energy_carrier(table, details, missing_entries)
+            missing_entries = self._validate_id_primary_energy_carrier(
+                table, details, missing_entries
+            )
         return missing_entries
 
     def _check_if_id_is_complete(self, table, id_name, details):
@@ -182,7 +212,9 @@ class TableValidator:
         details,
         missing_entries,
     ):
-        _ids, missing_id_entries = self._check_if_id_is_complete(table, "id_final_energy_carrier", details)
+        _ids, missing_id_entries = self._check_if_id_is_complete(
+            table, "id_final_energy_carrier", details
+        )
         missing_entries = TableValidator._include_missing_id_entries(
             missing_entries,
             details,
@@ -197,7 +229,9 @@ class TableValidator:
         details,
         missing_entries,
     ):
-        _ids, missing_id_entries = self._check_if_id_is_complete(table, "id_primary_energy_carrier", details)
+        _ids, missing_id_entries = self._check_if_id_is_complete(
+            table, "id_primary_energy_carrier", details
+        )
         missing_entries = TableValidator._include_missing_id_entries(
             missing_entries,
             details,
@@ -224,7 +258,9 @@ class TableValidator:
                     del region_table["id_region"]
                     label = id_region_table.label(id_region)
                     details = {"id_region": (id_region, label)}
-                    missing_entries = self.validate(region_table, details, missing_entries)
+                    missing_entries = self.validate(
+                        region_table, details, missing_entries
+                    )
                 else:
                     message = (
                         "The id_region "
@@ -259,7 +295,9 @@ class TableValidator:
         id_parameter_table = self._database.id_table("id_parameter")
         parameter_ids = table.unique_index_values("id_parameter")
         for id_parameter in parameter_ids:
-            parameter_table_or_series_or_value = table.reduce("id_parameter", id_parameter)
+            parameter_table_or_series_or_value = table.reduce(
+                "id_parameter", id_parameter
+            )
             if not isinstance(parameter_table_or_series_or_value, Table):
                 continue
             parameter_table = parameter_table_or_series_or_value

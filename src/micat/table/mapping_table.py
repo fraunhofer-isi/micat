@@ -27,7 +27,7 @@ class MappingTable(AbstractTable):
     @staticmethod
     def from_json(custom_json, name=None):
         data_frame = AbstractTable._data_frame_from_json(custom_json)
-        data_frame.set_index(['id'], inplace=True)
+        data_frame.set_index(["id"], inplace=True)
         return MappingTable(data_frame, name)
 
     @staticmethod
@@ -36,14 +36,20 @@ class MappingTable(AbstractTable):
 
     @staticmethod
     def _check_for_special_values_and_remove_them(data_frame, name):
-        data_frame = AbstractTable._check_for_dummy_values_and_remove_them(data_frame, -99, name)  # -99: redundant
-        data_frame = AbstractTable._check_for_dummy_values_and_remove_them(data_frame, -999, name)  # -999: unmapped
+        data_frame = AbstractTable._check_for_special_values_and_remove_them(
+            data_frame, -99, name
+        )  # -99: redundant
+        data_frame = AbstractTable._check_for_special_values_and_remove_them(
+            data_frame, -999, name
+        )  # -999: unmapped
         return data_frame
 
     @staticmethod
     def _validate_and_filter(indexed_data_frame, name):
         MappingTable._validate_index(indexed_data_frame)
-        data_frame = MappingTable._check_for_special_values_and_remove_them(indexed_data_frame, name)
+        data_frame = MappingTable._check_for_special_values_and_remove_them(
+            indexed_data_frame, name
+        )
         MappingTable._validate_entries(data_frame)
         return data_frame
 
@@ -51,14 +57,14 @@ class MappingTable(AbstractTable):
     def _validate_entries(data_frame):
         if AbstractTable._contains_nan(data_frame):
             message = (
-                'Input for mapping table must not include NaN/Null/missing values.'
-                + 'Use special values instead (-99: redundant, -999: unmapped).'
+                "Input for mapping table must not include NaN/Null/missing values."
+                + "Use special values instead (-99: redundant, -999: unmapped)."
             )
             raise ValueError(message)
 
     @staticmethod
     def _validate_index(data_frame):
-        if list(data_frame.index.names) != ['id']:
+        if list(data_frame.index.names) != ["id"]:
             message = 'Input for mapping table must include a column "id" that serves as primary key.'
             raise ValueError(message)
 
@@ -79,10 +85,14 @@ class MappingTable(AbstractTable):
     def single_target_id(self, source_value):
         target_ids = self.target_ids(source_value)
         if len(target_ids) < 1:
-            raise ValueError('Unknown source value ' + source_value)
+            raise ValueError("Unknown source value " + source_value)
 
         if len(target_ids) > 1:
-            raise ValueError('Source value ' + source_value + ' is mapped to more then one target values.')
+            raise ValueError(
+                "Source value "
+                + source_value
+                + " is mapped to more then one target values."
+            )
 
         id_subsector = target_ids[0]
         return id_subsector
@@ -94,7 +104,7 @@ class MappingTable(AbstractTable):
         return ids
 
     def _target_query(self, source_value):
-        query = self.source_column + '=='
+        query = self.source_column + "=="
         if isinstance(source_value, str):
             query += '"' + source_value + '"'
         else:

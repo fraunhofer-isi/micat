@@ -6,10 +6,11 @@
 import sqlite3
 
 import pandas as pd
-from config import import_config
 
+from config import import_config
 from micat.data_import.database_import import DatabaseImport
 from micat.input.database import Database
+from micat.log.logger import Logger
 from micat.table.table import Table
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -21,16 +22,20 @@ def main():
     database = Database(public_database_path)
     database_import = DatabaseImport(public_database_path)
 
-    import_folder = raw_data_path + '/primes'
-    utilization_file_path = import_folder + '/renewable_energy_system_utilization_primes.xlsx'
+    import_folder = raw_data_path + "/primes"
+    utilization_file_path = (
+        import_folder + "/renewable_energy_system_utilization_primes.xlsx"
+    )
 
-    raw_sheets = pd.read_excel(import_folder + '/reference_scenario.xlsx', sheet_name=None)
+    raw_sheets = pd.read_excel(
+        import_folder + "/reference_scenario.xlsx", sheet_name=None
+    )
     sheets = _clean_sheets(raw_sheets)
 
-    id_region_table = database.id_table('id_region')
-    id_parameter_table = database.id_table('id_parameter')
+    id_region_table = database.id_table("id_region")
+    id_parameter_table = database.id_table("id_parameter")
 
-    print('# importing primes_parameters...')
+    Logger.info("# importing primes_parameters...")
     macroeconomic_data = _extract_macroeconomic_data(
         sheets,
         id_region_table,
@@ -39,9 +44,9 @@ def main():
     # includes following values of id_parameter:
     # 10: GDP, Gross domestic product
     # 24: Population
-    database_import.write_to_sqlite(macroeconomic_data, 'primes_parameters')
+    database_import.write_to_sqlite(macroeconomic_data, "primes_parameters")
 
-    print('# importing primes_primary_parameters...')
+    Logger.info("# importing primes_primary_parameters...")
     primary_parameters = _determine_primary_parameters(
         sheets,
         id_region_table,
@@ -51,18 +56,18 @@ def main():
     # includes following values of id_parameter:
     # 1: PP, Primary production
     # 2: GAE, Gross available energy
-    database_import.write_to_sqlite(primary_parameters, 'primes_primary_parameters')
+    database_import.write_to_sqlite(primary_parameters, "primes_primary_parameters")
 
-    print('# importing primes_technology_parameters')
+    Logger.info("# importing primes_technology_parameters")
     _import_utilization(utilization_file_path, database_import)
 
 
 def _import_utilization(file_path, database_import):
     utilization_frame = pd.read_excel(file_path)
     utilization = Table(utilization_frame)
-    utilization = utilization.insert_index_column('id_parameter', 0, 47)
+    utilization = utilization.insert_index_column("id_parameter", 0, 47)
 
-    database_import.write_to_sqlite(utilization, 'primes_technology_parameters')
+    database_import.write_to_sqlite(utilization, "primes_technology_parameters")
 
 
 def _clean_sheets(raw_sheets):
@@ -70,19 +75,19 @@ def _clean_sheets(raw_sheets):
     sheets_a = {}
     for sheet_name, sheet in raw_sheets.items():
         region_code = _extract_region_code(sheet_name)
-        if '_A' in sheet_name:
+        if "_A" in sheet_name:
             sheets_a[region_code] = clean_type_a_sheet(sheet)
-        elif '_B' in sheet_name:
+        elif "_B" in sheet_name:
             # currently we do not use the .._B sheets
             continue
         else:
-            raise ValueError('Invalid sheet name ' + sheet_name)
+            raise ValueError("Invalid sheet name " + sheet_name)
     return sheets_a
 
 
 def _extract_region_code(sheet_name):
-    region_code = sheet_name.split('_')[0]
-    region_code = region_code.replace('EU', 'EU27_2020')
+    region_code = sheet_name.split("_")[0]
+    region_code = region_code.replace("EU", "EU27_2020")
     return region_code
 
 
@@ -90,17 +95,17 @@ def clean_type_a_sheet(sheet):
     column_start_index = 11
     useless_columns = sheet.columns[column_start_index:]
     cleaned_sheet = sheet.drop(useless_columns, axis=1)
-    cleaned_sheet.rename(columns={'Unnamed: 0': 'primes'}, inplace=True)
+    cleaned_sheet.rename(columns={"Unnamed: 0": "primes"}, inplace=True)
     return cleaned_sheet
 
 
 def _extract_macroeconomic_data(sheets, id_region_table, id_parameter):
-    label_header = 'primes'
+    label_header = "primes"
 
-    useful_labels = ['Population (in million)', 'GDP (in 000 M€15)']
+    useful_labels = ["Population (in million)", "GDP (in 000 M€15)"]
     label_map = {
-        'Population (in million)': 'Population',
-        'GDP (in 000 M€15)': 'GDP',
+        "Population (in million)": "Population",
+        "GDP (in 000 M€15)": "GDP",
     }
     region_tables = []
     for region_code, sheet in sheets.items():
@@ -109,11 +114,15 @@ def _extract_macroeconomic_data(sheets, id_region_table, id_parameter):
         df = sheet[sheet[label_header].isin(useful_labels)]
         df.replace(label_map, inplace=True)
         df = id_parameter.label_to_id(df, label_header)
-        df['id_region'] = id_region
-        df.set_index(['id_region', 'id_parameter'], inplace=True)
+        df["id_region"] = id_region
+        df.set_index(["id_region", "id_parameter"], inplace=True)
         df.columns = years
-        df.loc[df.index.get_level_values('id_parameter') == 'GDP'] *= 1e9  # convert from B€ (1000 M€) to €
-        df.loc[df.index.get_level_values('id_parameter') == 'Population'] *= 1e6  # convert from M to 1
+        df.loc[df.index.get_level_values("id_parameter") == "GDP"] *= (
+            1e9  # convert from B€ (1000 M€) to €
+        )
+        df.loc[df.index.get_level_values("id_parameter") == "Population"] *= (
+            1e6  # convert from M to 1
+        )
         region_table = Table(df)
         region_tables.append(region_table)
 
@@ -133,9 +142,9 @@ def _determine_primary_parameters(
     import_folder,
 ):
     mapping__primes__primary_energy_carrier = database_import.read_mapping_table(
-        'mapping__primes__primary_energy_carrier',
-        'primes',
-        'id_primary_energy_carrier',
+        "mapping__primes__primary_energy_carrier",
+        "primes",
+        "id_primary_energy_carrier",
         import_folder,
     )
     primary_production = _extract_primary_production(
@@ -164,9 +173,9 @@ def _extract_primary_production(
 ):
     useful_row_ids = [94, 95, 96]
     label_map = {
-        'Biomass & Waste (6)': 'Biomass & Waste',
+        "Biomass & Waste (6)": "Biomass & Waste",
     }
-    id_columns = ['id_region', 'id_parameter', 'id_primary_energy_carrier']
+    id_columns = ["id_region", "id_parameter", "id_primary_energy_carrier"]
     region_tables = []
     for region_code, sheet in sheets.items():
         id_region = id_region_table.id_by_description(region_code)
@@ -174,8 +183,8 @@ def _extract_primary_production(
 
         df = sheet.loc[useful_row_ids]
         df.replace(label_map, inplace=True)
-        df['id_region'] = id_region
-        df['id_parameter'] = 1  # primary production
+        df["id_region"] = id_region
+        df["id_parameter"] = 1  # primary production
         df = mapping__primes__primary_energy_carrier.apply_for(df)
         # several primes entries might be mapped to one energy carrier => sum up corresponding rows
         df = df.groupby(id_columns).sum()
@@ -193,9 +202,9 @@ def _extract_gross_available_energy(
 ):
     useful_row_ids = [21, 22, 23, 24, 25, 26, 27, 28, 29]
     label_map = {
-        'Biomass & Waste (6)': 'Biomass & Waste',
+        "Biomass & Waste (6)": "Biomass & Waste",
     }
-    id_columns = ['id_region', 'id_parameter', 'id_primary_energy_carrier']
+    id_columns = ["id_region", "id_parameter", "id_primary_energy_carrier"]
     region_tables = []
     for region_code, sheet in sheets.items():
         id_region = id_region_table.id_by_description(region_code)
@@ -203,8 +212,8 @@ def _extract_gross_available_energy(
 
         df = sheet.loc[useful_row_ids]
         df.replace(label_map, inplace=True)
-        df['id_region'] = id_region
-        df['id_parameter'] = 2  # gross available energy
+        df["id_region"] = id_region
+        df["id_parameter"] = 2  # gross available energy
         df = mapping__primes__primary_energy_carrier.apply_for(df)
         # several primes entries might be mapped to one energy carrier => sum up corresponding rows
         df = df.groupby(id_columns).sum()
@@ -218,9 +227,9 @@ def _extract_gross_available_energy(
 def _eurostat_primary_parameters_data(database_path):
     con = sqlite3.connect(database_path)
     df = pd.read_sql_query("SELECT * FROM eurostat_primary_parameter_data", con)
-    del df['id']
+    del df["id"]
     return df
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

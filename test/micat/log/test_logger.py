@@ -27,8 +27,19 @@ class TestConstruction:
 def mocked_inspection_frame():
     frame_mock = Mock()
     frame_mock.f_back = Mock()
-    frame_mock.f_back.f_code = 'mocked_function'
+    frame_mock.f_back.f_code = "mocked_function"
     return frame_mock
+
+
+@patch(
+    inspect.currentframe,
+    Mock(mocked_inspection_frame()),
+)
+def test_debug():
+    with patch(logger.Logger.log_debug) as mocked_log_debug:
+        mocked_log_debug.assert_not_called()
+        logger.Logger.debug("mocked_message")
+        mocked_log_debug.assert_called_once_with("mocked_message", "mocked_function")
 
 
 @patch(
@@ -38,8 +49,8 @@ def mocked_inspection_frame():
 def test_info():
     with patch(logger.Logger.log_info) as mocked_log_info:
         mocked_log_info.assert_not_called()
-        logger.Logger.info('mocked_message')
-        mocked_log_info.assert_called_once_with('mocked_message', 'mocked_function')
+        logger.Logger.info("mocked_message")
+        mocked_log_info.assert_called_once_with("mocked_message", "mocked_function")
 
 
 @patch(
@@ -49,8 +60,8 @@ def test_info():
 def test_warn():
     with patch(logger.Logger.log_warn) as mocked_log_info:
         mocked_log_info.assert_not_called()
-        logger.Logger.warn('mocked_message')
-        mocked_log_info.assert_called_once_with('mocked_message', 'mocked_function')
+        logger.Logger.warn("mocked_message")
+        mocked_log_info.assert_called_once_with("mocked_message", "mocked_function")
 
 
 @patch(
@@ -60,8 +71,8 @@ def test_warn():
 def test_error():
     with patch(logger.Logger.log_error) as mocked_log_info:
         mocked_log_info.assert_not_called()
-        logger.Logger.error('mocked_message')
-        mocked_log_info.assert_called_once_with('mocked_message', 'mocked_function')
+        logger.Logger.error("mocked_message")
+        mocked_log_info.assert_called_once_with("mocked_message", "mocked_function")
 
 
 @patch(time.time, 5.123456)
@@ -70,7 +81,7 @@ def test_current_time_in_ms():
 
 
 def mocked_color_handler(self):
-    self._name = 'mocked_color_handler'
+    self._name = "mocked_color_handler"
     self.setLevel = Mock()
     self.setFormatter = Mock()
 
@@ -86,39 +97,39 @@ def test_create_logger():
 class TestLogInfo:
     def test_active(self, sut):
         logger.Logger.wrapped_logger = Mock()
-        sut.log_info('foo')
+        sut.log_info("foo")
         logger.Logger.wrapped_logger.info.assert_called_once()
 
     def test_inactive(self, sut):
         logger.Logger.wrapped_logger = Mock()
         sut._is_active = False
-        sut.log_info('foo')
+        sut.log_info("foo")
         logger.Logger.wrapped_logger.info.assert_not_called()
 
 
 class TestLogWarn:
     def test_active(self, sut):
         logger.Logger.wrapped_logger = Mock()
-        sut.log_warn('baa')
+        sut.log_warn("baa")
         logger.Logger.wrapped_logger.warning.assert_called_once()
 
     def test_inactive(self, sut):
         logger.Logger.wrapped_logger = Mock()
         sut._is_active = False
-        sut.log_warn('baa')
+        sut.log_warn("baa")
         logger.Logger.wrapped_logger.warning.assert_not_called()
 
 
 class TestLogError:
     def test_active(self, sut):
         logger.Logger.wrapped_logger = Mock()
-        sut.log_error('qux')
+        sut.log_error("qux")
         logger.Logger.wrapped_logger.error.assert_called_once()
 
     def test_inactive(self, sut):
         logger.Logger.wrapped_logger = Mock()
         sut._is_active = False
-        sut.log_error('qux')
+        sut.log_error("qux")
         logger.Logger.wrapped_logger.error.assert_not_called()
 
 
@@ -139,12 +150,12 @@ class TestInfoElapsedTime:
     def test_active(self, sut):
         sut._start_time = 10
         sut._current_time_in_ms = Mock(30)
-        sut.info_elapsed_time('foo')
+        sut.info_elapsed_time("foo")
 
         logger.Logger.log_info.assert_called_once()  # pylint: disable=no-member
 
     @patch(logger.Logger.log_info)
     def test_inactive(self, sut):
         sut._is_active = False
-        sut.info_elapsed_time('foo')
+        sut.info_elapsed_time("foo")
         logger.Logger.log_info.assert_not_called()  # pylint: disable=no-member

@@ -13,7 +13,9 @@ from micat.log.logger import Logger
 class AbstractTable:
     def __init__(self, data_frame):
         if data_frame.empty:
-            raise ValueError('Empty tables are not supported. Please provide non-empty data columns.')
+            raise ValueError(
+                "Empty tables are not supported. Please provide non-empty data columns."
+            )
         self._data_frame = data_frame
 
     @staticmethod
@@ -31,7 +33,7 @@ class AbstractTable:
         # noinspection PyProtectedMember
         result_data_frame = data_frame.merge(
             mapping_table._data_frame,  # pylint: disable=protected-access
-            how='left',
+            how="left",
             on=mapping_table.source_column,
         )
         del result_data_frame[mapping_table.source_column]
@@ -49,22 +51,29 @@ class AbstractTable:
             )
             raise KeyError(message)
 
-        data_frame = AbstractTable._handle_unmapped_reverse_entries(data_frame, mapping_table)
+        data_frame = AbstractTable._handle_unmapped_reverse_entries(
+            data_frame, mapping_table
+        )
         # noinspection PyProtectedMember
         result_data_frame = data_frame.merge(
             mapping_table._data_frame,  # pylint: disable=protected-access
-            how='left',
+            how="left",
             on=mapping_table.target_column,
         )
         del result_data_frame[mapping_table.target_column]
         return result_data_frame
 
     @staticmethod
-    def _check_for_dummy_values_and_remove_them(df, dummy_value, table_name):
+    def _check_for_special_values_and_remove_them(df, dummy_value, table_name):
         contains_dummy_value = AbstractTable._contains(df, dummy_value)
         if contains_dummy_value:
-            message = 'Removing dummy values ' + str(dummy_value) + ' from table ' + table_name
-            Logger.info(message)
+            message = (
+                "Removing special values "
+                + str(dummy_value)
+                + " from table "
+                + table_name
+            )
+            Logger.debug(message)
             cleaned_df = AbstractTable._remove_rows_containing_value(df, dummy_value)
             return cleaned_df
         else:
@@ -83,7 +92,7 @@ class AbstractTable:
         value_column_names = []
 
         for column_name in data_frame.columns:
-            if 'id_' in str(column_name):
+            if "id_" in str(column_name):
                 id_column_names.append(column_name)
             else:
                 if str(column_name).isdigit():
@@ -109,7 +118,7 @@ class AbstractTable:
 
     @staticmethod
     def _contains_object(data_frame):
-        return (data_frame.dtypes == 'object').any()
+        return (data_frame.dtypes == "object").any()
 
     @staticmethod
     def _contains(data_frame, value):
@@ -117,10 +126,10 @@ class AbstractTable:
 
     @staticmethod
     def _data_frame_from_json(custom_json):
-        headers = custom_json['headers']
-        rows = custom_json['rows']
+        headers = custom_json["headers"]
+        rows = custom_json["rows"]
         if len(rows) < 1:
-            Logger.warn('Creating empty table from json data.')
+            Logger.warn("Creating empty table from json data.")
 
         data_frame = pd.DataFrame(
             columns=headers,
@@ -145,7 +154,7 @@ class AbstractTable:
         # https://stackoverflow.com/questions/
         # 75308818/pandas-to-sql-ignores-foreign-key-constrains-when-appending-to-sqlite-table/
         cursor = connection.cursor()
-        cursor.execute('PRAGMA foreign_keys = ON')
+        cursor.execute("PRAGMA foreign_keys = ON")
 
     @staticmethod
     def _handle_unmapped_entries(data_frame, mapping_table):
@@ -156,7 +165,10 @@ class AbstractTable:
         if contains_non_exiting_ids:
             unmapped_id_values = set(source_series[non_existing_ids].values)
             message = (
-                'Dataframe includes id values for ' + source_column + ' that wont be mapped: ' + str(unmapped_id_values)
+                "Dataframe includes id values for "
+                + source_column
+                + " that wont be mapped: "
+                + str(unmapped_id_values)
             )
             Logger.warn(message)
 
@@ -173,9 +185,9 @@ class AbstractTable:
         if contains_non_exiting_ids:
             unmapped_id_values = set(reverse_source_series[non_existing_ids].values)
             message = (
-                'Dataframe includes id values for '
+                "Dataframe includes id values for "
                 + reverse_source_column
-                + ' that wont be mapped: '
+                + " that wont be mapped: "
                 + str(unmapped_id_values)
             )
             Logger.warn(message)
@@ -244,14 +256,14 @@ class AbstractTable:
         connection = args[1]
         self._enable_foreign_key_constraints(connection)
         data_frame = self._data_frame
-        if 'id' not in data_frame.index.names:
+        if "id" not in data_frame.index.names:
             data_frame = data_frame.reset_index()
 
         try:
             data_frame.to_sql(*args, **kwargs)
         except IntegrityError as error:
             duplicated = self._data_frame[self._data_frame.index.duplicated()]
-            Logger.warn('!! Duplicate entries in index !!')
+            Logger.warn("!! Duplicate entries in index !!")
             Logger.warn(duplicated)
             raise error
 
@@ -328,7 +340,7 @@ class AbstractTable:
         if isinstance(result, pd.DataFrame):
             return self._create(result)
         else:
-            raise ValueError('This subtraction is not yet implemented')
+            raise ValueError("This subtraction is not yet implemented")
 
     def __rtruediv__(self, other):
         result_data_frame = AbstractTable._other_value(other) / self._data_frame
@@ -374,7 +386,9 @@ class AbstractTable:
         )
         return column_result
 
-    def _multi_index_lookup_for_cell(self, index_value_or_tuple, column_name, index_order):
+    def _multi_index_lookup_for_cell(
+        self, index_value_or_tuple, column_name, index_order
+    ):
         if isinstance(index_value_or_tuple, tuple):
             index_value = self._create_index_entry(index_value_or_tuple, index_order)
         else:
@@ -389,11 +403,11 @@ class AbstractTable:
         right_length = len(right_index)
         if left_length != right_length:
             message = (
-                'Tables must have same lengths but they are different ('
+                "Tables must have same lengths but they are different ("
                 + str(left_length)
-                + ' vs. '
+                + " vs. "
                 + str(right_length)
-                + ')'
+                + ")"
             )
             raise KeyError(message)
 
@@ -404,13 +418,13 @@ class AbstractTable:
         right_index_values.sort()
 
         if left_index_values != right_index_values:
-            print('## left:')
+            print("## left:")
             print(str(left_index_values))
 
-            print('## right:')
+            print("## right:")
             print(str(right_index_values))
 
-            message = 'Tables must have same index entries but they are different.'
+            message = "Tables must have same index entries but they are different."
             raise KeyError(message)
 
     @property
