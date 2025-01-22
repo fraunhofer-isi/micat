@@ -11,6 +11,7 @@ import pandas as pd
 
 from micat.data_import.table_validator import TableValidator
 from micat.input.database import Database
+from micat.log.logger import Logger
 from micat.table.mapping_table import MappingTable
 from micat.utils import file as file_utils
 
@@ -32,15 +33,18 @@ class DatabaseImport:
     ):
         if path_to_import_scripts is None:
             path_to_import_scripts = os.getcwd()
-        print(f"Running import scripts in folder {path_to_import_scripts}")
+        Logger.log_info(f"# Running import scripts in folder {path_to_import_scripts}")
 
         file_names = DatabaseImport._file_names(
             excluded_scripts, path_to_import_scripts
         )
 
+        env = os.environ.copy()
+        env["PYTHONPATH"] = src_path
+
         for file_name in file_names:
-            print(
-                "Running file "
+            Logger.log_info(
+                "## Running file "
                 + str(file_names.index(file_name) + 1)
                 + " of "
                 + str(len(file_names))
@@ -49,16 +53,18 @@ class DatabaseImport:
                 + "\n"
             )
 
-            env = os.environ.copy()
-            env["PYTHONPATH"] = src_path
-
-            subprocess.run(
+            result = subprocess.run(
                 "python " + file_name,
                 shell=True,
                 check=False,
                 cwd=path_to_import_scripts,
                 env=env,
             )
+            if result.returncode != 0:
+                message = (
+                    f"Script {file_name} failed with return code {result.returncode}"
+                )
+                raise RuntimeError(message)
 
     @staticmethod
     def _file_names(excluded_scripts, path_to_import_scripts):
@@ -169,7 +175,7 @@ class DatabaseImport:
         try:
             self._check_labels(df_or_table)
         except Exception as exception:
-            print(
+            Logger.log_error(
                 "Table "
                 + table_name
                 + " at "
