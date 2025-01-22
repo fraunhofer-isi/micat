@@ -75,25 +75,15 @@ class TableValidator:
     def validate(self, table, details={}, missing_entries=[]):  # pylint: disable=dangerous-default-value
         id_column_names, _year_column_names, _ = table.column_names
         if "id_region" in id_column_names:
-            missing_entries = self._validate_id_region_and_below(
-                table, details, missing_entries
-            )
+            missing_entries = self._validate_id_region_and_below(table, details, missing_entries)
         elif "id_parameter" in id_column_names:
-            missing_entries = self._validate_id_parameter_and_below(
-                table, details, missing_entries
-            )
+            missing_entries = self._validate_id_parameter_and_below(table, details, missing_entries)
         elif "id_subsector" in id_column_names:
-            missing_entries = self._validate_id_subsector_and_below(
-                table, details, missing_entries, id_column_names
-            )
+            missing_entries = self._validate_id_subsector_and_below(table, details, missing_entries, id_column_names)
         elif "id_final_energy_carrier" in id_column_names:
-            missing_entries = self._validate_id_final_energy_carrier(
-                table, details, missing_entries
-            )
+            missing_entries = self._validate_id_final_energy_carrier(table, details, missing_entries)
         elif "id_primary_energy_carrier" in id_column_names:
-            missing_entries = self._validate_id_primary_energy_carrier(
-                table, details, missing_entries
-            )
+            missing_entries = self._validate_id_primary_energy_carrier(table, details, missing_entries)
         return missing_entries
 
     def _check_if_id_is_complete(self, table, id_name, details):
@@ -212,9 +202,7 @@ class TableValidator:
         details,
         missing_entries,
     ):
-        _ids, missing_id_entries = self._check_if_id_is_complete(
-            table, "id_final_energy_carrier", details
-        )
+        _ids, missing_id_entries = self._check_if_id_is_complete(table, "id_final_energy_carrier", details)
         missing_entries = TableValidator._include_missing_id_entries(
             missing_entries,
             details,
@@ -229,9 +217,7 @@ class TableValidator:
         details,
         missing_entries,
     ):
-        _ids, missing_id_entries = self._check_if_id_is_complete(
-            table, "id_primary_energy_carrier", details
-        )
+        _ids, missing_id_entries = self._check_if_id_is_complete(table, "id_primary_energy_carrier", details)
         missing_entries = TableValidator._include_missing_id_entries(
             missing_entries,
             details,
@@ -261,9 +247,7 @@ class TableValidator:
                     details = parent_details.copy()
                     details["id_region"] = (id_region, label)
 
-                    missing_entries = self.validate(
-                        region_table, details, missing_entries
-                    )
+                    missing_entries = self.validate(region_table, details, missing_entries)
                 else:
                     message = (
                         "The id_region "
@@ -298,9 +282,7 @@ class TableValidator:
         id_parameter_table = self._database.id_table("id_parameter")
         parameter_ids = table.unique_index_values("id_parameter")
         for id_parameter in parameter_ids:
-            parameter_table_or_series_or_value = table.reduce(
-                "id_parameter", id_parameter
-            )
+            parameter_table_or_series_or_value = table.reduce("id_parameter", id_parameter)
             if not isinstance(parameter_table_or_series_or_value, Table):
                 continue
             parameter_table = parameter_table_or_series_or_value

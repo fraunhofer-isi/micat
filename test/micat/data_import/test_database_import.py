@@ -223,9 +223,7 @@ class TestPublicApi:
             mocked_df = Mock()
             mocked_df.to_sql = Mock()
 
-            with patch(
-                DatabaseImport._read_mapping_table_from_excel_file
-            ) as mocked_read:
+            with patch(DatabaseImport._read_mapping_table_from_excel_file) as mocked_read:
                 mocked_read.return_value = mocked_df
                 sut.import_mapping_table(
                     "mocked_table_name",
@@ -245,9 +243,7 @@ class TestPublicApi:
             mocked_df = Mock()
             mocked_df.to_sql = Mock()
 
-            with patch(
-                DatabaseImport._read_mapping_table_from_excel_file
-            ) as mocked_read:
+            with patch(DatabaseImport._read_mapping_table_from_excel_file) as mocked_read:
                 mocked_read.return_value = mocked_df
                 sut.import_mapping_table(
                     "mocked_table_name",
@@ -444,9 +440,7 @@ class TestPrivateApi:
 
         @patch(Database.__init__, mocked_database__init__)
         def test_read_id_table_from_database(self, sut):
-            result = sut._read_id_table_from_database(
-                "mocked_database_path", "table_name"
-            )
+            result = sut._read_id_table_from_database("mocked_database_path", "table_name")
             assert result == "mocked_table"
 
     # pylint: disable=attribute-defined-outside-init

@@ -77,6 +77,7 @@ class DatabaseImport:
             for excluded_script in excluded_scripts:
                 if excluded_script in file_names:
                     file_names.remove(excluded_script)
+        file_names.sort()
         return file_names
 
     @staticmethod
