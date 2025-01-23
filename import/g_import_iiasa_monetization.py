@@ -39,7 +39,8 @@ def main():
     monetization_factors = pd.read_excel(import_folder + "/monetisation_factors_updated.xlsx", engine="openpyxl")
     monetization_factors.LABEL_REGION = monetization_factors.LABEL_REGION.replace(
         {
-            "European Union27": "European Union",
+            "EU27": "European Union",
+            "Slovak Republic": "Slovakia",
         },
     )
     monetization_factors.MORB_IND = monetization_factors.MORB_IND.replace(
