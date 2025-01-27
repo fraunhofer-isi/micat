@@ -35,7 +35,6 @@ class DataSource:
         self._user_input_measure_tables = DataSource._create_measure_specific_tables(
             measure_specific_parameters,
         )
-
         self._user_input_global_tables = self._create_global_tables(global_parameters)
 
     @staticmethod

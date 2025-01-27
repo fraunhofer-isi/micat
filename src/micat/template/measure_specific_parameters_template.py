@@ -78,7 +78,9 @@ def _fill_measure_specific_template(
 
     final_energy_saving_by_action_type = _final_energy_saving_by_action_type(measure, context)
 
-    data_source = DataSource(database, id_region, confidential_database)
+    data_source = DataSource(
+        database, id_region, confidential_database, global_parameters=template_args["global_parameters"]
+    )
     df = data_source.mapping_table("mapping__subsector__sector")._data_frame
     id_sector = df.loc[df["id_subsector"] == int(template_args["id_subsector"])]["id_sector"].item()
 
@@ -504,5 +506,6 @@ def _template_args(request):
             "primes_parameters",
             "primes_primary_parameters",
         ],
+        "global_parameters": measure.get("global_parameters"),
     }
     return args
