@@ -6,6 +6,7 @@
 from urllib.parse import parse_qs
 
 from micat.calculation import air_pollution, conversion, cost_benefit_analysis
+from micat.calculation.conversion import convert_units_of_measure_specific_parameters
 from micat.calculation.ecologic import calculation_ecologic, energy_saving
 from micat.calculation.economic import (
     calculation_economic,
@@ -28,20 +29,22 @@ def calculate_indicator_data(
     print("Calculating indicator data for request")
     print(http_request)
 
+    # The arguments include:
+    # id_mode,
+    # id_region,
+    # final_energy_saving_by_action_type (dataframe including id_measure, id_subsector, id_action_type as index)
+    # measure_specific_parameters (dictionary using id_measure as key)
+    # parameters ( maps parameter_name => dataframe )
+    # population_of_municipality (as int)
     arguments = _front_end_arguments(http_request)
 
     id_mode = arguments["id_mode"]
     id_region = arguments["id_region"]
 
-    # Multiply investment cost by 1,000,000, since investment costs are converted beforehand
-    # (see investment.py -> investment_cost_in_euro())
-    for k, v in arguments["measure_specific_parameters"].items():
-        for param in v["parameters"]:
-            if param["id_parameter"] == 40:
-                for year, value in param.items():
-                    if year != "id_parameter":
-                        param[year] = value * 1000000
+    # maps from id_measure to {'parameters': [...], 'finalParameters': [...], 'constants': [...]}
     measure_specific_parameters = arguments["measure_specific_parameters"]
+    measure_specific_parameters = convert_units_of_measure_specific_parameters(measure_specific_parameters)
+
     parameters = arguments["parameters"]
     population_of_municipality = arguments["population_of_municipality"]
 

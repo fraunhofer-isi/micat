@@ -35,9 +35,7 @@ class DatabaseImport:
             path_to_import_scripts = os.getcwd()
         Logger.info(f"# Running import scripts in folder {path_to_import_scripts}")
 
-        file_names = DatabaseImport._file_names(
-            excluded_scripts, path_to_import_scripts
-        )
+        file_names = DatabaseImport._file_names(excluded_scripts, path_to_import_scripts)
 
         env = os.environ.copy()
         env["PYTHONPATH"] = src_path
@@ -60,9 +58,7 @@ class DatabaseImport:
                 env=env,
             )
             if result.returncode != 0:
-                message = (
-                    f"Script {file_name} failed with return code {result.returncode}"
-                )
+                message = f"Script {file_name} failed with return code {result.returncode}"
                 raise RuntimeError(message)
 
     @staticmethod
@@ -97,16 +93,12 @@ class DatabaseImport:
             for entry in missing_entries:
                 if "year" in entry:
                     year = entry["year"]
-                    row = DatabaseImport._create_missing_row(
-                        entry, column_mapping, year, value, exclusions
-                    )
+                    row = DatabaseImport._create_missing_row(entry, column_mapping, year, value, exclusions)
                     if DatabaseImport._is_extra_row(row, rows):
                         rows.append(row)
                 else:
                     for year in years:
-                        row = DatabaseImport._create_missing_row(
-                            entry, column_mapping, year, value, exclusions
-                        )
+                        row = DatabaseImport._create_missing_row(entry, column_mapping, year, value, exclusions)
                         if DatabaseImport._is_extra_row(row, rows):
                             rows.append(row)
 
@@ -167,33 +159,21 @@ class DatabaseImport:
         optional_explicit_columns_that_will_be_unique=None,
     ):
         if directory_or_database.endswith(".sqlite"):
-            df_or_table = self._read_id_table_from_database(
-                directory_or_database, table_name
-            )
+            df_or_table = self._read_id_table_from_database(directory_or_database, table_name)
         else:
-            df_or_table = self._read_id_table_from_excel_file(
-                directory_or_database, table_name
-            )
+            df_or_table = self._read_id_table_from_excel_file(directory_or_database, table_name)
 
         try:
             self._check_labels(df_or_table)
         except Exception as exception:
-            Logger.error(
-                "Table "
-                + table_name
-                + " at "
-                + directory_or_database
-                + " contains NaN labels."
-            )
+            Logger.error("Table " + table_name + " at " + directory_or_database + " contains NaN labels.")
             raise exception
 
         with sqlite3.connect(self._database_path) as target_connection:
             target_cursor = target_connection.cursor()
             self._delete_table_if_exists(table_name, target_cursor)
 
-            create_query = self._query_to_create_id_table(
-                table_name, optional_explicit_columns_that_will_be_unique
-            )
+            create_query = self._query_to_create_id_table(table_name, optional_explicit_columns_that_will_be_unique)
             target_cursor.execute(create_query)
 
             df_or_table.to_sql(
@@ -227,15 +207,11 @@ class DatabaseImport:
 
             self._delete_table_if_exists(target_table_name, target_cursor)
 
-            create_query = self._query_to_create_mapping_table(
-                source_column_name, target_id_name, target_table_name
-            )
+            create_query = self._query_to_create_mapping_table(source_column_name, target_id_name, target_table_name)
             target_cursor.execute(create_query)
 
             # hint: to_sql must not use if_exists='replace' but 'append'; otherwise table structure is lost
-            mapping_table.to_sql(
-                target_table_name, target_connection, index=False, if_exists="append"
-            )
+            mapping_table.to_sql(target_table_name, target_connection, index=False, if_exists="append")
 
     def read_mapping_table(
         self,
@@ -257,9 +233,7 @@ class DatabaseImport:
         details = {
             "table": table_name,
         }
-        missing_entries = self._table_validator.validate(
-            sorted_table, details, missing_entries
-        )
+        missing_entries = self._table_validator.validate(sorted_table, details, missing_entries)
         return missing_entries
 
     def write_to_sqlite(self, table, table_name):
@@ -269,9 +243,7 @@ class DatabaseImport:
         with sqlite3.connect(self._database_path) as connection:
             DatabaseImport._recreate_data_table(table_name, sorted_table, connection)
             # hint: to_sql must not use if_exists='replace' but 'append'; otherwise table structure is lost
-            sorted_table.to_sql(
-                table_name, connection, index_label="id", if_exists="append"
-            )
+            sorted_table.to_sql(table_name, connection, index_label="id", if_exists="append")
 
     @staticmethod
     def _check_labels(df):
@@ -309,9 +281,7 @@ class DatabaseImport:
 
     @staticmethod
     def _key_column_names(id_column_names):
-        key_column_names = list(
-            filter(lambda id_column_name: id_column_name != "id_unit", id_column_names)
-        )
+        key_column_names = list(filter(lambda id_column_name: id_column_name != "id_unit", id_column_names))
         return key_column_names
 
     @staticmethod
@@ -324,11 +294,7 @@ class DatabaseImport:
             unique_columns = optional_explicit_columns_that_will_be_unique
 
         create_query = (
-            "CREATE TABLE `"
-            + table_name
-            + "` ("
-            + "id integer PRIMARY KEY NOT NULL, "
-            + "label text NOT NULL"
+            "CREATE TABLE `" + table_name + "` (" + "id integer PRIMARY KEY NOT NULL, " + "label text NOT NULL"
         )
 
         # In some special cases one might want to allow that
@@ -407,9 +373,7 @@ class DatabaseImport:
         delete_query = "DROP TABLE IF EXISTS `" + table_name + "`"
         cursor.execute(delete_query)
 
-        create_query = (
-            "CREATE TABLE `" + table_name + "` (" + "id integer PRIMARY KEY NOT NULL, "
-        )
+        create_query = "CREATE TABLE `" + table_name + "` (" + "id integer PRIMARY KEY NOT NULL, "
 
         for column_name in id_column_names:
             create_query += column_name + " integer NOT NULL, "
@@ -421,9 +385,7 @@ class DatabaseImport:
             create_query += "`" + str(column_name) + "` real NOT NULL, "
 
         for column_name in id_column_names:
-            create_query += (
-                "FOREIGN KEY (" + column_name + ") REFERENCES " + column_name + "(id), "
-            )
+            create_query += "FOREIGN KEY (" + column_name + ") REFERENCES " + column_name + "(id), "
 
         key_column_names = id_column_names  # table.key_column_names
         create_query += "UNIQUE (" + ", ".join(key_column_names) + ")"
@@ -439,11 +401,7 @@ class DatabaseImport:
     def _table_exists(self, table_name):
         with sqlite3.connect(self._database_path) as connection:
             cursor = connection.cursor()
-            query = (
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='"
-                + table_name
-                + "'"
-            )
+            query = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + table_name + "'"
             cursor.execute(query)
             result = cursor.fetchall()
             table_exists = len(result) > 0

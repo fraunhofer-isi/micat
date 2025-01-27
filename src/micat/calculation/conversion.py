@@ -18,14 +18,14 @@ def primary_energy_saving(
     eurostat_primary_parameters,
     _h2_coefficient,
 ):
-    heat_saving = final_energy_saving.reduce('id_final_energy_carrier', [7])
-    del heat_saving['id_final_energy_carrier']
+    heat_saving = final_energy_saving.reduce("id_final_energy_carrier", [7])
+    del heat_saving["id_final_energy_carrier"]
 
-    electricity_saving = final_energy_saving.reduce('id_final_energy_carrier', [1])
-    del electricity_saving['id_final_energy_carrier']
+    electricity_saving = final_energy_saving.reduce("id_final_energy_carrier", [1])
+    del electricity_saving["id_final_energy_carrier"]
 
-    heat_coefficient = eurostat_primary_parameters.reduce('id_parameter', 20)
-    electricity_coefficient = eurostat_primary_parameters.reduce('id_parameter', 21)
+    heat_coefficient = eurostat_primary_parameters.reduce("id_parameter", 20)
+    electricity_coefficient = eurostat_primary_parameters.reduce("id_parameter", 21)
 
     # TO DO: remove this is comments if h2 is a constant
     # Also see https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/156
@@ -44,3 +44,22 @@ def primary_energy_saving(
         heat_saving_times_coefficient + electricity_saving_times_coefficient
     )  # + h2_saving_times_h2_coefficient_times_electricity_coefficient
     return result
+
+
+def convert_units_of_measure_specific_parameters(measure_specific_parameters):
+    for id_mode, entry in measure_specific_parameters.items():
+        parameters = entry["parameters"]
+        for parameter_row in parameters:
+            id_parameter = parameter_row["id_parameter"]
+            _convert_investment_cost_to_euro(id_parameter, parameter_row)
+
+    return measure_specific_parameters
+
+
+def _convert_investment_cost_to_euro(id_parameter, parameter_row):
+    # Multiply investment cost by 1,000,000, since investment costs are converted beforehand
+    # (see investment.py -> investment_cost_in_euro())
+    if id_parameter == 40:  # Investment cost
+        for key, value in parameter_row.items():
+            if key != "id_parameter":
+                parameter_row[key] = value * 1000000
