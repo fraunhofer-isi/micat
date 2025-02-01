@@ -123,7 +123,22 @@ def main():
             regional_data_frame = regional_data_frame[regional_data_frame["incgrp"] == "TOTAL"]
             del regional_data_frame["hhtyp"]
             del regional_data_frame["incgrp"]
-            regional_data_frame = regional_data_frame.fillna(0).replace(r"[a-z]", "", regex=True)
+            regional_data_frame = regional_data_frame.replace(r"[a-z]", "", regex=True)
+            # Replace NaN values by copying values from previous or next years
+            for column in regional_data_frame.columns:
+                try:
+                    prev = str(int(column) - 1)
+                    next = str(int(column) + 1)
+                except ValueError:
+                    # Only consider columns with years
+                    continue
+                regional_data_frame[column] = regional_data_frame[column].fillna(
+                    regional_data_frame[prev] if prev in regional_data_frame.columns else regional_data_frame[next]
+                )
+                if regional_data_frame[column].isnull().any():
+                    # If there are still NaN values, search for the next year
+                    regional_data_frame[column] = regional_data_frame[column].fillna(regional_data_frame[next])
+
             # Copy 2003 values to 2000
             regional_data_frame["2000"] = regional_data_frame["2003"]
             # Copy 2023 values to 2030
@@ -574,6 +589,7 @@ def calculate_extra_primary_parameters(data_frame, database_import, micat_folder
     )
 
     merged_nrg_bal = merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
+
     coefficients = conversion_coefficients(merged_nrg_bal)
     return coefficients
 
