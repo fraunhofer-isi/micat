@@ -35,6 +35,7 @@ class DataSource:
         self._user_input_measure_tables = DataSource._create_measure_specific_tables(
             measure_specific_parameters,
         )
+
         self._user_input_global_tables = self._create_global_tables(global_parameters)
 
     @staticmethod
@@ -329,8 +330,8 @@ class DataSource:
             ],
             "EnergyPrice": [  # TO DO #233
                 {
-                    "table_name": "error",
-                    "id_parameter": -999,
+                    "table_name": "enerdata_final_sector_parameters",
+                    "id_parameter": 13,
                 }
             ],
             "HeatGeneration": [
@@ -819,7 +820,8 @@ class DataSource:
             if "id_technology" not in id_column_names:
                 raise KeyError("Database table " + table_name + " does not include id_technology.")
 
-        if "id_region" in id_column_names:
+        if table_name != "enerdata_final_sector_parameters" and "id_region" in id_column_names:
+            # Remove the id_region column from the table, except for energy prices
             table = table.reduce("id_region", [self._id_region])
             del table["id_region"]
 
@@ -827,6 +829,7 @@ class DataSource:
 
     def _create_global_tables(self, global_parameters):
         tables = {}
+
         for sheet_name, json_entry in global_parameters.items():
             if len(json_entry) > 0:
                 entries = DataSource._map_global_parameter_tables(sheet_name)

@@ -537,9 +537,13 @@ class Table(AbstractTable):
     def update(self, table):
         # noinspection PyProtectedMember
         if isinstance(self._data_frame.index, pd.MultiIndex):
-            all_entries = pd.concat(
-                [self._data_frame, table._data_frame.reorder_levels(self._data_frame.index.names)]
-            )  # pylint: disable=protected-access
+            new_data = table._data_frame.reorder_levels(self._data_frame.index.names)
+            if len(new_data.columns) < len(self._data_frame.columns):
+                # If the columns are missing, let's replace values
+                all_entries = new_data.combine_first(self._data_frame)
+            else:
+                # If all columns are present, let's replace all rows
+                all_entries = pd.concat([self._data_frame, new_data])  # pylint: disable=protected-access
         else:
             all_entries = pd.concat([self._data_frame, table._data_frame])
         unique_entries = all_entries.query('~index.duplicated(keep="last")')

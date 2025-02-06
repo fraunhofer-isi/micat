@@ -20,8 +20,10 @@ def reduction_of_energy_cost(
         energy_saving_by_final_energy_carrier_in_ktoe,
         data_source,
     )
-    energy_price_for_region = enerdata_final_sector_parameters.reduce('id_region', id_region)
-    energy_price = energy_price_for_region.reduce('id_parameter', 13)
+
+    energy_price_for_region = enerdata_final_sector_parameters.reduce("id_region", id_region)
+    energy_price = energy_price_for_region.reduce("id_parameter", 13)
+
     # energy_price_outlook = energy_price_for_region.reduce('id_parameter', 62)
 
     years = energy_saving_by_final_energy_carrier_in_ktoe.years
@@ -54,11 +56,11 @@ def reduction_of_energy_cost(
 
 
 def _enerdata_final_sector_parameters(energy_saving_by_final_energy_carrier_in_ktoe, data_source):
-    subsector_ids = energy_saving_by_final_energy_carrier_in_ktoe.unique_index_values('id_subsector')
+    subsector_ids = energy_saving_by_final_energy_carrier_in_ktoe.unique_index_values("id_subsector")
     enerdata_final_sector_parameters = data_source.table(
-        'enerdata_final_sector_parameters',
+        "enerdata_final_sector_parameters",
         {
-            'id_subsector': subsector_ids,
+            "id_subsector": subsector_ids,
         },
     )
     return enerdata_final_sector_parameters
@@ -121,6 +123,6 @@ def reduction_of_energy_cost_by_final_energy_carrier(
     reduction_of_energy_cost_by_action_type,
 ):
     reduction_by_final_energy_carrier = reduction_of_energy_cost_by_action_type.aggregate_to(
-        ['id_measure', 'id_final_energy_carrier'],
+        ["id_measure", "id_final_energy_carrier"],
     )
     return reduction_by_final_energy_carrier
