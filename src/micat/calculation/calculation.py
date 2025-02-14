@@ -66,6 +66,7 @@ def calculate_indicator_data(
         id_region,
         years,
     )
+
     _validate_data(interim_data)
 
     social_indicators = calculation_social.social_indicators(

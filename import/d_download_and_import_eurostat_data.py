@@ -587,9 +587,7 @@ def calculate_extra_primary_parameters(data_frame, database_import, micat_folder
         "id_primary_energy_carrier",
         micat_folder,
     )
-
     merged_nrg_bal = merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
-
     coefficients = conversion_coefficients(merged_nrg_bal)
     return coefficients
 

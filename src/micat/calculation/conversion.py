@@ -18,7 +18,7 @@ def primary_energy_saving(
     eurostat_primary_parameters,
     _h2_coefficient,
 ):
-    heat_saving = final_energy_saving.reduce("id_final_energy_carrier", [7])
+    heat_saving = final_energy_saving.reduce("id_final_energy_carrier", [6])
     del heat_saving["id_final_energy_carrier"]
 
     electricity_saving = final_energy_saving.reduce("id_final_energy_carrier", [1])

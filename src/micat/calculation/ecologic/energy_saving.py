@@ -42,5 +42,5 @@ def _final_energy_saving_by_action_type_and_energy_carrier(
 
 
 def _aggregate_primary_energy_saving(primary_energy_saving_by_action_type):
-    aggregated_saving = primary_energy_saving_by_action_type.aggregate_to(['id_measure', 'id_primary_energy_carrier'])
+    aggregated_saving = primary_energy_saving_by_action_type.aggregate_to(["id_measure", "id_primary_energy_carrier"])
     return aggregated_saving
