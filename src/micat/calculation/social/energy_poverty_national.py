@@ -237,8 +237,8 @@ def _measure_specific_share_of_energy_poor_population_tenant_others(share_input)
     energy_poverty_gap = share_input["energy_poverty_gap"]
 
     delta_di = (
-        reduction_of_energy_cost / m2_equivalence_coefficient - rent_premium / 100 * average_rent
-    ) / number_of_affected_dwellings
+        reduction_of_energy_cost - rent_premium / 100 * average_rent
+    ) / number_of_affected_dwellings / m2_equivalence_coefficient
 
     def number_of_smaller_deciles(value, year):
         number_for_value = _number_of_smaller_deciles(value, year, energy_poverty_gap)
