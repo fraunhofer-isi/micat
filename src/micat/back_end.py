@@ -296,32 +296,63 @@ class BackEnd:
                 row_idx += 5
 
             # Outputs
-            aggregation_measurements = []
-            for key, category in data["categories"].items():
-                if key not in ["quantification", "monetization"]:
-                    continue
-                worksheet = workbook.add_worksheet(category["title"])
-                row_idx = 0
-                for measurement in category["measurements"]:
-                    if key == "monetization" or measurement["identifier"] == "impactOnGrossDomesticProduct":
-                        aggregation_measurements.append(measurement)
-                    if row_idx > 0:
+            for program in data["results"]:
+                aggregation_measurements = []
+                title_appendix = f" ({program['name']})" if len(data["results"]) > 1 else ""
+                for key, category in data["categories"].items():
+                    if key not in ["quantification", "monetization"]:
+                        continue
+                    worksheet = workbook.add_worksheet(f"{category['title']}{title_appendix}")
+                    row_idx = 0
+                    for measurement in category["measurements"]:
+                        if key == "monetization" or measurement["identifier"] == "impactOnGrossDomesticProduct":
+                            aggregation_measurements.append(measurement)
+                        if row_idx > 0:
+                            row_idx += 1
+                        # title
+                        title = (
+                            f"[{measurement['subcategory']}] {measurement['title']}"
+                            if measurement.get("subcategory")
+                            else measurement["title"]
+                        )
+                        worksheet.write(row_idx, 0, title, bold)
                         row_idx += 1
-                    # title
-                    title = (
-                        f"[{measurement['subcategory']}] {measurement['title']}"
-                        if measurement.get("subcategory")
-                        else measurement["title"]
-                    )
-                    worksheet.write(row_idx, 0, title, bold)
-                    row_idx += 1
-                    # unit
-                    worksheet.write(row_idx, 0, measurement["yAxis"], italic)
-                    row_idx += 1
-                    result = data["results"][measurement["identifier"]]
-                    for year_idx, year in enumerate(result["yearColumnNames"]):
-                        worksheet.write(row_idx, year_idx + 1, year, bold)
-                    row_idx += 1
+                        # unit
+                        worksheet.write(row_idx, 0, measurement["yAxis"], italic)
+                        row_idx += 1
+                        result = program["data"][measurement["identifier"]]
+                        for year_idx, year in enumerate(result["yearColumnNames"]):
+                            worksheet.write(row_idx, year_idx + 1, year, bold)
+                        row_idx += 1
+                        col_idx = 0
+                        for row in result["rows"]:
+                            for idx, entry in enumerate(row):
+                                try:
+                                    column_name = result["idColumnNames"][idx]
+                                except IndexError:
+                                    if col_idx == 0:
+                                        col_idx += 1
+                                    worksheet.write(row_idx, col_idx, entry)
+                                else:
+                                    if column_name == "id_measure":
+                                        continue
+                                    else:
+                                        worksheet.write(row_idx, col_idx, entry)
+                                col_idx += 1
+                            row_idx += 1
+                            col_idx = 0
+                        row_idx += 1
+
+                # Aggregation
+                worksheet = workbook.add_worksheet(f"Aggregation{title_appendix}")
+                col_idx = 1
+                for year in data["years"]:
+                    worksheet.write(0, col_idx, year, bold)
+                    col_idx += 1
+                row_idx = 1
+                for measurement in aggregation_measurements:
+                    worksheet.write(row_idx, 0, measurement["title"], bold)
+                    result = program["data"][measurement["identifier"]]
                     col_idx = 0
                     for row in result["rows"]:
                         for idx, entry in enumerate(row):
@@ -339,35 +370,6 @@ class BackEnd:
                             col_idx += 1
                         row_idx += 1
                         col_idx = 0
-                    row_idx += 1
-
-            # Aggregation
-            worksheet = workbook.add_worksheet("Aggregation")
-            col_idx = 1
-            for year in data["years"]:
-                worksheet.write(0, col_idx, year, bold)
-                col_idx += 1
-            row_idx = 1
-            for measurement in aggregation_measurements:
-                worksheet.write(row_idx, 0, measurement["title"], bold)
-                result = data["results"][measurement["identifier"]]
-                col_idx = 0
-                for row in result["rows"]:
-                    for idx, entry in enumerate(row):
-                        try:
-                            column_name = result["idColumnNames"][idx]
-                        except IndexError:
-                            if col_idx == 0:
-                                col_idx += 1
-                            worksheet.write(row_idx, col_idx, entry)
-                        else:
-                            if column_name == "id_measure":
-                                continue
-                            else:
-                                worksheet.write(row_idx, col_idx, entry)
-                        col_idx += 1
-                    row_idx += 1
-                    col_idx = 0
 
             # CBA
             cbaData = data["cbaData"]
