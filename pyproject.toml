@@ -68,7 +68,7 @@ debug = [
 ]
 
 doc = [
-    'Sphinx==8.2.1',
+    'Sphinx==8.2.3',
     'myst-parser==4.0.1',
     'sphinx-rtd-theme==3.0.2',
     'sphinxcontrib-applehelp==2.0.0',
