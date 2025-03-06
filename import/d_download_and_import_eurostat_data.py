@@ -70,9 +70,15 @@ def main():
         unzip_and_transform_energy_balance_data(zip_file_path, file_path)
 
         print("Reading eurostat data...")
-        original_data_frame = pd.read_csv(file_path, sep="\t")
+        original_data_frame = pd.read_csv(file_path, sep="\t", decimal=".")
         original_data_frame.rename(columns={"geo\\TIME_PERIOD": "geo"}, inplace=True)
         year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
+        if dataset["code"] == "nrg_bal_c":
+            # Replace all non numeric values in year columns with NaN
+            original_data_frame[year_column_names] = original_data_frame[year_column_names].apply(
+                pd.to_numeric,
+                errors="coerce",
+            )
 
         cleaned_data_frame = clean_and_remove_redundant_rows(dataset, original_data_frame, siec_relations)
 
@@ -150,6 +156,8 @@ def main():
             regional_data_frame = regional_data_frame[sorted(regional_data_frame)]
             table = Table(regional_data_frame)
             table = table.insert_index_column("id_parameter", 1, 25)
+            # Remove column 2024 as it is not present in the wuppertal data
+            table = table.drop("2024", axis=1)
             # IMPORTANT: This action clears the whole table, hence the Wuppertal import must be run after this one
             database_import.write_to_sqlite(table, "wuppertal_parameters")
 
