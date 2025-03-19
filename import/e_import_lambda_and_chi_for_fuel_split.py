@@ -34,14 +34,13 @@ def main():
     chi = determine_chi(import_folder, id_region_table, final_energy_carrier_ids)
 
     print("Determining missing entries for chi...")
-    missing_entries = database_import.validate_table(
-        chi, "mixed_final_constant_parameters"
-    )
+    missing_entries = database_import.validate_table(chi, "mixed_final_constant_parameters")
     file_path = import_folder + "/chi_missing_entries.xlsx"
     _write_missing_entries_as_excel_file(missing_entries, file_path)
 
     print("Merging missing entries...")
     chi_missing_entries = pd.read_excel(file_path)
+    chi_missing_entries = chi_missing_entries.drop("table", axis=1)
 
     chi_missing_entries.set_index(
         [
@@ -122,9 +121,7 @@ def calculate_chi_industry(import_folder, final_energy_carrier_ids):
     ]
 
     file_path = import_folder + "/chi_industry.xlsx"
-    final_energy_demand_dataframe = pd.read_excel(
-        file_path, sheet_name="Result_FinalEnergyDemand_"
-    )
+    final_energy_demand_dataframe = pd.read_excel(file_path, sheet_name="Result_FinalEnergyDemand_")
     final_energy_demand_dataframe.drop(useless_columns, axis=1, inplace=True)
 
     index_columns = [
@@ -137,9 +134,7 @@ def calculate_chi_industry(import_folder, final_energy_carrier_ids):
     # There might be several rows that belong to the same combination of id_columns because
     # we do not map the difference in "Level_2".
     # Therefore, we sum up those rows.
-    aggregated_final_energy_demand = final_energy_demand_dataframe.groupby(
-        index_columns
-    ).sum()
+    aggregated_final_energy_demand = final_energy_demand_dataframe.groupby(index_columns).sum()
 
     final_energy_demand_in_twh = Table(aggregated_final_energy_demand)
     if final_energy_demand_in_twh.contains_nan():
@@ -148,36 +143,26 @@ def calculate_chi_industry(import_folder, final_energy_carrier_ids):
     if final_energy_demand_in_twh.contains_negative_values():
         message = "Demand data should not contain negative values; we replace them with 0 for the time being..."
         warnings.warn(message)
-        final_energy_demand_in_twh = (
-            final_energy_demand_in_twh.replace_negative_values_with_zero()
-        )
+        final_energy_demand_in_twh = final_energy_demand_in_twh.replace_negative_values_with_zero()
 
     chi = calculate_chi_from_final_energy_demand(final_energy_demand_in_twh)
 
     missing_final_energy_carrier_ids = final_energy_carrier_ids.copy()
-    missing_final_energy_carrier_ids.remove(
-        1
-    )  # id_final_energy_carrier = 1 is already included in data
-    chi = append_zeros_for_missing_energy_carriers_of_cross_cutting_technology(
-        chi, missing_final_energy_carrier_ids
-    )
+    missing_final_energy_carrier_ids.remove(1)  # id_final_energy_carrier = 1 is already included in data
+    chi = append_zeros_for_missing_energy_carriers_of_cross_cutting_technology(chi, missing_final_energy_carrier_ids)
 
     return chi
 
 
 def calculate_chi_from_final_energy_demand(final_energy_demand_in_twh):
-    annual_chi = final_energy_demand_in_twh.normalize(
-        ["id_region", "id_final_energy_carrier", "id_subsector"]
-    )
+    annual_chi = final_energy_demand_in_twh.normalize(["id_region", "id_final_energy_carrier", "id_subsector"])
     chi = annual_chi.annual_mean()
     chi.name = "chi"
     return chi
 
 
 def read_chi_others(import_folder, id_region_table):
-    raw_data_frames = pd.read_excel(
-        import_folder + "/chi_all_but_industry.xlsx", sheet_name=None
-    )
+    raw_data_frames = pd.read_excel(import_folder + "/chi_all_but_industry.xlsx", sheet_name=None)
     regional_tables = translate_regional_sheets(raw_data_frames, id_region_table)
     table = Table.concat(regional_tables)
     chi_series = table["chi"]
@@ -209,9 +194,7 @@ def translate_regional_sheets(sheets, id_region_table):
     return tables
 
 
-def append_zeros_for_missing_energy_carriers_of_cross_cutting_technology(
-    series, missing_final_energy_carrier_ids
-):
+def append_zeros_for_missing_energy_carriers_of_cross_cutting_technology(series, missing_final_energy_carrier_ids):
     # TO DO: why doing this at all?
     # TO DO: already add zeros in raw data or remove the zeros?
     # do not add zeros for all combinations but only the unique already existing ones
@@ -235,9 +218,7 @@ def append_zeros_for_missing_energy_carriers_of_cross_cutting_technology(
 
 
 def index_entries_for_action_type(series, id_action_type):
-    existing_entries = series.to_frame().query(
-        "id_action_type == " + str(id_action_type)
-    )["chi"]
+    existing_entries = series.to_frame().query("id_action_type == " + str(id_action_type))["chi"]
     index = existing_entries.index
     #  we assume that id_final_energy_carrier is 1 for all entries and can be dropped
     base_index = index.droplevel(level=["id_final_energy_carrier", "id_action_type"])
