@@ -27,7 +27,6 @@ def calculate_indicator_data(
     confidential_database,
 ):
     print("Calculating indicator data for request")
-    print(http_request)
 
     # The arguments include:
     # id_mode,
@@ -282,6 +281,7 @@ def _interim_data(
     id_region,
     years,
 ):
+    # TODO: renewables
     subsector_ids = final_energy_saving_by_action_type.unique_index_values("id_subsector")
 
     eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
