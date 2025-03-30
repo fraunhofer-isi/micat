@@ -56,7 +56,7 @@ def main():  # pylint: disable=too-many-locals
     raw_morbidity_factor.Parameter = raw_morbidity_factor.Parameter.replace(
         {
             "AP_DEATHS": "Mortality_AP",
-            "Hospital admissions": "Morbidity_AP",
+            "Hospital admissions": "Hospitalisation_AP",
             "Labor force WLD": "Lost work days",
         }
     )
