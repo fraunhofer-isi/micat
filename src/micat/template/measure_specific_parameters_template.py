@@ -348,7 +348,7 @@ def _fill_dwelling_stock(
         population_of_municipality,
     )
 
-    _fill_annual_series(sheet, 5, 4, dwelling_stock)
+    _fill_annual_series(sheet, 5, 5, dwelling_stock)
 
 
 def _fill_average_hh_per_building(sheet, wuppertal_parameters):
@@ -368,7 +368,7 @@ def _fill_rent_premium(sheet, wuppertal_parameters):
 
 def _fill_energy_poverty_targeteness(sheet, wuppertal_parameters):
     energy_poverty_targeteness = wuppertal_parameters.reduce("id_parameter", 25)
-    _fill_annual_series(sheet, 5, 3, energy_poverty_targeteness)
+    _fill_annual_series(sheet, 5, 4, energy_poverty_targeteness)
 
 
 def _fill_investment_cost(
