@@ -161,8 +161,10 @@ def _fill_number_of_affected_dwellings_calculated_nan_values(
 def _fill_table_values_for_id_action_type_greater_than_four(
     table_values,
 ):
-    index_selected = table_values.index.get_level_values('id_action_type') > 4
-    table_values.loc[index_selected] = 0
+    index_selected_action_type = table_values.index.get_level_values('id_action_type') > 4
+    index_selected_subsector = table_values.index.get_level_values('id_subsector') !=  17
+    table_values.loc[index_selected_action_type] = 0
+    table_values.loc[index_selected_subsector] = 0
 
 
 def _calculate_annual_renovation_rate(
