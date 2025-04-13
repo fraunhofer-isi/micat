@@ -1,6 +1,7 @@
 # © 2024 - 2025 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
+
 from copy import copy
 
 import numpy as np

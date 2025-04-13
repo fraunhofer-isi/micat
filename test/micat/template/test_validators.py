@@ -1,6 +1,7 @@
 # © 2024 - 2025 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
+
 from datetime import datetime
 from micat.template import mocks, validators, xlsx_utils
 
