@@ -56,10 +56,22 @@ def reduction_of_mortality_morbidity_monetization(
     years = reduction_of_mortality_morbidity_table.years
 
     who_parameters = data_source.table("who_parameters", {"id_region": str(id_region)})
-
     value_of_statistical_life = who_parameters.reduce("id_parameter", 37)
     extrapolated_value_of_statistical_life = extrapolation.extrapolate_series(value_of_statistical_life, years)
-    health_costs = reduction_of_mortality_morbidity_table * extrapolated_value_of_statistical_life
+
+    iiasa_lost_working_days_monetization_factors = data_source.table(
+        "iiasa_lost_working_days_monetization_factors", {"id_region": str(id_region)}
+    )
+    hospitalisation_admission = iiasa_lost_working_days_monetization_factors.reduce("id_parameter", 63)
+    extrapolated_hospitalisation_admission = extrapolation.extrapolate_series(
+        hospitalisation_admission,
+        years,
+    )
+
+    health_costs = (
+        reduction_of_mortality_morbidity_table * extrapolated_value_of_statistical_life
+        # * extrapolated_hospitalisation_admission
+    )
     del health_costs["id_parameter"]
     return health_costs
 

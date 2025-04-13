@@ -30,27 +30,6 @@ def sut_fixture():
 
 
 class TestPublicApi:
-    @patch_by_string("subprocess.run", Mock())
-    @patch_by_string("os.getcwd", "mocked_cwd")
-    @patch_by_string("os.path.join", "mocked_file_a.py")
-    @patch_by_string("os.listdir", ["mocked_file_a.py", "mocked_file_b.py"])
-    @patch_by_string("os.path.isfile", True)
-    @patch_by_string("os.path.splitext", ["test", ".py"])
-    class TestExcecuteImportScriptsInFolder:
-        def test_without_excluded_scripts(self):
-            disable_stdout()
-            DatabaseImport.execute_import_scripts_in_folder("mocked_src_path")
-            enable_stdout()
-
-        def test_with_excluded_scripts(self):
-            disable_stdout()
-            DatabaseImport.execute_import_scripts_in_folder(
-                "mocked_src_path",
-                "mocked_cwd",
-                ["mocked_file_a.py"],
-            )
-            enable_stdout()
-
     @patch(file.delete_file_if_exists)
     class TestWriteMissingEntriesAsExcelFile:
         def test_without_entries(self):

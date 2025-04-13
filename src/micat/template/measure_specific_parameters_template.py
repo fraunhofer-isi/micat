@@ -1,12 +1,10 @@
 # © 2024 - 2025 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
-import io
 from copy import copy
 
 import numpy as np
-import openpyxl
+import pandas as pd
 
 from micat.calculation import extrapolation
 from micat.calculation.ecologic import fuel_split
@@ -23,46 +21,19 @@ def measure_specific_parameters_template(
     confidential_database,
 ):
     template_args = _template_args(request)
-    template_bytes = _measure_specific_template(
+    return _get_measure_specific_data(
         template_args,
         database,
         confidential_database,
     )
-    return template_bytes
-
-
-# pylint: disable=unused-argument
-def _measure_specific_template(
-    template_args,
-    database,
-    confidential_database,
-):
-    workbook = openpyxl.load_workbook("template/measure_specific_parameters_template.xlsx")
-    _fill_measure_specific_template(
-        workbook,
-        template_args,
-        database,
-        confidential_database,
-    )
-    output = io.BytesIO()
-    workbook.save(output)
-
-    return output
 
 
 # pylint:disable=too-many-locals
-def _fill_measure_specific_template(
-    workbook,
+def _get_measure_specific_data(
     template_args,
     database,
     confidential_database,
 ):
-    main_sheet = workbook["main"]
-    affected_fuels_sheet = workbook["affectedFuels"]
-    fuel_switch_sheet = workbook["fuelSwitch"]
-    residential_sheet = workbook["residential"]
-    context_sheet = workbook["context"]
-
     measure = template_args["measure"]
     population_of_municipality = population.population_of_municipality(measure)
 
@@ -90,27 +61,43 @@ def _fill_measure_specific_template(
         data_source,
     )
 
-    _fill_main_and_fuel_sheet(
-        main_sheet,
-        affected_fuels_sheet,
+    main = _get_main_data(
         context,
         final_energy_saving_by_action_type,
         wuppertal_parameters,
+        data_source,
+    )
+
+    affected_fuels = _get_fuel_data(
+        context,
+        final_energy_saving_by_action_type,
         data_source,
     )
 
     years = final_energy_saving_by_action_type.years
-    _fill_fuel_switch_sheet(fuel_switch_sheet, years, id_sector)
+    fuel_switch = _get_fuel_switch_data(years, id_sector, data_source)
 
-    _fill_residential_sheet(
-        residential_sheet,
+    residential = _get_residential_data(
         context,
         final_energy_saving_by_action_type,
         wuppertal_parameters,
         data_source,
     )
 
-    _fill_context_sheet(context_sheet, context)
+    context = [
+        {"id_region": "id_region", "0": context["id_region"]},
+        {"id_region": "id_subsector", "0": context["id_subsector"]},
+        {"id_region": "id_action_type", "0": context["id_action_type"]},
+        {"id_region": "population", "0": context["population_of_municipality"]},
+    ]
+
+    return {
+        "affectedFuels": affected_fuels,
+        "residential": residential,
+        "fuelSwitch": fuel_switch,
+        "context": context,
+        "main": main,
+    }
 
 
 def _wuppertal_parameters(
@@ -126,100 +113,252 @@ def _wuppertal_parameters(
     return wuppertal_parameters
 
 
-def _fill_main_and_fuel_sheet(
-    main_sheet,
-    affected_fuels_sheet,
+def _get_main_data(
     context,
     final_energy_saving_by_action_type,
     wuppertal_parameters,
     data_source,
 ):
-    years = final_energy_saving_by_action_type.years
-    main_sheet = _interpolate_annual_data(main_sheet, years)
-    main_sheet = _fill_unit(main_sheet, context)
-    affected_fuels_sheet = _interpolate_annual_data(affected_fuels_sheet, years)
-    affected_fuels_sheet = _fill_unit(affected_fuels_sheet, context)
+    main_data = {
+        "energy_savings": {
+            "id_parameter": None,
+            "id_final_energy_carrier": None,
+            "label": "Energy savings",
+            "unit": context["unit"]["symbol"],
+            "importance": "mandatory",
+            "constants": None,
+        },
+        "investment_costs": {
+            "id_parameter": 40,
+            "id_final_energy_carrier": None,
+            "label": "Investment costs",
+            "unit": "Mio. \u20ac",
+            "importance": "mandatory",
+            "constants": None,
+        },
+        "subsidy_rate": {
+            "id_parameter": 35,
+            "id_final_energy_carrier": None,
+            "label": "Average subsidy rate",
+            "unit": "%",
+            "importance": "recommended",
+            "constants": None,
+        },
+        "lifetime": {
+            "id_parameter": 36,
+            "id_final_energy_carrier": None,
+            "label": "Average technology lifetime",
+            "unit": "years",
+            "importance": "optional",
+            "constants": _lifetime(context, data_source),
+        },
+    }
 
-    _fill_annual_savings(main_sheet, final_energy_saving_by_action_type)
+    main_data["energy_savings"] = (
+        main_data["energy_savings"] | final_energy_saving_by_action_type._data_frame.to_dict(orient="records")[0]
+    )
 
-    _fill_investment_cost(
-        main_sheet,
+    investment_cost = investment.investment_cost_in_euro(
         final_energy_saving_by_action_type,
         data_source,
     )
-
-    _fill_subsidy_rate(main_sheet, wuppertal_parameters)
-
-    _fill_lifetime(main_sheet, context, data_source)
-
-    _fill_share_affected(
-        affected_fuels_sheet,
-        context,
-        final_energy_saving_by_action_type,
-        data_source,
+    # Convert to million euros to display the advanced parameter investment cost in mio. €
+    investment_cost._data_frame = investment_cost._data_frame.select_dtypes(exclude=["object", "datetime"]) / 1_000_000
+    main_data["investment_costs"] = (
+        main_data["investment_costs"] | investment_cost._data_frame.to_dict(orient="records")[0]
     )
 
-
-def _fill_fuel_switch_sheet(sheet, years, id_sector):
-    # Remove rows, which doesn't match the sector
-    rows_to_delete = []
-    for idx, row in enumerate(sheet.iter_rows(min_row=2)):
-        if row[1].value != id_sector:
-            rows_to_delete.append(idx)
-    for idx in reversed(rows_to_delete):
-        sheet.delete_rows(idx + 2, 1)
-    # Interpolate the annual data
-    _interpolate_annual_data(sheet, years)
+    subsidy_rate = wuppertal_parameters.reduce("id_parameter", 35)
+    main_data["subsidy_rate"] = main_data["subsidy_rate"] | subsidy_rate._series.to_dict()
+    return list(main_data.values())
 
 
-def _fill_residential_sheet(
-    sheet,
+def _get_fuel_data(
     context,
     final_energy_saving_by_action_type,
-    wuppertal_parameters,
     data_source,
 ):
-    years = final_energy_saving_by_action_type.years
-
-    sheet = _interpolate_annual_data(sheet, years)
-
-    _fill_number_of_affected_dwellings(
-        sheet,
-        context,
-        final_energy_saving_by_action_type,
-        data_source,
-    )
-
-    _fill_energy_poverty_targeteness(sheet, wuppertal_parameters)
-
-    _fill_dwelling_stock(
-        sheet,
-        context,
-        final_energy_saving_by_action_type,
-        data_source,
-    )
-
-    # _fill_annual_renovation_rate(sheet, ...)   # not yet available from sqlite databases
-    _fill_average_hh_per_building(sheet, wuppertal_parameters)
-    _fill_average_rent(sheet, wuppertal_parameters)
-    _fill_rent_premium(sheet, wuppertal_parameters)
-
-
-def _fill_context_sheet(
-    sheet,
-    context,
-):
+    data = {
+        1: {
+            "id_parameter": 16,
+            "id_final_energy_carrier": 1,
+            "label": "Share of electricity among affected",
+            "unit": "ktoe",
+            "importance": "recommended",
+        },
+        2: {
+            "id_parameter": 16,
+            "id_final_energy_carrier": 2,
+            "label": "Share of oil among affected",
+            "unit": "%",
+            "importance": "recommended",
+        },
+        3: {
+            "id_parameter": 16,
+            "id_final_energy_carrier": 3,
+            "label": "Share of coal among affected",
+            "unit": "%",
+            "importance": "recommended",
+        },
+        4: {
+            "id_parameter": 16,
+            "id_final_energy_carrier": 4,
+            "label": "Share of gas among affected",
+            "unit": "%",
+            "importance": "recommended",
+        },
+        5: {
+            "id_parameter": 16,
+            "id_final_energy_carrier": 5,
+            "label": "Share of biomass and waste among affected",
+            "unit": "%",
+            "importance": "recommended",
+        },
+        6: {
+            "id_parameter": 16,
+            "id_final_energy_carrier": 6,
+            "label": "Share of heat among affected",
+            "unit": "%",
+            "importance": "recommended",
+        },
+        7: {
+            "id_parameter": 16,
+            "id_final_energy_carrier": 7,
+            "label": "Share of H2 and e-fuels among affected",
+            "unit": "%",
+            "importance": "recommended",
+        },
+    }
+    id_mode = context["id_mode"]
     id_region = context["id_region"]
-    sheet.cell(column=2, row=1, value=id_region)
-
     id_subsector = context["id_subsector"]
-    sheet.cell(column=2, row=2, value=id_subsector)
+    subsector_ids = [id_subsector]
 
-    id_action_type = context["id_action_type"]
-    sheet.cell(column=2, row=3, value=id_action_type)
+    share_affected = fuel_split.fuel_split_by_action_type(
+        final_energy_saving_by_action_type,
+        data_source,
+        id_mode,
+        id_region,
+        subsector_ids,
+    )
 
+    for index, values in share_affected._data_frame.to_dict(orient="index").items():
+        data[index[2]] = data[index[2]] | values
+
+    return list(data.values())
+
+
+def _get_fuel_switch_data(years, id_sector, data_source):
+    table = data_source.table("measurement_specific_parameters_fuel_switch", {"id_sector": str(id_sector)})
+    # Extract the columns with year numbers
+    annual_df = table._data_frame.filter(regex="[1-3][0-9]{3}")
+    annual_df.apply(pd.to_numeric)
+    raw_annual_table = Table(annual_df)
+    if raw_annual_table.contains_non_nan():
+        annual_table = extrapolation.extrapolate(raw_annual_table, years)
+    else:
+        annual_table = _extrapolated_nan_table(raw_annual_table, years)
+    # Remove annual from the original table
+    table._data_frame = table._data_frame.drop(columns=annual_df.columns)
+    # Add the interpolated annual data to the table
+    table._data_frame = pd.concat([table._data_frame, annual_table._data_frame], axis=1)
+    return table._data_frame.to_dict(orient="records")
+
+
+def _get_residential_data(
+    context,
+    final_energy_saving_by_action_type,
+    wuppertal_parameters,
+    data_source,
+):
+    data = {
+        "number_of_affected_dwellings": {
+            "id_parameter": 45,
+            "label": "Number of affected dwellings",
+            "unit": "absolute",
+            "importance": "recommended",
+        },
+        "annual_renovation_rate": {
+            "id_parameter": 43,
+            "label": "Annual renovation rate",
+            "unit": "%",
+            "importance": "alternative to 1",
+        },
+        "energy_poverty_target": {
+            "id_parameter": 42,
+            "label": "Energy poverty target",
+            "unit": "%",
+            "importance": "optional",
+        },
+        "total_dwelling_stock": {
+            "id_parameter": 32,
+            "label": "Total dwelling stock",
+            "unit": "absolute",
+            "importance": "optional",
+        },
+        "average_hh_per_building": {
+            "id_parameter": 31,
+            "label": "Average number of households per building",
+            "unit": "absolute",
+            "importance": "optional",
+        },
+        "average_rent": {
+            "id_parameter": 29,
+            "label": "Average rent of energy poor households",
+            "unit": "\u20ac/year",
+            "importance": "optional",
+        },
+        "rent_premium": {
+            "id_parameter": 34,
+            "label": "Average renovation rent premium",
+            "unit": "% of rent",
+            "importance": "optional",
+        },
+    }
+
+    id_region = context["id_region"]
     population_of_municipality = context["population_of_municipality"]
-    sheet.cell(column=2, row=4, value=population_of_municipality)
+
+    number_of_affected_dwellings = dwelling.number_of_affected_dwellings(
+        final_energy_saving_by_action_type,
+        data_source,
+        id_region,
+        population_of_municipality,
+    )
+    data["number_of_affected_dwellings"] = (
+        data["number_of_affected_dwellings"] | number_of_affected_dwellings._data_frame.to_dict(orient="records")[0]
+    )
+
+    # TODO: Annual renovation rate is not available yet
+    data["annual_renovation_rate"] = data["annual_renovation_rate"] | {
+        str(y): 0 for y in final_energy_saving_by_action_type.years
+    }
+
+    energy_poverty_target = wuppertal_parameters.reduce("id_parameter", 25)
+    data["energy_poverty_target"] = data["energy_poverty_target"] | energy_poverty_target._series.to_dict()
+
+    id_region = context["id_region"]
+    population_of_municipality = context["population_of_municipality"]
+    dwelling_stock = dwelling.dwelling_stock(
+        final_energy_saving_by_action_type,
+        data_source,
+        id_region,
+        population_of_municipality,
+    )
+    data["total_dwelling_stock"] = (
+        data["total_dwelling_stock"] | dwelling_stock._data_frame.to_dict(orient="records")[0]
+    )
+
+    average_hh_per_building = wuppertal_parameters.reduce("id_parameter", 31)
+    data["average_hh_per_building"] = data["average_hh_per_building"] | average_hh_per_building._series.to_dict()
+
+    average_rent = wuppertal_parameters.reduce("id_parameter", 29)
+    data["average_rent"] = data["average_rent"] | average_rent._series.to_dict()
+
+    rent_premium = wuppertal_parameters.reduce("id_parameter", 34)
+    data["rent_premium"] = data["rent_premium"] | rent_premium._series.to_dict()
+
+    return list(data.values())
 
 
 def _annual_columns(sheet):
@@ -295,10 +434,6 @@ def _fill_annual_data(
     return sheet
 
 
-def _fill_annual_savings(sheet, final_energy_saving_by_action_type):
-    _fill_annual_series(sheet, 7, 2, final_energy_saving_by_action_type)
-
-
 def _fill_annual_series(
     sheet,
     start_column_index,
@@ -332,65 +467,6 @@ def _fill_table(
         row_index += 1
 
 
-def _fill_dwelling_stock(
-    sheet,
-    context,
-    final_energy_saving_by_action_type,
-    data_source,
-):
-    id_region = context["id_region"]
-    population_of_municipality = context["population_of_municipality"]
-
-    dwelling_stock = dwelling.dwelling_stock(
-        final_energy_saving_by_action_type,
-        data_source,
-        id_region,
-        population_of_municipality,
-    )
-
-    _fill_annual_series(sheet, 5, 5, dwelling_stock)
-
-
-def _fill_average_hh_per_building(sheet, wuppertal_parameters):
-    average_hh_per_building = wuppertal_parameters.reduce("id_parameter", 31)
-    _fill_annual_series(sheet, 5, 6, average_hh_per_building)
-
-
-def _fill_average_rent(sheet, wuppertal_parameters):
-    average_rent = wuppertal_parameters.reduce("id_parameter", 29)
-    _fill_annual_series(sheet, 5, 7, average_rent)
-
-
-def _fill_rent_premium(sheet, wuppertal_parameters):
-    rent_premium = wuppertal_parameters.reduce("id_parameter", 34)
-    _fill_annual_series(sheet, 5, 8, rent_premium)
-
-
-def _fill_energy_poverty_targeteness(sheet, wuppertal_parameters):
-    energy_poverty_targeteness = wuppertal_parameters.reduce("id_parameter", 25)
-    _fill_annual_series(sheet, 5, 4, energy_poverty_targeteness)
-
-
-def _fill_investment_cost(
-    sheet,
-    final_energy_saving_by_action_type,
-    data_source,
-):
-    investment_cost = investment.investment_cost_in_euro(
-        final_energy_saving_by_action_type,
-        data_source,
-    )
-    # Convert to million euros to display the advanced parameter investment cost in mio. €
-    investment_cost._data_frame = investment_cost._data_frame.select_dtypes(exclude=["object", "datetime"]) / 1_000_000
-    _fill_annual_series(sheet, 7, 3, investment_cost)
-
-
-def _fill_lifetime(sheet, context, database):
-    lifetime = _lifetime(context, database)
-    cell = sheet.cell(column=6, row=5)
-    cell.value = lifetime
-
-
 def _lifetime(context, database):
     id_subsector = context["id_subsector"]
     id_action_type = context["id_action_type"]
@@ -399,52 +475,6 @@ def _lifetime(context, database):
     )
     lifetime = wuppertal_sector_parameters.reduce("id_parameter", 36)
     return lifetime
-
-
-def _fill_share_affected(
-    sheet,
-    context,
-    final_energy_saving_by_action_type,
-    data_source,
-):
-    id_mode = context["id_mode"]
-    id_region = context["id_region"]
-    id_subsector = context["id_subsector"]
-    subsector_ids = [id_subsector]
-
-    share_affected = fuel_split.fuel_split_by_action_type(
-        final_energy_saving_by_action_type,
-        data_source,
-        id_mode,
-        id_region,
-        subsector_ids,
-    )
-
-    _fill_table(sheet, 7, 2, share_affected)
-
-
-def _fill_subsidy_rate(sheet, wuppertal_parameters):
-    subsidy_rate = wuppertal_parameters.reduce("id_parameter", 35)
-    _fill_annual_series(sheet, 7, 4, subsidy_rate)
-
-
-# pylint: disable=duplicate-code
-def _fill_number_of_affected_dwellings(
-    sheet,
-    context,
-    final_energy_saving_by_action_type,
-    data_source,
-):
-    id_region = context["id_region"]
-    population_of_municipality = context["population_of_municipality"]
-
-    number_of_affected_dwellings = dwelling.number_of_affected_dwellings(
-        final_energy_saving_by_action_type,
-        data_source,
-        id_region,
-        population_of_municipality,
-    )
-    _fill_annual_series(sheet, 5, 2, number_of_affected_dwellings)
 
 
 def _fill_unit(sheet, context):

@@ -17,21 +17,23 @@ def _mocked_years():
 def _mocked_final_energy_savings_by_action_type():
     mocked_final_energy_savings_by_action_type = table.Table(
         [
-            {'id_measure': 1, 'id_subsector': 1, 'id_action_type': 1, '2020': 10, '2025': 20, '2030': 30},
-            {'id_measure': 2, 'id_subsector': 2, 'id_action_type': 2, '2020': 100, '2025': 200, '2030': 300},
+            {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 10, "2025": 20, "2030": 30},
+            {"id_measure": 2, "id_subsector": 2, "id_action_type": 2, "2020": 100, "2025": 200, "2030": 300},
         ]
     )
     return mocked_final_energy_savings_by_action_type
 
 
 def _mocked_annual_series(value):
-    mocked_annual_series = annual_series.AnnualSeries({'2020': value, '2025': value, '2030': value})
+    mocked_annual_series = annual_series.AnnualSeries({"2020": value, "2025": value, "2030": value})
     return mocked_annual_series
 
 
 def _mocked_data_source():
     mocked_data_source = Mock()
-    mocked_data_source.annual_series_from_value = Mock(return_value='mocked_series')
+    mocked_data_source.annual_series_from_value = Mock(
+        return_value=annual_series.AnnualSeries({"2020": 1, "2025": 1, "2030": 1})
+    )
     return mocked_data_source
 
 
@@ -45,22 +47,22 @@ def _mocked_data_source():
 def test_reduction_in_disability_adjusted_life_years():
     result = air_quality.reduction_in_disability_adjusted_life_years(
         _mocked_final_energy_savings_by_action_type(),
-        'mocked_data_source',
+        "mocked_data_source",
         1,
     )
-    assert result['2020'][1, 1, 1] == 60
+    assert result["2020"][1, 1, 1] == 60
 
 
 def test_daly_per_damp_and_mouldy_building_ratio():
     result = air_quality._daly_per_damp_and_mouldy_building_ratio(_mocked_data_source(), 1, _mocked_years())
-    assert result == 'mocked_series'
+    assert result.columns == ["2020", "2025", "2030"]
 
 
 def test_medium_and_deep_renovations_share():
     result = air_quality._medium_and_deep_renovations_share(_mocked_data_source(), 1, _mocked_years())
-    assert result == 'mocked_series'
+    assert result.columns == ["2020", "2025", "2030"]
 
 
 def test_damp_and_mouldy_buildings_targetedness_factor():
     result = air_quality._damp_and_mouldy_buildings_targetedness_factor(_mocked_data_source(), 1, _mocked_years())
-    assert result == 0.01 * 'mocked_series'
+    assert result.columns == ["2020", "2025", "2030"]

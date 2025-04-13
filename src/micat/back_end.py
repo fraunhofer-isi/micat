@@ -205,48 +205,6 @@ class BackEnd:
             )
             return self.create_json_parameters_response(parameter_bytes, request)
 
-        @app.route("/measure", methods=["POST"])
-        def measure():
-            # Returns the measure specific parameter template as Excel file; also includes the passed savings.
-            # Example query:
-            # https://micatool-dev.eu/measure?id_mode=1&id_region=1
-            # Content-Type: application/json
-            # Example Content:
-            # {
-            #       "2000": 0,
-            #       "2010": 0,
-            #       "2015": 0,
-            #       "2020": 10,
-            #       "2025": 20,
-            #       "2030": 30,
-            #       "id": 1,
-            #       "row_number": 1,
-            #       "active": true,
-            #       "subsector": {
-            #         "id": 1,
-            #         "label": "Average agriculture",
-            #         "_description": "Agriculture, forestry & fishing"
-            #       },
-            #       "action_type": {
-            #        "id": 8,
-            #        "label": "Cross-cutting technologies",
-            #        "_description": "Energy-efficient electric cross-cutting technologies"
-            #       },
-            #       "details": {},
-            #       "unit": {
-            #         "name": "kilotonne of oil equivalent",
-            #         "symbol": "ktoe",
-            #         "factor": 1
-            #       }
-            #  };
-            request = self._flask.request
-            measure_bytes = measure_specific_parameters_template.measure_specific_parameters_template(
-                request,
-                self._database,
-                self._confidential_database,
-            )
-            return self.create_excel_file_response(measure_bytes, request, "filename")
-
         @app.route("/json_measure", methods=["POST"])
         def json_measure():
             # Returns the measure specific parameter template as json; also includes the passed savings.
@@ -258,12 +216,11 @@ class BackEnd:
             # Example Content: see measure route
 
             request = self._flask.request
-            measure_bytes = measure_specific_parameters_template.measure_specific_parameters_template(
+            return measure_specific_parameters_template.measure_specific_parameters_template(
                 request,
                 self._database,
                 self._confidential_database,
             )
-            return self.create_json_parameters_response(measure_bytes, request)
 
         @app.route("/export-results", methods=["POST"])
         def export_results():

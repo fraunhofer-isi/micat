@@ -9,7 +9,7 @@ from micat.test_utils.isi_mock import raises
 class TestIsEurostatMode:
     def test_with_string(self):
         with raises(ValueError):
-            mode.is_eurostat_mode('2')
+            mode.is_eurostat_mode("foo")
 
     def test_with_eurostat_mode(self):
         result = mode.is_eurostat_mode(3)

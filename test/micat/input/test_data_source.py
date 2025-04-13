@@ -583,7 +583,7 @@ class TestPrivateApi:
     def test_add_global_tables_from_mapping(self, sut):
         tables = {}
         json_entry = [
-            {"index": 0, "Monetisation factor": "foo", "2000": 1},
+            {"index": 0, "Monetisation factor": "foo", "2000": 1, "identifier": "foo"},
         ]
 
         entry = {
@@ -1025,11 +1025,9 @@ class TestPrivateApi:
             "Monetisation factor": "foo",
             "Value": 3,
         }
-        key_column_name = "Monetisation factor"
-        result = DataSource._row_to_json_array(row, key_column_name)
+        result = DataSource._row_to_json_array(row)
         entry = result[0]
         assert entry["value"] == 3
-        assert "Monetisation factor" not in entry
         assert "index" not in entry
 
     class TestTableForMeasure:

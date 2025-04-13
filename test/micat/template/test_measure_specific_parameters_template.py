@@ -15,59 +15,131 @@ from micat.calculation.social import dwelling
 from micat.series.annual_series import AnnualSeries
 from micat.table.table import Table
 from micat.template import measure_specific_parameters_template
-from micat.test_utils.isi_mock import Mock, patch, patch_by_string
+from micat.test_utils.isi_mock import Mock, patch
 from micat.utils import api
 
 
 @patch(
     measure_specific_parameters_template._template_args,
-    "mocked_template_args",
+    {
+        "measure": {
+            "id": 1,
+            "2000": 0,
+            "2010": 10,
+            "subsector": {
+                "id": 2,
+                "name": "mocked_subsector_name",
+            },
+            "action_type": {
+                "id": 3,
+                "name": "mocked_action_type_name",
+            },
+            "unit": {
+                "symbol": "mocked_unit_symbol",
+            },
+        },
+        "id_region": 1,
+        "id_subsector": 2,
+        "id_action_type": 3,
+        "id_mode": 1,
+        "global_parameters": {},
+    },
 )
 @patch(
-    measure_specific_parameters_template._measure_specific_template,
-    "mocked_result",
+    investment.investment_cost_in_euro,
+    Table(
+        [
+            {"id_parameter": 1, "id_region": 1, 2000: 0.1, 2010: 0.2, 2020: 0.3},
+            {"id_parameter": 2, "id_region": 1, 2000: 0.4, 2010: 0.5, 2020: 0.6},
+        ]
+    ),
 )
+@patch(
+    fuel_split.fuel_split_by_action_type,
+    Table(
+        [
+            {"id_parameter": 1, "id_region": 1, "id_final_energy_carrier": 1, 2000: 0.1, 2010: 0.2, 2020: 0.3},
+            {"id_parameter": 2, "id_region": 1, "id_final_energy_carrier": 2, 2000: 0.4, 2010: 0.5, 2020: 0.6},
+            {"id_parameter": 3, "id_region": 1, "id_final_energy_carrier": 3, 2000: 0.7, 2010: 0.8, 2020: 0.9},
+        ]
+    ),
+)
+@patch(
+    measure_specific_parameters_template._wuppertal_parameters,
+    Table(
+        [
+            {"id_parameter": 31, "id_region": 1, 2000: 0.1, 2010: 0.2, 2020: 0.3},
+            {"id_parameter": 25, "id_region": 1, 2000: 0.4, 2010: 0.5, 2020: 0.6},
+            {"id_parameter": 35, "id_region": 1, 2000: 0.7, 2010: 0.8, 2020: 0.9},
+            {"id_parameter": 29, "id_region": 1, 2000: 0.7, 2010: 0.8, 2020: 0.9},
+            {"id_parameter": 34, "id_region": 1, 2000: 0.7, 2010: 0.8, 2020: 0.9},
+        ]
+    ),
+)
+@patch(
+    dwelling.number_of_affected_dwellings,
+    Table(
+        [
+            {"id_parameter": 1, "id_region": 1, 2000: 0.1, 2010: 0.2, 2020: 0.3},
+            {"id_parameter": 2, "id_region": 1, 2000: 0.4, 2010: 0.5, 2020: 0.6},
+            {"id_parameter": 3, "id_region": 1, 2000: 0.7, 2010: 0.8, 2020: 0.9},
+        ]
+    ),
+)
+@patch(dwelling.dwelling_stock, Table([{"id_parameter": 1, "id_region": 1, 2000: 0.1, 2010: 0.2, 2020: 0.3}]))
 def test_measure_specific_parameters_template():
+    data_source = Mock()
+    data_source.table.return_value = Table(
+        [
+            {"id_parameter": 1, "id_region": 1, 2000: 0.1, 2010: 0.2, 2020: 0.3},
+            {"id_parameter": 2, "id_region": 1, 2000: 0.4, 2010: 0.5, 2020: 0.6},
+            {"id_parameter": 3, "id_region": 1, 2000: 0.7, 2010: 0.8, 2020: 0.9},
+        ]
+    )
     result = measure_specific_parameters_template.measure_specific_parameters_template(
         "mocked_request",
-        "mocked_database",
-        "mocked_confidential_database",
+        data_source,
+        data_source,
     )
-    assert result == "mocked_result"
-
-
-@patch(measure_specific_parameters_template._fill_measure_specific_template)
-@patch(io.BytesIO, "mocked_result")
-def test_measure_specific_template():
-    mocked_template_args = {
-        "measure": "mocked_measure",
-    }
-    with patch_by_string("openpyxl.load_workbook", Mock()) as mocked_load_workbook:
-        result = measure_specific_parameters_template._measure_specific_template(
-            mocked_template_args,
-            "mocked_database",
-            "mocked_confidential_database",
-        )
-        mocked_load_workbook.assert_called_once()
-        assert result == "mocked_result"
+    assert list(result.keys()) == ["affectedFuels", "residential", "fuelSwitch", "context", "main"]
 
 
 @patch(population.population_of_municipality)
 @patch(measure_specific_parameters_template._final_energy_saving_by_action_type)
 @patch(measure_specific_parameters_template._wuppertal_parameters)
-@patch(measure_specific_parameters_template._fill_main_and_fuel_sheet)
-@patch(measure_specific_parameters_template._fill_fuel_switch_sheet)
-@patch(measure_specific_parameters_template._fill_residential_sheet)
-@patch(measure_specific_parameters_template._fill_context_sheet)
-def test_fill_measure_specific_template():
-    workbook = Mock()
-    template_args = Mock()
+@patch(measure_specific_parameters_template._get_main_data)
+@patch(measure_specific_parameters_template._get_fuel_data)
+@patch(measure_specific_parameters_template._get_fuel_switch_data)
+@patch(measure_specific_parameters_template._get_residential_data)
+def test_get_measure_specific_data():
+    data_source = Mock()
 
-    measure_specific_parameters_template._fill_measure_specific_template(
-        workbook,
-        template_args,
-        "mocked_database",
-        "mocked_confidential_database",
+    measure_specific_parameters_template._get_measure_specific_data(
+        {
+            "measure": {
+                "id": 1,
+                "2000": 0,
+                "2010": 10,
+                "subsector": {
+                    "id": 2,
+                    "name": "mocked_subsector_name",
+                },
+                "action_type": {
+                    "id": 3,
+                    "name": "mocked_action_type_name",
+                },
+                "unit": {
+                    "symbol": "mocked_unit_symbol",
+                },
+            },
+            "id_region": 1,
+            "id_subsector": 2,
+            "id_action_type": 3,
+            "id_mode": 1,
+            "global_parameters": {},
+        },
+        data_source,
+        data_source,
     )
 
 
@@ -87,59 +159,57 @@ def test_wuppertal_parameters():
 
 @patch(measure_specific_parameters_template._interpolate_annual_data)
 @patch(measure_specific_parameters_template._fill_unit)
-@patch(measure_specific_parameters_template._fill_annual_savings)
-@patch(measure_specific_parameters_template._fill_investment_cost)
-@patch(measure_specific_parameters_template._fill_subsidy_rate)
-@patch(measure_specific_parameters_template._fill_lifetime)
-def test_fill_main_sheet():
+def test_get_main_data():
     final_energy_saving_by_action_type = Mock()
+    data_source = Mock()
+    wuppertal_parameters = Mock()
 
-    with patch(measure_specific_parameters_template._fill_share_affected) as mocked_fill:
-        measure_specific_parameters_template._fill_main_sheet(
-            "mocked_sheet",
-            "mocked_context",
-            final_energy_saving_by_action_type,
-            "mocked_wuppertal_parameters",
-            "mocked_data_source",
-        )
-        mocked_fill.assert_called_once()
-
-
-def test_fill_fuel_switch_sheet():
-    with patch(measure_specific_parameters_template._interpolate_annual_data) as mocked_interpolate:
-        measure_specific_parameters_template._fill_fuel_switch_sheet(
-            "mocked_sheet",
-            "mocked_years",
-        )
-        mocked_interpolate.assert_called_once()
+    res = measure_specific_parameters_template._get_main_data(
+        {
+            "unit": {"symbol": "mocked_unit_symbol"},
+            "id_region": 1,
+            "id_subsector": 2,
+            "id_action_type": 3,
+            "id_measure": 4,
+        },
+        final_energy_saving_by_action_type,
+        wuppertal_parameters,
+        data_source,
+    )
+    assert len(res) == 4
 
 
-@patch(measure_specific_parameters_template._interpolate_annual_data)
-@patch(measure_specific_parameters_template._fill_number_of_affected_dwellings)
-@patch(measure_specific_parameters_template._fill_energy_poverty_targeteness)
-@patch(measure_specific_parameters_template._fill_dwelling_stock)
-@patch(measure_specific_parameters_template._fill_average_hh_per_building)
-@patch(measure_specific_parameters_template._fill_average_rent)
-def test_fill_residential_sheet():
+def test_get_fuel_switch_data():
+    data_source = Mock()
+    data_source.table.return_value = Table(
+        [
+            {"id_parameter": 1, "id_region": 1, 2000: 0.1, 2010: 0.2, 2020: 0.3},
+            {"id_parameter": 2, "id_region": 1, 2000: 0.4, 2010: 0.5, 2020: 0.6},
+            {"id_parameter": 3, "id_region": 1, 2000: 0.7, 2010: 0.8, 2020: 0.9},
+        ]
+    )
+    res = measure_specific_parameters_template._get_fuel_switch_data(
+        [2000, 2010, 2020],
+        "mocked_context",
+        data_source,
+    )
+
+    assert len(res) == 3
+
+
+def test_get_residential_data():
     final_energy_saving_by_action_type = Mock()
-
-    with patch(measure_specific_parameters_template._fill_rent_premium) as mocked_fill_rent_premium:
-        measure_specific_parameters_template._fill_residential_sheet(
-            "mocked_sheet",
-            "mocked_context",
-            final_energy_saving_by_action_type,
-            "mocked_wuppertal_parameters",
-            "mocked_data_source",
-        )
-
-        mocked_fill_rent_premium.assert_called_once()
-
-
-def test_fill_context_sheet():
-    sheet = Mock()
     context = Mock()
-    measure_specific_parameters_template._fill_context_sheet(sheet, context)
-    sheet.cell.assert_called()
+    data_source = Mock()
+    wuppertal_parameters = Mock()
+    res = measure_specific_parameters_template._get_residential_data(
+        context,
+        final_energy_saving_by_action_type,
+        wuppertal_parameters,
+        data_source,
+    )
+
+    assert len(res) == 7
 
 
 def test_annual_columns():
@@ -212,15 +282,6 @@ def test_fill_annual_data():
     sheet.cell.assert_called()
 
 
-def test_fill_annual_savings():
-    with patch(measure_specific_parameters_template._fill_annual_series) as patched_fill:
-        measure_specific_parameters_template._fill_annual_savings(
-            "mocked_sheet",
-            "mocked_final_energy_saving_by_action_type",
-        )
-        patched_fill.assert_called_once()
-
-
 class TestFillAnnualSeries:
     def test_with_table(self):
         sheet = Mock()
@@ -265,77 +326,6 @@ def test_fill_table():
     sheet.cell.assert_called()
 
 
-@patch(dwelling.dwelling_stock)
-@patch(measure_specific_parameters_template._fill_annual_series)
-def test_fill_dwelling_stock():
-    context = Mock()
-
-    measure_specific_parameters_template._fill_dwelling_stock(
-        "mocked_sheet",
-        context,
-        "mocked_final_energy_saving_by_action_type",
-        "mocked_data_source",
-    )
-
-
-def test_fill_average_hh_per_building():
-    with patch(measure_specific_parameters_template._fill_annual_series) as patched_fill:
-        measure_specific_parameters_template._fill_average_hh_per_building(
-            "mocked_sheet",
-            Mock(),
-        )
-        patched_fill.assert_called_once()
-
-
-def test_fill_average_rent():
-    with patch(measure_specific_parameters_template._fill_annual_series) as patched_fill:
-        measure_specific_parameters_template._fill_average_rent(
-            "mocked_sheet",
-            Mock(),
-        )
-        patched_fill.assert_called_once()
-
-
-def test_fill_rent_premium():
-    with patch(measure_specific_parameters_template._fill_annual_series) as patched_fill:
-        measure_specific_parameters_template._fill_rent_premium(
-            "mocked_sheet",
-            Mock(),
-        )
-        patched_fill.assert_called_once()
-
-
-def test_fill_energy_poverty_targeteness():
-    with patch(measure_specific_parameters_template._fill_annual_series) as patched_fill:
-        measure_specific_parameters_template._fill_energy_poverty_targeteness(
-            "mocked_sheet",
-            Mock(),
-        )
-        patched_fill.assert_called_once()
-
-
-@patch(investment.investment_cost_in_euro)
-def test_fill_investment_cost():
-    with patch(measure_specific_parameters_template._fill_annual_series) as patched_fill:
-        measure_specific_parameters_template._fill_investment_cost(
-            "mocked_sheet",
-            "mocked_final_energy_saving_by_action_type",
-            "mocked_data_source",
-        )
-        patched_fill.assert_called_once()
-
-
-@patch(measure_specific_parameters_template._lifetime)
-def test_fill_lifetime():
-    sheet = Mock()
-    measure_specific_parameters_template._fill_lifetime(
-        sheet,
-        "mocked_context",
-        "mocked_database",
-    )
-    sheet.cell.assert_called_once()
-
-
 def test_lifetime():
     context = Mock()
 
@@ -349,39 +339,6 @@ def test_lifetime():
         database,
     )
     assert result == "mocked_result"
-
-
-@patch(fuel_split.fuel_split_by_action_type)
-def test_fill_share_affected():
-    with patch(measure_specific_parameters_template._fill_table) as patched_fill:
-        measure_specific_parameters_template._fill_share_affected(
-            "mocked_sheet",
-            Mock(),
-            "mocked_final_energy_saving_by_action_type",
-            "mocked_data_source",
-        )
-        patched_fill.assert_called_once()
-
-
-def test_fill_subsidy_rate():
-    with patch(measure_specific_parameters_template._fill_annual_series) as patched_fill:
-        measure_specific_parameters_template._fill_subsidy_rate(
-            "mocked_sheet",
-            Mock(),
-        )
-        patched_fill.assert_called_once()
-
-
-@patch(dwelling.number_of_affected_dwellings)
-def test_fill_number_of_affected_dwellings():
-    with patch(measure_specific_parameters_template._fill_annual_series) as patched_fill:
-        measure_specific_parameters_template._fill_number_of_affected_dwellings(
-            "mocked_sheet",
-            Mock(),
-            "mocked_final_energy_saving_by_action_type",
-            "mocked_data_source",
-        )
-        patched_fill.assert_called_once()
 
 
 def test_fill_unit():
@@ -458,7 +415,7 @@ def test_split_sheet():
 
 @patch(
     api.parse_request,
-    {"id_mode": "1", "id_region": "2", "json": {}},
+    {"id_mode": "1", "id_region": "2", "id_subsector": "1", "json": {}},
 )
 def test_template_args():
     result = measure_specific_parameters_template._template_args("mocked_request")

@@ -65,6 +65,10 @@ class TestParametersTemplate:
     def test_true_condition(self):
         mocked_args = {
             "coefficient_sheets": ["FuelSplitCoefficient", "ElectricityGeneration", "MonetisationFactors"],
+            "years": [2015, 2016],
+            "id_mode": 1,
+            "id_region": 2,
+            "id_subsector": 3,
         }
         mocked_database = Mock()
         mocked_database.id_table = Mock()
@@ -78,6 +82,7 @@ class TestParametersTemplate:
     def test_false_condition(self):
         mocked_args = {
             "coefficient_sheets": ["mocked_sheet_name3", "mocked_sheet_name4"],
+            "years": [2015, 2016],
         }
         mocked_database = Mock()
         mocked_database.id_table = Mock()
