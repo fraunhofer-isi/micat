@@ -184,7 +184,7 @@ def _get_fuel_data(
             "id_parameter": 16,
             "id_final_energy_carrier": 1,
             "label": "Share of electricity among affected",
-            "unit": "ktoe",
+            "unit": "%",
             "importance": "recommended",
         },
         2: {
