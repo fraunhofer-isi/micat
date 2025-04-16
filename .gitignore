@@ -17,6 +17,8 @@ confidential.sqlite
 /import/raw_data/eurostat/nrg_bal_c.tsv.gz
 /import/raw_data/eurostat/estat_nrg_bal_c.tsv
 /import/raw_data/eurostat/estat_nrg_bal_c.tsv.gz
+/import/raw_data/eurostat/estat_sdg_07_60.tsv
+/import/raw_data/eurostat/estat_sdg_07_60.tsv.gz
 .DS_Store
 .vscode/
 ~$*

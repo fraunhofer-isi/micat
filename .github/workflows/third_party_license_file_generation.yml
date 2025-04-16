@@ -30,8 +30,9 @@ jobs:
       run: |
         which python3
     - name: third party license file generation
+      # urllib3 is excluded because it is marked as unknown license even though it is licensed under MIT
       run: |
-        python3 -m third_party_license_file_generator -r requirements.txt -o THIRDPARTY.md -p $(which python3) -g
+        python3 -m third_party_license_file_generator -r requirements.txt -o THIRDPARTY.md -p $(which python3) -g -y urllib3
     - name: delete temp requirements.txt file
       run: |
         rm requirements.txt
