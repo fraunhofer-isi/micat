@@ -60,11 +60,11 @@ def economic_indicators(  # pylint: disable=too-many-locals
         population_of_municipality,
     )
 
-    scaled_gross_domestic_product_2015 = gross_domestic_product.gross_domestic_product_2015(
-        data_source,
-        id_region,
-        population_of_municipality,
-    )
+#    scaled_gross_domestic_product_2015 = gross_domestic_product.gross_domestic_product_2015(
+#        data_source,
+#        id_region,
+#        population_of_municipality,
+#    )
 
     impact_on_gross_domestic_product = gross_domestic_product.impact_on_gross_domestic_product(
         final_energy_saving_by_action_type,
@@ -104,13 +104,13 @@ def economic_indicators(  # pylint: disable=too-many-locals
         years,
     )
 
-    change_in_unit_costs_of_production = production.change_in_unit_costs_of_production(
-        reduction_of_energy_cost,
-        scaled_gross_domestic_product,
-        scaled_gross_domestic_product_2015,
-        data_source,
-        id_region,
-    )
+#    change_in_unit_costs_of_production = production.change_in_unit_costs_of_production(
+#        reduction_of_energy_cost,
+#        scaled_gross_domestic_product,
+#        scaled_gross_domestic_product_2015,
+#        data_source,
+#        id_region,
+#    )
 
     turnover_of_energy_efficiency_goods = energy_efficiency.turnover_of_energy_efficiency_goods(
         final_energy_saving_by_action_type,
@@ -125,20 +125,20 @@ def economic_indicators(  # pylint: disable=too-many-locals
             data_source,
         )
     )
-
-    change_in_supplier_diversity_by_energy_efficiency_impact = (
-        supplier_diversity.change_in_supplier_diversity_by_energy_efficiency_impact(
-            energy_saving_by_final_energy_carrier,
-            data_source,
-            id_region,
-        )
-    )
+#
+#    change_in_supplier_diversity_by_energy_efficiency_impact = (
+#        supplier_diversity.change_in_supplier_diversity_by_energy_efficiency_impact(
+#            energy_saving_by_final_energy_carrier,
+#            data_source,
+#            id_region,
+#        )
+#    )
 
     return {
         "addedAssetValueOfBuildings": added_asset_value_of_buildings,
         "additionalEmployment": additional_employment,
-        "changeInUnitCostsOfProduction": change_in_unit_costs_of_production,
-        "changeInSupplierDiversityByEnergyEfficiencyImpact": change_in_supplier_diversity_by_energy_efficiency_impact,
+        #"changeInUnitCostsOfProduction": change_in_unit_costs_of_production,
+        #"changeInSupplierDiversityByEnergyEfficiencyImpact": change_in_supplier_diversity_by_energy_efficiency_impact,
         "energyIntensity": energy_intensity_table,
         "impactOnGrossDomesticProduct": impact_on_gross_domestic_product,
         "reductionOfAdditionalCapacitiesInGridMonetization": monetization_of_reduction_of_additional_capacities_in_grid,

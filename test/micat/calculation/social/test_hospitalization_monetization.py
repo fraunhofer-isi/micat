@@ -5,7 +5,7 @@
 # pylint: disable=protected-access, duplicate-code
 
 from micat.calculation import extrapolation
-from micat.calculation.social import hospitalization_monetization
+from micat.calculation.archive import hospitalization_monetization
 from micat.table.table import Table
 from micat.test_utils.isi_mock import Mock, patch
 
