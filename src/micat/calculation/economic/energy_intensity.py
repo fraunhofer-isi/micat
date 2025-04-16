@@ -50,25 +50,32 @@ def energy_intensity_difference(
     #primary_non_energy_use,
     additional_primary_energy_saving,
 ):
-    # Call the existing energy_intensity function
-    energy_intensity_table = energy_intensity(
-        gross_available_energy,
+    primary_energy_consumption_baseline = gross_available_energy #- primary_non_energy_use
+    sum_series_baseline = primary_energy_consumption_baseline.sum()
+    energy_intensity_table_baseline = _intensity_diff_table(
+        sum_series_baseline,
         gross_domestic_product_baseline,
-        additional_gross_domestic_product,
-        #primary_non_energy_use,
-        additional_primary_energy_saving,
     )
 
-    # Separate the "With saving" and "Without savings" rows using DataFrame filtering
-    with_savings = energy_intensity_table._data_frame[energy_intensity_table._data_frame["label"] == "With saving"]
-    without_savings = energy_intensity_table._data_frame[
-        energy_intensity_table._data_frame["label"] == "Without savings"]
+    additional_gross_domestic_product = additional_gross_domestic_product.insert_index_column('id_parameter', 0, 10)
+    additional_gross_domestic_product_all_measures = additional_gross_domestic_product.aggregate_to('id_parameter')
+    additional_gross_domestic_product_all_measures_in_bio = additional_gross_domestic_product_all_measures / 1000000000
 
-    # Subtract "Without savings" from "With saving"
-    difference = with_savings.reset_index(drop=True) - without_savings.reset_index(drop=True)
+    gross_domestic_product = gross_domestic_product_baseline + additional_gross_domestic_product_all_measures_in_bio
 
-    # Wrap the result back into a Table object
-    return Table._create(difference)
+    additional_primary_energy_saving_all_measures = additional_primary_energy_saving.aggregate_to(
+        ['id_primary_energy_carrier']
+    )
+
+    primary_energy_consumption = primary_energy_consumption_baseline - additional_primary_energy_saving_all_measures
+    sum_series = primary_energy_consumption.sum()
+    energy_intensity_table = _intensity_diff_table(
+        sum_series,
+        gross_domestic_product,
+    )
+
+    difference_table = energy_intensity_table - energy_intensity_table_baseline
+    return difference_table
 
 def _intensity_table(
     sum_series,
@@ -78,3 +85,10 @@ def _intensity_table(
     energy_intensity_series = sum_series / gross_domestic_product
     energy_intensity_table = energy_intensity_series.transpose('label', label)
     return energy_intensity_table
+
+def _intensity_diff_table(
+    sum_series,
+    gross_domestic_product,
+):
+    energy_intensity_series = sum_series / gross_domestic_product
+    return energy_intensity_series
