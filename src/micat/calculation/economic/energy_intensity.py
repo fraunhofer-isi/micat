@@ -59,14 +59,16 @@ def energy_intensity_difference(
         additional_primary_energy_saving,
     )
 
-    # Separate the "With saving" and "Without savings" rows
-    with_savings = energy_intensity_table.query("label", "With saving")
-    without_savings = energy_intensity_table.query("label", "Without savings")
+    # Separate the "With saving" and "Without savings" rows using DataFrame filtering
+    with_savings = energy_intensity_table._data_frame[energy_intensity_table._data_frame["label"] == "With saving"]
+    without_savings = energy_intensity_table._data_frame[
+        energy_intensity_table._data_frame["label"] == "Without savings"]
 
     # Subtract "Without savings" from "With saving"
-    difference = with_savings - without_savings
+    difference = with_savings.reset_index(drop=True) - without_savings.reset_index(drop=True)
 
-    return difference
+    # Wrap the result back into a Table object
+    return Table._create(difference)
 
 def _intensity_table(
     sum_series,
