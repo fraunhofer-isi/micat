@@ -11,10 +11,10 @@ def energy_intensity(
     gross_available_energy,
     gross_domestic_product_baseline,
     additional_gross_domestic_product,
-    primary_non_energy_use,
+    #primary_non_energy_use,
     additional_primary_energy_saving,
 ):
-    primary_energy_consumption_baseline = gross_available_energy - primary_non_energy_use
+    primary_energy_consumption_baseline = gross_available_energy #- primary_non_energy_use
     sum_series_baseline = primary_energy_consumption_baseline.sum()
     energy_intensity_table_baseline = _intensity_table(
         sum_series_baseline,
@@ -43,6 +43,30 @@ def energy_intensity(
     result = Table.concat([energy_intensity_table_baseline, energy_intensity_table])
     return result
 
+def energy_intensity_difference(
+    gross_available_energy,
+    gross_domestic_product_baseline,
+    additional_gross_domestic_product,
+    #primary_non_energy_use,
+    additional_primary_energy_saving,
+):
+    # Call the existing energy_intensity function
+    energy_intensity_table = energy_intensity(
+        gross_available_energy,
+        gross_domestic_product_baseline,
+        additional_gross_domestic_product,
+        #primary_non_energy_use,
+        additional_primary_energy_saving,
+    )
+
+    # Separate the "With saving" and "Without savings" rows
+    with_savings = energy_intensity_table.filter("label", "With saving")
+    without_savings = energy_intensity_table.filter("label", "Without savings")
+
+    # Subtract "Without savings" from "With saving"
+    difference = with_savings - without_savings
+
+    return difference
 
 def _intensity_table(
     sum_series,

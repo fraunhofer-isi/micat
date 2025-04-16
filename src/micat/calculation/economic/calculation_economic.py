@@ -73,14 +73,22 @@ def economic_indicators(  # pylint: disable=too-many-locals
     )
 
     # TO DO: use different sources for non_energy_use, depending on id_mode? #268
-    eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
-    primary_non_energy_use = eurostat_primary_parameters.reduce("id_parameter", 3)
+    #eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
+    #primary_non_energy_use = eurostat_primary_parameters.reduce("id_parameter", 3)
 
-    energy_intensity_table = energy_intensity.energy_intensity(
+#    energy_intensity_table = energy_intensity.energy_intensity(
+#        scaled_gross_available_energy,
+#        scaled_gross_domestic_product,
+#        impact_on_gross_domestic_product,
+#        primary_non_energy_use,
+#        additional_primary_energy_saving,
+#    )
+
+    energy_intensity_difference = energy_intensity.energy_intensity_difference(
         scaled_gross_available_energy,
         scaled_gross_domestic_product,
         impact_on_gross_domestic_product,
-        primary_non_energy_use,
+        #primary_non_energy_use,
         additional_primary_energy_saving,
     )
 
@@ -88,7 +96,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
         total_primary_energy_saving,
         primary_production,
         scaled_gross_available_energy,
-        primary_non_energy_use,
+        #primary_non_energy_use,
     )
 
     additional_employment = employment.additional_employment(
@@ -139,7 +147,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
         "additionalEmployment": additional_employment,
         #"changeInUnitCostsOfProduction": change_in_unit_costs_of_production,
         #"changeInSupplierDiversityByEnergyEfficiencyImpact": change_in_supplier_diversity_by_energy_efficiency_impact,
-        "energyIntensity": energy_intensity_table,
+        "energyIntensity": energy_intensity_difference,
         "impactOnGrossDomesticProduct": impact_on_gross_domestic_product,
         "reductionOfAdditionalCapacitiesInGridMonetization": monetization_of_reduction_of_additional_capacities_in_grid,
         "reductionOfEnergyCost": reduction_of_energy_cost_by_final_energy_carrier,
