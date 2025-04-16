@@ -74,7 +74,8 @@ def energy_intensity_difference(
         gross_domestic_product,
     )
 
-    difference_table = energy_intensity_table - energy_intensity_table_baseline
+    difference = energy_intensity_table - energy_intensity_table_baseline
+    difference_table = difference.transpose('label', 'difference')
     return difference_table
 
 def _intensity_table(
