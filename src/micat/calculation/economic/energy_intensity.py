@@ -60,8 +60,8 @@ def energy_intensity_difference(
     )
 
     # Separate the "With saving" and "Without savings" rows
-    with_savings = energy_intensity_table.filter("label", "With saving")
-    without_savings = energy_intensity_table.filter("label", "Without savings")
+    with_savings = energy_intensity_table.query("label", "With saving")
+    without_savings = energy_intensity_table.query("label", "Without savings")
 
     # Subtract "Without savings" from "With saving"
     difference = with_savings - without_savings
