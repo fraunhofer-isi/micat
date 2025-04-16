@@ -6,9 +6,11 @@
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/29
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/45
 # pylint: disable = duplicate-code
+import pandas as pd
 
 from micat.calculation import extrapolation
 from micat.utils import list as list_utils
+from micat.table.table import Table
 
 
 def reduction_of_air_pollution(
@@ -68,10 +70,13 @@ def reduction_of_mortality_morbidity_monetization(
         years,
     )
 
-    health_costs = (
-        reduction_of_mortality_morbidity_table * extrapolated_value_of_statistical_life
-        # * extrapolated_hospitalisation_admission
+    mortality = (
+        reduction_of_mortality_morbidity_table.query("id_parameter == [8]") * extrapolated_value_of_statistical_life
     )
+    hospitalisation = (
+        reduction_of_mortality_morbidity_table.query("id_parameter == [9]") * extrapolated_hospitalisation_admission
+    )
+    health_costs = Table(pd.concat([mortality._data_frame, hospitalisation._data_frame]))
     del health_costs["id_parameter"]
     return health_costs
 

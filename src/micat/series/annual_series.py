@@ -42,17 +42,17 @@ class AnnualSeries(AbstractSeries):
         series = self._series
         includes_negative_values = (series < 0).any()
         if includes_negative_values:
-            Logger.error('Interpolation of negative values is not yet implemented.')
+            Logger.error("Interpolation of negative values is not yet implemented.")
 
         year_column_names = self.columns
         year_column_names.sort()
         sorted_series = self._series[year_column_names]
 
-        interpolated_series = sorted_series.interpolate(method='linear', s=0, limit_direction='both')
+        interpolated_series = sorted_series.interpolate(method="linear", s=0, limit_direction="both")
 
         interpolated_data_includes_negative_values = (interpolated_series < 0).any()
         if interpolated_data_includes_negative_values:
-            Logger.warn('Replacing negative values of extrapolated data with zeros.')
+            Logger.warn("Replacing negative values of extrapolated data with zeros.")
             # We do not allow negative values, also see #125
             interpolated_series.clip(lower=0, inplace=True)
 
