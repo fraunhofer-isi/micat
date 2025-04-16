@@ -48,7 +48,7 @@ def test_reduction_of_import_dependency():
         'mocked_primary_energy_saving_by_action_type',
         'mocked_primary_production',
         'mocked_gross_available_energy',
-        'mocked_primary_non_energy_use',
+        #'mocked_primary_non_energy_use',
     )
     assert result['2000'][1] == 0
 
@@ -64,7 +64,7 @@ def test_filter_for_relevant_primary_energy_carriers():
     )
 
     result = import_dependency._filter_for_relevant_primary_energy_carriers(df)
-    values = list(result['2000'].values)  # pylint: disable=unsubscriptable-object, no-member
+    values = result['2000'].to_list()  # pylint: disable=unsubscriptable-object, no-member
     assert values == [2001, 2002, 2003]
 
 
@@ -72,7 +72,7 @@ def test_import_dependency():
     result = import_dependency._import_dependency(
         primary_production,
         gross_available_energy,
-        primary_non_energy_use,
+        #primary_non_energy_use,
     )
     assert result['2020'][1] == 1 - 1 / (40 - 2)
     assert result['2030'][1] == 1 - 1 / (40 - 20)
@@ -93,7 +93,7 @@ def test_import_dependency_with_savings():
     result = import_dependency._import_dependency_with_savings(
         primary_production,
         gross_available_energy,
-        primary_non_energy_use,
+        #primary_non_energy_use,
         primary_energy_saving_by_action_type,
     )
     assert result['2020'][1, 1] == 1 - 1 / ((40 - 36) - 2)

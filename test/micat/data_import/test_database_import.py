@@ -13,8 +13,8 @@ from micat.input.database import Database
 from micat.table.mapping_table import MappingTable
 from micat.test_utils.isi_mock import (
     Mock,
-    disable_stdout,
-    enable_stdout,
+    #disable_stdout,
+    #enable_stdout,
     fixture,
     patch,
     patch_by_string,

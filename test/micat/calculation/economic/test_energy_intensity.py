@@ -57,7 +57,7 @@ def test_energy_intensity():
         mocked_gross_available_energy,
         mocked_gross_domestic_product_baseline,
         mocked_additional_gross_domestic_product,
-        mocked_primary_non_energy_use,
+        #mocked_primary_non_energy_use,
         mocked_additional_primary_energy_saving,
     )
     assert result == 'mocked_result'
