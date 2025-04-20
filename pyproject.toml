@@ -38,7 +38,7 @@ dependencies = [
     'watchdog==6.0.0',
     ## scientific calculus
     'pandas==2.2.3',
-    'numpy==2.2.4',
+    'numpy==2.2.5',
     ## excel
     'XlsxWriter==3.2.3',
     'openpyxl==3.1.5',
