@@ -329,18 +329,16 @@ class BackEnd:
                         col_idx = 0
 
             # CBA
-            cbaData = data["cbaData"]
-            {
-                "annualMultipleImpacts": 76275556525.2398,
-                "annualEnergyCosts": 24900244715.592014,
-                "netPresentValue": 75488046926.65067,
-            }
-            worksheet = workbook.add_worksheet("CBA")
-            row_idx = 0
-            for key, result in cbaData.items():
-                worksheet.write(row_idx, 0, key, bold)
-                worksheet.write(row_idx, 1, result)
-                row_idx += 1
+            for program in data["cbaData"]:
+                worksheet = workbook.add_worksheet(f"CBA ({program['name']})" if len(data["results"]) > 1 else "CBA")
+                row_idx = 0
+
+                for key, result in program.items():
+                    # if key == "name":
+                    #     continue
+                    worksheet.write(row_idx, 0, key, bold)
+                    worksheet.write(row_idx, 1, result)
+                    row_idx += 1
             # years = cbaData.pop("years")
             # del cbaData["supportingYears"]
             # for key, charts in cbaData.items():
