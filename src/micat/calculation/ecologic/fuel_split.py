@@ -27,10 +27,7 @@ def fuel_split_by_action_type(
     measure_specific_lambda = data_source.measure_specific_calculation(
         final_energy_saving_by_action_type,
         _determine_lambda_for_measure,
-        lambda id_measure,
-        id_subsector,
-        id_action_type,
-        savings: _provide_default_lambda(
+        lambda id_measure, id_subsector, id_action_type, savings: _provide_default_lambda(
             id_measure,
             id_subsector,
             id_action_type,
@@ -39,9 +36,7 @@ def fuel_split_by_action_type(
         ),
     )
 
-    action_type_ids = final_energy_saving_by_action_type.unique_index_values(
-        "id_action_type"
-    )
+    action_type_ids = final_energy_saving_by_action_type.unique_index_values("id_action_type")
 
     basic_chi = _basic_chi(
         data_source,
@@ -52,13 +47,7 @@ def fuel_split_by_action_type(
 
     measure_specific_chi = data_source.measure_specific_calculation(
         final_energy_saving_by_action_type,
-        lambda id_measure,
-        id_subsector,
-        id_action_type,
-        savings,
-        _first,
-        _second,
-        _third: _determine_chi_for_measure(
+        lambda id_measure, id_subsector, id_action_type, savings, _first, _second, _third: _determine_chi_for_measure(
             id_measure,
             id_subsector,
             id_action_type,
@@ -72,9 +61,7 @@ def fuel_split_by_action_type(
             basic_chi,
         ),
     )
-    fuel_split = _measure_specific_fuel_split(
-        measure_specific_lambda, measure_specific_chi
-    )
+    fuel_split = _measure_specific_fuel_split(measure_specific_lambda, measure_specific_chi)
 
     # TODO : currently rounding is done here, with the effect that
     # * rounded values are exported and
@@ -155,12 +142,7 @@ def _determine_chi_for_measure(
     # for which we use the basic_chi data.
     # Also see https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/264
 
-    query = (
-        "id_subsector=="
-        + str(id_subsector)
-        + " & id_action_type=="
-        + str(id_action_type)
-    )
+    query = "id_subsector==" + str(id_subsector) + " & id_action_type==" + str(id_action_type)
     chi = basic_chi.query(query)
     chi = chi.insert_index_column("id_measure", 0, id_measure)
     chi["value"] = 1
@@ -175,9 +157,7 @@ def _energy_consumption(
 ):
     eta_ante = _eta_ante(extrapolated_final_parameters, lambda_ante)
     eta_post = _eta_post(extrapolated_final_parameters, lambda_post)
-    eta_factor = eta_ante / (
-        eta_post - eta_ante
-    )  # TO DO: handle case where eta_post == eta_ante
+    eta_factor = eta_ante / (eta_post - eta_ante)  # TO DO: handle case where eta_post == eta_ante
     energy_consumption = energy_saving * eta_factor
     return energy_consumption
 
@@ -273,12 +253,7 @@ def _provide_default_chi(
     _savings,
     basic_chi,
 ):
-    query = (
-        "id_subsector=="
-        + str(id_subsector)
-        + "& id_action_type=="
-        + str(id_action_type)
-    )
+    query = "id_subsector==" + str(id_subsector) + "& id_action_type==" + str(id_action_type)
     chi = basic_chi.query(query)
     chi = chi.insert_index_column("id_measure", 0, id_measure)
     return chi
@@ -302,9 +277,7 @@ def _raw_lambda(
         table = data_source.table("primes_final_sector_parameters", where_clause)
 
     if table is None:
-        raise NotImplementedError(
-            "Need to handle case of missing confidential database"
-        )  # TO DO #428
+        raise NotImplementedError("Need to handle case of missing confidential database")  # TO DO #428
 
     lambda_ = table.reduce("id_parameter", 11)
     return lambda_

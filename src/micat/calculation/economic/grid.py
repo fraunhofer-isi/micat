@@ -23,8 +23,8 @@ def reduction_of_additional_capacities_in_grid(
 
     product = final_energy_saving_electricity * capacity_reduction_factor
 
-    del product['id_subsector']
-    del product['id_action_type']
+    del product["id_subsector"]
+    del product["id_action_type"]
     return product
 
 
@@ -33,13 +33,13 @@ def monetization_of_reduction_of_additional_capacities_in_grid(
     data_source,
 ):
     investment_costs_of_renewable_energy_system_technologies = data_source.parameter(
-        'irena_technology_parameters',
+        "irena_technology_parameters",
         None,
         44,
     )
 
     product = reduction_of_additional_capacities * investment_costs_of_renewable_energy_system_technologies
-    aggregated_product = product.aggregate_to('id_measure')
+    aggregated_product = product.aggregate_to("id_measure")
     return aggregated_product
 
 
@@ -63,5 +63,5 @@ def _capacity_reduction_factor(
             years,
         )
 
-    capacity_reduction_factor = technology_parameters.reduce('id_parameter', 47)
+    capacity_reduction_factor = technology_parameters.reduce("id_parameter", 47)
     return capacity_reduction_factor
