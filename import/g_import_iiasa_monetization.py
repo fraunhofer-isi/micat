@@ -33,10 +33,10 @@ def main():
 
     database_import.write_to_sqlite(monetization_factors, "iiasa_greenhouse_gas_emission_monetization_factors")
 
-    # Import lost working days and (?) monetization factors
+    # Import lost working days and hospital admission monetisation factors
     id_region_table = database.id_table("id_region")
     id_parameter_table = database.id_table("id_parameter")
-    monetization_factors = pd.read_excel(import_folder + "/monetisation_factors_updated.xlsx", engine="openpyxl")
+    monetization_factors = pd.read_excel(import_folder + "/IIASA_MONETISATION_2024.xlsx", engine="openpyxl")
     monetization_factors.LABEL_REGION = monetization_factors.LABEL_REGION.replace(
         {
             "European Union27": "European Union",

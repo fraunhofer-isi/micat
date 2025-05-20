@@ -239,7 +239,7 @@ class DatabaseImport:
     def write_to_sqlite(self, table, table_name):
         sorted_table = table.sort()
         details = {"table": table_name}
-        self._table_validator.validate(sorted_table, details)
+        self._table_validator.validate(sorted_table, details)    # to be solved
         with sqlite3.connect(self._database_path) as connection:
             DatabaseImport._recreate_data_table(table_name, sorted_table, connection)
             # hint: to_sql must not use if_exists='replace' but 'append'; otherwise table structure is lost

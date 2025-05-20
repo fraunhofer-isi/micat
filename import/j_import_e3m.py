@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from config import import_config
+import pandas as pd
 
 from micat.data_import.database_import import DatabaseImport
 from micat.table.table import Table
@@ -27,6 +28,13 @@ def main():
     nia_per_ktoe = Table.read_excel(nia_per_ktoe_path)
     data = Table.concat([investments_in_mio_per_ktoe, nia_per_ktoe])
     database_import.write_to_sqlite(data, "e3m_global_parameters")
+
+    # Import e3m_energy_prices
+    energy_prices_path = import_path + "/e3m_energy_prices.xlsx"
+    energy_prices = Table.read_excel(energy_prices_path)
+    #energy_prices = energy_prices.set_index(['id_parameter', 'id_region', 'id_sector', 'id_final_energy_carrier'])
+    print(energy_prices)
+    database_import.write_to_sqlite(energy_prices, "e3m_energy_prices")
 
 
 if __name__ == "__main__":

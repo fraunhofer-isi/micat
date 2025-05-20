@@ -101,7 +101,7 @@
     ]
   },
   "reductionOfMortalityMorbidity": {
-    "legend": ["Mortality_AP"],
+    "legend": ["Mortality"],
     "rows": [
       ["2020", 0.0019086958137105744],
       ["2025", 0.0023527601910062574],

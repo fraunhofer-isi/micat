@@ -146,7 +146,7 @@ class AbstractTable:
             return data_frame
 
     @staticmethod
-    def _enable_foreign_key_constraints(connection):
+    def _enable_foreign_key_constraints(connection: object) -> object:
         # sqlite3 has the foreign key feature disabled by default and
         # pandas does not have an option to enable it automatically
         # => we do it here

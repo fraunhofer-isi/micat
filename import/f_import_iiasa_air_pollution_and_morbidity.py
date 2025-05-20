@@ -30,7 +30,7 @@ def main():  # pylint: disable=too-many-locals
     print("Reading input files...")
 
     # air pollution factors are specified in kt/PJ
-    raw_air_pollution_factor = pd.read_excel(import_folder + "/air_pollutant_updated.xlsx", engine="openpyxl")
+    raw_air_pollution_factor = pd.read_excel(import_folder + "/IIASA_FACTORS_EM_2024.xlsx", engine="openpyxl")
     raw_air_pollution_factor = raw_air_pollution_factor.rename(
         columns={
             "Pollutant": "Parameter",
@@ -38,8 +38,16 @@ def main():  # pylint: disable=too-many-locals
         }
     )
 
+    # Rename countries
+    raw_air_pollution_factor.LABEL_REGION = raw_air_pollution_factor.LABEL_REGION.replace(
+        {
+            "EU27": "European Union",
+            "Slovak Republic": "Slovakia",
+        },
+    )
+
     # morbidity factors are specified in 1/PJ
-    raw_morbidity_factor = pd.read_excel(import_folder + "/morbidity_updated.xlsx", engine="openpyxl")
+    raw_morbidity_factor = pd.read_excel(import_folder + "/IIASA_FACTORS_MOR_2024.xlsx", engine="openpyxl")
     # Rename columns
     raw_morbidity_factor = raw_morbidity_factor.rename(
         columns={
@@ -49,37 +57,39 @@ def main():  # pylint: disable=too-many-locals
     # Rename countries
     raw_morbidity_factor.LABEL_REGION = raw_morbidity_factor.LABEL_REGION.replace(
         {
-            "European Union27": "European Union",
+            "EU27": "European Union",
+            "Slovak Republic": "Slovakia",
         },
     )
     # Rename parameters
     raw_morbidity_factor.Parameter = raw_morbidity_factor.Parameter.replace(
         {
-            "AP_DEATHS": "Mortality_AP",
-            "Hospital admissions": "Hospitalisation_AP",
+            "AP_DEATHS": "Mortality",
+            "Hospital admissions": "Hospital admissions",
             "Labor force WLD": "Lost work days",
         }
     )
 
     # Replicate entries for different subsectors values
-    sector_value_mapping = {
-        "Average industry": [7, 8, 9, 10, 12, 13, 14],
-        "Not elsewhere specified in transport": [23],
-    }
-    for identifier, new_sectors in sector_value_mapping.items():
-        replicates = raw_air_pollution_factor.loc[raw_air_pollution_factor["MICAT_SECTOR"] == identifier]
-        for index in new_sectors:
-            subsector = id_subsector_table._data_frame.loc[index]["label"]
-            replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({identifier: subsector})
-            raw_air_pollution_factor = pd.concat([raw_air_pollution_factor, replicates])
-            replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({subsector: identifier})
-    for identifier, new_sectors in sector_value_mapping.items():
-        replicates = raw_morbidity_factor.loc[raw_morbidity_factor["MICAT_SECTOR"] == identifier]
-        for index in new_sectors:
-            subsector = id_subsector_table._data_frame.loc[index]["label"]
-            replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({identifier: subsector})
-            raw_morbidity_factor = pd.concat([raw_morbidity_factor, replicates])
-            replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({subsector: identifier})
+    #sector_value_mapping = {
+    #    "Average industry": [7, 8, 9, 10, 12, 13, 14],
+    #    "Not elsewhere specified in transport": [23],
+    #}
+    #for identifier, new_sectors in sector_value_mapping.items():
+    #    replicates = raw_air_pollution_factor.loc[raw_air_pollution_factor["MICAT_SECTOR"] == identifier]
+    #    for index in new_sectors:
+    #        subsector = id_subsector_table._data_frame.loc[index]["label"]
+    #        replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({identifier: subsector})
+    #        raw_air_pollution_factor = pd.concat([raw_air_pollution_factor, replicates])
+    #        replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({subsector: identifier})
+    #for identifier, new_sectors in sector_value_mapping.items():
+    #    replicates = raw_morbidity_factor.loc[raw_morbidity_factor["MICAT_SECTOR"] == identifier]
+    #    for index in new_sectors:
+    #        subsector = id_subsector_table._data_frame.loc[index]["label"]
+    #        replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({identifier: subsector})
+    #        raw_morbidity_factor = pd.concat([raw_morbidity_factor, replicates])
+    #        replicates.MICAT_SECTOR = replicates.MICAT_SECTOR.replace({subsector: identifier})
+
     # Replicate entries for different energy carriers
     carrier_value_mapping = {
         "Gas": [7],
@@ -121,12 +131,12 @@ def main():  # pylint: disable=too-many-locals
     )
     air_pollution_factor_in_kt_per_ktoe = air_pollution_factor_in_kt_per_pj * 1 / pj_to_ktoe
 
-    print("Including air pollution data for europe...")
-    air_pollution_factor_with_europe = _add_europe_data(air_pollution_factor_in_kt_per_ktoe)
+    #print("Including air pollution data for europe...")
+    #air_pollution_factor_with_europe = _add_europe_data(air_pollution_factor_in_kt_per_ktoe)
 
     print("Validating data...")
     missing_entries = database_import.validate_table(
-        air_pollution_factor_with_europe,
+        air_pollution_factor_in_kt_per_ktoe,
         "air_pollution_factor_with_europe",
         missing_entries,
     )
@@ -158,11 +168,11 @@ def main():  # pylint: disable=too-many-locals
     morbidity_factor_in_1_over_ktoe = morbidity_factor * 1 / pj_to_ktoe
 
     print("Including morbidity data for europe...")
-    morbidity_factor_with_europe = _add_europe_data(morbidity_factor_in_1_over_ktoe)
+    #morbidity_factor_with_europe = _add_europe_data(morbidity_factor_in_1_over_ktoe)
 
     print("Validating data...")
     missing_entries = database_import.validate_table(
-        morbidity_factor_with_europe,
+        morbidity_factor_in_1_over_ktoe,
         "morbidity_factor_with_europe",
         missing_entries,
     )
@@ -179,7 +189,7 @@ def main():  # pylint: disable=too-many-locals
             exclusions,
         )
 
-    factors = Table.concat([air_pollution_factor_with_europe, morbidity_factor_with_europe])
+    factors = Table.concat([air_pollution_factor_in_kt_per_ktoe, morbidity_factor_in_1_over_ktoe])
     # Remove duplicated rows, since somehow pivot_table creates duplicates
     factors = factors[~factors.index.duplicated(keep="first")]
 
@@ -196,13 +206,13 @@ def _extract_years(df):
     return years
 
 
-def _add_europe_data(factors):
-    id_columns = ["id_parameter", "id_subsector", "id_final_energy_carrier"]
-    europe_data = factors.aggregate_by_mean_to(id_columns)
-    # note: if you want to change the default value of 0, be aware of the different units
-    europe_data = europe_data.insert_index_column("id_region", 0, 0)
-    extended_factors = Table.concat([factors, europe_data])
-    return extended_factors
+#def _add_europe_data(factors):
+#    id_columns = ["id_parameter", "id_subsector", "id_final_energy_carrier"]
+#    europe_data = factors.aggregate_by_mean_to(id_columns)
+#    # note: if you want to change the default value of 0, be aware of the different units
+#    europe_data = europe_data.insert_index_column("id_region", 0, 0)
+#    extended_factors = Table.concat([factors, europe_data])
+#    return extended_factors
 
 
 def _translate_iiasa_table(

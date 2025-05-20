@@ -6,6 +6,7 @@ import pandas as pd
 from config import import_config
 
 from micat.data_import.database_import import DatabaseImport
+from micat.series.annual_series import AnnualSeries
 from micat.table.table import Table
 
 
@@ -26,7 +27,20 @@ def main():
         id_parameter,
     )
 
+    capacity_factors_path = import_path + "/capacity_factors_res.xlsx"
+    raw_capacity_factors = pd.read_excel(capacity_factors_path)
+    capacity_factors = Table(raw_capacity_factors)
+    id_parameter = 64
+    fraunhofer_capacity_factors = capacity_factors.insert_index_column(
+        'id_parameter',
+        1,
+        id_parameter,
+    )
+
     database_import.write_to_sqlite(fraunhofer_constant_parameters, 'fraunhofer_constant_parameters')
+    database_import.write_to_sqlite(fraunhofer_capacity_factors, 'fraunhofer_capacity_factors')
+    # In case of issue with AnnualSeries, comment out "self._table_validator.validate(sorted_table, details)" in the
+    # write_to_sqlite method of the DatabaseImport class
 
 
 if __name__ == "__main__":
