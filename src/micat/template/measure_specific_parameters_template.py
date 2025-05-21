@@ -241,6 +241,7 @@ def _get_fuel_data(
         id_mode,
         id_region,
         subsector_ids,
+        round=True,
     )
 
     for index, values in share_affected._data_frame.to_dict(orient="index").items():

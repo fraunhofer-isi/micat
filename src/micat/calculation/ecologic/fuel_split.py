@@ -9,11 +9,7 @@ from micat.calculation import extrapolation, mode
 
 # pylint: disable=too-many-locals
 def fuel_split_by_action_type(
-    final_energy_saving_by_action_type,
-    data_source,
-    id_mode,
-    id_region,
-    subsector_ids,
+    final_energy_saving_by_action_type, data_source, id_mode, id_region, subsector_ids, round=False
 ):
     raw_lambda = _raw_lambda(
         data_source,
@@ -63,13 +59,8 @@ def fuel_split_by_action_type(
     )
     fuel_split = _measure_specific_fuel_split(measure_specific_lambda, measure_specific_chi)
 
-    # TODO : currently rounding is done here, with the effect that
-    # * rounded values are exported and
-    # * rounded values are used for further calculations
-    # If the saving calculations should be done with original values,
-    # the rounding should be done in the export function.
-    # Issue ticket: https://github.com/fraunhofer-isi/micat/issues/37
-    fuel_split = _round_values(fuel_split, years)
+    if round:
+        fuel_split = _round_values(fuel_split, years)
     return fuel_split
 
 
