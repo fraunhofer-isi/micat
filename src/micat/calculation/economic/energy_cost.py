@@ -13,8 +13,6 @@ def reduction_of_energy_cost(
     data_source,
     id_region,
 ):
-    # The commented code is used in if the table enerdate_final_sector_parameters contains separate parameter for the
-    # actual energy costs (id_parameter=13) and the energy cost outlook (id_parameter=62).
 
     enerdata_final_sector_parameters = _enerdata_final_sector_parameters(
         energy_saving_by_final_energy_carrier_in_ktoe,
@@ -24,33 +22,13 @@ def reduction_of_energy_cost(
     energy_price_for_region = enerdata_final_sector_parameters.reduce("id_region", id_region)
     energy_price = energy_price_for_region.reduce("id_parameter", 13)
 
-    # energy_price_outlook = energy_price_for_region.reduce('id_parameter', 62)
-
     years = energy_saving_by_final_energy_carrier_in_ktoe.years
     interpolated_energy_price_in_euro_per_ktoe = extrapolation.extrapolate(energy_price, years)
-    # interpolated_energy_price_outlook_in_euro_per_ktoe = extrapolation.extrapolate(energy_price_outlook, years)
 
     total_reduction_of_energy_costs_in_euro = _reduction_of_energy_costs_in_euro(
         energy_saving_by_final_energy_carrier_in_ktoe,
         interpolated_energy_price_in_euro_per_ktoe,
     )
-
-    # total_reduction_of_energy_costs_in_euro = _past_reduction_of_energy_costs(
-    #     years,
-    #     energy_saving_by_final_energy_carrier_in_ktoe,
-    #     interpolated_energy_price_in_euro_per_ktoe,
-    # )
-    #
-    # reduction_of_energy_costs_in_euro_outlook = _reduction_of_energy_costs_outlook(
-    #     years,
-    #     energy_saving_by_final_energy_carrier_in_ktoe,
-    #     interpolated_energy_price_outlook_in_euro_per_ktoe,
-    # )
-    #
-    # total_reduction_of_energy_costs_in_euro = _total_reduction_of_energy_costs_in_euro(
-    #     reduction_of_energy_costs_in_euro,
-    #     reduction_of_energy_costs_in_euro_outlook,
-    # )
 
     return total_reduction_of_energy_costs_in_euro
 
@@ -86,22 +64,6 @@ def _past_reduction_of_energy_costs(
     else:
         reduction_in_euro = None
     return reduction_in_euro
-
-
-def _reduction_of_energy_costs_outlook(
-    years,
-    energy_saving_by_final_energy_carrier_in_ktoe,
-    interpolated_energy_price_outlook_in_euro_per_ktoe,
-):
-    future_years = [str(year) for year in years if year > 2021]
-    reduction_in_euro_outlook = (
-        energy_saving_by_final_energy_carrier_in_ktoe * interpolated_energy_price_outlook_in_euro_per_ktoe
-    )
-    if len(future_years) > 0:
-        reduction_in_euro_outlook = reduction_in_euro_outlook.sort()[future_years]
-    else:
-        reduction_in_euro_outlook = None
-    return reduction_in_euro_outlook
 
 
 def _total_reduction_of_energy_costs_in_euro(

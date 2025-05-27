@@ -32,9 +32,8 @@ def main():
     # Import e3m_energy_prices
     energy_prices_path = import_path + "/e3m_energy_prices.xlsx"
     energy_prices = Table.read_excel(energy_prices_path)
-    #energy_prices = energy_prices.set_index(['id_parameter', 'id_region', 'id_sector', 'id_final_energy_carrier'])
-    print(energy_prices)
-    database_import.write_to_sqlite(energy_prices, "e3m_energy_prices")
+    energy_prices_in_mio = energy_prices / 1000000  # convert to mio €
+    database_import.write_to_sqlite(energy_prices_in_mio, "e3m_energy_prices")
 
 
 if __name__ == "__main__":
