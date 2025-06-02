@@ -23,7 +23,9 @@ def reduction_of_energy_cost(
     energy_price = energy_price_for_region.reduce("id_parameter", 13)
 
     years = energy_saving_by_final_energy_carrier_in_ktoe.years
-    interpolated_energy_price_in_euro_per_ktoe = extrapolation.extrapolate(energy_price, years)
+    interpolated_energy_price_in_mio_euro_per_ktoe = extrapolation.extrapolate(energy_price, years)
+    interpolated_energy_price_in_euro_per_ktoe = interpolated_energy_price_in_mio_euro_per_ktoe * 1000000  # convert to €
+
 
     total_reduction_of_energy_costs_in_euro = _reduction_of_energy_costs_in_euro(
         energy_saving_by_final_energy_carrier_in_ktoe,
