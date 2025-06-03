@@ -600,8 +600,8 @@ class DataSource:
     def id_table(self, table_name):
         return self._database.id_table(table_name)
 
-    def mapping_table(self, table_name):
-        return self._database.mapping_table(table_name)
+    def mapping_table(self, table_name, where_clause=None):
+        return self._database.mapping_table(table_name, where_clause)
 
     def measure_specific_calculation(
         self,

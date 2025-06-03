@@ -29,7 +29,7 @@ def added_asset_value_of_buildings(
 
     includes_relevant_action_types = _includes_relevant_action_types(reduction_of_energy_cost, relevant_action_type_ids)
     if includes_relevant_action_types:
-        relevant_cost = reduction_of_energy_cost.reduce('id_action_type', relevant_action_type_ids)
+        relevant_cost = reduction_of_energy_cost.reduce("id_action_type", relevant_action_type_ids)
     else:
         zero_result = _create_zero_result(
             reduction_of_energy_cost,
@@ -57,14 +57,14 @@ def _sector_cost(data_source, relevant_cost, relevant_sector_ids, years):
     sectorial_cost_frame = _sectorial_cost_frame(relevant_cost, data_source)
     sectorial_cost = Table(sectorial_cost_frame)
     sectorial_cost = _include_default_entries(sectorial_cost, relevant_sector_ids, years)
-    relevant_sectorial_cost = sectorial_cost.reduce('id_sector', relevant_sector_ids)
-    sector_cost = relevant_sectorial_cost.aggregate_to(['id_measure', 'id_sector'])
+    relevant_sectorial_cost = sectorial_cost.reduce("id_sector", relevant_sector_ids)
+    sector_cost = relevant_sectorial_cost.aggregate_to(["id_measure", "id_sector"])
     return sector_cost
 
 
 def _capitalization_rate(data_source, id_region):
-    cbre_parameters = data_source.table('cbre_parameters', {'id_region': str(id_region)})
-    capitalization_rate = cbre_parameters.reduce('id_parameter', 46)
+    cbre_parameters = data_source.table("cbre_parameters", {"id_region": str(id_region)})
+    capitalization_rate = cbre_parameters.reduce("id_parameter", 46)
     return capitalization_rate
 
 
@@ -73,13 +73,13 @@ def _create_zero_result(
     relevant_sector_ids,
     years,
 ):
-    existing_measure_ids = table.unique_index_values('id_measure')
+    existing_measure_ids = table.unique_index_values("id_measure")
     zero_rows = []
     for id_measure in existing_measure_ids:
         for id_sector in relevant_sector_ids:
             extra_entry = {
-                'id_measure': id_measure,
-                'id_sector': id_sector,
+                "id_measure": id_measure,
+                "id_sector": id_sector,
             }
             for year in years:
                 extra_entry[str(year)] = 0
@@ -93,18 +93,18 @@ def _include_default_entries(sectorial_cost, relevant_sector_ids, years):
     # ensures that there are zero entries for all relevant sector ids for
     # each measure, so that the grouped/aggregated table will never be empty
     # but contain zero rows.
-    existing_measure_ids = sectorial_cost.unique_index_values('id_measure')
+    existing_measure_ids = sectorial_cost.unique_index_values("id_measure")
     extra_zero_rows = []
     for id_measure in existing_measure_ids:
-        measure_cost = sectorial_cost.reduce('id_measure', [id_measure])
-        existing_sector_ids = measure_cost.unique_index_values('id_sector')
+        measure_cost = sectorial_cost.reduce("id_measure", [id_measure])
+        existing_sector_ids = measure_cost.unique_index_values("id_sector")
         for id_sector in relevant_sector_ids:
             if id_sector not in existing_sector_ids:
                 extra_entry = {
-                    'id_measure': id_measure,
-                    'id_sector': id_sector,
-                    'id_action_type': 1,
-                    'id_final_energy_carrier': 1,
+                    "id_measure": id_measure,
+                    "id_sector": id_sector,
+                    "id_action_type": 1,
+                    "id_final_energy_carrier": 1,
                 }
                 for year in years:
                     extra_entry[str(year)] = 0
@@ -115,7 +115,7 @@ def _include_default_entries(sectorial_cost, relevant_sector_ids, years):
 
 
 def _includes_relevant_action_types(reduction_of_energy_cost, relevant_action_type_ids):
-    existing_action_type_ids = reduction_of_energy_cost.unique_index_values('id_action_type')
+    existing_action_type_ids = reduction_of_energy_cost.unique_index_values("id_action_type")
     for id_action_type in relevant_action_type_ids:
         if id_action_type in existing_action_type_ids:
             return True
@@ -124,14 +124,14 @@ def _includes_relevant_action_types(reduction_of_energy_cost, relevant_action_ty
 
 
 def _sectorial_cost_frame(relevant_cost, data_source):
-    mapping_subsector_sector = data_source.mapping_table('mapping__subsector__sector')
+    mapping_subsector_sector = data_source.mapping_table("mapping__subsector__sector")
     sectorial_cost_frame = mapping_subsector_sector.apply_for(relevant_cost)
     sectorial_cost_frame.set_index(
         [
-            'id_measure',
-            'id_sector',
-            'id_action_type',
-            'id_final_energy_carrier',
+            "id_measure",
+            "id_sector",
+            "id_action_type",
+            "id_final_energy_carrier",
         ],
         inplace=True,
     )

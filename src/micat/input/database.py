@@ -41,9 +41,10 @@ class Database:
 
         return json_string
 
-    def mapping_table(self, mapping_table_name):
+    def mapping_table(self, mapping_table_name, where_clause=None):
         query = "SELECT *  FROM `" + mapping_table_name + "`"
-        where_clause = {}
+        if where_clause is None:
+            where_clause = {}
         json_data = self._data_query(query, where_clause)
         mapping_table = MappingTable.from_json(json_data, mapping_table_name)
         return mapping_table

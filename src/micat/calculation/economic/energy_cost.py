@@ -13,13 +13,12 @@ def reduction_of_energy_cost(
     data_source,
     id_region,
 ):
-
-    enerdata_final_sector_parameters = _enerdata_final_sector_parameters(
+    e3m_energy_prices = _e3m_energy_prices(
         energy_saving_by_final_energy_carrier_in_ktoe,
         data_source,
     )
 
-    energy_price_for_region = enerdata_final_sector_parameters.reduce("id_region", id_region)
+    energy_price_for_region = e3m_energy_prices.reduce("id_region", id_region)
     energy_price = energy_price_for_region.reduce("id_parameter", 13)
 
     years = energy_saving_by_final_energy_carrier_in_ktoe.years
@@ -35,14 +34,29 @@ def reduction_of_energy_cost(
     return total_reduction_of_energy_costs_in_euro
 
 
-def _enerdata_final_sector_parameters(energy_saving_by_final_energy_carrier_in_ktoe, data_source):
+def _e3m_energy_prices(energy_saving_by_final_energy_carrier_in_ktoe, data_source):
     subsector_ids = energy_saving_by_final_energy_carrier_in_ktoe.unique_index_values("id_subsector")
+    mapping_subsector_sector = data_source.mapping_table("mapping__subsector__sector", {"id_subsector": subsector_ids})
     enerdata_final_sector_parameters = data_source.table(
-        "enerdata_final_sector_parameters",
+        "e3m_energy_prices",
         {
-            "id_subsector": subsector_ids,
+            "id_sector": [int(mapping_subsector_sector["id_sector"].iloc[0])],
         },
     )
+    # Add the subsector as an index
+    enerdata_final_sector_parameters._data_frame["id_subsector"] = subsector_ids[0]
+    enerdata_final_sector_parameters._data_frame = enerdata_final_sector_parameters._data_frame.set_index(
+        "id_subsector", append=True
+    )
+    # Remove the id_sector index level
+    enerdata_final_sector_parameters._data_frame = enerdata_final_sector_parameters._data_frame.reset_index(
+        level="id_sector"
+    )
+    enerdata_final_sector_parameters._data_frame = enerdata_final_sector_parameters._data_frame.drop(
+        columns=["id_sector"]
+    )
+    # Since all values are in M€, multiply by 1e6 to convert to Euro
+    enerdata_final_sector_parameters._data_frame = enerdata_final_sector_parameters._data_frame * 1000000
     return enerdata_final_sector_parameters
 
 

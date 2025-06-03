@@ -60,11 +60,11 @@ def economic_indicators(  # pylint: disable=too-many-locals
         population_of_municipality,
     )
 
-#    scaled_gross_domestic_product_2015 = gross_domestic_product.gross_domestic_product_2015(
-#        data_source,
-#        id_region,
-#        population_of_municipality,
-#    )
+    #    scaled_gross_domestic_product_2015 = gross_domestic_product.gross_domestic_product_2015(
+    #        data_source,
+    #        id_region,
+    #        population_of_municipality,
+    #    )
 
     impact_on_gross_domestic_product = gross_domestic_product.impact_on_gross_domestic_product(
         final_energy_saving_by_action_type,
@@ -73,22 +73,22 @@ def economic_indicators(  # pylint: disable=too-many-locals
     )
 
     # TO DO: use different sources for non_energy_use, depending on id_mode? #268
-    #eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
-    #primary_non_energy_use = eurostat_primary_parameters.reduce("id_parameter", 3)
+    # eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
+    # primary_non_energy_use = eurostat_primary_parameters.reduce("id_parameter", 3)
 
-#    energy_intensity_table = energy_intensity.energy_intensity(
-#        scaled_gross_available_energy,
-#        scaled_gross_domestic_product,
-#        impact_on_gross_domestic_product,
-#        primary_non_energy_use,
-#        additional_primary_energy_saving,
-#    )
+    #    energy_intensity_table = energy_intensity.energy_intensity(
+    #        scaled_gross_available_energy,
+    #        scaled_gross_domestic_product,
+    #        impact_on_gross_domestic_product,
+    #        primary_non_energy_use,
+    #        additional_primary_energy_saving,
+    #    )
 
     energy_intensity_difference = energy_intensity.energy_intensity_difference(
         scaled_gross_available_energy,
         scaled_gross_domestic_product,
         impact_on_gross_domestic_product,
-        #primary_non_energy_use,
+        # primary_non_energy_use,
         additional_primary_energy_saving,
     )
 
@@ -96,7 +96,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
         total_primary_energy_saving,
         primary_production,
         scaled_gross_available_energy,
-        #primary_non_energy_use,
+        # primary_non_energy_use,
     )
 
     additional_employment = employment.additional_employment(
@@ -112,13 +112,13 @@ def economic_indicators(  # pylint: disable=too-many-locals
         years,
     )
 
-#    change_in_unit_costs_of_production = production.change_in_unit_costs_of_production(
-#        reduction_of_energy_cost,
-#        scaled_gross_domestic_product,
-#        scaled_gross_domestic_product_2015,
-#        data_source,
-#        id_region,
-#    )
+    #    change_in_unit_costs_of_production = production.change_in_unit_costs_of_production(
+    #        reduction_of_energy_cost,
+    #        scaled_gross_domestic_product,
+    #        scaled_gross_domestic_product_2015,
+    #        data_source,
+    #        id_region,
+    #    )
 
     turnover_of_energy_efficiency_goods = energy_efficiency.turnover_of_energy_efficiency_goods(
         final_energy_saving_by_action_type,
@@ -133,20 +133,20 @@ def economic_indicators(  # pylint: disable=too-many-locals
             data_source,
         )
     )
-#
-#    change_in_supplier_diversity_by_energy_efficiency_impact = (
-#        supplier_diversity.change_in_supplier_diversity_by_energy_efficiency_impact(
-#            energy_saving_by_final_energy_carrier,
-#            data_source,
-#            id_region,
-#        )
-#    )
+    #
+    #    change_in_supplier_diversity_by_energy_efficiency_impact = (
+    #        supplier_diversity.change_in_supplier_diversity_by_energy_efficiency_impact(
+    #            energy_saving_by_final_energy_carrier,
+    #            data_source,
+    #            id_region,
+    #        )
+    #    )
 
     return {
         "addedAssetValueOfBuildings": added_asset_value_of_buildings,
         "additionalEmployment": additional_employment,
-        #"changeInUnitCostsOfProduction": change_in_unit_costs_of_production,
-        #"changeInSupplierDiversityByEnergyEfficiencyImpact": change_in_supplier_diversity_by_energy_efficiency_impact,
+        # "changeInUnitCostsOfProduction": change_in_unit_costs_of_production,
+        # "changeInSupplierDiversityByEnergyEfficiencyImpact": change_in_supplier_diversity_by_energy_efficiency_impact,
         "energyIntensity": energy_intensity_difference,
         "impactOnGrossDomesticProduct": impact_on_gross_domestic_product,
         "reductionOfAdditionalCapacitiesInGridMonetization": monetization_of_reduction_of_additional_capacities_in_grid,
