@@ -56,12 +56,21 @@ def _parameters_template(template_args, database, confidential_database=None):
     workbook = xlsx_utils.empty_workbook(template_bytes)
 
     for sheet_name in template_args["coefficient_sheets"]:
-        if sheet_name in ("FuelSplitCoefficient", "EnergyPrice"):
+        if sheet_name == "FuelSplitCoefficient":
             _subsector_final_create_parameter_sheet(
                 workbook,
                 sheet_name,
                 template_args,
                 database if mode.is_eurostat_mode(template_args["id_mode"]) else confidential_database,
+                id_subsector_table,
+                id_final_energy_carrier_table,
+            )
+        elif sheet_name == "EnergyPrice":
+            _energy_prices_create_parameter_sheet(
+                workbook,
+                sheet_name,
+                template_args,
+                database,
                 id_subsector_table,
                 id_final_energy_carrier_table,
             )
@@ -219,6 +228,50 @@ def _subsector_final_create_parameter_sheet(
         sheet,
         database,
         "eurostat_final_sector_parameters" if mode.is_eurostat_mode(id_mode) else "primes_final_sector_parameters",
+        id_mode,
+        id_region,
+        id_parameter,
+        id_subsector_table,
+        id_final_energy_carrier_table,
+        years,
+        ignore_years,
+    )
+
+    sheet.set_column(first_col=0, last_col=constants.MAX_COLS, width=30)
+
+
+# pylint: disable=too-many-arguments
+def _energy_prices_create_parameter_sheet(
+    workbook,
+    sheet_name,
+    template_args,
+    database,
+    id_subsector_table,
+    id_final_energy_carrier_table,
+):
+    id_mode = template_args["id_mode"]
+    id_region = template_args["id_region"]
+    years = template_args.get("years")
+    ignore_years = template_args.get("ignore_years", [])
+
+    sheet = workbook.add_worksheet(sheet_name)
+    sheet = _add_parameters_header(
+        sheet, workbook, ["id_subsector", "id_final_energy_carrier", "Subsector", "Final energy carrier"]
+    )
+    sheet = _subsector_final_add_parameters_data_validation(
+        sheet,
+        template_args["options_sheet_name"],
+        id_mode,
+        id_subsector_table,
+        id_final_energy_carrier_table,
+    )
+
+    id_parameter = 13
+
+    sheet = _subsector_final_add_parameter_data(
+        sheet,
+        database,
+        "e3m_energy_prices",
         id_mode,
         id_region,
         id_parameter,
@@ -473,6 +526,21 @@ def _subsector_final_add_parameter_data(
 
     data_table = database_utils.table(database, table_name, filtered_column_names, where_clause)
     data_table = data_table.reduce("id_parameter", id_parameter)
+
+    # Add id_subsector, if there's none
+    if "id_subsector" not in data_table.index.names:
+        # Add the subsector as an index
+        mapping_subsector_sector = database.mapping_table("mapping__subsector__sector")
+        # Remove the id_sector index level
+        data_table._data_frame = data_table._data_frame.reset_index(level="id_sector")
+        data_table._data_frame = data_table._data_frame.rename(columns={"id_sector": "id_subsector"})
+        data_table._data_frame["id_subsector"] = data_table._data_frame.apply(
+            lambda row: mapping_subsector_sector._data_frame.loc[
+                mapping_subsector_sector._data_frame["id_sector"] == row["id_subsector"], "id_subsector"
+            ].values[0],
+            axis=1,
+        )
+        data_table._data_frame = data_table._data_frame.set_index("id_subsector", append=True)
 
     data_table = data_table.join_id_column(
         id_subsector_table,

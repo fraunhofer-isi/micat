@@ -328,9 +328,9 @@ class DataSource:
                     "id_parameter": 11,
                 },
             ],
-            "EnergyPrice": [  # TO DO #233
+            "EnergyPrice": [
                 {
-                    "table_name": "enerdata_final_sector_parameters",
+                    "table_name": "e3m_energy_prices",
                     "id_parameter": 13,
                 }
             ],
@@ -820,7 +820,7 @@ class DataSource:
             if "id_technology" not in id_column_names:
                 raise KeyError("Database table " + table_name + " does not include id_technology.")
 
-        if table_name != "enerdata_final_sector_parameters" and "id_region" in id_column_names:
+        if table_name != "e3m_energy_prices" and "id_region" in id_column_names:
             # Remove the id_region column from the table, except for energy prices
             table = table.reduce("id_region", [self._id_region])
             del table["id_region"]
@@ -832,6 +832,16 @@ class DataSource:
 
         for sheet_name, json_entry in global_parameters.items():
             if len(json_entry) > 0:
+                if sheet_name == "EnergyPrice":
+                    # Replace id_subsector with id_sector
+                    mapping_subsector_sector = self.mapping_table("mapping__subsector__sector")
+                    for entry in json_entry:
+                        if "id_subsector" in entry:
+                            entry["id_sector"] = mapping_subsector_sector._data_frame.loc[
+                                mapping_subsector_sector._data_frame["id_subsector"] == entry["id_subsector"],
+                                "id_sector",
+                            ].values[0]
+                            del entry["id_subsector"]
                 entries = DataSource._map_global_parameter_tables(sheet_name)
                 for entry in entries:
                     if "mapping" in entry:

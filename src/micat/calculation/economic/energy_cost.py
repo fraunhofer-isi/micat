@@ -23,8 +23,9 @@ def reduction_of_energy_cost(
 
     years = energy_saving_by_final_energy_carrier_in_ktoe.years
     interpolated_energy_price_in_mio_euro_per_ktoe = extrapolation.extrapolate(energy_price, years)
-    interpolated_energy_price_in_euro_per_ktoe = interpolated_energy_price_in_mio_euro_per_ktoe * 1000000  # convert to €
-
+    interpolated_energy_price_in_euro_per_ktoe = (
+        interpolated_energy_price_in_mio_euro_per_ktoe * 1000000
+    )  # convert to €
 
     total_reduction_of_energy_costs_in_euro = _reduction_of_energy_costs_in_euro(
         energy_saving_by_final_energy_carrier_in_ktoe,
@@ -37,27 +38,21 @@ def reduction_of_energy_cost(
 def _e3m_energy_prices(energy_saving_by_final_energy_carrier_in_ktoe, data_source):
     subsector_ids = energy_saving_by_final_energy_carrier_in_ktoe.unique_index_values("id_subsector")
     mapping_subsector_sector = data_source.mapping_table("mapping__subsector__sector", {"id_subsector": subsector_ids})
-    enerdata_final_sector_parameters = data_source.table(
+    e3m_energy_prices = data_source.table(
         "e3m_energy_prices",
         {
             "id_sector": [int(mapping_subsector_sector["id_sector"].iloc[0])],
         },
     )
     # Add the subsector as an index
-    enerdata_final_sector_parameters._data_frame["id_subsector"] = subsector_ids[0]
-    enerdata_final_sector_parameters._data_frame = enerdata_final_sector_parameters._data_frame.set_index(
-        "id_subsector", append=True
-    )
+    e3m_energy_prices._data_frame["id_subsector"] = subsector_ids[0]
+    e3m_energy_prices._data_frame = e3m_energy_prices._data_frame.set_index("id_subsector", append=True)
     # Remove the id_sector index level
-    enerdata_final_sector_parameters._data_frame = enerdata_final_sector_parameters._data_frame.reset_index(
-        level="id_sector"
-    )
-    enerdata_final_sector_parameters._data_frame = enerdata_final_sector_parameters._data_frame.drop(
-        columns=["id_sector"]
-    )
+    e3m_energy_prices._data_frame = e3m_energy_prices._data_frame.reset_index(level="id_sector")
+    e3m_energy_prices._data_frame = e3m_energy_prices._data_frame.drop(columns=["id_sector"])
     # Since all values are in M€, multiply by 1e6 to convert to Euro
-    enerdata_final_sector_parameters._data_frame = enerdata_final_sector_parameters._data_frame * 1000000
-    return enerdata_final_sector_parameters
+    e3m_energy_prices._data_frame = e3m_energy_prices._data_frame * 1000000
+    return e3m_energy_prices
 
 
 def _reduction_of_energy_costs_in_euro(
