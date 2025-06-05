@@ -173,7 +173,18 @@ class DatabaseImport:
             target_cursor = target_connection.cursor()
             self._delete_table_if_exists(table_name, target_cursor)
 
-            create_query = self._query_to_create_id_table(table_name, optional_explicit_columns_that_will_be_unique)
+            extra_columns = []
+            if "type" in df_or_table.columns:
+                extra_columns.append(
+                    {
+                        "name": "type",
+                        "type": "int",
+                    }
+                )
+
+            create_query = self._query_to_create_id_table(
+                table_name, optional_explicit_columns_that_will_be_unique, extra_columns
+            )
             target_cursor.execute(create_query)
 
             df_or_table.to_sql(
@@ -239,7 +250,7 @@ class DatabaseImport:
     def write_to_sqlite(self, table, table_name):
         sorted_table = table.sort()
         details = {"table": table_name}
-        self._table_validator.validate(sorted_table, details)    # to be solved
+        self._table_validator.validate(sorted_table, details)  # to be solved
         with sqlite3.connect(self._database_path) as connection:
             DatabaseImport._recreate_data_table(table_name, sorted_table, connection)
             # hint: to_sql must not use if_exists='replace' but 'append'; otherwise table structure is lost
@@ -288,6 +299,7 @@ class DatabaseImport:
     def _query_to_create_id_table(
         table_name,
         optional_explicit_columns_that_will_be_unique=None,
+        extra_columns=None,
     ):
         unique_columns = ["label"]
         if optional_explicit_columns_that_will_be_unique is not None:
@@ -306,6 +318,12 @@ class DatabaseImport:
         create_query += ", description text"
         if "description" in unique_columns:
             create_query += " UNIQUE"
+
+        if extra_columns is not None:
+            for extra_column in extra_columns:
+                create_query += ", " + extra_column["name"] + " " + extra_column["type"]
+                if extra_column.get("unique", False):
+                    create_query += " UNIQUE"
 
         create_query += ")"
         return create_query
@@ -343,7 +361,10 @@ class DatabaseImport:
     def _read_id_table_from_excel_file(directory, table_name):
         excel_file_path = directory + "/" + table_name + ".xlsx"
         df = pd.read_excel(excel_file_path, index_col="id")
-        df = df[["label", "description"]]
+        default_columns = ["label", "description"]
+        if "type" in df.columns:
+            default_columns.append("type")
+        df = df[default_columns]
         return df
 
     @staticmethod
