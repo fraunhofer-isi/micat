@@ -51,9 +51,6 @@ def energy_intensity_difference(
     # primary_non_energy_use,
     additional_primary_energy_saving,
 ):
-    import ipdb
-
-    ipdb.set_trace()
     primary_energy_consumption_baseline = gross_available_energy  # - primary_non_energy_use
     sum_series_baseline = primary_energy_consumption_baseline.sum()
     energy_intensity_table_baseline = _intensity_diff_table(

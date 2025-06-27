@@ -15,6 +15,7 @@ def gross_available_energy(
     raw_gross_available_energy = data_source.merge_tables(
         eurostat_primary_parameters,
         primes_primary_parameters,
+        False,
     )
 
     raw_gross_available_energy = raw_gross_available_energy.reduce("id_parameter", 2)

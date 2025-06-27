@@ -17,14 +17,6 @@ def reduction_of_additional_capacities_in_grid(
         id_region,
         years,
     )
-
-    capacity_reduction_factor._data_frame = capacity_reduction_factor._data_frame.drop(
-        columns=[
-            col
-            for col in capacity_reduction_factor._data_frame.columns
-            if col not in final_energy_saving_electricity.columns
-        ]
-    )
     product = final_energy_saving_electricity * capacity_reduction_factor
 
     del product["id_subsector"]
