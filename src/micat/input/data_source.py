@@ -766,7 +766,7 @@ class DataSource:
             table = self._table_from_database(table_name, where_clause)
             return table
 
-    def merge_tables(self, first_table, second_table):
+    def merge_tables(self, first_table, second_table, interpolate=True):
         """
         Merges two tables.
         """
@@ -779,33 +779,35 @@ class DataSource:
         # Drop duplicate columns from df2
         df2 = df2.drop(columns=[col for col in df2.columns if col in df1.columns])
 
-        # Get full continuous range of years
-        years_df1 = df1.columns.astype(int)
-        years_df2 = df2.columns.astype(int)
+        if interpolate:
+            # Get full continuous range of years
+            years_df1 = df1.columns.astype(int)
+            years_df2 = df2.columns.astype(int)
 
-        min_year = min(years_df1.min(), years_df2.min())
-        max_year = max(years_df1.max(), years_df2.max())
+            min_year = min(years_df1.min(), years_df2.min())
+            max_year = max(years_df1.max(), years_df2.max())
 
-        # Create the full year range as strings (since columns are strings)
-        all_years = [str(year) for year in range(min_year, max_year + 1)]
+            # Create the full year range as strings (since columns are strings)
+            all_years = [str(year) for year in range(min_year, max_year + 1)]
 
-        # Add missing years to both DataFrames, filled with NaN
-        for year in all_years:
-            if year not in df1.columns:
-                df1[year] = np.nan
-            if year not in df2.columns:
-                df2[year] = np.nan
+            # Add missing years to both DataFrames, filled with NaN
+            for year in all_years:
+                if year not in df1.columns:
+                    df1[year] = np.nan
+                if year not in df2.columns:
+                    df2[year] = np.nan
 
-        # Sort columns to ensure chronological order
-        df1 = df1[all_years]
-        df2 = df2[all_years]
+            # Sort columns to ensure chronological order
+            df1 = df1[all_years]
+            df2 = df2[all_years]
 
         # Merge by taking df1 as primary, but fill NaNs with df2 values
         # This keeps df1's values unless they're NaN, in which case it uses df2's values
         merged_df = df1.combine_first(df2)
 
-        # Interpolate missing values across years
-        first_table._data_frame = merged_df.interpolate(axis=1, limit_direction="both")
+        if interpolate:
+            # Interpolate missing values across years
+            first_table._data_frame = merged_df.interpolate(axis=1, limit_direction="both")
         return first_table
 
     def _add_global_tables_from_mapping(
