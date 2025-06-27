@@ -43,7 +43,6 @@ def test_fuel_split_by_action_type():
     result = fuel_split.fuel_split_by_action_type(
         final_energy_saving_by_action_type,
         data_source,
-        "mocked_id_mode",
         "mocked_id_region",
         "mocked_subsector_ids",
     )
@@ -380,11 +379,8 @@ class TestRawLambda:
         mocked_data_source = Mock()
         mocked_data_source.table = Mock(mocked_frame)
 
-        id_mode = 3
-
         result = fuel_split._raw_lambda(
             mocked_data_source,
-            id_mode,
             "mocked_id_region",
             "mocked_subsector_ids",
         )
@@ -399,11 +395,8 @@ class TestRawLambda:
             mocked_data_source = Mock()
             mocked_data_source.table = Mock(mocked_frame)
 
-            id_mode = 1
-
             result = fuel_split._raw_lambda(
                 mocked_data_source,
-                id_mode,
                 "mocked_id_region",
                 "mocked_subsector_ids",
             )
@@ -417,12 +410,9 @@ class TestRawLambda:
             mocked_data_source = Mock()
             mocked_data_source.table = Mock(None)
 
-            id_mode = 1
-
             with raises(NotImplementedError):
                 fuel_split._raw_lambda(
                     mocked_data_source,
-                    id_mode,
                     "mocked_id_region",
                     "mocked_subsector_ids",
                 )

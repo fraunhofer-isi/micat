@@ -17,7 +17,6 @@ def social_indicators(
     population_of_municipality,
     interim_data,
     data_source,
-    id_mode,
     id_region,
 ):
     # pylint: disable-msg=too-many-locals
@@ -30,7 +29,6 @@ def social_indicators(
         population_of_municipality,
         reduction_of_energy_cost,
         data_source,
-        id_mode,
         id_region,
     )
 

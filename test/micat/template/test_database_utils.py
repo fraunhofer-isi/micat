@@ -26,21 +26,8 @@ def test_column_names():
     assert result == "mocked_result"
 
 
-@patch(database_utils._year_range, ["2020", "2021"])
-@patch(database_utils._year_columns_filter, False)
-def test_filter_column_names_by_id_mode():
-    result = database_utils.filter_column_names_by_id_mode(["2020", "2021"], 1)
-    assert isinstance(result, list)
-    assert len(result) == 0
-    # Test with given years, which do not match the year range
-    result = database_utils.filter_column_names_by_id_mode(["2015", "2020"], 1, ["2025"])
-    assert len(result) == 0
-
-
-@patch(validators.min_year, 2020)
-@patch(validators.max_year, 2030)
 def test_year_range():
-    result = database_utils._year_range(mocked_template_args["id_mode"])
+    result = database_utils._year_range()
     assert isinstance(result, list)
     assert len(result) == 11
 
@@ -71,12 +58,10 @@ class TestTable:
 
 
 @patch(database_utils.column_names)
-@patch(database_utils.filter_column_names_by_id_mode)
 @patch(database_utils.table, "mocked_parameter_table")
 def test_parameter_table():
     result = database_utils.parameter_table(
         "mocked_database",
-        "mocked_id_mode",
         "mocked_table_name",
         "mocked_where_clause",
     )

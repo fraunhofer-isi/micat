@@ -40,7 +40,6 @@ from micat.utils import api
         "id_region": 1,
         "id_subsector": 2,
         "id_action_type": 3,
-        "id_mode": 1,
         "global_parameters": {},
     },
 )
@@ -134,7 +133,6 @@ def test_get_measure_specific_data():
             "id_region": 1,
             "id_subsector": 2,
             "id_action_type": 3,
-            "id_mode": 1,
             "global_parameters": {},
         },
         data_source,
@@ -414,9 +412,8 @@ def test_split_sheet():
 
 @patch(
     api.parse_request,
-    {"id_mode": "1", "id_region": "2", "id_subsector": "1", "json": {}},
+    {"id_region": "2", "id_subsector": "1", "json": {}},
 )
 def test_template_args():
     result = measure_specific_parameters_template._template_args("mocked_request")
-    assert result["id_mode"] == "1"
     assert result["id_region"] == "2"

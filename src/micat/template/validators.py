@@ -2,37 +2,11 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
-
 from micat.template import xlsx_utils
 
 
-def min_year(id_mode):
-    if id_mode == 1:
-        return 2000
-    elif id_mode == 2:
-        # PAST
-        return 2000
-    elif id_mode == 3:
-        return 2000
-    elif id_mode == 4:
-        # FUTURE
-        return 2000
-    else:
-        raise ValueError(f"ID Mode of {id_mode} not yet implemented.")
-
-
-def max_year(id_mode):
-    if id_mode == 1:
-        return datetime.now().year - 3
-    elif id_mode == 2:
-        return datetime.now().year - 3
-    elif id_mode == 3:
-        return 2050
-    elif id_mode == 4:
-        return 2050
-    else:
-        raise ValueError(f"ID Mode of {id_mode} not yet implemented.")
+MIN_YEAR = 2000
+MAX_YEAR = 2050
 
 
 def exact_string_validator(string_name, first_row, first_col, last_row, last_col):
@@ -43,14 +17,14 @@ def exact_string_validator(string_name, first_row, first_col, last_row, last_col
     }
 
 
-def year_header_validator(id_mode):
+def year_header_validator():
     return {
         "validate": "integer",
         "criteria": "between",
-        "minimum": min_year(id_mode),
-        "maximum": max_year(id_mode),
+        "minimum": MIN_YEAR,
+        "maximum": MAX_YEAR,
         "input_title": "Enter a year",
-        "input_message": f"between {min_year(id_mode)} and {max_year(id_mode)}",
+        "input_message": f"between {MIN_YEAR} and {MAX_YEAR}",
     }
 
 
