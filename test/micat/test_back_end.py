@@ -126,15 +126,12 @@ class TestPublicApi:
 
         def test_handle_preflight_options_request(self, sut, client):  # pylint: disable=unused-argument
             response = client.options(
-                "/id_mode",
+                "/id_region",
                 query_string={
                     "query_parameter": "value",
                 },
             )
             assert response.status_code == 200
-
-        def test_id_mode(self, sut, client):
-            assert_table_query(sut, client, "id_mode")
 
         def test_id_region(self, sut, client):
             assert_table_query(sut, client, "id_region")

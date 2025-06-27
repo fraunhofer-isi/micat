@@ -8,7 +8,6 @@ import io
 
 import pandas as pd
 
-from micat.calculation import mode
 from micat.table import table
 from micat.template import constants, database_utils, validators, xlsx_utils
 from micat.utils import api
@@ -80,7 +79,9 @@ def _parameters_template(template_args, database, confidential_database=None):
                 workbook,
                 sheet_name,
                 template_args,
-                database if mode.is_eurostat_mode(template_args["id_mode"]) else confidential_database,
+                # TODO: id_mode
+                database,
+                # confidential_database,
                 id_primary_energy_carrier_table,
             )
         elif sheet_name in ["MonetisationFactors"]:
@@ -541,6 +542,10 @@ def _subsector_final_add_parameter_data(
             axis=1,
         )
         data_table._data_frame = data_table._data_frame.set_index("id_subsector", append=True)
+
+    import ipdb
+
+    ipdb.set_trace()
 
     data_table = data_table.join_id_column(
         id_subsector_table,

@@ -3,24 +3,28 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/41
-from micat.calculation import mode
 from micat.calculation.economic import eurostat, primes
 
 
 def reduction_of_additional_capacities_in_grid(
     final_energy_saving_electricity,
     data_source,
-    id_mode,
     id_region,
 ):
     years = final_energy_saving_electricity.years
     capacity_reduction_factor = _capacity_reduction_factor(
         data_source,
-        id_mode,
         id_region,
         years,
     )
 
+    capacity_reduction_factor._data_frame = capacity_reduction_factor._data_frame.drop(
+        columns=[
+            col
+            for col in capacity_reduction_factor._data_frame.columns
+            if col not in final_energy_saving_electricity.columns
+        ]
+    )
     product = final_energy_saving_electricity * capacity_reduction_factor
 
     del product["id_subsector"]
@@ -45,23 +49,24 @@ def monetization_of_reduction_of_additional_capacities_in_grid(
 
 def _capacity_reduction_factor(
     data_source,
-    id_mode,
     id_region,
     years,
 ):
-    if mode.is_eurostat_mode(id_mode):
-        technology_parameters = eurostat.technology_parameters(
-            data_source,
-            id_region,
-            years,
-        )
+    eurostat_res = eurostat.technology_parameters(
+        data_source,
+        id_region,
+        years,
+    )
 
-    else:
-        technology_parameters = primes.technology_parameters(
-            data_source,
-            id_region,
-            years,
-        )
+    technology_parameters = primes.technology_parameters(
+        data_source,
+        id_region,
+        years,
+    )
+    capacity_reduction_factor = data_source.merge_tables(
+        eurostat_res,
+        technology_parameters,
+    )
 
-    capacity_reduction_factor = technology_parameters.reduce("id_parameter", 47)
+    capacity_reduction_factor = capacity_reduction_factor.reduce("id_parameter", 47)
     return capacity_reduction_factor

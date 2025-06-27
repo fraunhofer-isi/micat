@@ -36,36 +36,17 @@ from micat.test_utils.isi_mock import Mock, patch
 @patch(grid.monetization_of_reduction_of_additional_capacities_in_grid)
 @patch(supplier_diversity.change_in_supplier_diversity_by_energy_efficiency_impact)
 class TestEconomicIndicators:
-    def test_with_eurostat_mode(self):
-        id_mode = 3
+    def test_indicators(self):
         mocked_interim_data = Mock()
         mocked_ecologic_indicators = Mock()
 
         result = calculation_economic.economic_indicators(
-            'mocked_final_energy_saving_by_action_type',
-            'mocked_population_of_municipality',
+            "mocked_final_energy_saving_by_action_type",
+            "mocked_population_of_municipality",
             mocked_interim_data,
             mocked_ecologic_indicators,
-            'mocked_data_source',
-            id_mode,
-            'mocked_id_region',
-            'mocked_years',
-        )
-        assert len(result) == 10
-
-    def test_with_primes_mode(self):
-        id_mode = 1
-        mocked_interim_data = Mock()
-        mocked_ecologic_indicators = Mock()
-
-        result = calculation_economic.economic_indicators(
-            'mocked_final_energy_saving_by_action_type',
-            'mocked_population_of_municipality',
-            mocked_interim_data,
-            mocked_ecologic_indicators,
-            'mocked_data_source',
-            id_mode,
-            'mocked_id_region',
-            'mocked_years',
+            "mocked_data_source",
+            "mocked_id_region",
+            "mocked_years",
         )
         assert len(result) == 10

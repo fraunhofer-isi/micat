@@ -44,11 +44,10 @@ def test_parameters_template():
 
 @patch(
     utils.api.parse_request,
-    {"id_mode": "1", "id_region": "2"},
+    {"id_region": "2"},
 )
 def test_template_args():
     result = parameters_template._template_args(Mock())
-    assert result["id_mode"] == 1
     assert result["id_region"] == 2
 
 
@@ -66,7 +65,6 @@ class TestParametersTemplate:
         mocked_args = {
             "coefficient_sheets": ["FuelSplitCoefficient", "ElectricityGeneration", "MonetisationFactors"],
             "years": [2015, 2016],
-            "id_mode": 1,
             "id_region": 2,
             "id_subsector": 3,
         }
@@ -236,7 +234,6 @@ def test_subsector_final_add_parameters_data_validation(*args):
     parameters_template._subsector_final_add_parameters_data_validation(
         mocked_parameters_sheet,
         "mocked_sheet_name",
-        "mocked_id_mode",
         "mocked_id_subsectors_table",
         "mocked_id_final_energy_carriers_table",
     )
@@ -247,7 +244,6 @@ def test_subsector_final_add_parameters_data_validation(*args):
 
 
 @patch(database_utils.column_names)
-@patch(database_utils.filter_column_names_by_id_mode)
 @patch(database_utils.table)
 @patch(parameters_template._subsector_final_reorder_and_rename_columns)
 @patch(parameters_template._write_data_to_sheet)
@@ -258,7 +254,6 @@ def test_subsector_final_add_parameter_data(*args):  # pylint: disable=unused-ar
         mocked_sheet,
         "mocked_database",
         "mocked_table_name",
-        "mocked_id_mode",
         "mocked_id_region",
         "mocked_id_parameter",
         "mocked_id_subsector_table",
@@ -278,7 +273,6 @@ def test_primary_add_parameters_data_validation(*args):
     parameters_template._primary_add_parameters_data_validation(
         mocked_parameters_sheet,
         "mocked_sheet_name",
-        "mocked_id_mode",
         "mocked_id_primary_energy_carriers_table",
     )
 
@@ -295,7 +289,6 @@ def test_monetization_add_parameters_data_validation(*args):
 
     parameters_template._monetization_add_parameters_data_validation(
         mocked_parameters_sheet,
-        "mocked_id_mode",
     )
 
     assert mocked_parameters_sheet.data_validation.call_count == 4
@@ -304,7 +297,6 @@ def test_monetization_add_parameters_data_validation(*args):
 
 
 @patch(database_utils.column_names)
-@patch(database_utils.filter_column_names_by_id_mode)
 @patch(database_utils.table)
 @patch(parameters_template._primary_reorder_and_rename_columns)
 @patch(parameters_template._write_data_to_sheet)
@@ -315,7 +307,6 @@ def test_primary_add_parameter_data(*args):  # pylint: disable=unused-argument
         mocked_sheet,
         "mocked_database",
         "mocked_table_name",
-        "mocked_id_mode",
         "mocked_id_region",
         "mocked_id_parameter",
         "mocked_id_primary_energy_carrier_table",

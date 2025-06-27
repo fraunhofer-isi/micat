@@ -34,10 +34,9 @@ def mocked_database():
 
 def mocked_template_args():
     template_args = {
-        'coefficient_sheets': ['mocked_sheet1', 'mocked_sheet2', 'mocked_sheet3', 'mocked_sheet4'],
-        'id_mode': 1,
-        'id_region': 1,
-        'sheet_password': 'micat',
-        'options_sheet_name': 'Options',
+        "coefficient_sheets": ["mocked_sheet1", "mocked_sheet2", "mocked_sheet3", "mocked_sheet4"],
+        "id_region": 1,
+        "sheet_password": "micat",
+        "options_sheet_name": "Options",
     }
     return template_args

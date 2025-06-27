@@ -13,22 +13,9 @@ def column_names(database, table_name):
     return column_names_
 
 
-def filter_column_names_by_id_mode(column_names_, id_mode, years=None):
-    year_columns = _year_range(id_mode)
-    if years is not None:
-        year_columns = set(year_columns).intersection(years)
-        if len(year_columns) == 0:
-            # No valid years are selected, fall back to default
-            year_columns = _year_range(id_mode)
-    filtered_column_names = list(
-        filter(lambda column_name: _year_columns_filter(column_name, year_columns), column_names_),
-    )
-    return filtered_column_names
-
-
-def _year_range(id_mode):
-    min_year = validators.min_year(id_mode)
-    max_year = validators.max_year(id_mode)
+def _year_range():
+    min_year = validators.MIN_YEAR
+    max_year = validators.MAX_YEAR
     year_columns = list(str(el) for el in range(min_year, max_year + 1, 1))
     return year_columns
 
@@ -58,11 +45,8 @@ def table(database, table_name, column_names_=None, where_clause=None):
 
 def parameter_table(
     database,
-    id_mode,
     table_name,
     where_clause,
 ):
-    column_names_ = column_names(database, table_name)
-    filtered_column_names = filter_column_names_by_id_mode(column_names_, id_mode)
-    parameter_table_ = table(database, table_name, filtered_column_names, where_clause)
+    parameter_table_ = table(database, table_name, column_names(database, table_name), where_clause)
     return parameter_table_

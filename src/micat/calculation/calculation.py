@@ -29,7 +29,6 @@ def calculate_indicator_data(
     print("Calculating indicator data for request")
 
     # The arguments include:
-    # id_mode,
     # id_region,
     # final_energy_saving_by_action_type (dataframe including id_measure, id_subsector, id_action_type as index)
     # measure_specific_parameters (dictionary using id_measure as key)
@@ -37,7 +36,6 @@ def calculate_indicator_data(
     # population_of_municipality (as int)
     arguments = _front_end_arguments(http_request)
 
-    id_mode = arguments["id_mode"]
     id_region = arguments["id_region"]
 
     # maps from id_measure to {'parameters': [...], 'finalParameters': [...], 'constants': [...]}
@@ -61,7 +59,6 @@ def calculate_indicator_data(
     interim_data = _interim_data(
         final_energy_saving_by_action_type,
         data_source,
-        id_mode,
         id_region,
         years,
     )
@@ -73,7 +70,6 @@ def calculate_indicator_data(
         population_of_municipality,
         interim_data,
         data_source,
-        id_mode,
         id_region,
     )
     _validate_data(social_indicators)
@@ -81,7 +77,6 @@ def calculate_indicator_data(
     ecologic_indicators = calculation_ecologic.ecologic_indicators(
         interim_data,
         data_source,
-        id_mode,
         id_region,
     )
     _validate_data(ecologic_indicators)
@@ -92,7 +87,6 @@ def calculate_indicator_data(
         interim_data,
         ecologic_indicators,
         data_source,
-        id_mode,
         id_region,
         years,
     )
@@ -207,14 +201,6 @@ def _additional_primary_energy_saving(
 
 
 def _check_request_parameters(query_parameters):
-    if "id_mode" not in query_parameters.keys():
-        raise AttributeError('Query parameters must include "id_mode"')
-
-    id_mode = query_parameters["id_mode"]
-
-    if (id_mode is None) or (id_mode == "undefined"):
-        raise AttributeError('Query parameters must include "id_mode"')
-
     if "id_region" not in query_parameters.keys():
         raise AttributeError('Query parameters must include "id_region"')
 
@@ -253,7 +239,6 @@ def _extract_details_from_measures(measures):
 def _front_end_arguments(http_request):
     query_parameters = _parse_request(http_request)
     _check_request_parameters(query_parameters)
-    id_mode = int(query_parameters["id_mode"])
     id_region = int(query_parameters["id_region"])
     measures = query_parameters["savings"]
     measure_specific_parameters, measures = _extract_details_from_measures(measures)
@@ -264,7 +249,6 @@ def _front_end_arguments(http_request):
     population_of_municipality = population.population_of_municipality(json)
 
     return {
-        "id_mode": id_mode,
         "id_region": id_region,
         "final_energy_saving_by_action_type": final_energy_saving_by_action_type,
         "population_of_municipality": population_of_municipality,
@@ -277,7 +261,6 @@ def _front_end_arguments(http_request):
 def _interim_data(
     final_energy_saving_by_action_type,
     data_source,
-    id_mode,
     id_region,
     years,
 ):
@@ -289,7 +272,6 @@ def _interim_data(
     energy_saving_by_final_energy_carrier = energy_saving.energy_saving_by_final_energy_carrier(
         final_energy_saving_by_action_type,
         data_source,
-        id_mode,
         id_region,
         subsector_ids,
     )

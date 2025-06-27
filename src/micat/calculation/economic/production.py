@@ -4,22 +4,19 @@
 
 import numpy as np
 
-from micat.calculation import mode
 from micat.calculation.economic import eurostat, primes
 
 
 def primary_production(
     data_source,
-    id_mode,
     id_region,
     years,
 ):
-    if mode.is_eurostat_mode(id_mode):
-        eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
-        extrapolated_primary_production = eurostat_primary_parameters.reduce('id_parameter', 1)
-    else:
-        primes_primary_parameters = primes.primary_parameters(data_source, id_region, years)
-        extrapolated_primary_production = primes_primary_parameters.reduce('id_parameter', 1)
+    eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
+    extrapolated_primary_production = eurostat_primary_parameters.reduce("id_parameter", 1)
+    primes_primary_parameters = primes.primary_parameters(data_source, id_region, years)
+    extrapolated_primary_production = primes_primary_parameters.reduce("id_parameter", 1)
+    # TODO: id_mode
 
     return extrapolated_primary_production
 
@@ -40,9 +37,9 @@ def change_in_unit_costs_of_production(
         # zero output (=> division by zero).
         # This check is to ensure, that inf values only come from the division
         # and not from erroneous numerator data .
-        raise ValueError('Change in energy purchase must not contain infinite values.')
+        raise ValueError("Change in energy purchase must not contain infinite values.")
 
-    subsector_ids = change_in_energy_purchase.unique_index_values('id_subsector')
+    subsector_ids = change_in_energy_purchase.unique_index_values("id_subsector")
 
     output = _output(
         gross_domestic_product_primes,
@@ -55,7 +52,7 @@ def change_in_unit_costs_of_production(
     # Here we must find a way for when the numerator (input from the user) is also Zero, which returns NaN values.
     change_in_unit_costs = change_in_unit_costs.replace([np.inf, -np.inf], 0)
 
-    del change_in_unit_costs['id_subsector']
+    del change_in_unit_costs["id_subsector"]
 
     return change_in_unit_costs
 
@@ -63,7 +60,7 @@ def change_in_unit_costs_of_production(
 def _change_in_energy_purchase(
     reduction_of_energy_cost,
 ):
-    change_in_purchase = reduction_of_energy_cost.aggregate_to(['id_measure', 'id_subsector'])
+    change_in_purchase = reduction_of_energy_cost.aggregate_to(["id_measure", "id_subsector"])
     return change_in_purchase
 
 
@@ -86,9 +83,9 @@ def _output_2015(
     subsector_ids,
 ):
     where_clause = {
-        'id_region': str(id_region),
-        'id_subsector': subsector_ids,
+        "id_region": str(id_region),
+        "id_subsector": subsector_ids,
     }
-    eurostat_sector_parameters = data_source.table('eurostat_sector_parameters', where_clause)
-    output_2015 = eurostat_sector_parameters.reduce('id_parameter', 50)
+    eurostat_sector_parameters = data_source.table("eurostat_sector_parameters", where_clause)
+    output_2015 = eurostat_sector_parameters.reduce("id_parameter", 50)
     return output_2015

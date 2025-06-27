@@ -15,8 +15,6 @@ def main():
 
     delete_file_if_exists(public_database_path)
 
-    database_import.import_id_table("id_mode", raw_data_path)
-
     database_import.import_id_table("id_region", raw_data_path)
 
     database_import.import_id_table("id_partner_region", raw_data_path)
