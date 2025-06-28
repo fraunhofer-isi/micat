@@ -3,10 +3,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/24
-import numpy as np
-import pandas as pd
-
 from micat.calculation import extrapolation
+from micat.table.table import merge_tables
 
 
 # pylint: disable=too-many-locals
@@ -263,7 +261,7 @@ def _raw_lambda(
     eurostat = data_source.table("eurostat_final_sector_parameters", where_clause)
     primes = data_source.table("primes_final_sector_parameters", where_clause)
 
-    table = data_source.merge_tables(
+    table = merge_tables(
         eurostat,
         primes,
     )

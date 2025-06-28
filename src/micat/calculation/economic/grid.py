@@ -4,6 +4,7 @@
 
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/41
 from micat.calculation.economic import eurostat, primes
+from micat.table.table import merge_tables
 
 
 def reduction_of_additional_capacities_in_grid(
@@ -55,9 +56,10 @@ def _capacity_reduction_factor(
         id_region,
         years,
     )
-    capacity_reduction_factor = data_source.merge_tables(
+    capacity_reduction_factor = merge_tables(
         eurostat_res,
         technology_parameters,
+        False,
     )
 
     capacity_reduction_factor = capacity_reduction_factor.reduce("id_parameter", 47)

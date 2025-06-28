@@ -21,7 +21,6 @@ def parameters_template(request, database, confidential_database=None):
 
 def _template_args(request):
     query = api.parse_request(request)
-    id_mode = int(query["id_mode"])
     id_region = int(query["id_region"])
     args = {
         "coefficient_sheets": [
@@ -31,7 +30,6 @@ def _template_args(request):
             "HeatGeneration",
             "MonetisationFactors",
         ],
-        "id_mode": id_mode,
         "id_region": id_region,
         "sheet_password": "micat",
         "options_sheet_name": "Options",
@@ -60,7 +58,8 @@ def _parameters_template(template_args, database, confidential_database=None):
                 workbook,
                 sheet_name,
                 template_args,
-                database if mode.is_eurostat_mode(template_args["id_mode"]) else confidential_database,
+                database,
+                confidential_database,
                 id_subsector_table,
                 id_final_energy_carrier_table,
             )
@@ -79,9 +78,8 @@ def _parameters_template(template_args, database, confidential_database=None):
                 workbook,
                 sheet_name,
                 template_args,
-                # TODO: id_mode
                 database,
-                # confidential_database,
+                confidential_database,
                 id_primary_energy_carrier_table,
             )
         elif sheet_name in ["MonetisationFactors"]:
@@ -203,10 +201,10 @@ def _subsector_final_create_parameter_sheet(
     sheet_name,
     template_args,
     database,
+    confidential_database,
     id_subsector_table,
     id_final_energy_carrier_table,
 ):
-    id_mode = template_args["id_mode"]
     id_region = template_args["id_region"]
     years = template_args.get("years")
     ignore_years = template_args.get("ignore_years", [])
@@ -218,7 +216,6 @@ def _subsector_final_create_parameter_sheet(
     sheet = _subsector_final_add_parameters_data_validation(
         sheet,
         template_args["options_sheet_name"],
-        id_mode,
         id_subsector_table,
         id_final_energy_carrier_table,
     )
@@ -228,8 +225,9 @@ def _subsector_final_create_parameter_sheet(
     sheet = _subsector_final_add_parameter_data(
         sheet,
         database,
-        "eurostat_final_sector_parameters" if mode.is_eurostat_mode(id_mode) else "primes_final_sector_parameters",
-        id_mode,
+        "eurostat_final_sector_parameters",
+        confidential_database,
+        "primes_final_sector_parameters",
         id_region,
         id_parameter,
         id_subsector_table,
@@ -380,7 +378,6 @@ def _add_parameters_header(sheet, workbook, header_columns):
 def _subsector_final_add_parameters_data_validation(
     sheet,
     options_sheet_name,
-    id_mode,
     id_subsector_table,
     id_final_energy_carrier_table,
 ):
@@ -403,7 +400,7 @@ def _subsector_final_add_parameters_data_validation(
         first_col=2,
         last_row=0,
         last_col=constants.MAX_COLS,
-        options=validators.year_header_validator(id_mode),
+        options=validators.year_header_validator(),
     )
     sheet.data_validation(
         first_row=1,
@@ -510,7 +507,8 @@ def _subsector_final_add_parameter_data(
     sheet,
     database,
     table_name,
-    id_mode,
+    confidential_database,
+    confidential_table_name,
     id_region,
     id_parameter,
     id_subsector_table,
@@ -518,15 +516,27 @@ def _subsector_final_add_parameter_data(
     years=None,
     ignore_years=[],
 ):
-    column_names = database_utils.column_names(database, table_name)
-    filtered_column_names = database_utils.filter_column_names_by_id_mode(column_names, id_mode, years)
     where_clause = {
         "id_region": str(id_region),
         "id_parameter": str(id_parameter),
     }
 
-    data_table = database_utils.table(database, table_name, filtered_column_names, where_clause)
-    data_table = data_table.reduce("id_parameter", id_parameter)
+    # Database
+    column_names = database_utils.column_names(database, table_name)
+    data_table = database_utils.table(database, table_name, column_names, where_clause)
+
+    # Confidential Database
+    confidential_column_names = database_utils.column_names(confidential_database, confidential_table_name)
+    confidential_data_table = database_utils.table(
+        confidential_table_name, confidential_table_name, confidential_column_names, where_clause
+    )
+
+    data_table = table.merge_tables(data_table, confidential_data_table, False)
+    import ipdb
+
+    ipdb.set_trace()
+
+    confidential_data_table = confidential_data_table.reduce("id_parameter", id_parameter)
 
     # Add id_subsector, if there's none
     if "id_subsector" not in data_table.index.names:
@@ -542,10 +552,6 @@ def _subsector_final_add_parameter_data(
             axis=1,
         )
         data_table._data_frame = data_table._data_frame.set_index("id_subsector", append=True)
-
-    import ipdb
-
-    ipdb.set_trace()
 
     data_table = data_table.join_id_column(
         id_subsector_table,
