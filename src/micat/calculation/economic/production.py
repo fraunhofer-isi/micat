@@ -5,6 +5,7 @@
 import numpy as np
 
 from micat.calculation.economic import eurostat, primes
+from micat.table.table import merge_tables
 
 
 def primary_production(
@@ -13,11 +14,12 @@ def primary_production(
     years,
 ):
     eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
-    extrapolated_primary_production = eurostat_primary_parameters.reduce("id_parameter", 1)
     primes_primary_parameters = primes.primary_parameters(data_source, id_region, years)
-    extrapolated_primary_production = primes_primary_parameters.reduce("id_parameter", 1)
-    # TODO: id_mode
-
+    extrapolated_primary_production = merge_tables(
+        eurostat_primary_parameters,
+        primes_primary_parameters,
+        False,
+    ).reduce("id_parameter", 1)
     return extrapolated_primary_production
 
 

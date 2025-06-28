@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 from micat.calculation.economic import eurostat, population, primes
+from micat.table.table import merge_tables
 
 
 def gross_available_energy(
@@ -12,7 +13,7 @@ def gross_available_energy(
 ):
     eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
     primes_primary_parameters = primes.primary_parameters(data_source, id_region, years)
-    raw_gross_available_energy = data_source.merge_tables(
+    raw_gross_available_energy = merge_tables(
         eurostat_primary_parameters,
         primes_primary_parameters,
         False,

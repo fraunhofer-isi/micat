@@ -4,7 +4,7 @@
 
 from micat.calculation.economic import energy_cost
 from micat.calculation.social import affected_dwellings, energy_poverty_national
-from micat.table.table import Table
+from micat.table.table import Table, merge_tables
 
 
 def alleviation_of_energy_poverty_on_eu_level(final_energy_saving_by_action_type, data_source, id_region):
@@ -69,10 +69,9 @@ def alleviation_of_energy_poverty_on_eu_level(final_energy_saving_by_action_type
 
 
 def _population_table(final_energy_saving_by_action_type, data_source):
-    population_table = data_source.table("eurostat_parameters", {"id_parameter": "24"})
-    population_table = data_source.table("primes_parameters", {"id_parameter": "24"})
-    # TODO: id_mode
-    population_table = population_table.reduce("id_parameter", 24)
+    eurostat = data_source.table("eurostat_parameters", {"id_parameter": "24"})
+    primes = data_source.table("primes_parameters", {"id_parameter": "24"})
+    population_table = merge_tables(eurostat, primes, False).reduce("id_parameter", 24)
     joined_years = population_table.columns + list(
         set(final_energy_saving_by_action_type.columns) - set(population_table.columns)
     )
