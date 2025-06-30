@@ -39,7 +39,7 @@ def _template_args(request):
     return args
 
 
-def _parameters_template(template_args, database, confidential_database=None):
+def _parameters_template(template_args, database, confidential_database):
     id_subsector_table = database.id_table("id_subsector")
     id_final_energy_carrier_table = database.id_table("id_final_energy_carrier")
     id_primary_energy_carrier_table = database.id_table("id_primary_energy_carrier")
@@ -107,17 +107,15 @@ def _monetization_create_parameter_sheet(
     template_args,
     database,
 ):
-    id_mode = template_args["id_mode"]
     id_region = template_args["id_region"]
 
     sheet = workbook.add_worksheet(sheet_name)
     sheet = _add_parameters_header(sheet, workbook, ["id_parameter", "Parameter", "Value"])
     sheet = _monetization_add_parameters_data_validation(
         sheet,
-        id_mode,
     )
 
-    monetization_parameter_table = _monetization_parameters_table(database, id_mode, id_region)
+    monetization_parameter_table = _monetization_parameters_table(database, id_region)
 
     data_table = table.Table(monetization_parameter_table)
     sheet = _write_data_to_sheet(sheet, data_table)
@@ -125,39 +123,37 @@ def _monetization_create_parameter_sheet(
     sheet.set_column(first_col=0, last_col=constants.MAX_COLS, width=40)
 
 
-def _monetization_parameters_table(database, id_mode, id_region):
+def _monetization_parameters_table(database, id_region):
     value_of_statistical_life = database_utils.parameter_table(
-        database, id_mode, "who_parameters", {"id_region": str(id_region), "id_parameter": str(37)}
+        database, "who_parameters", {"id_region": str(id_region), "id_parameter": str(37)}
     )
     value_of_a_life_year = database_utils.parameter_table(
-        database, id_mode, "who_parameters", {"id_region": str(id_region), "id_parameter": str(56)}
+        database, "who_parameters", {"id_region": str(id_region), "id_parameter": str(56)}
     )
     value_of_a_lost_workday = database_utils.parameter_table(
         database,
-        id_mode,
         "iiasa_lost_working_days_monetization_factors",
         {"id_parameter": str(19), "id_region": str(id_region)},
     )
     hospitalisation_monetisation = database_utils.parameter_table(
         database,
-        id_mode,
         "iiasa_lost_working_days_monetization_factors",
         {"id_parameter": str(63), "id_region": str(id_region)},
     )
     cost_per_ton_of_emitted_co2 = database_utils.parameter_table(
-        database, id_mode, "iiasa_greenhouse_gas_emission_monetization_factors", {"id_region": str(id_region)}
+        database, "iiasa_greenhouse_gas_emission_monetization_factors", {"id_region": str(id_region)}
     )
     cost_of_statistical_transfer_of_res = database_utils.parameter_table(
-        database, id_mode, "fraunhofer_constant_parameters", {"id_region": str(id_region), "id_parameter": str(61)}
+        database, "fraunhofer_constant_parameters", {"id_region": str(id_region), "id_parameter": str(61)}
     )
     investment_costs_of_pv = database_utils.parameter_table(
-        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(3)}
+        database, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(3)}
     )
     investment_costs_of_onshore_wind = database_utils.parameter_table(
-        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(1)}
+        database, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(1)}
     )
     investment_costs_of_offshore_wind = database_utils.parameter_table(
-        database, id_mode, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(2)}
+        database, "irena_technology_parameters", {"id_parameter": str(44), "id_technology": str(2)}
     )
 
     parameter_tables = {
@@ -248,7 +244,6 @@ def _energy_prices_create_parameter_sheet(
     id_subsector_table,
     id_final_energy_carrier_table,
 ):
-    id_mode = template_args["id_mode"]
     id_region = template_args["id_region"]
     years = template_args.get("years")
     ignore_years = template_args.get("ignore_years", [])
@@ -260,7 +255,6 @@ def _energy_prices_create_parameter_sheet(
     sheet = _subsector_final_add_parameters_data_validation(
         sheet,
         template_args["options_sheet_name"],
-        id_mode,
         id_subsector_table,
         id_final_energy_carrier_table,
     )
@@ -271,7 +265,8 @@ def _energy_prices_create_parameter_sheet(
         sheet,
         database,
         "e3m_energy_prices",
-        id_mode,
+        None,
+        None,
         id_region,
         id_parameter,
         id_subsector_table,
@@ -288,9 +283,9 @@ def _primary_create_parameter_sheet(
     sheet_name,
     template_args,
     database,
+    confidential_database,
     id_primary_energy_carrier_table,
 ):
-    id_mode = template_args["id_mode"]
     id_region = template_args["id_region"]
     years = template_args.get("years")
     years = template_args.get("years")
@@ -303,7 +298,6 @@ def _primary_create_parameter_sheet(
     sheet = _primary_add_parameters_data_validation(
         sheet,
         template_args["options_sheet_name"],
-        id_mode,
         id_primary_energy_carrier_table,
     )
 
@@ -312,10 +306,9 @@ def _primary_create_parameter_sheet(
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            "eurostat_primary_parameters"
-            if mode.is_eurostat_mode(id_mode)
-            else "primes_primary_parameters_confidential",
-            id_mode,
+            "eurostat_primary_parameters",
+            confidential_database,
+            "primes_primary_parameters_confidential",
             id_region,
             id_parameter,
             id_primary_energy_carrier_table,
@@ -328,10 +321,9 @@ def _primary_create_parameter_sheet(
         sheet = _primary_add_parameter_data(
             sheet,
             database,
-            "eurostat_primary_parameters"
-            if mode.is_eurostat_mode(id_mode)
-            else "primes_primary_parameters_confidential",
-            id_mode,
+            "eurostat_primary_parameters",
+            confidential_database,
+            "primes_primary_parameters_confidential",
             id_region,
             id_parameter,
             id_primary_energy_carrier_table,
@@ -431,7 +423,6 @@ def _subsector_final_add_parameters_data_validation(
 def _primary_add_parameters_data_validation(
     sheet,
     options_sheet_name,
-    id_mode,
     id_primary_energy_carrier_table,
 ):
     sheet.data_validation(
@@ -446,7 +437,7 @@ def _primary_add_parameters_data_validation(
         first_col=1,
         last_row=0,
         last_col=constants.MAX_COLS,
-        options=validators.year_header_validator(id_mode),
+        options=validators.year_header_validator(),
     )
     sheet.data_validation(
         first_row=1,
@@ -469,7 +460,6 @@ def _primary_add_parameters_data_validation(
 
 def _monetization_add_parameters_data_validation(
     sheet,
-    id_mode,
 ):
     sheet.data_validation(
         first_row=0,
@@ -490,7 +480,7 @@ def _monetization_add_parameters_data_validation(
         first_col=2,
         last_row=0,
         last_col=constants.MAX_COLS,
-        options=validators.year_header_validator(id_mode),
+        options=validators.year_header_validator(),
     )
     sheet.data_validation(
         first_row=1,
@@ -523,20 +513,22 @@ def _subsector_final_add_parameter_data(
 
     # Database
     column_names = database_utils.column_names(database, table_name)
-    data_table = database_utils.table(database, table_name, column_names, where_clause)
+    filtered_column_names = database_utils.filter_column_names_by_year(column_names, years)
+    data_table = database_utils.table(database, table_name, filtered_column_names, where_clause)
 
     # Confidential Database
-    confidential_column_names = database_utils.column_names(confidential_database, confidential_table_name)
-    confidential_data_table = database_utils.table(
-        confidential_table_name, confidential_table_name, confidential_column_names, where_clause
-    )
+    if confidential_database is not None and confidential_table_name is not None:
+        confidential_column_names = database_utils.column_names(confidential_database, confidential_table_name)
+        filtered_confidential_column_names = database_utils.filter_column_names_by_year(
+            confidential_column_names, years
+        )
+        confidential_data_table = database_utils.table(
+            confidential_database, confidential_table_name, filtered_confidential_column_names, where_clause
+        )
 
-    data_table = table.merge_tables(data_table, confidential_data_table, False)
-    import ipdb
+        data_table = table.merge_tables(data_table, confidential_data_table, False)
 
-    ipdb.set_trace()
-
-    confidential_data_table = confidential_data_table.reduce("id_parameter", id_parameter)
+    data_table = data_table.reduce("id_parameter", id_parameter)
 
     # Add id_subsector, if there's none
     if "id_subsector" not in data_table.index.names:
@@ -584,22 +576,32 @@ def _primary_add_parameter_data(
     sheet,
     database,
     table_name,
-    id_mode,
+    confidential_database,
+    confidential_table_name,
     id_region,
     id_parameter,
     id_primary_energy_carrier_table,
     years=None,
     ignore_years=[],
 ):
-    column_names = database_utils.column_names(database, table_name)
-    filtered_column_names = database_utils.filter_column_names_by_id_mode(column_names, id_mode, years)
     where_clause = {
         "id_region": str(id_region),
         "id_parameter": str(id_parameter),
     }
 
+    # Database
+    column_names = database_utils.column_names(database, table_name)
+    filtered_column_names = database_utils.filter_column_names_by_year(column_names, years)
     data_table = database_utils.table(database, table_name, filtered_column_names, where_clause)
-    data_table = data_table.reduce("id_parameter", id_parameter)
+
+    # Confidential Database
+    confidential_column_names = database_utils.column_names(confidential_database, confidential_table_name)
+    filtered_confidential_column_names = database_utils.filter_column_names_by_year(confidential_column_names, years)
+    confidential_data_table = database_utils.table(
+        confidential_database, confidential_table_name, filtered_confidential_column_names, where_clause
+    )
+
+    data_table = table.merge_tables(data_table, confidential_data_table, False).reduce("id_parameter", id_parameter)
 
     data_table = data_table.join_id_column(
         id_primary_energy_carrier_table,

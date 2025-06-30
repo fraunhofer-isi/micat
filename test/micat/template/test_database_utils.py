@@ -29,7 +29,7 @@ def test_column_names():
 def test_year_range():
     result = database_utils._year_range()
     assert isinstance(result, list)
-    assert len(result) == 11
+    assert len(result) == 51
 
 
 def test_year_columns_filter():

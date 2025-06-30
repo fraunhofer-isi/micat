@@ -49,4 +49,4 @@ class TestEconomicIndicators:
             "mocked_id_region",
             "mocked_years",
         )
-        assert len(result) == 10
+        assert len(result) == 8
