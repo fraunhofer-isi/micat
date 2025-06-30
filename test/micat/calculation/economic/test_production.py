@@ -5,31 +5,21 @@
 # pylint: disable=protected-access
 import numpy as np
 
-from micat.calculation import mode
 from micat.calculation.economic import eurostat, primes, production
 from micat.series.annual_series import AnnualSeries
 from micat.table.table import Table
 from micat.table.value_table import ValueTable
+from micat.template import mocks
 from micat.test_utils.isi_mock import Mock, patch, raises
 
 
 class TestPrimaryProduction:
-    @patch(mode.is_eurostat_mode, True)
-    def test_for_eurostat_mode(self):
+    def test_production(self):
         mocked_parameters = Mock()
         mocked_parameters.reduce = Mock("mocked_result")
 
         with patch(eurostat.primary_parameters, Mock(mocked_parameters)):
-            result = production.primary_production("mocked_data_source", "mocked_id_region", "mocked_years")
-            assert result == "mocked_result"
-
-    @patch(mode.is_eurostat_mode, False)
-    def test_for_primes_mode(self):
-        mocked_parameters = Mock()
-        mocked_parameters.reduce = Mock("mocked_result")
-
-        with patch(primes.primary_parameters, Mock(mocked_parameters)):
-            result = production.primary_production("mocked_data_source", "mocked_id_region", "mocked_years")
+            result = production.primary_production(mocks.mocked_database(), "mocked_id_region", [2020, 2030])
             assert result == "mocked_result"
 
 

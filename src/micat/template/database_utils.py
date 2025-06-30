@@ -26,6 +26,19 @@ def _year_columns_filter(column_name, year_columns):
     return True
 
 
+def filter_column_names_by_year(column_names_, years=None):
+    year_columns = _year_range()
+    if years is not None:
+        year_columns = set(year_columns).intersection(years)
+        if len(year_columns) == 0:
+            # No valid years are selected, fall back to default
+            year_columns = _year_range()
+    filtered_column_names = list(
+        filter(lambda column_name: _year_columns_filter(column_name, year_columns), column_names_),
+    )
+    return filtered_column_names
+
+
 def table(database, table_name, column_names_=None, where_clause=None):
     if (
         column_names_ is None

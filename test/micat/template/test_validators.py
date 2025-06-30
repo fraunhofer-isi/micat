@@ -6,16 +6,9 @@ from datetime import datetime
 from micat.template import mocks, validators, xlsx_utils
 
 # pylint: disable=protected-access
-from micat.test_utils.isi_mock import patch, raises
+from micat.test_utils.isi_mock import patch
 
 mocked_template_args = mocks.mocked_template_args()
-
-
-class TestMaxYear:
-    def test_min_year_failure(self):
-        with raises(BaseException) as exception_info:
-            validators.max_year(0)
-        assert isinstance(exception_info.value, ValueError)
 
 
 @patch(xlsx_utils.slice_to_cell_string, "A1:A1")
