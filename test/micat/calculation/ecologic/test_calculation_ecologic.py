@@ -23,10 +23,9 @@ from micat.test_utils.isi_mock import Mock, patch
 @patch(targets.impact_on_res_targets_monetization)
 @patch(grid.reduction_of_additional_capacities_in_grid)
 class TestEcologicIndicators:
-    def test_eurostat_mode(self):
+    def test_indicators(self):
         mocked_interim_data = Mock()
 
-        id_mode = 3
         id_region = 0
 
         mocked_data_source = Mock()
@@ -34,23 +33,6 @@ class TestEcologicIndicators:
         result = calculation_ecologic.ecologic_indicators(
             mocked_interim_data,
             mocked_data_source,
-            id_mode,
-            id_region,
-        )
-        assert len(result) == 9
-
-    def test_primes_mode(self):
-        mocked_interim_data = Mock()
-
-        id_mode = 1
-        id_region = 0
-
-        mocked_data_source = Mock()
-
-        result = calculation_ecologic.ecologic_indicators(
-            mocked_interim_data,
-            mocked_data_source,
-            id_mode,
             id_region,
         )
         assert len(result) == 9

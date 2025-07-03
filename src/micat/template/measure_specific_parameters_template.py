@@ -40,7 +40,6 @@ def _get_measure_specific_data(
 
     id_region = int(template_args["id_region"])
     context = {
-        "id_mode": int(template_args["id_mode"]),
         "id_region": id_region,
         "id_subsector": int(measure["subsector"]["id"]),
         "id_action_type": int(measure["action_type"]["id"]),
@@ -230,7 +229,6 @@ def _get_fuel_data(
             "importance": "recommended",
         },
     }
-    id_mode = context["id_mode"]
     id_region = context["id_region"]
     id_subsector = context["id_subsector"]
     subsector_ids = [id_subsector]
@@ -238,7 +236,6 @@ def _get_fuel_data(
     share_affected = fuel_split.fuel_split_by_action_type(
         final_energy_saving_by_action_type,
         data_source,
-        id_mode,
         id_region,
         subsector_ids,
         round=True,
@@ -526,7 +523,6 @@ def _template_args(request):
     measure = query_dict["json"]
     args = {
         "measure": measure,
-        "id_mode": query_dict["id_mode"],
         "id_region": query_dict["id_region"],
         "id_subsector": query_dict["id_subsector"],
         "parameter_table_names": [

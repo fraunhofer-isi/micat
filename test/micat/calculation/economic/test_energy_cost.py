@@ -22,7 +22,11 @@ def _mocked_energy_saving_by_final_energy_carrier():
 
 def _mocked_data_source():
     mocked_data_source = Mock()
-    mocked_data_source.table = Mock(return_value="mocked_table")
+    mocked_data_source.table = Mock(
+        return_value=Table(
+            [{"id_sector": 1, "id_parameter": 1, "id_region": 1, "id_final_energy_carrier": 1, "2020": 2}]
+        )
+    )
     return mocked_data_source
 
 
@@ -35,7 +39,6 @@ def _mocked_table():
 
 @patch(energy_cost._e3m_energy_prices, _mocked_table())
 @patch(energy_cost._past_reduction_of_energy_costs)
-@patch(energy_cost._reduction_of_energy_costs_outlook)
 @patch(energy_cost._total_reduction_of_energy_costs_in_euro, "mocked_total_reduction_of_energy_costs_in_euro")
 @patch(energy_cost._reduction_of_energy_costs_in_euro, "mocked_total_reduction_of_energy_costs_in_euro")
 @patch(extrapolation.extrapolate)
@@ -51,7 +54,7 @@ def test_e3m_energy_prices():
         _mocked_table(),
         _mocked_data_source(),
     )
-    assert result == "mocked_table"
+    assert result["2020"][1, 1, 1].iloc[0] == 2000000
 
 
 class TestPastReductionOfEnergyCosts:
@@ -92,36 +95,6 @@ def test_reduction_of_energy_costs():
     )
     result = energy_cost._reduction_of_energy_costs_in_euro(mocked_table, mocked_table)
     assert result["2020"][1, 1] == 100
-
-
-class TestReductionOfEnergyCostOutlook:
-    mocked_table = Table(
-        [
-            {"id_subsector": 1, "id_final_energy_carrier": 1, "2020": 10},
-            {"id_subsector": 2, "id_final_energy_carrier": 2, "2025": 20},
-            {"id_subsector": 3, "id_final_energy_carrier": 3, "2030": 30},
-        ]
-    )
-
-    def test_with_past_years(self):
-        mocked_years = [2010, 2015, 2020]
-        result = energy_cost._reduction_of_energy_costs_outlook(
-            mocked_years,
-            self.mocked_table,
-            self.mocked_table,
-        )
-        assert result is None
-
-    def test_with_future_years(self):
-        mocked_years = [2020, 2025, 2030]
-        result = energy_cost._reduction_of_energy_costs_outlook(
-            mocked_years,
-            self.mocked_table,
-            self.mocked_table,
-        )
-        assert result["2030"][3, 3] == 900
-        with raises(KeyError):
-            pd.isna(result["2020"][1, 1])
 
 
 class TestTotalReductionOfEnergyCostsInEuro:

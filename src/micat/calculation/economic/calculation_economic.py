@@ -23,7 +23,6 @@ def economic_indicators(  # pylint: disable=too-many-locals
     interim_data,
     ecologic_indicators,
     data_source,
-    id_mode,
     id_region,
     years,
 ):
@@ -32,7 +31,6 @@ def economic_indicators(  # pylint: disable=too-many-locals
 
     scaled_gross_available_energy = gross_available_energy.gross_available_energy(
         data_source,
-        id_mode,
         id_region,
         years,
         population_of_municipality,
@@ -40,7 +38,6 @@ def economic_indicators(  # pylint: disable=too-many-locals
 
     primary_production = production.primary_production(
         data_source,
-        id_mode,
         id_region,
         years,
     )

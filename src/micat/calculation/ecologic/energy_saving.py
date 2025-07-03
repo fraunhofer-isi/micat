@@ -15,14 +15,12 @@ def energy_saving(primary_energy_saving_by_action_type):
 def energy_saving_by_final_energy_carrier(
     final_energy_saving_by_action_type,
     data_source,
-    id_mode,
     id_region,
     subsector_ids,
 ):
     fuel_split_by_action_type = fuel_split.fuel_split_by_action_type(
         final_energy_saving_by_action_type,
         data_source,
-        id_mode,
         id_region,
         subsector_ids,
     )

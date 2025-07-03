@@ -69,10 +69,10 @@ def reduction_of_mortality_morbidity_monetization(
         hospitalisation_admission,
         years,
     )
-
     mortality = (
         reduction_of_mortality_morbidity_table.query("id_parameter == [8]") * extrapolated_value_of_statistical_life
     )
+
     hospitalisation = (
         reduction_of_mortality_morbidity_table.query("id_parameter == [9]") * extrapolated_hospitalisation_admission
     )

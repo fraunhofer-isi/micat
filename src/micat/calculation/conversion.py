@@ -47,7 +47,7 @@ def primary_energy_saving(
 
 
 def convert_units_of_measure_specific_parameters(measure_specific_parameters):
-    for id_mode, entry in measure_specific_parameters.items():
+    for id_measure, entry in measure_specific_parameters.items():
         parameters = entry["parameters"]
         for parameter_row in parameters:
             id_parameter = parameter_row["id_parameter"]

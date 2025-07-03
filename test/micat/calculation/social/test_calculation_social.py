@@ -16,7 +16,7 @@ from micat.test_utils.isi_mock import Mock, patch
 
 @patch(
     energy_poverty.alleviation_of_energy_poverty,
-    ('mocked_alleviation_of_energy_poverty_m2', 'mocked_alleviation_of_energy_poverty_2m'),
+    ("mocked_alleviation_of_energy_poverty_m2", "mocked_alleviation_of_energy_poverty_2m"),
 )
 @patch(air_pollution.reduction_of_lost_work_days)
 @patch(lost_working_days_monetization.monetization_of_lost_working_days_due_to_air_pollution)
@@ -29,11 +29,10 @@ def test_social_indicators():
     mocked_interim_data = Mock()
 
     result = calculation_social.social_indicators(
-        'mocked_final_energy_saving_by_action_type',
-        'mocked_population_of_municipality',
+        "mocked_final_energy_saving_by_action_type",
+        "mocked_population_of_municipality",
         mocked_interim_data,
-        'mocked_data_source',
-        'mocked_id_mode',
-        'mocked_id_region',
+        "mocked_data_source",
+        "mocked_id_region",
     )
     assert len(result) == 8

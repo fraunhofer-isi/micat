@@ -91,10 +91,6 @@ class BackEnd:
 
         # API routes for id tables
 
-        @app.route("/id_mode")
-        def id_mode():
-            return self._get_table("id_mode", self._flask.request)
-
         @app.route("/id_region")
         def id_region():
             return self._get_table("id_region", self._flask.request)
@@ -147,7 +143,7 @@ class BackEnd:
         @app.route("/indicator_data", methods=["POST"])
         def indicator_data():
             # Example query:
-            # URL: https://micatool-dev.eu/indicator_data?id_mode=1&id_region=2
+            # URL: https://micatool-dev.eu/indicator_data?id_region=2
             # Content-Type: application/json
             # Example content:
             # {
@@ -184,7 +180,7 @@ class BackEnd:
         def parameters():
             # Returns the global parameter template as Excel file.
             # Example query:
-            # https://micatool-dev.eu/parameters?id_mode=1&id_region=0&file_name=parameters.xlsx
+            # https://micatool-dev.eu/parameters?id_region=0&file_name=parameters.xlsx
             request = self._flask.request
             parameter_bytes = parameters_template.parameters_template(request, self._database)
             return self.create_excel_file_response(parameter_bytes, request)
@@ -193,7 +189,7 @@ class BackEnd:
         def json_parameters():
             # Returns the global parameter template as json
             # Example query:
-            # https://micatool-dev.eu/json_parameters?id_mode=1&id_region=0&orient=index
+            # https://micatool-dev.eu/json_parameters?id_region=0&orient=index
             # allowed_orients = ['split', 'records', 'index', 'columns', 'values', 'table'], also see
             # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_json.html
             # also see
@@ -209,7 +205,7 @@ class BackEnd:
         def json_measure():
             # Returns the measure specific parameter template as json; also includes the passed savings.
             # Example query:
-            # https://micatool-dev.eu/json_measure?id_mode=1&id_region=0&orient=index
+            # https://micatool-dev.eu/json_measure?id_region=0&orient=index
             # allowed_orients = ['split', 'records', 'index', 'columns', 'values', 'table'], also see
             # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_json.html
             # Content-Type: application/json
@@ -416,7 +412,7 @@ class BackEnd:
         @app.route("/savings", methods=["POST"])
         def savings():
             # Example query:
-            # https://micatool-dev.eu/savings?id_mode=1&id_region=0&
+            # https://micatool-dev.eu/savings?id_region=0&
             # &file_name=micat_energy_savings.xlsx'
             # Content-Type: application/json
             # Example Content: [

@@ -17,7 +17,6 @@ from micat.calculation.economic import grid
 def ecologic_indicators(
     interim_data,
     data_source,
-    id_mode,
     id_region,
 ):
     air_pollution_parameters = interim_data["air_pollution_parameters"]
@@ -79,7 +78,6 @@ def ecologic_indicators(
     reduction_of_additional_capacities_in_grid = grid.reduction_of_additional_capacities_in_grid(
         final_energy_saving_electricity,
         data_source,
-        id_mode,
         id_region,
     )
 

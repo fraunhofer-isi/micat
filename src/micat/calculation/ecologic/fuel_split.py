@@ -3,17 +3,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/24
-
-from micat.calculation import extrapolation, mode
+from micat.calculation import extrapolation
+from micat.table.table import merge_tables
 
 
 # pylint: disable=too-many-locals
-def fuel_split_by_action_type(
-    final_energy_saving_by_action_type, data_source, id_mode, id_region, subsector_ids, round=False
-):
+def fuel_split_by_action_type(final_energy_saving_by_action_type, data_source, id_region, subsector_ids, round=False):
     raw_lambda = _raw_lambda(
         data_source,
-        id_mode,
         id_region,
         subsector_ids,
     )
@@ -252,7 +249,6 @@ def _provide_default_chi(
 
 def _raw_lambda(
     data_source,
-    id_mode,
     id_region,
     subsector_ids,
 ):
@@ -262,13 +258,12 @@ def _raw_lambda(
         "id_subsector": subsector_ids,
     }
 
-    if mode.is_eurostat_mode(id_mode):
-        table = data_source.table("eurostat_final_sector_parameters", where_clause)
-    else:
-        table = data_source.table("primes_final_sector_parameters", where_clause)
+    eurostat = data_source.table("eurostat_final_sector_parameters", where_clause)
+    primes = data_source.table("primes_final_sector_parameters", where_clause)
 
-    if table is None:
-        raise NotImplementedError("Need to handle case of missing confidential database")  # TO DO #428
-
+    table = merge_tables(
+        eurostat,
+        primes,
+    )
     lambda_ = table.reduce("id_parameter", 11)
     return lambda_

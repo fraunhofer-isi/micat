@@ -11,43 +11,42 @@ from micat.test_utils.isi_mock import Mock, patch
 
 mocked_primary_energy = Table(
     [
-        {'id_primary_energy_carrier': 1, 'id_subsector': 1, 'id_action_type': 1, '2020': 5},
-        {'id_primary_energy_carrier': 1, 'id_subsector': 1, 'id_action_type': 2, '2020': 6},
-        {'id_primary_energy_carrier': 8, 'id_subsector': 1, 'id_action_type': 2, '2020': 7},
-        {'id_primary_energy_carrier': 8, 'id_subsector': 2, 'id_action_type': 2, '2020': 8},
+        {"id_primary_energy_carrier": 1, "id_subsector": 1, "id_action_type": 1, "2020": 5},
+        {"id_primary_energy_carrier": 1, "id_subsector": 1, "id_action_type": 2, "2020": 6},
+        {"id_primary_energy_carrier": 8, "id_subsector": 1, "id_action_type": 2, "2020": 7},
+        {"id_primary_energy_carrier": 8, "id_subsector": 2, "id_action_type": 2, "2020": 8},
     ]
 )
 
 
 def mocked_table_init(self, _data_frame):
-    self._data_frame = 'mocked_frame'
+    self._data_frame = "mocked_frame"
 
 
 @patch(
     energy_saving._aggregate_primary_energy_saving,
-    'mocked_result',
+    "mocked_result",
 )
 def test_energy_savings():
     result = energy_saving.energy_saving(mocked_primary_energy)
-    assert result == 'mocked_result'
+    assert result == "mocked_result"
 
 
 @patch(fuel_split.fuel_split_by_action_type)
 @patch(
     energy_saving._final_energy_saving_by_action_type_and_energy_carrier,
-    'mocked_result',
+    "mocked_result",
 )
 def test_energy_saving_by_final_energy_carrier():
     mocked_final_energy_saving_by_action_type = Mock()
 
     result = energy_saving.energy_saving_by_final_energy_carrier(
         mocked_final_energy_saving_by_action_type,
-        'mocked_data_source',
-        'mocked_id_mode',
-        'mocked_id_region',
-        'mocked_subsector_ids',
+        "mocked_data_source",
+        "mocked_id_region",
+        "mocked_subsector_ids",
     )
-    assert result == 'mocked_result'
+    assert result == "mocked_result"
 
 
 def test_final_energy_saving_by_action_type_and_energy_carrier():
@@ -61,7 +60,7 @@ def test_final_energy_saving_by_action_type_and_energy_carrier():
     assert result == 2 * 3
 
 
-@patch(Table.aggregate_to, 'mocked_result')
+@patch(Table.aggregate_to, "mocked_result")
 def test_aggregate_primary_energy_savings():
     result = energy_saving._aggregate_primary_energy_saving(mocked_primary_energy)
-    assert result == 'mocked_result'
+    assert result == "mocked_result"
