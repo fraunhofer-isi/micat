@@ -150,17 +150,12 @@ def mocked_table():
 
 class TestPublicApi:
     @staticmethod
-    def mocked_id_mode():
-        return "1"
-
-    @staticmethod
     def mocked_id_region():
         return "1"
 
     @patch(
         calculation._front_end_arguments,
         {
-            "id_mode": mocked_id_mode(),
             "id_region": mocked_id_region(),
             "final_energy_saving_by_action_type": mocked_savings(),
             "parameters": {},

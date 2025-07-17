@@ -10,6 +10,7 @@ import io
 import pandas as pd
 
 from micat import utils
+from micat.input.database import Database
 from micat.table import table
 from micat.template import (
     database_utils,
@@ -44,11 +45,10 @@ def test_parameters_template():
 
 @patch(
     utils.api.parse_request,
-    {"id_mode": "1", "id_region": "2"},
+    {"id_region": "2"},
 )
 def test_template_args():
     result = parameters_template._template_args(Mock())
-    assert result["id_mode"] == 1
     assert result["id_region"] == 2
 
 
@@ -66,16 +66,18 @@ class TestParametersTemplate:
         mocked_args = {
             "coefficient_sheets": ["FuelSplitCoefficient", "ElectricityGeneration", "MonetisationFactors"],
             "years": [2015, 2016],
-            "id_mode": 1,
             "id_region": 2,
             "id_subsector": 3,
         }
         mocked_database = Mock()
         mocked_database.id_table = Mock()
+        mocked_confidential_database = Mock()
+        mocked_confidential_database.id_table = Mock()
 
         output = parameters_template._parameters_template(
             mocked_args,
             mocked_database,
+            mocked_confidential_database,
         )
         assert output == "mocked_io"
 
@@ -86,10 +88,13 @@ class TestParametersTemplate:
         }
         mocked_database = Mock()
         mocked_database.id_table = Mock()
+        mocked_confidential_database = Mock()
+        mocked_confidential_database.id_table = Mock()
 
         output = parameters_template._parameters_template(
             mocked_args,
             mocked_database,
+            mocked_confidential_database,
         )
         assert output != "not_mocked_io"
 
@@ -117,7 +122,7 @@ mocked_dataframe.fillna = Mock(return_value="mocked_monetization_parameter_table
 @patch(database_utils.parameter_table, "mocked_parameter_table")
 @patch(parameters_template._construct_monetization_parameter_table, Mock(return_value=mocked_dataframe))
 def test_monetization_parameters_table():
-    result = parameters_template._monetization_parameters_table("mocked_database", 0, 0)
+    result = parameters_template._monetization_parameters_table("mocked_database", 0)
     assert result == "mocked_monetization_parameter_table"
 
 
@@ -152,6 +157,7 @@ def test_subsector_final_create_parameter_sheet():
             "mocked_sheet_name",
             mocked_template_args,
             "mocked_database",
+            "mocked_confidential_database",
             "mocked_id_subsector_table",
             "mocked_id_final_energy_carrier_table",
         )
@@ -172,6 +178,7 @@ class TestPrimaryCreateParameterSheet:
                 "ElectricityGeneration",
                 mocked_template_args,
                 "mocked_database",
+                "mocked_confidential_database",
                 "mocked_id_primary_energy_carrier_table",
             )
             mocked_add_data.assert_called_once()
@@ -187,6 +194,7 @@ class TestPrimaryCreateParameterSheet:
                 "HeatGeneration",
                 mocked_template_args,
                 "mocked_database",
+                "mocked_confidential_database",
                 "mocked_id_primary_energy_carrier_table",
             )
 
@@ -236,7 +244,6 @@ def test_subsector_final_add_parameters_data_validation(*args):
     parameters_template._subsector_final_add_parameters_data_validation(
         mocked_parameters_sheet,
         "mocked_sheet_name",
-        "mocked_id_mode",
         "mocked_id_subsectors_table",
         "mocked_id_final_energy_carriers_table",
     )
@@ -247,18 +254,16 @@ def test_subsector_final_add_parameters_data_validation(*args):
 
 
 @patch(database_utils.column_names)
-@patch(database_utils.filter_column_names_by_id_mode)
 @patch(database_utils.table)
 @patch(parameters_template._subsector_final_reorder_and_rename_columns)
 @patch(parameters_template._write_data_to_sheet)
 def test_subsector_final_add_parameter_data(*args):  # pylint: disable=unused-argument
-    mocked_sheet = mocks.mocked_sheet()
-
     result = parameters_template._subsector_final_add_parameter_data(
-        mocked_sheet,
-        "mocked_database",
+        mocks.mocked_sheet(),
+        mocks.mocked_database(),
         "mocked_table_name",
-        "mocked_id_mode",
+        "mocked_confidential_database",
+        "mocked_confidential_table_name",
         "mocked_id_region",
         "mocked_id_parameter",
         "mocked_id_subsector_table",
@@ -278,7 +283,6 @@ def test_primary_add_parameters_data_validation(*args):
     parameters_template._primary_add_parameters_data_validation(
         mocked_parameters_sheet,
         "mocked_sheet_name",
-        "mocked_id_mode",
         "mocked_id_primary_energy_carriers_table",
     )
 
@@ -295,7 +299,6 @@ def test_monetization_add_parameters_data_validation(*args):
 
     parameters_template._monetization_add_parameters_data_validation(
         mocked_parameters_sheet,
-        "mocked_id_mode",
     )
 
     assert mocked_parameters_sheet.data_validation.call_count == 4
@@ -304,7 +307,6 @@ def test_monetization_add_parameters_data_validation(*args):
 
 
 @patch(database_utils.column_names)
-@patch(database_utils.filter_column_names_by_id_mode)
 @patch(database_utils.table)
 @patch(parameters_template._primary_reorder_and_rename_columns)
 @patch(parameters_template._write_data_to_sheet)
@@ -315,7 +317,8 @@ def test_primary_add_parameter_data(*args):  # pylint: disable=unused-argument
         mocked_sheet,
         "mocked_database",
         "mocked_table_name",
-        "mocked_id_mode",
+        "mocked_confidential_database",
+        "mocked_confidential_table_name",
         "mocked_id_region",
         "mocked_id_parameter",
         "mocked_id_primary_energy_carrier_table",

@@ -30,6 +30,18 @@ mocked_fuel_split_table = Table(
     ]
 )
 
+mocked_final_sector_parameters_table = Table(
+    [
+        {
+            "id_final_energy_carrier": 8,
+            "id_subsector": 1,
+            "id_action_type": 2,
+            "id_parameter": 11,
+            "2020": 0.5,
+        },
+    ]
+)
+
 
 @patch(extrapolation.extrapolate)
 @patch(fuel_split._raw_lambda)
@@ -39,13 +51,14 @@ mocked_fuel_split_table = Table(
 def test_fuel_split_by_action_type():
     final_energy_saving_by_action_type = Mock()
     data_source = Mock()
+    data_source.table = Mock(mocked_final_sector_parameters_table)
 
     result = fuel_split.fuel_split_by_action_type(
         final_energy_saving_by_action_type,
         data_source,
-        "mocked_id_mode",
         "mocked_id_region",
         "mocked_subsector_ids",
+        round=True,
     )
     assert result == "mocked_result"
 
@@ -373,56 +386,13 @@ def test_provide_default_chi():
 
 
 class TestRawLambda:
-    def test_eurostat_mode(self):
-        mocked_frame = Mock()
-        mocked_frame.reduce = Mock("mocked_result")
-
+    def test_raw_lambda(self):
         mocked_data_source = Mock()
-        mocked_data_source.table = Mock(mocked_frame)
-
-        id_mode = 3
+        mocked_data_source.table = Mock(mocked_final_sector_parameters_table)
 
         result = fuel_split._raw_lambda(
             mocked_data_source,
-            id_mode,
             "mocked_id_region",
             "mocked_subsector_ids",
         )
-
-        assert result == "mocked_result"
-
-    class TestPrimesMode:
-        def test_with_table(self):
-            mocked_frame = Mock()
-            mocked_frame.reduce = Mock("mocked_result")
-
-            mocked_data_source = Mock()
-            mocked_data_source.table = Mock(mocked_frame)
-
-            id_mode = 1
-
-            result = fuel_split._raw_lambda(
-                mocked_data_source,
-                id_mode,
-                "mocked_id_region",
-                "mocked_subsector_ids",
-            )
-
-            assert result == "mocked_result"
-
-        def test_without_table(self):
-            mocked_frame = Mock()
-            mocked_frame.reduce = Mock("mocked_result")
-
-            mocked_data_source = Mock()
-            mocked_data_source.table = Mock(None)
-
-            id_mode = 1
-
-            with raises(NotImplementedError):
-                fuel_split._raw_lambda(
-                    mocked_data_source,
-                    id_mode,
-                    "mocked_id_region",
-                    "mocked_subsector_ids",
-                )
+        assert result["2020"] == 0.5

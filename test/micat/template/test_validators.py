@@ -6,40 +6,9 @@ from datetime import datetime
 from micat.template import mocks, validators, xlsx_utils
 
 # pylint: disable=protected-access
-from micat.test_utils.isi_mock import patch, raises
+from micat.test_utils.isi_mock import patch
 
 mocked_template_args = mocks.mocked_template_args()
-
-
-class TestMinYear:
-    def test_min_year_success(self):
-        for id_mode in range(1, 5):
-            result = validators.min_year(id_mode)
-            if id_mode in (1, 2):
-                assert result == 2000
-            else:
-                assert result == 2000
-
-    def test_min_year_failure(self):
-        with raises(BaseException) as exception_info:
-            validators.min_year(0)
-        assert isinstance(exception_info.value, ValueError)
-
-
-class TestMaxYear:
-    def test_max_year_success(self):
-        for id_mode in range(1, 5):
-            result = validators.max_year(id_mode)
-            if id_mode in (1, 2):
-                res = datetime.now().year - 3
-                assert result == res
-            else:
-                assert result == 2050
-
-    def test_min_year_failure(self):
-        with raises(BaseException) as exception_info:
-            validators.max_year(0)
-        assert isinstance(exception_info.value, ValueError)
 
 
 @patch(xlsx_utils.slice_to_cell_string, "A1:A1")
@@ -50,12 +19,10 @@ def test_exact_string_validator():
     assert "A1:A1" in result["value"]
 
 
-@patch(validators.min_year, 2015)
-@patch(validators.max_year, 2050)
 def test_year_header_validator():
-    result = validators.year_header_validator(mocked_template_args["id_mode"])
+    result = validators.year_header_validator()
     assert len(result) == 6
-    assert result["minimum"] == 2015
+    assert result["minimum"] == 2000
     assert result["maximum"] == 2050
 
 
