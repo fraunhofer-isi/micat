@@ -622,7 +622,6 @@ class DataSource:
         has_no_measure_specific_parameters = (
             measure_final_parameters is None and measure_parameters is None and measure_constants is None
         )
-
         if has_no_measure_specific_parameters:
             # No measure specific data has been specified by users
             measure_specific_table = DataSource._loop_over_measures_and_collect_tables(

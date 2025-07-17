@@ -261,7 +261,7 @@ def _get_fuel_switch_data(years, id_sector, data_source):
     table._data_frame = table._data_frame.drop(columns=annual_df.columns)
     # Add the interpolated annual data to the table
     table._data_frame = pd.concat([table._data_frame, annual_table._data_frame], axis=1)
-    return table._data_frame.to_dict(orient="records")
+    return table._data_frame.reset_index().to_dict(orient="records")
 
 
 def _get_residential_data(
