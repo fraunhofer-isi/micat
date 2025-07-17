@@ -1,6 +1,7 @@
 # © 2024 - 2025 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
+
 import pytest
 
 from micat.calculation.economic import import_dependency

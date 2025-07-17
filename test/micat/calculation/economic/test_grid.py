@@ -1,6 +1,7 @@
 # © 2024 - 2025 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
+
 from micat.calculation.economic import eurostat, grid, primes
 from micat.table.table import Table
 from micat.table.value_table import ValueTable
