@@ -226,6 +226,7 @@ class BackEnd:
             workbook = xlsxwriter.workbook.Workbook(output)
             bold = workbook.add_format({"bold": True})
             italic = workbook.add_format({"italic": True})
+            number_format = workbook.add_format({"num_format": "#,##0.00#######"})
 
             # Inputs
             worksheet = workbook.add_worksheet("Inputs")
@@ -233,6 +234,14 @@ class BackEnd:
             for program in data["programs"]:
                 worksheet.write(row_idx, 0, "Program")
                 worksheet.write(row_idx, 1, program["name"], bold)
+                row_idx += 1
+                worksheet.write(row_idx, 0, "Unit")
+                worksheet.write(row_idx, 1, program["unitName"], bold)
+                row_idx += 1
+                worksheet.write(row_idx, 0, "Region")
+                where_clause = {"id": str(data["region"])}
+                region = self._database.table("id_region", where_clause)
+                worksheet.write(row_idx, 1, region["label"].values[0], bold)
                 row_idx += 1
                 worksheet.write(row_idx, 0, "Subsector")
                 worksheet.write(row_idx, 1, program.get("subsectorName", program["subsector"]), bold)
@@ -243,7 +252,7 @@ class BackEnd:
                     col_idx = 0
                     for key, value in improvement["values"].items():
                         worksheet.write(row_idx, col_idx, key, bold)
-                        worksheet.write(row_idx + 1, col_idx, value, bold)
+                        worksheet.write(row_idx + 1, col_idx, value, number_format)
                         col_idx += 1
                     row_idx += 2
                 row_idx += 5
@@ -285,12 +294,12 @@ class BackEnd:
                                 except IndexError:
                                     if col_idx == 0:
                                         col_idx += 1
-                                    worksheet.write(row_idx, col_idx, entry)
+                                    worksheet.write(row_idx, col_idx, entry, number_format)
                                 else:
                                     if column_name == "id_measure":
                                         continue
                                     else:
-                                        worksheet.write(row_idx, col_idx, entry)
+                                        worksheet.write(row_idx, col_idx, entry, number_format)
                                 col_idx += 1
                             row_idx += 1
                             col_idx = 0
@@ -314,12 +323,12 @@ class BackEnd:
                             except IndexError:
                                 if col_idx == 0:
                                     col_idx += 1
-                                worksheet.write(row_idx, col_idx, entry)
+                                worksheet.write(row_idx, col_idx, entry, number_format)
                             else:
                                 if column_name == "id_measure":
                                     continue
                                 else:
-                                    worksheet.write(row_idx, col_idx, entry)
+                                    worksheet.write(row_idx, col_idx, entry, number_format)
                             col_idx += 1
                         row_idx += 1
                         col_idx = 0
@@ -329,12 +338,27 @@ class BackEnd:
                 worksheet = workbook.add_worksheet(f"CBA ({program['name']})" if len(data["results"]) > 1 else "CBA")
                 row_idx = 0
 
+                # Add unit
+                worksheet.write(row_idx, 0, "unit", bold)
+                worksheet.write(row_idx, 1, "Euro", italic)
+                row_idx += 1
+
                 for key, result in program.items():
-                    # if key == "name":
-                    #     continue
+                    if key == "parameters":
+                        continue
                     worksheet.write(row_idx, 0, key, bold)
-                    worksheet.write(row_idx, 1, result)
+                    worksheet.write(row_idx, 1, result, number_format)
                     row_idx += 1
+
+                # Add parameters
+                row_idx += 1
+                worksheet.write(row_idx, 0, "Parameters", bold)
+                row_idx += 1
+                for key, value in program["parameters"].items():
+                    worksheet.write(row_idx, 0, key, bold)
+                    worksheet.write(row_idx, 1, value)
+                    row_idx += 1
+
             # years = cbaData.pop("years")
             # del cbaData["supportingYears"]
             # for key, charts in cbaData.items():
