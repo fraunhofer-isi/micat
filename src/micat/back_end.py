@@ -287,6 +287,7 @@ class BackEnd:
                             worksheet.write(row_idx, year_idx + 1, year, bold)
                         row_idx += 1
                         col_idx = 0
+                        total = [0 for x in result["yearColumnNames"]]
                         for row in result["rows"]:
                             for idx, entry in enumerate(row):
                                 try:
@@ -295,6 +296,7 @@ class BackEnd:
                                     if col_idx == 0:
                                         col_idx += 1
                                     worksheet.write(row_idx, col_idx, entry, number_format)
+                                    total[col_idx - 1] += entry
                                 else:
                                     if column_name == "id_measure":
                                         continue
@@ -303,6 +305,11 @@ class BackEnd:
                                 col_idx += 1
                             row_idx += 1
                             col_idx = 0
+                        if len(result["rows"]) > 1:
+                            # Write total row
+                            worksheet.write(row_idx, 0, "Total", bold)
+                            for idx, entry in enumerate(total):
+                                worksheet.write(row_idx, idx + 1, entry, number_format)
                         row_idx += 1
 
                 # Aggregation
