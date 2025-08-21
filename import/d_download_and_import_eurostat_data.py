@@ -32,12 +32,12 @@ def main():
 
     utilization_file_path = import_folder + "/renewable_energy_system_utilization_eurostat.xlsx"
 
-    #output_at_basic_price_file_path = import_folder + "/output_at_basic_price.xlsx"
+    # output_at_basic_price_file_path = import_folder + "/output_at_basic_price.xlsx"
 
     population_file_path = import_folder + "/population.xlsx"
 
-    #risk_coefficient_file_path = import_folder + "/risk_coefficient_of_suppliers.xlsx"
-    #imported_energy_file_path = import_folder + "/average_monthly_imported_energy.xlsx"
+    # risk_coefficient_file_path = import_folder + "/risk_coefficient_of_suppliers.xlsx"
+    # imported_energy_file_path = import_folder + "/average_monthly_imported_energy.xlsx"
 
     is_skipping_download = False
 
@@ -74,6 +74,10 @@ def main():
         original_data_frame.rename(columns={"geo\\TIME_PERIOD": "geo"}, inplace=True)
         year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
         if dataset["code"] == "nrg_bal_c":
+            import ipdb
+
+            ipdb.set_trace()
+
             # Replace all non numeric values in year columns with NaN
             original_data_frame[year_column_names] = original_data_frame[year_column_names].apply(
                 pd.to_numeric,
@@ -108,11 +112,11 @@ def main():
                 database_import,
             )
 
-            #_import_output_source_at_basic_price_2015(
+            # _import_output_source_at_basic_price_2015(
             #    output_at_basic_price_file_path,
             #    database,
             #    database_import,
-            #)
+            # )
 
             _import_population(
                 import_folder,
@@ -120,11 +124,11 @@ def main():
                 database_import,
             )
 
-            #_import_supplier_diversity(
+            # _import_supplier_diversity(
             #    risk_coefficient_file_path,
             #    imported_energy_file_path,
             #    database_import,
-            #)
+            # )
         elif dataset["code"] == "sdg_07_60":
             regional_data_frame = regional_data_frame[regional_data_frame["incgrp"] == "TOTAL"]
             del regional_data_frame["hhtyp"]
@@ -311,11 +315,11 @@ def _import_utilization(file_path, database_import):
     database_import.write_to_sqlite(utilization, "eurostat_technology_parameters")
 
 
-#def _import_output_source_at_basic_price_2015(
+# def _import_output_source_at_basic_price_2015(
 #    file_path,
 #    database,
 #    database_import,
-#):
+# ):
 #    source_at_basic_price_frame = pd.read_excel(file_path)
 #    source_at_basic_price = Table(source_at_basic_price_frame)
 #
@@ -348,11 +352,11 @@ def _gross_domestic_product_2015(database):
     return gross_domestic_product_2015
 
 
-#def _scaled_output_source_at_basic_price_2015(
+# def _scaled_output_source_at_basic_price_2015(
 #    source_at_basic_price_europe,
 #    gross_domestic_product_2015,
 #    id_region,
-#):
+# ):
 #    id_region_europe = 0
 #    gross_domestic_product_2015_europe = gross_domestic_product_2015[id_region_europe]
 #    gross_domestic_product_2015_region = gross_domestic_product_2015[id_region]
