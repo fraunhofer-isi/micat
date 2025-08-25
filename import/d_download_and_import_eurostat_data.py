@@ -76,10 +76,6 @@ def main():
         original_data_frame.rename(columns={"geo\\TIME_PERIOD": "geo"}, inplace=True)
         year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
         if dataset["code"] == "nrg_bal_c":
-            import ipdb
-
-            ipdb.set_trace()
-
             # Replace all non numeric values in year columns with NaN
             original_data_frame[year_column_names] = original_data_frame[year_column_names].apply(
                 pd.to_numeric,
@@ -321,57 +317,11 @@ def _import_utilization(file_path, database_import):
     database_import.write_to_sqlite(utilization, "eurostat_technology_parameters")
 
 
-# def _import_output_source_at_basic_price_2015(
-#    file_path,
-#    database,
-#    database_import,
-# ):
-#    source_at_basic_price_frame = pd.read_excel(file_path)
-#    source_at_basic_price = Table(source_at_basic_price_frame)
-#
-#    source_at_basic_price_europe = source_at_basic_price.reduce("id_region", 0)["value"]
-#
-#    gross_domestic_product_2015 = _gross_domestic_product_2015(database)
-#
-#    missing_id_regions = [6, 9, 17, 18, 19, 26, 27]
-#    tables = []
-#    for id_region in missing_id_regions:
-#        source = _scaled_output_source_at_basic_price_2015(
-#            source_at_basic_price_europe,
-#            gross_domestic_product_2015,
-#            id_region,
-#        )
-#        tables.append(source)
-#
-#    source_at_basic_price = Table.concat([source_at_basic_price] + tables)
-#
-#    source_at_basic_price = source_at_basic_price.insert_index_column("id_parameter", 1, 50)
-#
-#    print("# Writing eurostat_sector_parameters")
-#    database_import.write_to_sqlite(source_at_basic_price, "eurostat_sector_parameters")
-
-
 def _gross_domestic_product_2015(database):
     primes_parameters = database.table("primes_parameters", {})
     gross_domestic_product_in_euro = primes_parameters.reduce("id_parameter", 10)
     gross_domestic_product_2015 = gross_domestic_product_in_euro["2015"]
     return gross_domestic_product_2015
-
-
-# def _scaled_output_source_at_basic_price_2015(
-#    source_at_basic_price_europe,
-#    gross_domestic_product_2015,
-#    id_region,
-# ):
-#    id_region_europe = 0
-#    gross_domestic_product_2015_europe = gross_domestic_product_2015[id_region_europe]
-#    gross_domestic_product_2015_region = gross_domestic_product_2015[id_region]
-#    source_series = (
-#        source_at_basic_price_europe * gross_domestic_product_2015_region / gross_domestic_product_2015_europe
-#    )
-#    source = Table(source_series)
-#    source = source.insert_index_column("id_region", 0, id_region)
-#    return source
 
 
 def _fill_missing_values_for_final_energy_consumption(table):
