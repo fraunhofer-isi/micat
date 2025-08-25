@@ -59,6 +59,19 @@ def main():
         fraunhofer_hydrogen_synthetic_fuels_generation, "fraunhofer_hydrogen_synthetic_fuels_generation"
     )
 
+    # conversion_efficiency.xlsx
+    conversion_efficiency_path = import_path + "/conversion_efficiency.xlsx"
+    raw_conversion_efficiency = pd.read_excel(conversion_efficiency_path)
+    conversion_efficiency = Table(raw_conversion_efficiency)
+    id_parameter = 65
+    fraunhofer_conversion_efficiency = conversion_efficiency.insert_index_column(
+        "id_parameter",
+        1,
+        id_parameter,
+    )
+
+    database_import.write_to_sqlite(fraunhofer_conversion_efficiency, "fraunhofer_conversion_efficiency")
+
 
 if __name__ == "__main__":
     main()
