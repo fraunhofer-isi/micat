@@ -20,7 +20,6 @@ def main():
     public_database_path, raw_data_path = import_config.get_paths()
 
     database_import = DatabaseImport(public_database_path)
-    database = Database(public_database_path)
 
     import_folder = raw_data_path + "/eurostat"
 
@@ -74,10 +73,6 @@ def main():
         original_data_frame.rename(columns={"geo\\TIME_PERIOD": "geo"}, inplace=True)
         year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
         if dataset["code"] == "nrg_bal_c":
-            import ipdb
-
-            ipdb.set_trace()
-
             # Replace all non numeric values in year columns with NaN
             original_data_frame[year_column_names] = original_data_frame[year_column_names].apply(
                 pd.to_numeric,
@@ -315,57 +310,11 @@ def _import_utilization(file_path, database_import):
     database_import.write_to_sqlite(utilization, "eurostat_technology_parameters")
 
 
-# def _import_output_source_at_basic_price_2015(
-#    file_path,
-#    database,
-#    database_import,
-# ):
-#    source_at_basic_price_frame = pd.read_excel(file_path)
-#    source_at_basic_price = Table(source_at_basic_price_frame)
-#
-#    source_at_basic_price_europe = source_at_basic_price.reduce("id_region", 0)["value"]
-#
-#    gross_domestic_product_2015 = _gross_domestic_product_2015(database)
-#
-#    missing_id_regions = [6, 9, 17, 18, 19, 26, 27]
-#    tables = []
-#    for id_region in missing_id_regions:
-#        source = _scaled_output_source_at_basic_price_2015(
-#            source_at_basic_price_europe,
-#            gross_domestic_product_2015,
-#            id_region,
-#        )
-#        tables.append(source)
-#
-#    source_at_basic_price = Table.concat([source_at_basic_price] + tables)
-#
-#    source_at_basic_price = source_at_basic_price.insert_index_column("id_parameter", 1, 50)
-#
-#    print("# Writing eurostat_sector_parameters")
-#    database_import.write_to_sqlite(source_at_basic_price, "eurostat_sector_parameters")
-
-
 def _gross_domestic_product_2015(database):
     primes_parameters = database.table("primes_parameters", {})
     gross_domestic_product_in_euro = primes_parameters.reduce("id_parameter", 10)
     gross_domestic_product_2015 = gross_domestic_product_in_euro["2015"]
     return gross_domestic_product_2015
-
-
-# def _scaled_output_source_at_basic_price_2015(
-#    source_at_basic_price_europe,
-#    gross_domestic_product_2015,
-#    id_region,
-# ):
-#    id_region_europe = 0
-#    gross_domestic_product_2015_europe = gross_domestic_product_2015[id_region_europe]
-#    gross_domestic_product_2015_region = gross_domestic_product_2015[id_region]
-#    source_series = (
-#        source_at_basic_price_europe * gross_domestic_product_2015_region / gross_domestic_product_2015_europe
-#    )
-#    source = Table(source_series)
-#    source = source.insert_index_column("id_region", 0, id_region)
-#    return source
 
 
 def _fill_missing_values_for_final_energy_consumption(table):
@@ -572,24 +521,43 @@ def calculate_extra_primary_parameters(data_frame, database_import, micat_folder
         "id_primary_energy_carrier",
         micat_folder,
     )
+
     merged_nrg_bal = merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
-    coefficients = conversion_coefficients(merged_nrg_bal)
-    return coefficients
+    heat_in_carriers = merged_nrg_bal["heat_in"]
+    electricity_in_carriers = merged_nrg_bal["electricity_in"]
+    table = None
+    primary_energy_carrier_ids = heat_in_carriers.unique_index_values("id_primary_energy_carrier")
+    for carrier_id in primary_energy_carrier_ids:
+        heat_in = heat_in_carriers.reduce("id_primary_energy_carrier", carrier_id)
+        heat_in = heat_in.insert_index_column("id_parameter", 1, 20)
+        heat_in = heat_in.insert_index_column("id_primary_energy_carrier", 2, carrier_id)
+        if table is None:
+            table = heat_in
+        else:
+            table = Table.concat([table, heat_in])
+
+        electricity_in = electricity_in_carriers.reduce("id_primary_energy_carrier", carrier_id)
+        electricity_in = electricity_in.insert_index_column("id_parameter", 1, 21)
+        electricity_in = electricity_in.insert_index_column("id_primary_energy_carrier", 2, carrier_id)
+        table = Table.concat([table, electricity_in])
+    # For heat and electricity calculate the shares for each region
+    # Group by region + parameter (ignoring carrier for now) and sum across carriers
+    totals = table._data_frame.groupby(level=["id_region", "id_parameter"]).transform("sum")
+
+    # Divide each carrier value by the total -> share
+    table._data_frame = table._data_frame / totals
+
+    table._data_frame.fillna(0, inplace=True)
+
+    return table
 
 
 def merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names):
-    # Also see # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/47
     heat_in = merge_nrg_bal_entries(
         data_frame,
-        ["TI_EHG_MAPH_E", "TI_EHG_APH_E"],
+        ["GHP_MAPH", "GHP_APH"],
         primary_energy_carrier_mapping,
         year_column_names,
-    )
-
-    heat_out = merge_nrg_bal_output_entries(
-        data_frame,
-        ["TO_EHG_MAPH", "TO_EHG_APH"],
-        "H8000",  # Heat
     )
 
     electricity_in = merge_nrg_bal_entries(
@@ -598,40 +566,9 @@ def merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
         primary_energy_carrier_mapping,
         year_column_names,
     )
-
-    electricity_out = merge_nrg_bal_output_entries(
-        data_frame,
-        ["TO_EHG_MAPE", "TO_EHG_APE"],
-        "E7000",  # Electricity
-    )
-
-    chp_in = merge_nrg_bal_entries(
-        data_frame,
-        ["TI_EHG_MAPCHP_E", "TI_EHG_APCHP_E"],
-        primary_energy_carrier_mapping,
-        year_column_names,
-    )
-
-    chp_heat_out = merge_nrg_bal_output_entries(
-        data_frame,
-        ["TO_EHG_MAPCHP", "TO_EHG_APCHP"],
-        "H8000",  # Heat
-    )
-
-    chp_electricity_out = merge_nrg_bal_output_entries(
-        data_frame,
-        ["TO_EHG_MAPCHP", "TO_EHG_APCHP"],
-        "E7000",  # Electricity
-    )
-
     merged_nrg_bal = {
         "heat_in": Table(heat_in),
-        "heat_out": Table(heat_out),
         "electricity_in": Table(electricity_in),
-        "electricity_out": Table(electricity_out),
-        "chp_in": Table(chp_in),
-        "chp_heat_out": Table(chp_heat_out),
-        "chp_electricity_out": Table(chp_electricity_out),
     }
     return merged_nrg_bal
 
