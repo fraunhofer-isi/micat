@@ -32,12 +32,9 @@ def main():
     utilization_file_path = import_folder + "/renewable_energy_system_utilization_eurostat.xlsx"
 
     # output_at_basic_price_file_path = import_folder + "/output_at_basic_price.xlsx"
-    # output_at_basic_price_file_path = import_folder + "/output_at_basic_price.xlsx"
 
     population_file_path = import_folder + "/population.xlsx"
 
-    # risk_coefficient_file_path = import_folder + "/risk_coefficient_of_suppliers.xlsx"
-    # imported_energy_file_path = import_folder + "/average_monthly_imported_energy.xlsx"
     # risk_coefficient_file_path = import_folder + "/risk_coefficient_of_suppliers.xlsx"
     # imported_energy_file_path = import_folder + "/average_monthly_imported_energy.xlsx"
 
@@ -111,11 +108,9 @@ def main():
             )
 
             # _import_output_source_at_basic_price_2015(
-            # _import_output_source_at_basic_price_2015(
             #    output_at_basic_price_file_path,
             #    database,
             #    database_import,
-            # )
             # )
 
             _import_population(
@@ -125,11 +120,9 @@ def main():
             )
 
             # _import_supplier_diversity(
-            # _import_supplier_diversity(
             #    risk_coefficient_file_path,
             #    imported_energy_file_path,
             #    database_import,
-            # )
             # )
         elif dataset["code"] == "sdg_07_60":
             regional_data_frame = regional_data_frame[regional_data_frame["incgrp"] == "TOTAL"]
