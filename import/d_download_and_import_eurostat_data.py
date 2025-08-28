@@ -251,6 +251,7 @@ def _create_data_for_primary_energy_carrier(
     parameter_table = _fill_missing_values_for_primary_parameters(parameter_table)
 
     print("# Writing eurostat_primary_parameters")
+
     database_import.write_to_sqlite(parameter_table, "eurostat_primary_parameters")
 
 
@@ -534,7 +535,10 @@ def calculate_extra_primary_parameters(data_frame, database_import, micat_folder
     electricity_in_carriers = merged_nrg_bal["electricity_in"]
     table = None
     primary_energy_carrier_ids = heat_in_carriers.unique_index_values("id_primary_energy_carrier")
+    region_ids = heat_in_carriers.unique_index_values("id_region")
+
     for carrier_id in primary_energy_carrier_ids:
+        # HEAT
         heat_in = heat_in_carriers.reduce("id_primary_energy_carrier", carrier_id)
         heat_in = heat_in.insert_index_column("id_parameter", 1, 20)
         heat_in = heat_in.insert_index_column("id_primary_energy_carrier", 2, carrier_id)
@@ -543,9 +547,20 @@ def calculate_extra_primary_parameters(data_frame, database_import, micat_folder
         else:
             table = Table.concat([table, heat_in])
 
+        # ELECTRICITY
         electricity_in = electricity_in_carriers.reduce("id_primary_energy_carrier", carrier_id)
+        # Check if some entries are missing
+        existing_regions = electricity_in.unique_index_values("id_region")
+        missing_regions = set(region_ids) - set(existing_regions)
+        if missing_regions:
+            for region in missing_regions:
+                electricity_in._data_frame.loc[region] = {}
+            electricity_in._data_frame = electricity_in._data_frame.fillna(0)
+            electricity_in._data_frame = electricity_in._data_frame.sort_index()
+
         electricity_in = electricity_in.insert_index_column("id_parameter", 1, 21)
         electricity_in = electricity_in.insert_index_column("id_primary_energy_carrier", 2, carrier_id)
+
         table = Table.concat([table, electricity_in])
     # For heat and electricity calculate the shares for each region
     # Group by region + parameter (ignoring carrier for now) and sum across carriers
@@ -573,6 +588,7 @@ def merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
         primary_energy_carrier_mapping,
         year_column_names,
     )
+
     merged_nrg_bal = {
         "heat_in": Table(heat_in),
         "electricity_in": Table(electricity_in),
@@ -672,6 +688,7 @@ def join_primary_energy_carrier(data_frame, database_import, micat_folder):
         "id_primary_energy_carrier",
         micat_folder,
     )
+
     data_frame = mapping_siec_energy_carrier.apply_for(data_frame)
     return data_frame
 
