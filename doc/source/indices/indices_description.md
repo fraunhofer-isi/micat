@@ -229,7 +229,7 @@ into 7 main groups, shown in the table below:
 id_primary_energy_carrier
 -----
 
-The primary energy carriers have been grouped into 6 overarching energy carrier types:
+The primary energy carriers have been grouped into 7 overarching energy carrier types:
 
 | **Id** | **Label**                   | **Description**                                       |
 |--------|-----------------------------|-------------------------------------------------------|
@@ -239,6 +239,8 @@ The primary energy carriers have been grouped into 6 overarching energy carrier 
 | **4**  | Biomass And Renewable Waste | Biomass And Non\-Renewable Waste                      |
 | **5**  | Renewables                  | PV, Wind, Geothermal, Tidal, etc.                     |
 | **6**  | Other                       | Other \(incl\. Nuclear, Non\-Renewable Waste, etc\.\) |
+| **7**  | Electricity                 | Electricity used in the generation of H2 and heat     |
+
 
 
 *This table is from back_end/import/public/id_primary_energy_carriers.xlsx*
@@ -246,9 +248,10 @@ The primary energy carriers have been grouped into 6 overarching energy carrier 
 *Details about the mapping of energy carriers to these groups can be found in*
 *back_end/import/public/mapping__final_energy_carrier__primary_energy_carrier.xlsx*
 
-Given the fact that electricity, heat, and H2 and synthetic fuels need to be generated
-from primary energy carriers (see Chapter below), they are not listed among 
-primary energy carriers.
+Given the fact that heat, and H2 and synthetic fuels can also be generated
+from electricity (see Chapter below), electricity is also listed among 
+primary energy carriers to simplify the calculation. However, electricity
+is not a primary energy carrier in the classical sense, so the necessary electricity for the generation of H2 and heat is later converted back to its primary energy sources.
 
 id_indicator
 -

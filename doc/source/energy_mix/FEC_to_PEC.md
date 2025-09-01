@@ -13,97 +13,129 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 FEC to PEC conversion
 ===
 
-**A.** **Total primary energy saving** for several years for each primary energy carrier:
+Default hydrogen/synthetic fuel generation mix
+-
 
-$\Delta E_{{\rm P}, pe, ss, a, y} = \Delta E_{{\rm P_{con}}, pe, ss, a, y} + \Delta E_{{\rm P_{map}}pe, ss, a, y}$
+The hydrogen/synthetic fuel generation mix is currently not country-specific, but global. It is assumed that hydrogen and synthetic fuels are generated using the following shares of primary energy carriers: 
 
-$\Delta E_{{\rm P}, pe, ss, a, y} =$ Total primary energy savings 
+| id_primary_energy_carrier | Label                       | Share |
+|---------------------------|-----------------------------|-------|
+| 1                         | Oil                         | 0.00  |
+| 2                         | Coal                        | 0.20  |
+| 3                         | Gas                         | 0.75  |
+| 4                         | Biomass And Renewable Waste | 0.00  |
+| 5                         | Renewables                  | 0.00  |
+| 6                         | Other                       | 0.00  |
+| 7                         | Electricity                 | 0.05  |
 
-$\Delta E_{{\rm P_{con}}, pe, ss, a, y} =$ Converted primary energy saving from electricity and heat generation
+This table is from /import/raw_data/fraunhofer/hydrogen_synthetic_fuels_generation.xlsx.
 
-$\Delta E_{{\rm P_{map}}pe, ss, a, y} =$ mapping of $\Delta E_{e, ss, a, y}$ to primary energy carriers
+Default heat generation mix
+-
 
+From the Eurostat Complete Energy Balances [nrg_bal_c] (download already implemented, but for other data), download [nrg_bal] : [GHP_MAPH] & [GHP_APH].
 
+Add up the two tables index-wise (so that only values with the exactly same indeces are added). Map them using import/raw_data/eurostat/mapping__siec__energy_carrier.xlsx to id_primary_energy_carrier (one of the two columns).
 
-**B.** **Primary energy saving** for a given id_primary_energy_carrier, id_action_type and year:
+Then, calculate the share of each of the 7 primary energy carriers compared to the total of all 7:
 
-$\Delta E_{{\rm P_{con}}, pe, ss, a, y} =k_{{\rm heat}, pe, y} \cdot \Delta E_{{\rm heat}, ss, a, y} + k_{{\rm elec}, pe, y} \cdot (\Delta E_{{\rm elec}, ss, a, y} + k_{{\rm h2}, y} \cdot \Delta E_{{\rm H2}, ss, a, y})$
+$`k_{{\rm heat}, c, pe, y} = \frac{E_{\rm{heat}, c, pe, y}}{\sum_{pe} E_{\rm{heat}, c, pe, y}}`$
 
-$\Delta E_{{\rm P_{con}}, pe, ss, a, y}$: Conventional primary energy saving for primary energy carrier $pe$ and year $y$ for heat and electricity
+with $`k_{{\rm heat}, c, pe, y}`$ being the heat coefficient (id_parameter = 20) for a given country _c_, primary energy carrier _pe_, and year _y_ and $`E_{\rm{heat}, c, pe, y}`$ the heat generated from primary energy carrier _pe_ ([GHP_MAPH] + [GHP_APH]).
 
-$k_{{\rm heat}, pe, y}$: Coefficient for heat (id_parameter = 20)
+Default electricity generation mix
+-
 
-$k_{{\rm elec}, pe, y}$: Coefficient for electricity (id_parameter = 21)
+From the Eurostat Complete Energy Balances [nrg_bal_c] (already implemented, but for other data), download [nrg_bal] : [GEP].
 
-$k_{{\rm H2}, pe, y}$: Coefficient for H2 and synthetic fuels (id_parameter = 22)
+Map the table using import/raw_data/eurostat/mapping__siec__energy_carrier.xlsx to id_primary_energy_carrier (one of the two columns).
 
-$\Delta E_{{\rm elec}, ss, a, y} =$ Final energy saving for electricity (= $\Delta E_{e, ss, a, y}$ for e=1), follows from [here](./lambda_chi.md)
+Then, calculate the share of each of the 7 primary energy carriers compared to the total of all 7:
 
-$\Delta E_{{\rm heat}, ss, a, y} =$ Final energy saving for heat (= $\Delta E_{e, ss, u, y}$ for e=7), follows from #24
+$`k_{{\rm elec}, c, pe, y} = \frac{E_{\rm{elec}, c, pe, y}}{\sum_{pe} E_{\rm{elec}, c, pe, y}}`$
 
-$\Delta E_{{\rm H2}, ss, a, y} =$ Final energy saving for hydrogen and synthetic carburants (= $\Delta E_{e, ss, a, y}$ for e=8), follows from [here](./lambda_chi.md)
+with $`k_{{\rm elec}, c, pe, y}`$ being the electricity coefficient (id_parameter = 21) for a given country _c_, primary energy carrier _pe_, and year _y_ and $`E_{\rm{elec}, c, pe, y}`$ the electricity generated from primary energy carrier _pe_ ([GEP]).
 
-**C.** **Import script for coefficients**
+The tables for heat and electricity generation mix can be combined, using their id_final_energy_carrier (elec = 1, heat = 6). For ex-ante analysis, analogous but confidential tables from the EU Reference Scenario 2020 are used instead (with data stored in the confidential database).
 
-$k_{{\rm heat}, pe, y} =
-\begin{cases}
-      \frac{E_{{\rm in, heat}, pe, y} + \tau_{{\rm CHP, heat}, y} \cdot E_{{\rm in, CHP}, pe, y}}{E_{{\rm out, heat}, y} + E_{{\rm out, CHP}, heat, y}} \quad{\rm for} \quad E_{{\rm out, CHP, heat}, y} \neq 0\\ 
-      \frac{ E_{{\rm in, heat}, pe, y} }{ E_{{\rm out, heat}, y} } \quad{\rm for} \quad E_{{\rm out, CHP, heat}, y} = 0 \quad{\rm and} \quad E_{{\rm out, heat}, y} \neq 0\\ 
-0 \quad{\rm for} \quad E_{{\rm out, CHP, heat}, y} = 0 \quad{\rm and} \quad E_{{\rm out, heat}, y} = 0\\       
-\end{cases}$
+Import conversion efficiency data
+-
 
-$k_{{\rm elec}, pe, y} =
-\begin{cases}
-      \frac{E_{{\rm in, elec}, pe, y} + \tau_{{\rm CHP, elec}, y} \cdot E_{{\rm in, CHP}, pe, y}}{E_{{\rm out, elec}, y} + E_{{\rm out, CHP}, elec, y}} \quad{\rm for} \quad E_{{\rm out, CHP, elec}, y} \neq 0\\ 
-      \frac{ E_{{\rm in, elec}, pe, y} }{ E_{{\rm out, elec}, y} } \quad{\rm for} \quad E_{{\rm out, CHP, elec}, y} = 0 \quad{\rm and} \quad E_{{\rm out, elec}, y} \neq 0\\ 
-0 \quad{\rm for} \quad E_{{\rm out, CHP, elec}, y} = 0 \quad{\rm and} \quad E_{{\rm out, elec}, y} = 0\\       
-\end{cases}$
+The data on conversion efficiency is in the table /import/raw_data/fraunhofer/conversion_efficiency.xlsx. The data is not country-specific, but global. It contains the conversion efficiencies from primary energy carriers to final energy carriers electricity (id_final_energy_carrier = 1), heat (id_final_energy_carrier = 6), and hydrogen/synthetic fuels (id_final_energy_carrier = 7). The efficiency values for electricity and heat stem from the PRIMES Technology Assumptions (https://circabc.europa.eu/ui/group/8f5f9424-a7ef-4dbf-b914-1af1d12ff5d2/library/336c6844-6ee8-4861-91e9-7e86107c35ad/details?download=true), whereas the figures for H2 come from the Hydrogen Analysis Resource Center (https://h2tools.org/hyarc/hydrogen-data/hydrogen-production-energy-conversion-efficiencies).
 
-The figures from Eurostat's NRG balances for main activity producer (MAP) and autoproducer (AP) need to be merged:
+Rewire primary energy saving calculation
+=
 
-$E_{{\rm in, heat}, pe, y} = TI\_EHG\_MAPH\_E_{pe, y} + TI\_EHG\_APH\_E_{pe, y}$
+This script is necessary to convert final energy savings to primary energy savings. Some energy carriers can merely be remapped (oil, coal, gas, biomass and waste; $`\Delta E_{{\rm map}, c, pe, y}`$). Others need to be converted (electricity, heat, hydrogen and synthetic fuels; $`\Delta E_{{\rm con}, c, pe, y}`$). 
 
-$E_{{\rm out, heat}, y} = TO\_EHG\_MAPH_{{\rm heat}, y} + TO\_EHG\_APH_{{\rm heat}, y}$
+Remapping energy carriers
+-
 
-$E_{{\rm in, elec}, pe, y} = TI\_EHG\_MAPE\_E_{pe, y} + TI\_EHG\_APE\_E_{pe, y}$
+The savings from the final energy carriers oil, gas, coal, and biomass and waste can be carried over into primary energy savings, by remapping them accordingly:
 
-$E_{{\rm out, elec}, y} = TO\_EHG\_MAPE_{{\rm elec}, y} + TO\_EHG\_APE_{{\rm elec}, y}$
+| Energy carrier| id_final_energy_carrier | id_primary_energy_carrier |
+| ------ | ------ | ------ |
+| Oil | 2 | 1 |
+| Coal | 3 | 2 |
+| Gas | 4   | 3 |
+| Biomass | 5 | 4 |
 
-$E_{{\rm in, CHP}, pe, y} = TI\_EHG\_MAPCHP\_E_{pe, y} + TI\_EHG\_APCHP\_E_{pe, y}$
+This mapping is also available under import/raw_data/mapping__final_energy_carrier__primary_energy_carrier.xlsx.
 
-$E_{{\rm out, CHP}, heat, y} = TO\_EHG\_MAPCHP_{heat, y} + TO\_EHG\_APCHP_{heat, y}$
+_The conversion process should start with the conversion of hydrogen, then heat, and finally electricity. This is due to the fact, that for both hydrogen and heat conversion electricity might be used, which then has to be converted into its sources._
 
-$E_{{\rm out, CHP}, elec, y} = TO\_EHG\_MAPCHP_{elec, y} + TO\_EHG\_APCHP_{elec, y}$
+Conversion of hydrogen/synthetic fuel
+-
 
-Until now, the **nrg_bal** codes TI_EHG_MAPH_E, TI_EHG_MAPCHP, etc. are not mapped in our data import for id_parameter.
+All energy savings attributed to id_final_energy_carrier = 7 (id_fec7) need to be allocated to primary energy carriers and electricity. This is done by multiplying the energy savings for id_fec7 with the values in the imported hydrogen_synthetic_fuels_generation. Then, to account for conversion losses, each resulting value has to be divided by the related value from the table conversion_efficiency table:
 
-=> Since we do not need the energy data as parameters, but only the coefficients, we can hard code those relations in the import script for the coefficients.  
+$`\Delta E_{\rm{H2}, c, pe, y} = \Delta E_{c, e=7, y} \cdot \lambda_{\rm{H2}, pe, y} / \eta_{e=7, pe, y}`$
 
-During the import, the **siec** codes for the energy carriers need to be mapped 
-a) for the inputs: according to the already existing mapping mapping__siec__energy_carrier for id_primary_energy_carrier
-b) for the outputs: according to the id_final_energy_carrier (or use the only existing entry)
+$`\Delta E_{\rm{H2}, c, pe, y}`$ = primary energy savings for primary energy carrier _pe_, in country _c_, and year _y_.
 
-The **energy usage share of CHP plants** for the generation of electricity and heat (source) follows from an equivalence number ($\tau$) method:
+$`\Delta E_{c, e=7, y}`$ = final energy savings of hydrogen in country _c_ and year _y_.
 
-$\tau_{{\rm CHP, heat}, y} = \frac{\sigma_{{\rm I/O, heat}, y} \cdot E_{{\rm out, CHP, heat}, y}}{\sigma_{{\rm I/O, heat}, y} \cdot E_{{\rm out, CHP, heat}, y} + \sigma_{{\rm I/O, elec}, y} \cdot E_{{\rm out, CHP, elec}, y} }$
+$`\lambda_{\rm{H2}, pe, y}`$ = share of primary energy carrier _pe_ in generation of hydrogen in year _y_.
 
-$\tau_{{\rm CHP, elec}, y} = \frac{\sigma_{{\rm I/O, elec}, y} \cdot E_{{\rm out, CHP, elec}, y}}{\sigma_{{\rm I/O, elec}, y} \cdot E_{{\rm out, CHP, elec}, y} + \sigma_{{\rm I/O, heat}, y} \cdot E_{{\rm out, CHP, heat}, y}}$
+$`\eta_{e=7, pe, y}`$ = conversion efficiency from primary energy carrier _pe_ to final energy carrier = 7 (hydrogen) in year y.
 
-The result might be NaN for the case that both outputs are zero. However, that case is already handled in the equation for the coefficient. 
+Conversion of heat
+-
 
+All energy savings attributed to id_final_energy_carrier = 6 (id_fec6) need to be allocated to primary energy carriers and electricity. This is done by multiplying the energy savings for id_fec6 with the values in the table created above for electricity and heat generation mix. Then, to account for conversion losses, each resulting value has to be divided by the related value from the table conversion_efficiency table:
 
-The **input/output-ratios** $\sigma$ follow from:
+$`\Delta E_{\rm{heat}, c, pe, y} = \Delta E_{c, e=6, y} \cdot \lambda_{c, e=6, pe, y} / \eta_{e=6, pe, y}`$
 
-$\sigma_{{\rm I/O, elec}, y} = 
-\begin{cases}
-\frac{\sum_e E_{{\rm in, elec}, e, y}}{E_{{\rm out, elec}, y}} \quad{\rm for} \quad E_{{\rm out, elec}, y} \neq 0\\ 
-\frac{\sum_c \sigma_{{\rm I/O, elec}, y, c}}{n_c} \quad{\rm for} \quad E_{{\rm out, elec}, y} = 0\\     
-\end{cases}$
+$`\Delta E_{\rm{heat}, c, pe, y}`$ = primary energy savings for primary energy carrier _pe_, in country _c_, and year _y_.
 
-$\sigma_{{\rm I/O, heat}, y} = 
-\begin{cases}
-\frac{\sum_e E_{{\rm in, heat}, e, y}}{E_{{\rm out, heat}, y}} \quad{\rm for} \quad E_{{\rm out, heat}, y} \neq 0\\ 
-\frac{\sum_c \sigma_{{\rm I/O, heat}, y, c}}{n_c} \quad{\rm for} \quad E_{{\rm out, heat}, y} = 0\\     
-\end{cases}$
+$`\Delta E_{c, e=6, y}`$ = final energy savings of heat in country _c_ and year _y_.
 
-$c$ represents regions with $E_{out, ...} \neq \textrm{0}$ ($n_c$ being their number)
+$`\lambda_{c, e=6, pe, y}`$ = share of primary energy carrier _pe_ in generation of heat in country _c_ and year _y_.
+
+$`\eta_{e=6, pe, y}`$ = conversion efficiency from primary energy carrier _pe_ to final energy carrier = 6 (heat) in year y.
+
+Conversion of electricity
+-
+
+All electricity savings need to be converted to primary energy carriers now: this includes final energy savings attributed to id_final_energy_carrier = 1 (id_fec1, $`\Delta E_{c, e=1, y}`$), as well as electricity savings from avoided hydrogen and heat generation calculated above:
+
+$`\Delta E_{\rm{elec tot}, c, y} = \Delta E_{c, e=1, y} + \Delta E_{\rm{H2}, c, pe=7, y} + \Delta E_{\rm{heat}, c, pe=7, y}`$
+
+This is done by multiplying the energy savings for id_fec1 with the values in the table created above for electricity and heat generation mix. Then, to account for conversion losses, each resulting value has to be divided by the related value from the table conversion_efficiency table:
+
+$`\Delta E_{\rm{elec}, c, pe, y} = \Delta E_{\rm{elec tot}, c, y} \cdot \lambda_{c, e=1, pe, y} / \eta_{e=1, pe, y}`$
+
+$`\Delta E_{\rm{elec}, c, pe, y}`$ = primary energy savings for primary energy carrier _pe_, in country _c_, and year _y_.
+
+$`\Delta E_{c, e=1, y}`$ = final energy savings of electricity in country _c_ and year _y_.
+
+$`\lambda_{c, e=1, pe, y}`$ = share of primary energy carrier _pe_ in generation of electricity in country _c_ and year _y_.
+
+$`\eta_{e=1, pe, y}`$ = conversion efficiency from primary energy carrier _pe_ to final energy carrier = 1 (electricity) in year y.
+
+Summing up all primary energy savings
+-
+
+Finally, the sum of all these conversions and remappings gives us the primary energy savings:
+
+$`\Delta E_{c, pe, y} = \Delta E_{{\rm map}, c, pe, y} + \Delta E_{{\rm con}, c, pe, y} = \Delta E_{{\rm map}, c, pe, y} + \Delta E_{{\rm H2}, c, pe, y} + \Delta E_{{\rm heat}, c, pe, y} + \Delta E_{{\rm elec}, c, pe, y}`$
