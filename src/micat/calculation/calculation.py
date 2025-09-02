@@ -169,7 +169,6 @@ def _extra_nuclear_table(
 ):
     id_primary_energy_carrier_renewables = 5
     id_primary_energy_carrier_other = 6
-    id_primary_energy_carrier_electricity = 7
 
     base_entry = {
         "id_measure": id_measure,
@@ -182,9 +181,7 @@ def _extra_nuclear_table(
     renewables_entry["id_primary_energy_carrier"] = id_primary_energy_carrier_renewables
     other_entry = base_entry.copy()
     other_entry["id_primary_energy_carrier"] = id_primary_energy_carrier_other
-    electricity_entry = base_entry.copy()
-    electricity_entry["id_primary_energy_carrier"] = id_primary_energy_carrier_electricity
-    extra_nuclear_table = Table([renewables_entry, other_entry, electricity_entry])
+    extra_nuclear_table = Table([renewables_entry, other_entry])
     return extra_nuclear_table
 
 
