@@ -43,6 +43,34 @@ def main():
     # In case of issue with AnnualSeries, comment out "self._table_validator.validate(sorted_table, details)" in the
     # write_to_sqlite method of the DatabaseImport class
 
+    # hydrogen_synthetic_fuels_generation.xlsx
+    hydrogen_synthetic_fuels_generation_path = import_path + "/hydrogen_synthetic_fuels_generation.xlsx"
+    raw_hydrogen_synthetic_fuels_generation = pd.read_excel(hydrogen_synthetic_fuels_generation_path)
+    hydrogen_synthetic_fuels_generation = Table(raw_hydrogen_synthetic_fuels_generation)
+    id_parameter = 22
+    fraunhofer_hydrogen_synthetic_fuels_generation = hydrogen_synthetic_fuels_generation.insert_index_column(
+        "id_parameter",
+        1,
+        id_parameter,
+    )
+
+    database_import.write_to_sqlite(
+        fraunhofer_hydrogen_synthetic_fuels_generation, "fraunhofer_hydrogen_synthetic_fuels_generation"
+    )
+
+    # conversion_efficiency.xlsx
+    conversion_efficiency_path = import_path + "/conversion_efficiency.xlsx"
+    raw_conversion_efficiency = pd.read_excel(conversion_efficiency_path)
+    conversion_efficiency = Table(raw_conversion_efficiency)
+    id_parameter = 65
+    fraunhofer_conversion_efficiency = conversion_efficiency.insert_index_column(
+        "id_parameter",
+        1,
+        id_parameter,
+    )
+
+    database_import.write_to_sqlite(fraunhofer_conversion_efficiency, "fraunhofer_conversion_efficiency")
+
 
 if __name__ == "__main__":
     main()
