@@ -9,9 +9,7 @@ import pandas as pd
 import requests
 from config import import_config
 
-from micat.data_import.conversion_coefficients import conversion_coefficients
 from micat.data_import.database_import import DatabaseImport
-from micat.input.database import Database
 from micat.table.table import Table
 
 
@@ -288,14 +286,22 @@ def _import_supplier_diversity(
 
 
 def _clean_population_sheet(population_sheet):
-    population_frame = population_sheet.iloc[10:38]
+    population_frame = population_sheet.iloc[10:38, :-2]
     population_frame.columns = _population_column_names(population_sheet)
     return population_frame
 
 
 def _population_column_names(population_sheet):
+    def is_int_string(x):
+        try:
+            int(x)
+            return True
+        except (ValueError, TypeError):  # TypeError catches NaN
+            return False
+
     column_names = population_sheet.iloc[8]
     years = column_names[1:]
+    years = years[years.apply(is_int_string)]
     int_years = list(map(int, years))
     year_column_names = list(map(str, int_years))
     column_names = ["geo"] + year_column_names
