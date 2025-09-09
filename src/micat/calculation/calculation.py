@@ -275,15 +275,14 @@ def _interim_data(
         id_region,
         subsector_ids,
     )
-
-    # TO DO: provide value for all years instead of hard coded years
-    # Also see https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/156
-    h2_coefficient = _mocked_h2()  # primary_parameters.reduce('id_parameter', 22) TO DO #156
+    h2_coefficient = data_source.table("fraunhofer_hydrogen_synthetic_fuels_generation", {})
+    conversion_efficiency = data_source.table("fraunhofer_conversion_efficiency", {})
 
     conventional_primary_energy_saving = conversion.primary_energy_saving(
         energy_saving_by_final_energy_carrier,
         eurostat_primary_parameters,
         h2_coefficient,
+        conversion_efficiency,
     )
 
     additional_primary_energy_saving = _additional_primary_energy_saving(
