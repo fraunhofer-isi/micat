@@ -17,33 +17,52 @@ def primary_energy_saving(
     final_energy_saving,
     eurostat_primary_parameters,
     _h2_coefficient,
+    _conversion_efficiency,
 ):
+    # Clean up and interpolate conversion efficiency table
+    conversion_efficiency = _conversion_efficiency.copy()
+    del conversion_efficiency["id_parameter"]
+    conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(int)
+    all_years = range(
+        conversion_efficiency._data_frame.columns.min(), conversion_efficiency._data_frame.columns.max() + 1
+    )
+    conversion_efficiency._data_frame = conversion_efficiency._data_frame.reindex(columns=all_years).interpolate(axis=1)
+    conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(str)
+
+    # H2 and sythentic fuels
+    h2_saving = final_energy_saving.reduce("id_final_energy_carrier", [7])
+    del h2_saving["id_final_energy_carrier"]
+    common_years = h2_saving._data_frame.columns.intersection(_h2_coefficient._data_frame.columns)
+    h2_coefficient = _h2_coefficient.reduce("id_parameter", 22)
+    h2_coefficient._data_frame = h2_coefficient._data_frame[common_years]
+    h2_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 7)
+    h2_conversion_efficiency._data_frame = h2_conversion_efficiency._data_frame[common_years]
+    h2_saving_final = h2_saving * h2_coefficient / h2_conversion_efficiency
+
+    # Heat
     heat_saving = final_energy_saving.reduce("id_final_energy_carrier", [6])
     del heat_saving["id_final_energy_carrier"]
+    heat_coefficient = eurostat_primary_parameters.reduce("id_parameter", 20)
+    heat_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 6)
+    heat_conversion_efficiency._data_frame = heat_conversion_efficiency._data_frame[common_years]
+    heat_saving_final = heat_saving * heat_coefficient / heat_conversion_efficiency
 
+    # Electricity
+    # Calculate total energy savings (includes avoided hydrogen and heat generation)
     electricity_saving = final_energy_saving.reduce("id_final_energy_carrier", [1])
     del electricity_saving["id_final_energy_carrier"]
-
-    heat_coefficient = eurostat_primary_parameters.reduce("id_parameter", 20)
+    heat = heat_saving_final.reduce("id_primary_energy_carrier", [7])
+    del heat["id_primary_energy_carrier"]
+    h2 = h2_saving_final.reduce("id_primary_energy_carrier", [7])
+    del h2["id_primary_energy_carrier"]
+    electricity_total = electricity_saving + heat + h2
+    # Then calculate primary energy savings for electricity
     electricity_coefficient = eurostat_primary_parameters.reduce("id_parameter", 21)
+    electricity_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 1)
+    electricity_conversion_efficiency._data_frame = electricity_conversion_efficiency._data_frame[common_years]
+    electricity_saving_final = electricity_total * electricity_coefficient / electricity_conversion_efficiency
 
-    # TO DO: remove this is comments if h2 is a constant
-    # Also see https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/156
-
-    # h2_saving = final_energy_saving.reduce("id_final_energy_carrier", 8)
-    # h2_saving_times_h2_coefficient = multiply_dataframe_with_series(h2_saving, h2_coefficient)
-    # h2_saving_times_h2_coefficient_times_electricity_coefficient =\
-    #     merge_and_multiply_tables(h2_saving_times_h2_coefficient, electricity_coefficient)
-
-    # TO DO implement equation #47 B when the data is available
-
-    heat_saving_times_coefficient = heat_saving * heat_coefficient
-    electricity_saving_times_coefficient = electricity_saving * electricity_coefficient
-
-    result = (
-        heat_saving_times_coefficient + electricity_saving_times_coefficient
-    )  # + h2_saving_times_h2_coefficient_times_electricity_coefficient
-    return result
+    return heat_saving_final + electricity_saving_final + h2_saving_final
 
 
 def convert_units_of_measure_specific_parameters(measure_specific_parameters):
