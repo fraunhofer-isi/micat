@@ -8,16 +8,16 @@ from micat.calculation.economic import investment, population, primes
 
 # pylint: disable=duplicate-code
 def impact_on_gross_domestic_product(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     data_source,
     id_region,
 ):
     annual_investment_in_euro = investment.annual_investment_cost_in_euro(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
     )
 
-    action_type_ids = final_energy_saving_by_action_type.unique_index_values("id_action_type")
+    action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
 
     e3m_parameters = data_source.table(
         "e3m_parameters",

@@ -238,7 +238,6 @@ def _create_data_for_primary_energy_carrier(
     )
 
     parameter_table = Table.concat([parameter_table, extra_primary_parameters_table])
-
     parameter_table = _fill_missing_values_for_primary_parameters(parameter_table)
 
     print("# Writing eurostat_primary_parameters")

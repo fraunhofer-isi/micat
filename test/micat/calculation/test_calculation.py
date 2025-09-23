@@ -70,7 +70,7 @@ def mocked_table():
 def mocked_front_end_arguments():
     return {
         "id_region": 1,
-        "final_energy_saving_by_action_type": mocked_savings(),
+        "final_energy_saving_or_capacities": mocked_savings(),
         "measure_specific_parameters": mocked_parameters(),
         "parameters": mocked_parameters(),
         "population_of_municipality": "mocked_population",
@@ -284,7 +284,7 @@ class TestPrivateApi:
 
             assert arguments["id_region"] == 1
 
-            final_energy_savings = arguments["final_energy_saving_by_action_type"]
+            final_energy_savings = arguments["final_energy_saving_or_capacities"]
             first_value = final_energy_savings["2020"][1, 3, 8]
             assert first_value == 1
             assert arguments["parameters"] == "undefined"
@@ -332,10 +332,10 @@ class TestPrivateApi:
         Mock(),
     )
     def test_interim_data(self):
-        mocked_final_energy_saving_by_action_type = Mock()
+        mocked_final_energy_saving_or_capacities = Mock()
 
         result = calculation._interim_data(
-            mocked_final_energy_saving_by_action_type,
+            mocked_final_energy_saving_or_capacities,
             "mocked_data_source",
             "mocked_id_region",
             "mocked_years",

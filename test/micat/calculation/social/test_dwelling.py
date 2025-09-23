@@ -20,17 +20,17 @@ def test_number_of_affected_dwellings():
     data_source = Mock()
 
     def mocked_measure_specific_calculation(
-        _final_energy_saving_by_action_type,
+        _final_energy_saving_or_capacities,
         _determine_table_for_measure,
         provide_default_table,
     ):
         provide_default_table(
-            'mocked_id_measure',
-            'mocked_id_subsector',
-            'mocked_id_action_type',
-            'mocked_savings',
+            "mocked_id_measure",
+            "mocked_id_subsector",
+            "mocked_id_action_type",
+            "mocked_savings",
         )
-        return 'mocked_result'
+        return "mocked_result"
 
     data_source.measure_specific_calculation = mocked_measure_specific_calculation
 
@@ -39,33 +39,33 @@ def test_number_of_affected_dwellings():
     result = dwelling.number_of_affected_dwellings(
         final_energy_savings_by_action_type,
         data_source,
-        'mocked_id_region',
-        'mocked_population_of_municipality',
+        "mocked_id_region",
+        "mocked_population_of_municipality",
     )
-    assert result == 'mocked_result'
+    assert result == "mocked_result"
 
 
-@patch(population.scale_by_population, 'mocked_result')
+@patch(population.scale_by_population, "mocked_result")
 def test_dwelling_stock():
     result = dwelling.dwelling_stock(
         Mock(),
         Mock(),
-        'mocked_id_region',
-        'mocked_population_of_municipality',
+        "mocked_id_region",
+        "mocked_population_of_municipality",
     )
-    assert result == 'mocked_result'
+    assert result == "mocked_result"
 
 
-@patch(extrapolation.extrapolate, 'mocked_result')
+@patch(extrapolation.extrapolate, "mocked_result")
 def test_improvement_actions_per_energy_unit():
     data_source = Mock()
-    result = dwelling._improvement_actions_per_energy_unit(data_source, 'mocked_years')
-    assert result == 'mocked_result'
+    result = dwelling._improvement_actions_per_energy_unit(data_source, "mocked_years")
+    assert result == "mocked_result"
 
 
 class TestProvideDefaultNumberOfAffectedDwellings:
     def test_for_different_subsector(self):
-        energy_savings = AnnualSeries({'2000': 1, '2010': 2})
+        energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
         id_subsector = 18
@@ -73,15 +73,15 @@ class TestProvideDefaultNumberOfAffectedDwellings:
         result = dwelling._provide_default_number_of_affected_dwellings(
             id_measure,
             id_subsector,
-            'mocked__id_action_type',
+            "mocked__id_action_type",
             energy_savings,
-            'mocked_improvement_actions_per_energy_unit',
+            "mocked_improvement_actions_per_energy_unit",
         )
-        assert result['2000'][id_measure] == 0
-        assert result['2010'][id_measure] == 0
+        assert result["2000"][id_measure] == 0
+        assert result["2010"][id_measure] == 0
 
     def test_for_id_action_type_1(self):
-        energy_savings = AnnualSeries({'2000': 1, '2010': 2})
+        energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
         id_subsector = 17
@@ -96,11 +96,11 @@ class TestProvideDefaultNumberOfAffectedDwellings:
             energy_savings,
             improvement_actions_per_energy_unit,
         )
-        assert result['2000'][id_measure] == 2
-        assert result['2010'][id_measure] == 4
+        assert result["2000"][id_measure] == 2
+        assert result["2010"][id_measure] == 4
 
     def test_for_id_action_type_4(self):
-        energy_savings = AnnualSeries({'2000': 1, '2010': 2})
+        energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
         id_subsector = 17
@@ -111,13 +111,13 @@ class TestProvideDefaultNumberOfAffectedDwellings:
             id_subsector,
             id_action_type,
             energy_savings,
-            'mocked_improvement_actions_per_energy_unit',
+            "mocked_improvement_actions_per_energy_unit",
         )
-        assert result['2000'][id_measure] == 0
-        assert result['2010'][id_measure] == 0
+        assert result["2000"][id_measure] == 0
+        assert result["2010"][id_measure] == 0
 
     def test_for_id_action_type_5(self):
-        energy_savings = AnnualSeries({'2000': 1, '2010': 2})
+        energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
         id_subsector = 17
@@ -128,13 +128,13 @@ class TestProvideDefaultNumberOfAffectedDwellings:
             id_subsector,
             id_action_type,
             energy_savings,
-            'mocked_improvement_actions_per_energy_unit',
+            "mocked_improvement_actions_per_energy_unit",
         )
-        assert result['2000'][id_measure] == 0
-        assert result['2010'][id_measure] == 0
+        assert result["2000"][id_measure] == 0
+        assert result["2010"][id_measure] == 0
 
     def test_for_unknown_id_action_type(self):
-        energy_savings = AnnualSeries({'2000': 1, '2010': 2})
+        energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
         id_subsector = 17
@@ -146,36 +146,36 @@ class TestProvideDefaultNumberOfAffectedDwellings:
                 id_subsector,
                 id_action_type,
                 energy_savings,
-                'mocked_improvement_actions_per_energy_unit',
+                "mocked_improvement_actions_per_energy_unit",
             )
 
 
 class TestMeasureSpecificNumberOfAffectedDwellings:
-    @patch(DataSource.row_table, 'mocked_result')
+    @patch(DataSource.row_table, "mocked_result")
     def test_non_residential(self):
         id_subsector = 1
         extrapolated_final_parameters = Mock()
         mocked_dwelling_stock = Mock()
 
         result = dwelling._measure_specific_number_of_affected_dwellings(
-            'mocked_id_measure',
+            "mocked_id_measure",
             id_subsector,
-            'mocked_id_action_type',
-            'mocked_energy_saving',
+            "mocked_id_action_type",
+            "mocked_energy_saving",
             extrapolated_final_parameters,
-            'mocked_improvement_actions_per_energy_unit',
+            "mocked_improvement_actions_per_energy_unit",
             mocked_dwelling_stock,
         )
-        assert result == 'mocked_result'
+        assert result == "mocked_result"
 
     class TestResidential:
         extrapolated_final_parameters = Mock()
 
         @patch(
             dwelling._measure_specific_number_of_affected_dwellings_others,
-            'mocked_value',
+            "mocked_value",
         )
-        @patch(DataSource.row_table, 'mocked_result')
+        @patch(DataSource.row_table, "mocked_result")
         def test_for_action_type_123(self):
             id_action_type = 1
             id_subsector = 17
@@ -184,56 +184,56 @@ class TestMeasureSpecificNumberOfAffectedDwellings:
             mocked_dwelling_stock = Mock()
 
             result = dwelling._measure_specific_number_of_affected_dwellings(
-                'mocked_id_measure',
+                "mocked_id_measure",
                 id_subsector,
                 id_action_type,
-                'mocked_energy_saving',
+                "mocked_energy_saving",
                 extrapolated_final_parameters,
                 mocked_improvement_actions_per_energy_unit,
                 mocked_dwelling_stock,
             )
-            assert result == 'mocked_result'
+            assert result == "mocked_result"
 
         @patch(
             dwelling._measure_specific_number_of_affected_dwellings_others,
-            'mocked_value',
+            "mocked_value",
         )
         @patch(DataSource.row_table)
-        @patch(dwelling._result_to_table, 'mocked_result')
+        @patch(dwelling._result_to_table, "mocked_result")
         def test_action_type_4(self):
             id_action_type = 4
             id_subsector = 17
             mocked_dwelling_stock = Mock()
 
             result = dwelling._measure_specific_number_of_affected_dwellings(
-                'mocked_id_measure',
+                "mocked_id_measure",
                 id_subsector,
                 id_action_type,
-                'mocked_energy_saving',
+                "mocked_energy_saving",
                 self.extrapolated_final_parameters,
-                'mocked_improvement_actions_per_energy_unit',
+                "mocked_improvement_actions_per_energy_unit",
                 mocked_dwelling_stock,
             )
-            assert result == 'mocked_result'
+            assert result == "mocked_result"
 
-        @patch(DataSource.row_table, 'mocked_result')
+        @patch(DataSource.row_table, "mocked_result")
         def test_action_type_5_6(self):
             id_action_type = 5
             id_subsector = 17
             mocked_dwelling_stock = Mock()
 
             result = dwelling._measure_specific_number_of_affected_dwellings(
-                'mocked_id_measure',
+                "mocked_id_measure",
                 id_subsector,
                 id_action_type,
-                'mocked_energy_saving',
+                "mocked_energy_saving",
                 self.extrapolated_final_parameters,
-                'mocked_improvement_actions_per_energy_unit',
+                "mocked_improvement_actions_per_energy_unit",
                 mocked_dwelling_stock,
             )
-            assert result == 'mocked_result'
+            assert result == "mocked_result"
 
-        @patch(DataSource.row_table, 'mocked_row_table')
+        @patch(DataSource.row_table, "mocked_row_table")
         def test_action_type_other(self):
             id_action_type = 8
             id_subsector = 17
@@ -241,12 +241,12 @@ class TestMeasureSpecificNumberOfAffectedDwellings:
 
             with raises(KeyError):
                 dwelling._measure_specific_number_of_affected_dwellings(
-                    'mocked_id_measure',
+                    "mocked_id_measure",
                     id_subsector,
                     id_action_type,
-                    'mocked_energy_saving',
+                    "mocked_energy_saving",
                     self.extrapolated_final_parameters,
-                    'mocked_improvement_actions_per_energy_unit',
+                    "mocked_improvement_actions_per_energy_unit",
                     mocked_dwelling_stock,
                 )
 
@@ -259,7 +259,7 @@ class TestMeasureSpecificNumberOfAffectedDwellingsElectric:
 
             result = dwelling._measure_specific_number_of_affected_dwellings_electric(
                 extrapolated_final_parameters,
-                'mocked_dwelling_stock',
+                "mocked_dwelling_stock",
             )
             assert result == 0
 
@@ -283,13 +283,13 @@ class TestMeasureSpecificNumberOfAffectedDwellingsElectric:
 
     def test_with_number_of_affected_dwellings(self):
         extrapolated_final_parameters = Mock()
-        extrapolated_final_parameters.reduce = Mock('mocked_result')
+        extrapolated_final_parameters.reduce = Mock("mocked_result")
 
         result = dwelling._measure_specific_number_of_affected_dwellings_electric(
             extrapolated_final_parameters,
-            'mocked_dwelling_stock',
+            "mocked_dwelling_stock",
         )
-        assert result == 'mocked_result'
+        assert result == "mocked_result"
 
 
 class TestResultToTable:
@@ -297,8 +297,8 @@ class TestResultToTable:
         table = Table([{"id_foo": 1, "2000": 10}])
         result = dwelling._result_to_table(
             table,
-            'mocked_id_measure',
-            'mocked_years',
+            "mocked_id_measure",
+            "mocked_years",
         )
         assert result["2000"][1] == 10
 
@@ -307,18 +307,18 @@ class TestResultToTable:
         result = dwelling._result_to_table(
             series,
             1,
-            'mocked_years',
+            "mocked_years",
         )
         assert result["2000"][1] == 10
 
-    @patch(DataSource.row_table, 'mocked_result')
+    @patch(DataSource.row_table, "mocked_result")
     def test_with_value(self):
         result = dwelling._result_to_table(
-            'mocked_value',
-            'mocked_id_measure',
-            'mocked_years',
+            "mocked_value",
+            "mocked_id_measure",
+            "mocked_years",
         )
-        assert result == 'mocked_result'
+        assert result == "mocked_result"
 
 
 class TestMeasureSpecificNumberOfAffectedDwellingsOthers:
@@ -330,14 +330,14 @@ class TestMeasureSpecificNumberOfAffectedDwellingsOthers:
                 elif value == 43:  # annual renovation rate
                     return None
                 else:
-                    raise ValueError('unknown')
+                    raise ValueError("unknown")
 
             extrapolated_final_parameters = Mock()
             extrapolated_final_parameters.reduce = mocked_reduce
 
             improvement_actions_per_energy_unit = 1
 
-            mocked_table = Table([{'id_measure': 1, '2000': 2}])
+            mocked_table = Table([{"id_measure": 1, "2000": 2}])
             energy_saving = mocked_table
             dwelling_stock = mocked_table
 
@@ -347,7 +347,7 @@ class TestMeasureSpecificNumberOfAffectedDwellingsOthers:
                 improvement_actions_per_energy_unit,
                 dwelling_stock,
             )
-            assert result['2000'][1] == 2
+            assert result["2000"][1] == 2
 
         def test_with_annual_renovation_rate(self):
             def mocked_reduce(_id_name, value):
@@ -358,25 +358,25 @@ class TestMeasureSpecificNumberOfAffectedDwellingsOthers:
                 elif value == 48:  # improvement actions per energy unit
                     return 2
                 else:
-                    raise ValueError('unknown')
+                    raise ValueError("unknown")
 
             extrapolated_final_parameters = Mock()
             extrapolated_final_parameters.reduce = mocked_reduce
 
-            mocked_table = Table([{'id_measure': 1, '2000': 2}])
+            mocked_table = Table([{"id_measure": 1, "2000": 2}])
             energy_saving = mocked_table
             dwelling_stock = mocked_table
 
             result = dwelling._measure_specific_number_of_affected_dwellings_others(
                 energy_saving,
                 extrapolated_final_parameters,
-                'mocked_improvement_actions_per_energy_unit',
+                "mocked_improvement_actions_per_energy_unit",
                 dwelling_stock,
             )
-            assert result['2000'][1] == 3 / 100 * 2
+            assert result["2000"][1] == 3 / 100 * 2
 
         def test_with_number_of_affected_dwellings(self):
-            mocked_table = Table([{'id_measure': 1, '2000': 2}])
+            mocked_table = Table([{"id_measure": 1, "2000": 2}])
 
             extrapolated_final_parameters = Mock()
             extrapolated_final_parameters.reduce = Mock(mocked_table)
@@ -387,7 +387,7 @@ class TestMeasureSpecificNumberOfAffectedDwellingsOthers:
             result = dwelling._measure_specific_number_of_affected_dwellings_others(
                 energy_saving,
                 extrapolated_final_parameters,
-                'mocked_improvement_actions_per_energy_unit',
+                "mocked_improvement_actions_per_energy_unit",
                 dwelling_stock,
             )
-            assert result['2000'][1] == 2
+            assert result["2000"][1] == 2

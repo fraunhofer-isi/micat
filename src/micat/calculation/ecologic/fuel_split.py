@@ -8,17 +8,17 @@ from micat.table.table import merge_tables
 
 
 # pylint: disable=too-many-locals
-def fuel_split_by_action_type(final_energy_saving_by_action_type, data_source, id_region, subsector_ids, round=False):
+def fuel_split_by_action_type(final_energy_saving_or_capacities, data_source, id_region, subsector_ids, round=False):
     raw_lambda = _raw_lambda(
         data_source,
         id_region,
         subsector_ids,
     )
-    years = final_energy_saving_by_action_type.years
+    years = final_energy_saving_or_capacities.years
     basic_lambda = extrapolation.extrapolate(raw_lambda, years)
 
     measure_specific_lambda = data_source.measure_specific_calculation(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         _determine_lambda_for_measure,
         lambda id_measure, id_subsector, id_action_type, savings: _provide_default_lambda(
             id_measure,
@@ -29,7 +29,7 @@ def fuel_split_by_action_type(final_energy_saving_by_action_type, data_source, i
         ),
     )
 
-    action_type_ids = final_energy_saving_by_action_type.unique_index_values("id_action_type")
+    action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
 
     basic_chi = _basic_chi(
         data_source,
@@ -39,7 +39,7 @@ def fuel_split_by_action_type(final_energy_saving_by_action_type, data_source, i
     )
 
     measure_specific_chi = data_source.measure_specific_calculation(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         lambda id_measure, id_subsector, id_action_type, savings, _first, _second, _third: _determine_chi_for_measure(
             id_measure,
             id_subsector,

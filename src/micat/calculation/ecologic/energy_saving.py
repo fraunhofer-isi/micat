@@ -13,29 +13,29 @@ def energy_saving(primary_energy_saving_by_action_type):
 
 # pylint: disable=duplicate-code
 def energy_saving_by_final_energy_carrier(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     data_source,
     id_region,
     subsector_ids,
 ):
     fuel_split_by_action_type = fuel_split.fuel_split_by_action_type(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
         subsector_ids,
     )
-    saving_by_final_energy_carrier = _final_energy_saving_by_action_type_and_energy_carrier(
+    saving_by_final_energy_carrier = _final_energy_saving_or_capacities_and_energy_carrier(
         fuel_split_by_action_type,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
     )
     return saving_by_final_energy_carrier
 
 
-def _final_energy_saving_by_action_type_and_energy_carrier(
+def _final_energy_saving_or_capacities_and_energy_carrier(
     fuel_split_by_action_type,
-    final_energy_savings_by_action_type,
+    final_energy_saving_or_capacities,
 ):
-    final_energy_saving_by_energy_carrier = final_energy_savings_by_action_type * fuel_split_by_action_type
+    final_energy_saving_by_energy_carrier = final_energy_saving_or_capacities * fuel_split_by_action_type
     return final_energy_saving_by_energy_carrier
 
 

@@ -110,7 +110,7 @@ class TestPublicApi:
             sut.table = Mock(None)
 
             result = sut.measure_specific_calculation(
-                "mocked_final_energy_saving_by_action_type",
+                "mocked_final_energy_saving_or_capacities",
                 "mocked_determine_table_for_measure",
                 "mocked_provide_default_table",
             )
@@ -129,7 +129,7 @@ class TestPublicApi:
             sut.table = Mock(mocked_table)
 
             result = sut.measure_specific_calculation(
-                "mocked_final_energy_saving_by_action_type",
+                "mocked_final_energy_saving_or_capacities",
                 "mocked_determine_table_for_measure",
                 "mocked_provide_default_table",
             )
@@ -144,7 +144,7 @@ class TestPublicApi:
             sut.table = Mock(None)
 
             result = sut.measure_specific_parameter(
-                "mocked_final_energy_saving_by_action_type",
+                "mocked_final_energy_saving_or_capacities",
                 "mocked_id_parameter",
                 "mocked_provide_default_table",
                 "mocked_years",
@@ -165,7 +165,7 @@ class TestPublicApi:
             sut.table = Mock(mocked_parameter_table)
 
             result = sut.measure_specific_parameter(
-                "mocked_final_energy_saving_by_action_type",
+                "mocked_final_energy_saving_or_capacities",
                 "mocked_id_parameter",
                 "mocked_provide_default_table",
                 "mocked_years",
@@ -183,7 +183,7 @@ class TestPublicApi:
 
             with raises(ValueError):
                 sut.measure_specific_parameter(
-                    "mocked_final_energy_saving_by_action_type",
+                    "mocked_final_energy_saving_or_capacities",
                     "mocked_id_parameter",
                     "mocked_provide_default_table",
                     "mocked_years",
@@ -209,7 +209,7 @@ class TestPublicApi:
             sut.table = mocked_table_without_constants
 
             result = sut.measure_specific_parameter(
-                "mocked_final_energy_saving_by_action_type",
+                "mocked_final_energy_saving_or_capacities",
                 "mocked_id_parameter",
                 "mocked_provide_default_table",
                 "mocked_years",
@@ -222,7 +222,7 @@ class TestPublicApi:
         parameter_default_values.reduce = Mock()
 
         def mocked_measure_specific_parameter(
-            _final_energy_saving_by_action_type,
+            _final_energy_saving_or_capacities,
             _id_parameter,
             provide_default_value,
         ):
@@ -233,10 +233,10 @@ class TestPublicApi:
 
         sut.measure_specific_parameter = mocked_measure_specific_parameter
 
-        final_energy_saving_by_action_type = Mock()
+        final_energy_saving_or_capacities = Mock()
 
         result = sut.measure_specific_parameter_using_default_table(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             "mocked_id_parameter",
             parameter_default_values,
         )
@@ -792,14 +792,14 @@ class TestPrivateApi:
 
         @patch(DataSource._table_for_measure, mocked_table)
         def test_with_table(self):
-            final_energy_saving_by_action_type = Table(
+            final_energy_saving_or_capacities = Table(
                 [
                     {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 0},
                 ]
             )
 
             result = DataSource._loop_over_measures_and_collect_parameters(
-                final_energy_saving_by_action_type,
+                final_energy_saving_or_capacities,
                 "mocked_measure_ids_for_which_extra_data_exists",
                 "mocked_parameter_table",
                 "mocked_provide_default_value",
@@ -818,14 +818,14 @@ class TestPrivateApi:
 
         @patch(DataSource._table_for_measure, mocked_value_table)
         def test_with_value_table(self):
-            final_energy_saving_by_action_type = Table(
+            final_energy_saving_or_capacities = Table(
                 [
                     {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 0},
                 ]
             )
 
             result = DataSource._loop_over_measures_and_collect_parameters(
-                final_energy_saving_by_action_type,
+                final_energy_saving_or_capacities,
                 "mocked_measure_ids_for_which_extra_data_exists",
                 "mocked_parameter_table",
                 "mocked_provide_default_value",
@@ -845,14 +845,14 @@ class TestPrivateApi:
 
         @patch(DataSource._calculated_table_for_measure, mocked_table)
         def test_with_table(self):
-            final_energy_saving_by_action_type = Table(
+            final_energy_saving_or_capacities = Table(
                 [
                     {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 0},
                 ]
             )
 
             result = DataSource._loop_over_measures_and_collect_tables(
-                final_energy_saving_by_action_type,
+                final_energy_saving_or_capacities,
                 "mocked_measure_ids_for_which_extra_data_exists",
                 "mocked_measure_final_parameters",
                 "mocked_measure_parameters",
@@ -873,14 +873,14 @@ class TestPrivateApi:
 
         @patch(DataSource._calculated_table_for_measure, mocked_value_table)
         def test_with_value_table(self):
-            final_energy_saving_by_action_type = Table(
+            final_energy_saving_or_capacities = Table(
                 [
                     {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 0},
                 ]
             )
 
             result = DataSource._loop_over_measures_and_collect_tables(
-                final_energy_saving_by_action_type,
+                final_energy_saving_or_capacities,
                 "mocked_measure_ids_for_which_extra_data_exists",
                 "mocked_measure_final_parameters",
                 "mocked_measure_parameters",

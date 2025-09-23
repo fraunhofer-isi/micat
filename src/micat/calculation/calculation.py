@@ -20,6 +20,35 @@ from micat.series.annual_series import AnnualSeries
 from micat.table.table import Table
 
 
+def calculate_energy_produced(final_energy_saving_or_capacities, data_source, id_region, years):
+    capacity_factors = data_source.table("fraunhofer_capacity_factors", {})
+    # Interpolate capacity factors for missing years
+    _capacity_factors = capacity_factors._data_frame.copy()
+    _capacity_factors = _capacity_factors.loc[id_region]
+    _capacity_factors.columns = _capacity_factors.columns.astype(int)
+    all_years = range(_capacity_factors.columns.min(), _capacity_factors.columns.max() + 1)
+    _capacity_factors = _capacity_factors.reindex(columns=all_years).interpolate(axis=1)
+    _capacity_factors.columns = _capacity_factors.columns.astype(str)
+
+    # Multiply capacities with capacity factors
+    df1 = final_energy_saving_or_capacities._data_frame.reset_index()
+    df2 = _capacity_factors.reset_index()
+    df1_long = df1.melt(id_vars=["id_measure", "id_subsector", "id_action_type"], var_name="year", value_name="value")
+    df2_long = df2.melt(
+        id_vars=["id_parameter", "id_subsector", "id_action_type"], var_name="year", value_name="factor"
+    )
+    merged = df1_long.merge(df2_long, on=["id_subsector", "id_action_type", "year"], how="left")
+    merged["result"] = (
+        merged["value"] * merged["factor"] * (365 * 24 * 0.00008598)
+    )  # (365d/yr⋅24h/d⋅0.00008598ktoe/MWh)
+    energy_produced = merged.pivot_table(
+        index=["id_measure", "id_subsector", "id_action_type"], columns="year", values="result", aggfunc="first"
+    )
+
+    final_energy_saving_or_capacities._data_frame = energy_produced.sort_index(axis=1)  # Jahre sortieren
+    return final_energy_saving_or_capacities
+
+
 # pylint: disable=too-many-locals
 def calculate_indicator_data(
     http_request,
@@ -30,7 +59,7 @@ def calculate_indicator_data(
 
     # The arguments include:
     # id_region,
-    # final_energy_saving_by_action_type (dataframe including id_measure, id_subsector, id_action_type as index)
+    # final_energy_saving_or_capacities (dataframe including id_measure, id_subsector, id_action_type as index)
     # measure_specific_parameters (dictionary using id_measure as key)
     # parameters ( maps parameter_name => dataframe )
     # population_of_municipality (as int)
@@ -53,11 +82,22 @@ def calculate_indicator_data(
         parameters,
     )
 
-    final_energy_saving_by_action_type = arguments["final_energy_saving_by_action_type"]
-    years = final_energy_saving_by_action_type.years
+    final_energy_saving_or_capacities = arguments["final_energy_saving_or_capacities"]
+    years = final_energy_saving_or_capacities.years
+
+    # Check if subsectors belong to renewables (id >= 30) and calculate energy produced
+    if any(
+        id_subsector >= 30 for id_subsector in final_energy_saving_or_capacities.unique_index_values("id_subsector")
+    ):
+        final_energy_saving_or_capacities = calculate_energy_produced(
+            final_energy_saving_or_capacities,
+            data_source,
+            id_region,
+            years,
+        )
 
     interim_data = _interim_data(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
         years,
@@ -66,7 +106,7 @@ def calculate_indicator_data(
     _validate_data(interim_data)
 
     social_indicators = calculation_social.social_indicators(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         population_of_municipality,
         interim_data,
         data_source,
@@ -82,7 +122,7 @@ def calculate_indicator_data(
     _validate_data(ecologic_indicators)
 
     economic_indicators = calculation_economic.economic_indicators(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         population_of_municipality,
         interim_data,
         ecologic_indicators,
@@ -93,7 +133,7 @@ def calculate_indicator_data(
     _validate_data(economic_indicators)
 
     cost_benefit_analysis_parameters = cost_benefit_analysis.parameters(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         id_region,
         data_source,
     )
@@ -242,7 +282,7 @@ def _front_end_arguments(http_request):
     id_region = int(query_parameters["id_region"])
     measures = query_parameters["savings"]
     measure_specific_parameters, measures = _extract_details_from_measures(measures)
-    final_energy_saving_by_action_type = Table(measures)
+    final_energy_saving_or_capacities = Table(measures)
 
     json = query_parameters["json"]
     parameters = json.get("parameters", {})
@@ -250,7 +290,7 @@ def _front_end_arguments(http_request):
 
     return {
         "id_region": id_region,
-        "final_energy_saving_by_action_type": final_energy_saving_by_action_type,
+        "final_energy_saving_or_capacities": final_energy_saving_or_capacities,
         "population_of_municipality": population_of_municipality,
         "parameters": parameters,
         "measure_specific_parameters": measure_specific_parameters,
@@ -259,24 +299,37 @@ def _front_end_arguments(http_request):
 
 # pylint: disable=duplicate-code
 def _interim_data(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     data_source,
     id_region,
     years,
 ):
-    # TODO: renewables
-    subsector_ids = final_energy_saving_by_action_type.unique_index_values("id_subsector")
+    subsector_ids = final_energy_saving_or_capacities.unique_index_values("id_subsector")
 
     eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
 
     energy_saving_by_final_energy_carrier = energy_saving.energy_saving_by_final_energy_carrier(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
         subsector_ids,
     )
+    # Interpolate missing years in h2_coefficient table
     h2_coefficient = data_source.table("fraunhofer_hydrogen_synthetic_fuels_generation", {})
+    h2_coefficient._data_frame.columns = h2_coefficient._data_frame.columns.astype(int)
+    all_years = range(h2_coefficient._data_frame.columns.min(), h2_coefficient._data_frame.columns.max() + 1)
+    h2_coefficient._data_frame = h2_coefficient._data_frame.reindex(columns=all_years).interpolate(axis=1)
+    h2_coefficient._data_frame.columns = h2_coefficient._data_frame.columns.astype(str)
+
+    # Clean up and interpolate conversion efficiency table
     conversion_efficiency = data_source.table("fraunhofer_conversion_efficiency", {})
+    del conversion_efficiency["id_parameter"]
+    conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(int)
+    all_years = range(
+        conversion_efficiency._data_frame.columns.min(), conversion_efficiency._data_frame.columns.max() + 1
+    )
+    conversion_efficiency._data_frame = conversion_efficiency._data_frame.reindex(columns=all_years).interpolate(axis=1)
+    conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(str)
 
     conventional_primary_energy_saving = conversion.primary_energy_saving(
         energy_saving_by_final_energy_carrier,

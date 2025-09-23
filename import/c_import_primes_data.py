@@ -23,13 +23,9 @@ def main():
     database_import = DatabaseImport(public_database_path)
 
     import_folder = raw_data_path + "/primes"
-    utilization_file_path = (
-        import_folder + "/renewable_energy_system_utilization_primes.xlsx"
-    )
+    utilization_file_path = import_folder + "/renewable_energy_system_utilization_primes.xlsx"
 
-    raw_sheets = pd.read_excel(
-        import_folder + "/reference_scenario.xlsx", sheet_name=None
-    )
+    raw_sheets = pd.read_excel(import_folder + "/reference_scenario.xlsx", sheet_name=None)
     sheets = _clean_sheets(raw_sheets)
 
     id_region_table = database.id_table("id_region")
@@ -56,6 +52,31 @@ def main():
     # includes following values of id_parameter:
     # 1: PP, Primary production
     # 2: GAE, Gross available energy
+
+    # Import shares_input_heat_electricity.xlsx
+    shares_input_heat_electricity_path = import_folder + "/shares_input_heat_electricity.xlsx"
+    shares_input_heat_electricity = pd.read_excel(shares_input_heat_electricity_path)
+    # Map id_final_energy_carrier to id_parameter
+
+    # map final_energy_carrier -> id_parameter
+    mapping_final_energy_carrier_to_parameter = {1: 21, 6: 20, 7: 22}
+    shares_input_heat_electricity["id_parameter"] = shares_input_heat_electricity["id_final_energy_carrier"].map(
+        mapping_final_energy_carrier_to_parameter
+    )
+    # drop id_final_energy_carrier (we don't need it anymore)
+    shares_input_heat_electricity = shares_input_heat_electricity.drop(columns=["id_final_energy_carrier"])
+
+    # reindex shares_input_heat_electricity on the same structure as parameter_table
+    shares_input_heat_electricity_indexed = shares_input_heat_electricity.set_index(
+        ["id_region", "id_parameter", "id_primary_energy_carrier"]
+    )
+
+    shares_input_heat_electricity_indexed.columns = shares_input_heat_electricity_indexed.columns.map(str)
+
+    primary_parameters._data_frame = primary_parameters._data_frame.add(
+        shares_input_heat_electricity_indexed, fill_value=0
+    )
+
     database_import.write_to_sqlite(primary_parameters, "primes_primary_parameters")
 
     Logger.info("# importing primes_technology_parameters")
@@ -117,12 +138,8 @@ def _extract_macroeconomic_data(sheets, id_region_table, id_parameter):
         df["id_region"] = id_region
         df.set_index(["id_region", "id_parameter"], inplace=True)
         df.columns = years
-        df.loc[df.index.get_level_values("id_parameter") == "GDP"] *= (
-            1e9  # convert from B€ (1000 M€) to €
-        )
-        df.loc[df.index.get_level_values("id_parameter") == "Population"] *= (
-            1e6  # convert from M to 1
-        )
+        df.loc[df.index.get_level_values("id_parameter") == "GDP"] *= 1e9  # convert from B€ (1000 M€) to €
+        df.loc[df.index.get_level_values("id_parameter") == "Population"] *= 1e6  # convert from M to 1
         region_table = Table(df)
         region_tables.append(region_table)
 

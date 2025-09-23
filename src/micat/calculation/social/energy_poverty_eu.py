@@ -7,12 +7,12 @@ from micat.calculation.social import affected_dwellings, energy_poverty_national
 from micat.table.table import Table, merge_tables
 
 
-def alleviation_of_energy_poverty_on_eu_level(final_energy_saving_by_action_type, data_source, id_region):
+def alleviation_of_energy_poverty_on_eu_level(final_energy_saving_or_capacities, data_source, id_region):
     # pylint: disable-msg=too-many-locals
     if id_region != 0:
         raise ValueError("Energy poverty on EU level can only be calculated for id_region == 0.")
 
-    population_table = _population_table(final_energy_saving_by_action_type, data_source)
+    population_table = _population_table(final_energy_saving_or_capacities, data_source)
 
     population_eu = population_table.reduce("id_region", 0)
     population_by_country = population_table.drop(0)
@@ -23,12 +23,12 @@ def alleviation_of_energy_poverty_on_eu_level(final_energy_saving_by_action_type
     for country_id in eu_country_ids:
         population_country = population_by_country.reduce("id_region", country_id)
         energy_savings_allocated_to_country = _energy_savings_allocated_to_country(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             population_country,
             population_eu,
         )
         number_of_affected_dwellings_allocated_to_country = _number_of_affected_dwellings_allocated_to_country(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             data_source,
             population_country,
             population_eu,
@@ -68,36 +68,36 @@ def alleviation_of_energy_poverty_on_eu_level(final_energy_saving_by_action_type
     return alleviation_of_energy_poverty_m2, alleviation_of_energy_poverty_2m
 
 
-def _population_table(final_energy_saving_by_action_type, data_source):
+def _population_table(final_energy_saving_or_capacities, data_source):
     eurostat = data_source.table("eurostat_parameters", {"id_parameter": "24"})
     primes = data_source.table("primes_parameters", {"id_parameter": "24"})
     population_table = merge_tables(eurostat, primes, False).reduce("id_parameter", 24)
     joined_years = population_table.columns + list(
-        set(final_energy_saving_by_action_type.columns) - set(population_table.columns)
+        set(final_energy_saving_or_capacities.columns) - set(population_table.columns)
     )
     population_table = population_table.reindex(columns=joined_years)
     population_table = population_table.fill_nan_values_by_extrapolation()
-    population_table = population_table.reindex(columns=final_energy_saving_by_action_type.columns)
+    population_table = population_table.reindex(columns=final_energy_saving_or_capacities.columns)
     return population_table
 
 
 def _energy_savings_allocated_to_country(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     population_country,
     population_eu,
 ):
-    energy_savings_allocated_to_country = final_energy_saving_by_action_type * population_country / population_eu
+    energy_savings_allocated_to_country = final_energy_saving_or_capacities * population_country / population_eu
     return energy_savings_allocated_to_country
 
 
 def _number_of_affected_dwellings_allocated_to_country(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     data_source,
     population_country,
     population_eu,
 ):
     number_of_affected_dwellings_eu = affected_dwellings.determine_number_of_affected_dwellings(
-        final_energy_saving_by_action_type, data_source, 0
+        final_energy_saving_or_capacities, data_source, 0
     )
     number_of_affected_dwellings_allocated_to_country = (
         number_of_affected_dwellings_eu * population_country / population_eu

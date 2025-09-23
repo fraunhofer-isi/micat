@@ -17,6 +17,7 @@ def main():
 
     import_path = raw_data_path + "/fraunhofer"
 
+    # statistical_transfers.xlsx
     cost_of_res_statistical_transfer_file_path = import_path + "/statistical_transfers.xlsx"
     raw_cost_of_res_statistical_transfer = pd.read_excel(cost_of_res_statistical_transfer_file_path)
     cost_of_res_statistical_transfer = Table(raw_cost_of_res_statistical_transfer)
@@ -26,8 +27,10 @@ def main():
         1,
         id_parameter,
     )
+    database_import.write_to_sqlite(fraunhofer_constant_parameters, "fraunhofer_constant_parameters")
 
-    capacity_factors_path = import_path + "/capacity_factors_res.xlsx"
+    # capacity_factors.xlsx
+    capacity_factors_path = import_path + "/capacity_factors.xlsx"
     raw_capacity_factors = pd.read_excel(capacity_factors_path)
     capacity_factors = Table(raw_capacity_factors)
     id_parameter = 64
@@ -36,9 +39,6 @@ def main():
         1,
         id_parameter,
     )
-
-    database_import.write_to_sqlite(fraunhofer_constant_parameters, "fraunhofer_constant_parameters")
-
     database_import.write_to_sqlite(fraunhofer_capacity_factors, "fraunhofer_capacity_factors")
     # In case of issue with AnnualSeries, comment out "self._table_validator.validate(sorted_table, details)" in the
     # write_to_sqlite method of the DatabaseImport class
@@ -53,7 +53,6 @@ def main():
         1,
         id_parameter,
     )
-
     database_import.write_to_sqlite(
         fraunhofer_hydrogen_synthetic_fuels_generation, "fraunhofer_hydrogen_synthetic_fuels_generation"
     )
@@ -68,7 +67,6 @@ def main():
         1,
         id_parameter,
     )
-
     database_import.write_to_sqlite(fraunhofer_conversion_efficiency, "fraunhofer_conversion_efficiency")
 
 

@@ -21,7 +21,7 @@ from micat.test_utils.isi_mock import Mock, patch
 class TestAlleviationOfEnergyPoverty:
     def test_on_eu_level(self):
         result = energy_poverty.alleviation_of_energy_poverty(
-            "mocked_final_energy_saving_by_action_type",
+            "mocked_final_energy_saving_or_capacities",
             "mocked_population_of_municipality",
             "mocked_reduction_of_energy_cost",
             "mocked_data_source",
@@ -32,7 +32,7 @@ class TestAlleviationOfEnergyPoverty:
 
     def test_on_national_level(self):
         result = energy_poverty.alleviation_of_energy_poverty(
-            "mocked_final_energy_saving_by_action_type",
+            "mocked_final_energy_saving_or_capacities",
             "mocked_population_of_municipality",
             "mocked_reduction_of_energy_cost",
             "mocked_data_source",

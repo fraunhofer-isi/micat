@@ -44,11 +44,11 @@ from micat.test_utils.isi_mock import Mock, patch, raises
 )
 class TestAlleviationOfEnergyPoverty:
     def test_mode_m2(self):
-        final_energy_saving_by_action_type = Mock()
+        final_energy_saving_or_capacities = Mock()
         data_source = Mock()
 
         result = energy_poverty_national.alleviation_of_energy_poverty_on_national_level(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             "mocked_population_of_municipality",
             "mocked_reduction_of_energy_cost",
             data_source,
@@ -57,11 +57,11 @@ class TestAlleviationOfEnergyPoverty:
         assert result["2000"][1] == 0.01
 
     def test_mode_2m(self):
-        final_energy_saving_by_action_type = Mock()
+        final_energy_saving_or_capacities = Mock()
         data_source = Mock()
 
         result = energy_poverty_national.alleviation_of_energy_poverty_on_national_level(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             "mocked_population_of_municipality",
             "mocked_reduction_of_energy_cost",
             data_source,
@@ -401,7 +401,7 @@ def test_share_of_energy_poor_population_owner():
     investment_in_euro = Mock()
 
     def mocked_measure_specific_calculation(
-        _final_energy_saving_by_action_type,
+        _final_energy_saving_or_capacities,
         determine_table_for_measure,
         _provide_default_share_of_energy_poor_population_owner,
     ):
@@ -444,7 +444,7 @@ def test_share_of_energy_poor_population_tenant():
     investment_in_euro = Mock()
 
     def mocked_measure_specific_calculation(
-        _final_energy_saving_by_action_type,
+        _final_energy_saving_or_capacities,
         determine_table_for_measure,
         _provide_default_share_of_energy_poor_population_owner,
     ):

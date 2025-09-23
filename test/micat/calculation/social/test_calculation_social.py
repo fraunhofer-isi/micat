@@ -29,7 +29,7 @@ def test_social_indicators():
     mocked_interim_data = Mock()
 
     result = calculation_social.social_indicators(
-        "mocked_final_energy_saving_by_action_type",
+        "mocked_final_energy_saving_or_capacities",
         "mocked_population_of_municipality",
         mocked_interim_data,
         "mocked_data_source",

@@ -10,9 +10,9 @@ from micat.test_utils.isi_mock import Mock, patch
 annual_investment_in_euro = Table(
     [
         {
-            'id_measure': 1,
-            'id_action_type': 1,
-            '2020': 10,
+            "id_measure": 1,
+            "id_action_type": 1,
+            "2020": 10,
         }
     ]
 )
@@ -23,15 +23,15 @@ annual_investment_in_euro = Table(
     annual_investment_in_euro,
 )
 def test_reduction_of_energy_cost():
-    final_energy_saving_by_action_type = Table(
+    final_energy_saving_or_capacities = Table(
         [
-            {'id_measure': 1, 'id_subsector': 1, 'id_action_type': 1, '2020': 0},
+            {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 0},
         ]
     )
 
     e3m_parameters = ValueTable(
         [
-            {'id_parameter': 39, 'id_action_type': 1, 'value': 3},
+            {"id_parameter": 39, "id_action_type": 1, "value": 3},
         ]
     )
 
@@ -39,8 +39,8 @@ def test_reduction_of_energy_cost():
     data_source.table = Mock(e3m_parameters)
 
     result = employment.additional_employment(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
-        'mocked_id_region',
+        "mocked_id_region",
     )
-    assert result['2020'][1] == 30
+    assert result["2020"][1] == 30

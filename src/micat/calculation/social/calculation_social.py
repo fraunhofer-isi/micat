@@ -13,7 +13,7 @@ from micat.calculation.social import (
 
 
 def social_indicators(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     population_of_municipality,
     interim_data,
     data_source,
@@ -25,7 +25,7 @@ def social_indicators(
     reduction_of_energy_cost = interim_data["reduction_of_energy_cost"]
 
     alleviation_of_energy_poverty_m2, alleviation_of_energy_poverty_2m = energy_poverty.alleviation_of_energy_poverty(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         population_of_municipality,
         reduction_of_energy_cost,
         data_source,
@@ -46,7 +46,7 @@ def social_indicators(
     )
 
     reduction_in_disability_adjusted_life_years_table = air_quality.reduction_in_disability_adjusted_life_years(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
     )
@@ -61,7 +61,7 @@ def social_indicators(
 
     avoided_excess_cold_weather_mortality_table = (
         indoor_health.avoided_excess_cold_weather_mortality_due_to_indoor_cold(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             data_source,
             id_region,
         )

@@ -6,17 +6,17 @@
 from micat.calculation import extrapolation
 
 
-def annual_investment_cost_in_euro(final_energy_saving_by_action_type, data_source):
+def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_source):
     # Investment cost is specified as cumulated data
     # in order to determine the annual investment, we subtract the
     # value of the previous year (or zero).
     # Also see https://gitlab.cc-asp.fraunhofer.de/isi/micat_confidential/-/issues/461
     cumulated_investment_cost = investment_cost_in_euro(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
     )
 
-    years = final_energy_saving_by_action_type.years
+    years = final_energy_saving_or_capacities.years
     annual_years = _annual_years(years)
     interpolated_cumulated_investment_cost = extrapolation.extrapolate(cumulated_investment_cost, annual_years)
     annual_investment_cost = interpolated_cumulated_investment_cost.map(
@@ -30,10 +30,10 @@ def annual_investment_cost_in_euro(final_energy_saving_by_action_type, data_sour
 
 
 def investment_cost_in_euro(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     data_source,
 ):
-    years = final_energy_saving_by_action_type.years
+    years = final_energy_saving_or_capacities.years
     investment_cost_per_ktoe = _investment_cost_per_ktoe(data_source, years)
 
     def _provide_default_investment(_id_measure, _id_subsector, id_action_type, year, saving):
@@ -47,7 +47,7 @@ def investment_cost_in_euro(
         return round(default_investment, 2)
 
     investment = data_source.measure_specific_parameter(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         40,  # id_parameter for investment cost
         _provide_default_investment,
     )

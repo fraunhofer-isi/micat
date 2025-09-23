@@ -41,7 +41,7 @@ class TestEconomicIndicators:
         mocked_ecologic_indicators = Mock()
 
         result = calculation_economic.economic_indicators(
-            "mocked_final_energy_saving_by_action_type",
+            "mocked_final_energy_saving_or_capacities",
             "mocked_population_of_municipality",
             mocked_interim_data,
             mocked_ecologic_indicators,

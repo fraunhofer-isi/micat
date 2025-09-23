@@ -11,7 +11,7 @@ from micat.input.data_source import DataSource
 
 # pylint: disable=too-many-locals
 def alleviation_of_energy_poverty_on_national_level(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     population_of_municipality,
     reduction_of_energy_cost,
     data_source,
@@ -19,11 +19,11 @@ def alleviation_of_energy_poverty_on_national_level(
     mode_2m=False,
     number_of_affected_dwellings=None,
 ):
-    years = final_energy_saving_by_action_type.years
+    years = final_energy_saving_or_capacities.years
 
     energy_poverty_gap_owner, energy_poverty_gap_tenant = _energy_poverty_gap(data_source, id_region, years, mode_2m)
 
-    measure_specific_lifetime = lifetime.measure_specific_lifetime(final_energy_saving_by_action_type, data_source)
+    measure_specific_lifetime = lifetime.measure_specific_lifetime(final_energy_saving_or_capacities, data_source)
 
     wuppertal_parameters = data_source.table("wuppertal_parameters", {"id_region": str(id_region)})
 
@@ -37,7 +37,7 @@ def alleviation_of_energy_poverty_on_national_level(
     policy_targetedness = _extrapolated_series(25, wuppertal_parameters, years)
 
     average_rent = data_source.measure_specific_parameter_using_default_table(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         29,
         wuppertal_parameters,
     )
@@ -47,7 +47,7 @@ def alleviation_of_energy_poverty_on_national_level(
     owner_occupier_rate = _extrapolated_series(33, wuppertal_parameters, years)
 
     rent_premium = data_source.measure_specific_parameter_using_default_table(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         34,
         wuppertal_parameters,
     )
@@ -56,19 +56,19 @@ def alleviation_of_energy_poverty_on_national_level(
 
     if number_of_affected_dwellings is None:
         number_of_affected_dwellings = dwelling.number_of_affected_dwellings(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             data_source,
             id_region,
             population_of_municipality,
         )
 
     investment_in_euro = investment.investment_cost_in_euro(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
     )
 
     share_of_energy_poor_population_owner_occupiers = _share_of_energy_poor_population_owner(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         reduction_of_energy_cost,
         equivalence_coefficient,
         measure_specific_lifetime,
@@ -80,7 +80,7 @@ def alleviation_of_energy_poverty_on_national_level(
     )
 
     share_of_energy_poor_population_tenant = _share_of_energy_poor_population_tenant(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         reduction_of_energy_cost,
         equivalence_coefficient,
         measure_specific_lifetime,
@@ -237,8 +237,10 @@ def _measure_specific_share_of_energy_poor_population_tenant_others(share_input)
     energy_poverty_gap = share_input["energy_poverty_gap"]
 
     delta_di = (
-        reduction_of_energy_cost - rent_premium / 100 * average_rent
-    ) / number_of_affected_dwellings / m2_equivalence_coefficient
+        (reduction_of_energy_cost - rent_premium / 100 * average_rent)
+        / number_of_affected_dwellings
+        / m2_equivalence_coefficient
+    )
 
     def number_of_smaller_deciles(value, year):
         number_for_value = _number_of_smaller_deciles(value, year, energy_poverty_gap)
@@ -275,7 +277,7 @@ def _provide_default_renovation_rate(
 
 
 def _share_of_energy_poor_population_owner(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     reduction_of_energy_cost,
     m2_equivalence_coefficient,
     measure_specific_lifetime,
@@ -285,7 +287,7 @@ def _share_of_energy_poor_population_owner(
     investment_in_euro,
     data_source,
 ):
-    years = final_energy_saving_by_action_type.years
+    years = final_energy_saving_or_capacities.years
 
     def _determine_table_for_measure(
         id_measure,
@@ -323,7 +325,7 @@ def _share_of_energy_poor_population_owner(
         return table
 
     share = data_source.measure_specific_calculation(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         _determine_table_for_measure,
         _determine_table_for_measure,
     )
@@ -332,7 +334,7 @@ def _share_of_energy_poor_population_owner(
 
 # pylint: disable = too-many-arguments, too-many-positional-arguments
 def _share_of_energy_poor_population_tenant(
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     reduction_of_energy_cost,
     m2_equivalence_coefficient,
     measure_specific_lifetime,
@@ -344,7 +346,7 @@ def _share_of_energy_poor_population_tenant(
     investment_in_euro,
     data_source,
 ):
-    years = final_energy_saving_by_action_type.years
+    years = final_energy_saving_or_capacities.years
 
     def _determine_table_for_measure(
         id_measure,
@@ -379,7 +381,7 @@ def _share_of_energy_poor_population_tenant(
         return table
 
     share = data_source.measure_specific_calculation(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         _determine_table_for_measure,
         _determine_table_for_measure,
     )

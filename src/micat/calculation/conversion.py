@@ -17,18 +17,8 @@ def primary_energy_saving(
     final_energy_saving,
     eurostat_primary_parameters,
     _h2_coefficient,
-    _conversion_efficiency,
+    conversion_efficiency,
 ):
-    # Clean up and interpolate conversion efficiency table
-    conversion_efficiency = _conversion_efficiency.copy()
-    del conversion_efficiency["id_parameter"]
-    conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(int)
-    all_years = range(
-        conversion_efficiency._data_frame.columns.min(), conversion_efficiency._data_frame.columns.max() + 1
-    )
-    conversion_efficiency._data_frame = conversion_efficiency._data_frame.reindex(columns=all_years).interpolate(axis=1)
-    conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(str)
-
     # H2 and sythentic fuels
     h2_saving = final_energy_saving.reduce("id_final_energy_carrier", [7])
     del h2_saving["id_final_energy_carrier"]

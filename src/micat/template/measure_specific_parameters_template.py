@@ -47,7 +47,7 @@ def _get_measure_specific_data(
         "population_of_municipality": population_of_municipality,
     }
 
-    final_energy_saving_by_action_type = _final_energy_saving_by_action_type(measure, context)
+    final_energy_saving_or_capacities = _final_energy_saving_or_capacities(measure, context)
 
     data_source = DataSource(
         database, id_region, confidential_database, global_parameters=template_args["global_parameters"]
@@ -57,29 +57,29 @@ def _get_measure_specific_data(
 
     wuppertal_parameters = _wuppertal_parameters(
         context,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
     )
 
     main = _get_main_data(
         context,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         wuppertal_parameters,
         data_source,
     )
 
     affected_fuels = _get_fuel_data(
         context,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
     )
 
-    years = final_energy_saving_by_action_type.years
+    years = final_energy_saving_or_capacities.years
     fuel_switch = _get_fuel_switch_data(years, id_sector, data_source)
 
     residential = _get_residential_data(
         context,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         wuppertal_parameters,
         data_source,
     )
@@ -102,20 +102,20 @@ def _get_measure_specific_data(
 
 def _wuppertal_parameters(
     context,
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     data_source,
 ):
     id_region = context["id_region"]
     wuppertal_parameters_raw = data_source.table("wuppertal_parameters", {"id_region": str(id_region)})
 
-    years = final_energy_saving_by_action_type.years
+    years = final_energy_saving_or_capacities.years
     wuppertal_parameters = extrapolation.extrapolate(wuppertal_parameters_raw, years)
     return wuppertal_parameters
 
 
 def _get_main_data(
     context,
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     wuppertal_parameters,
     data_source,
 ):
@@ -155,11 +155,11 @@ def _get_main_data(
     }
 
     main_data["energy_savings"] = (
-        main_data["energy_savings"] | final_energy_saving_by_action_type._data_frame.to_dict(orient="records")[0]
+        main_data["energy_savings"] | final_energy_saving_or_capacities._data_frame.to_dict(orient="records")[0]
     )
 
     investment_cost = investment.investment_cost_in_euro(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
     )
     # Convert to million euros to display the advanced parameter investment cost in mio. €
@@ -175,7 +175,7 @@ def _get_main_data(
 
 def _get_fuel_data(
     context,
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     data_source,
 ):
     data = {
@@ -234,7 +234,7 @@ def _get_fuel_data(
     subsector_ids = [id_subsector]
 
     share_affected = fuel_split.fuel_split_by_action_type(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
         subsector_ids,
@@ -266,7 +266,7 @@ def _get_fuel_switch_data(years, id_sector, data_source):
 
 def _get_residential_data(
     context,
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     wuppertal_parameters,
     data_source,
 ):
@@ -319,7 +319,7 @@ def _get_residential_data(
     population_of_municipality = context["population_of_municipality"]
 
     number_of_affected_dwellings = dwelling.number_of_affected_dwellings(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
         population_of_municipality,
@@ -330,7 +330,7 @@ def _get_residential_data(
 
     # TODO: Annual renovation rate is not available yet
     data["annual_renovation_rate"] = data["annual_renovation_rate"] | {
-        str(y): 0 for y in final_energy_saving_by_action_type.years
+        str(y): 0 for y in final_energy_saving_or_capacities.years
     }
 
     energy_poverty_target = wuppertal_parameters.reduce("id_parameter", 25)
@@ -339,7 +339,7 @@ def _get_residential_data(
     id_region = context["id_region"]
     population_of_municipality = context["population_of_municipality"]
     dwelling_stock = dwelling.dwelling_stock(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
         population_of_municipality,
@@ -494,7 +494,7 @@ def _interpolate_annual_data(sheet, years):
     return sheet
 
 
-def _final_energy_saving_by_action_type(measure, context):
+def _final_energy_saving_or_capacities(measure, context):
     annual_data = {key: value for key, value in measure.items() if key.isdigit()}
     annual_data["id_measure"] = measure["id"]
     annual_data["id_subsector"] = context["id_subsector"]

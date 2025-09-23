@@ -13,12 +13,11 @@ from micat.calculation.economic import (
     gross_domestic_product,
     import_dependency,
     production,
-    supplier_diversity,
 )
 
 
 def economic_indicators(  # pylint: disable=too-many-locals
-    final_energy_saving_by_action_type,
+    final_energy_saving_or_capacities,
     population_of_municipality,
     interim_data,
     ecologic_indicators,
@@ -64,7 +63,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #    )
 
     impact_on_gross_domestic_product = gross_domestic_product.impact_on_gross_domestic_product(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
     )
@@ -97,7 +96,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
     )
 
     additional_employment = employment.additional_employment(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         id_region,
     )
@@ -118,7 +117,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #    )
 
     turnover_of_energy_efficiency_goods = energy_efficiency.turnover_of_energy_efficiency_goods(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
     )
 

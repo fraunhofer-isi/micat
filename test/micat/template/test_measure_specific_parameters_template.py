@@ -103,7 +103,7 @@ def test_measure_specific_parameters_template():
 
 
 @patch(population.population_of_municipality)
-@patch(measure_specific_parameters_template._final_energy_saving_by_action_type)
+@patch(measure_specific_parameters_template._final_energy_saving_or_capacities)
 @patch(measure_specific_parameters_template._wuppertal_parameters)
 @patch(measure_specific_parameters_template._get_main_data)
 @patch(measure_specific_parameters_template._get_fuel_data)
@@ -143,12 +143,12 @@ def test_get_measure_specific_data():
 @patch(extrapolation.extrapolate, "mocked_result")
 def test_wuppertal_parameters():
     context = Mock()
-    final_energy_saving_by_action_type = Mock()
+    final_energy_saving_or_capacities = Mock()
     data_source = Mock()
 
     result = measure_specific_parameters_template._wuppertal_parameters(
         context,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
     )
     assert result == "mocked_result"
@@ -157,7 +157,7 @@ def test_wuppertal_parameters():
 @patch(measure_specific_parameters_template._interpolate_annual_data)
 @patch(measure_specific_parameters_template._fill_unit)
 def test_get_main_data():
-    final_energy_saving_by_action_type = Mock()
+    final_energy_saving_or_capacities = Mock()
     data_source = Mock()
     wuppertal_parameters = Mock()
 
@@ -169,7 +169,7 @@ def test_get_main_data():
             "id_action_type": 3,
             "id_measure": 4,
         },
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         wuppertal_parameters,
         data_source,
     )
@@ -195,13 +195,13 @@ def test_get_fuel_switch_data():
 
 
 def test_get_residential_data():
-    final_energy_saving_by_action_type = Mock()
+    final_energy_saving_or_capacities = Mock()
     context = Mock()
     data_source = Mock()
     wuppertal_parameters = Mock()
     res = measure_specific_parameters_template._get_residential_data(
         context,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         wuppertal_parameters,
         data_source,
     )
@@ -383,7 +383,7 @@ class TestInterpolateAnnualData:
             assert result == "mocked_result"
 
 
-def test_final_energy_saving_by_action_type():
+def test_final_energy_saving_or_capacities():
     measure = {
         "id": 1,
         "2000": 0,
@@ -393,7 +393,7 @@ def test_final_energy_saving_by_action_type():
         "id_subsector": 2,
         "id_action_type": 3,
     }
-    result = measure_specific_parameters_template._final_energy_saving_by_action_type(
+    result = measure_specific_parameters_template._final_energy_saving_or_capacities(
         measure,
         context,
     )

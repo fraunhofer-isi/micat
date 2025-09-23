@@ -15,9 +15,9 @@ def test_annual_investment_cost_in_euro():
     investment_cost = Table([{"id_foo": 1, "2000": 10, "2010": 20, "2020": 30}])
     years = [2000, 2010, 2020]
     with patch(investment.investment_cost_in_euro, investment_cost):
-        final_energy_saving_by_action_type = Mock()
-        final_energy_saving_by_action_type.years = years
-        result = investment.annual_investment_cost_in_euro(final_energy_saving_by_action_type, "mocked_data_source")
+        final_energy_saving_or_capacities = Mock()
+        final_energy_saving_or_capacities.years = years
+        result = investment.annual_investment_cost_in_euro(final_energy_saving_or_capacities, "mocked_data_source")
         assert result.years == years
         assert result["2000"][1] == 10
         assert result["2010"][1] == 1
@@ -38,7 +38,7 @@ def test_investment_cost_in_euro():
     )
 
     def mocked_measure_specific_parameter(
-        _final_energy_saving_by_action_type,
+        _final_energy_saving_or_capacities,
         _id_parameter,
         provide_default_value,
         _is_value_table=False,

@@ -28,15 +28,15 @@ def technology_parameters(
 
 def _primary_parameters_raw(data_source, id_region):
     where_clause = {
-        'id_region': str(id_region),
+        "id_region": str(id_region),
     }
-    table = data_source.table('eurostat_primary_parameters', where_clause)
+    table = data_source.table("eurostat_primary_parameters", where_clause)
     return table
 
 
 def _technology_parameters_raw(data_source, id_region):
     where_clause = {
-        'id_region': str(id_region),
+        "id_region": str(id_region),
     }
-    table = data_source.table('eurostat_technology_parameters', where_clause)
+    table = data_source.table("eurostat_technology_parameters", where_clause)
     return table

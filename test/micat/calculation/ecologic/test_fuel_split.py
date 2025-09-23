@@ -49,12 +49,12 @@ mocked_final_sector_parameters_table = Table(
 @patch(fuel_split._measure_specific_fuel_split, "mocked_measure_specific_result")
 @patch(fuel_split._round_values, "mocked_result")
 def test_fuel_split_by_action_type():
-    final_energy_saving_by_action_type = Mock()
+    final_energy_saving_or_capacities = Mock()
     data_source = Mock()
     data_source.table = Mock(mocked_final_sector_parameters_table)
 
     result = fuel_split.fuel_split_by_action_type(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         data_source,
         "mocked_id_region",
         "mocked_subsector_ids",

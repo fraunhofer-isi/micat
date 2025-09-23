@@ -237,7 +237,7 @@ class DataSource:
 
     @staticmethod
     def _loop_over_measures_and_collect_parameters(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         measure_ids_for_which_extra_data_exists,
         parameter_table,
         provide_default_value,
@@ -246,10 +246,10 @@ class DataSource:
         if is_value_table:
             years = None
         else:
-            years = final_energy_saving_by_action_type.years
+            years = final_energy_saving_or_capacities.years
 
         measure_tables = []
-        for measure_multi_index, savings in final_energy_saving_by_action_type.iterrows():
+        for measure_multi_index, savings in final_energy_saving_or_capacities.iterrows():
             measure_table = DataSource._table_for_measure(
                 measure_multi_index,
                 savings,
@@ -271,7 +271,7 @@ class DataSource:
     # pylint: disable=too-many-locals
     @staticmethod
     def _loop_over_measures_and_collect_tables(
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         measure_ids_for_which_extra_data_exists,
         measure_final_parameters,
         measure_parameters,
@@ -279,9 +279,9 @@ class DataSource:
         determine_table_for_measure,
         provide_default_table,
     ):
-        years = final_energy_saving_by_action_type.years
+        years = final_energy_saving_or_capacities.years
         measure_tables = []
-        for measure_multi_index, savings in final_energy_saving_by_action_type.iterrows():
+        for measure_multi_index, savings in final_energy_saving_or_capacities.iterrows():
             measure_table = DataSource._calculated_table_for_measure(
                 measure_multi_index,
                 savings,
@@ -548,13 +548,13 @@ class DataSource:
 
     def annual_parameters_per_measure(
         self,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         parameter_table_name,
         id_parameter,
         provide_default_parameter,
         id_region=None,
     ):
-        years = final_energy_saving_by_action_type.years
+        years = final_energy_saving_or_capacities.years
         default_parameters_table = self._default_annual_parameters(parameter_table_name, id_parameter, years)
 
         def _provide_default_parameter(id_measure, id_subsector, id_action_type, year, saving):
@@ -571,7 +571,7 @@ class DataSource:
             return value
 
         measure_specific_parameters = self.measure_specific_parameter(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             id_parameter,
             _provide_default_parameter,
         )
@@ -605,7 +605,7 @@ class DataSource:
 
     def measure_specific_calculation(
         self,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         determine_table_for_measure,
         provide_default_table,  # has to use the same format (=id columns, years) as determine_table_for_measure
     ):
@@ -625,7 +625,7 @@ class DataSource:
         if has_no_measure_specific_parameters:
             # No measure specific data has been specified by users
             measure_specific_table = DataSource._loop_over_measures_and_collect_tables(
-                final_energy_saving_by_action_type,
+                final_energy_saving_or_capacities,
                 [],
                 None,
                 None,
@@ -643,7 +643,7 @@ class DataSource:
             )
 
             measure_specific_table = DataSource._loop_over_measures_and_collect_tables(
-                final_energy_saving_by_action_type,
+                final_energy_saving_or_capacities,
                 measure_ids_for_which_extra_data_exists,
                 measure_final_parameters,
                 measure_parameters,
@@ -655,7 +655,7 @@ class DataSource:
 
     def measure_specific_parameter(
         self,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         id_parameter,
         # the following argument is a function that returns a single column value for a given set of
         # id_measure, id_subsector, id_action_type, year, saving:
@@ -670,7 +670,7 @@ class DataSource:
         if annual_table is None and constant_table is None:
             # No measure specific data is available
             measure_specific_table = DataSource._loop_over_measures_and_collect_parameters(
-                final_energy_saving_by_action_type,
+                final_energy_saving_or_capacities,
                 [],
                 None,
                 provide_default_value,
@@ -688,7 +688,7 @@ class DataSource:
                 # Measure specific data has been specified by users
                 measure_ids_for_which_extra_data_exists = parameter_table.unique_index_values("id_measure")
                 measure_specific_table = DataSource._loop_over_measures_and_collect_parameters(
-                    final_energy_saving_by_action_type,
+                    final_energy_saving_or_capacities,
                     measure_ids_for_which_extra_data_exists,
                     parameter_table,
                     provide_default_value,
@@ -707,11 +707,11 @@ class DataSource:
 
     def measure_specific_parameter_using_default_table(
         self,
-        final_energy_saving_by_action_type,
+        final_energy_saving_or_capacities,
         id_parameter,
         parameter_default_values,
     ):
-        years = final_energy_saving_by_action_type.years
+        years = final_energy_saving_or_capacities.years
         default_values = parameter_default_values.reduce("id_parameter", id_parameter)
         extrapolated_default_values = extrapolation.extrapolate_series(default_values, years)
 
@@ -720,7 +720,7 @@ class DataSource:
             return default_value
 
         measure_specific_parameter = self.measure_specific_parameter(
-            final_energy_saving_by_action_type,
+            final_energy_saving_or_capacities,
             id_parameter,
             provide_default_value,
         )

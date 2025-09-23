@@ -64,7 +64,7 @@ class TestAlleviationOfEnergyPovertyOnEuLevel:
     def test_national_id_region(self):
         with pytest.raises(ValueError) as error:
             energy_poverty_eu.alleviation_of_energy_poverty_on_eu_level(
-                "mocked_final_energy_saving_by_action_type",
+                "mocked_final_energy_saving_or_capacities",
                 "mocked_data_source",
                 1,
             )
@@ -78,7 +78,7 @@ class TestAlleviationOfEnergyPovertyOnEuLevel:
     @patch(Table.concat, _mocked_alleviation_of_energy_poverty())
     def test_eu(self):
         result = energy_poverty_eu.alleviation_of_energy_poverty_on_eu_level(
-            "mocked_final_energy_saving_by_action_type",
+            "mocked_final_energy_saving_or_capacities",
             "mocked_data_source",
             0,
         )

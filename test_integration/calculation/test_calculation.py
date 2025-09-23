@@ -157,7 +157,7 @@ class TestPublicApi:
         calculation._front_end_arguments,
         {
             "id_region": mocked_id_region(),
-            "final_energy_saving_by_action_type": mocked_savings(),
+            "final_energy_saving_or_capacities": mocked_savings(),
             "parameters": {},
             "measure_specific_parameters": mocked_measure_specific_parameters,
             "population_of_municipality": 1,

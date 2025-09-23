@@ -34,14 +34,14 @@ def test_energy_savings():
 
 @patch(fuel_split.fuel_split_by_action_type)
 @patch(
-    energy_saving._final_energy_saving_by_action_type_and_energy_carrier,
+    energy_saving._final_energy_saving_or_capacities_and_energy_carrier,
     "mocked_result",
 )
 def test_energy_saving_by_final_energy_carrier():
-    mocked_final_energy_saving_by_action_type = Mock()
+    mocked_final_energy_saving_or_capacities = Mock()
 
     result = energy_saving.energy_saving_by_final_energy_carrier(
-        mocked_final_energy_saving_by_action_type,
+        mocked_final_energy_saving_or_capacities,
         "mocked_data_source",
         "mocked_id_region",
         "mocked_subsector_ids",
@@ -49,11 +49,11 @@ def test_energy_saving_by_final_energy_carrier():
     assert result == "mocked_result"
 
 
-def test_final_energy_saving_by_action_type_and_energy_carrier():
+def test_final_energy_saving_or_capacities_and_energy_carrier():
     fuel_split_by_action_type = 2
     final_energy_savings_by_action_type = 3
 
-    result = energy_saving._final_energy_saving_by_action_type_and_energy_carrier(
+    result = energy_saving._final_energy_saving_or_capacities_and_energy_carrier(
         fuel_split_by_action_type,
         final_energy_savings_by_action_type,
     )
