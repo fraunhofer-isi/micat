@@ -99,7 +99,7 @@ def test_measure_specific_parameters_template():
         data_source,
         data_source,
     )
-    assert list(result.keys()) == ["affectedFuels", "residential", "fuelSwitch", "context", "main"]
+    assert list(result.keys()) == ["main", "affectedFuels", "fuelSwitch", "residential", "context"]
 
 
 @patch(population.population_of_municipality)
@@ -158,6 +158,7 @@ def test_wuppertal_parameters():
 @patch(measure_specific_parameters_template._fill_unit)
 def test_get_main_data():
     final_energy_saving_or_capacities = Mock()
+    final_energy_saving_or_capacities.unique_index_values = Mock([1])
     data_source = Mock()
     wuppertal_parameters = Mock()
 

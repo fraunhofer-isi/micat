@@ -65,6 +65,7 @@ def alleviation_of_energy_poverty_on_national_level(
     investment_in_euro = investment.investment_cost_in_euro(
         final_energy_saving_or_capacities,
         data_source,
+        id_region,
     )
 
     share_of_energy_poor_population_owner_occupiers = _share_of_energy_poor_population_owner(

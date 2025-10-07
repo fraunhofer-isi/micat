@@ -12,12 +12,12 @@ def additional_employment(
     data_source,
     id_region,
 ):
+    action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
     annual_investment_cost_in_euro = investment.annual_investment_cost_in_euro(
         final_energy_saving_or_capacities,
         data_source,
+        id_region,
     )
-
-    action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
 
     e3m_parameters = data_source.table(
         "e3m_parameters",

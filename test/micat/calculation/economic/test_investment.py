@@ -17,7 +17,9 @@ def test_annual_investment_cost_in_euro():
     with patch(investment.investment_cost_in_euro, investment_cost):
         final_energy_saving_or_capacities = Mock()
         final_energy_saving_or_capacities.years = years
-        result = investment.annual_investment_cost_in_euro(final_energy_saving_or_capacities, "mocked_data_source")
+        result = investment.annual_investment_cost_in_euro(
+            final_energy_saving_or_capacities, "mocked_data_source", "mocked_id_region"
+        )
         assert result.years == years
         assert result["2000"][1] == 10
         assert result["2010"][1] == 1
@@ -55,10 +57,9 @@ def test_investment_cost_in_euro():
     data_source = Mock()
     data_source.measure_specific_parameter = mocked_measure_specific_parameter
 
-    result = investment.investment_cost_in_euro(
-        Mock(),
-        data_source,
-    )
+    final_energy_saving_or_capacities = Mock()
+    final_energy_saving_or_capacities.unique_index_values = Mock([1])
+    result = investment.investment_cost_in_euro(final_energy_saving_or_capacities, data_source, "mocked_id_region")
     assert result["2000"][1, 1] == 10
 
 

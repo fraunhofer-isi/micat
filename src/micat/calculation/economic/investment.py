@@ -3,10 +3,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/38
-from micat.calculation import extrapolation
+from micat.calculation import extrapolation, calculation
 
 
-def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_source):
+def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_region):
     # Investment cost is specified as cumulated data
     # in order to determine the annual investment, we subtract the
     # value of the previous year (or zero).
@@ -14,6 +14,7 @@ def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_sourc
     cumulated_investment_cost = investment_cost_in_euro(
         final_energy_saving_or_capacities,
         data_source,
+        id_region,
     )
 
     years = final_energy_saving_or_capacities.years
@@ -29,30 +30,80 @@ def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_sourc
     return filtered_annual_investment_cost
 
 
-def investment_cost_in_euro(
-    final_energy_saving_or_capacities,
-    data_source,
-):
+def investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_region):
     years = final_energy_saving_or_capacities.years
-    investment_cost_per_ktoe = _investment_cost_per_ktoe(data_source, years)
+    id_subsector = final_energy_saving_or_capacities.unique_index_values("id_subsector")[0]
+    id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
 
-    def _provide_default_investment(_id_measure, _id_subsector, id_action_type, year, saving):
-        default_investment = _default_investment(
-            saving,
-            investment_cost_per_ktoe,
-            id_action_type,
-            year,
+    if id_subsector >= 30:
+        # Capital investments (CAPEX)
+        investments_res_capex = data_source.table(
+            "investments_res",
+            {
+                "id_subsector": str(id_subsector),
+                "id_action_type": str(id_action_type),
+                "id_parameter": "68",  # Investment costs per capacity
+            },
         )
-        # Round to 2 decimal places (not anymore: and convert to million euros)
-        return round(default_investment, 2)
+        capex = final_energy_saving_or_capacities * extrapolation.extrapolate(
+            investments_res_capex, final_energy_saving_or_capacities.years
+        )
+        capex = capex.droplevel("id_parameter")
 
-    investment = data_source.measure_specific_parameter(
-        final_energy_saving_or_capacities,
-        40,  # id_parameter for investment cost
-        _provide_default_investment,
-    )
+        # Running costs (OPEX)
+        investments_res_opex = data_source.table(
+            "investments_res",
+            {
+                "id_subsector": str(id_subsector),
+                "id_action_type": str(id_action_type),
+                "id_parameter": "69",  # Running costs
+            },
+        )
+        opex = final_energy_saving_or_capacities * extrapolation.extrapolate(
+            investments_res_opex, final_energy_saving_or_capacities.years
+        )
+        opex = opex.droplevel("id_parameter")
 
-    del investment["id_subsector"]
+        # Variable running costs (VOPEX)
+        investments_res_vopex = data_source.table(
+            "investments_res",
+            {
+                "id_subsector": str(id_subsector),
+                "id_action_type": str(id_action_type),
+                "id_parameter": "70",  # Variable running costs
+            },
+        )
+        generated_energy_quantity = calculation.calculate_energy_produced(
+            final_energy_saving_or_capacities.copy(),
+            data_source,
+            id_region,
+        )
+        vopex = generated_energy_quantity * extrapolation.extrapolate(
+            investments_res_vopex, final_energy_saving_or_capacities.years
+        )
+        vopex = vopex.droplevel("id_parameter")
+
+        investment = capex + opex + vopex
+    else:
+        investment_cost_per_ktoe = _investment_cost_per_ktoe(data_source, years)
+
+        def _provide_default_investment(_id_measure, _id_subsector, id_action_type, year, saving):
+            default_investment = _default_investment(
+                saving,
+                investment_cost_per_ktoe,
+                id_action_type,
+                year,
+            )
+            # Round to 2 decimal places (not anymore: and convert to million euros)
+            return round(default_investment, 2)
+
+        investment = data_source.measure_specific_parameter(
+            final_energy_saving_or_capacities,
+            40,  # id_parameter for investment cost
+            _provide_default_investment,
+        )
+
+        del investment["id_subsector"]
     return investment
 
 

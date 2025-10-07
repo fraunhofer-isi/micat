@@ -5,7 +5,7 @@
 # pylint: disable = import-self
 from urllib.parse import parse_qs
 
-from micat.calculation import air_pollution, conversion, cost_benefit_analysis
+from micat.calculation import air_pollution, conversion, cost_benefit_analysis, extrapolation
 from micat.calculation.conversion import convert_units_of_measure_specific_parameters
 from micat.calculation.ecologic import calculation_ecologic, energy_saving
 from micat.calculation.economic import (
@@ -20,19 +20,14 @@ from micat.series.annual_series import AnnualSeries
 from micat.table.table import Table
 
 
-def calculate_energy_produced(final_energy_saving_or_capacities, data_source, id_region, years):
+def calculate_energy_produced(final_energy_saving_or_capacities, data_source, id_region):
     capacity_factors = data_source.table("fraunhofer_capacity_factors", {})
     # Interpolate capacity factors for missing years
-    _capacity_factors = capacity_factors._data_frame.copy()
-    _capacity_factors = _capacity_factors.loc[id_region]
-    _capacity_factors.columns = _capacity_factors.columns.astype(int)
-    all_years = range(_capacity_factors.columns.min(), _capacity_factors.columns.max() + 1)
-    _capacity_factors = _capacity_factors.reindex(columns=all_years).interpolate(axis=1)
-    _capacity_factors.columns = _capacity_factors.columns.astype(str)
+    _capacity_factors = extrapolation.extrapolate(capacity_factors, final_energy_saving_or_capacities.years)
 
     # Multiply capacities with capacity factors
     df1 = final_energy_saving_or_capacities._data_frame.reset_index()
-    df2 = _capacity_factors.reset_index()
+    df2 = _capacity_factors._data_frame.reset_index()
     df1_long = df1.melt(id_vars=["id_measure", "id_subsector", "id_action_type"], var_name="year", value_name="value")
     df2_long = df2.melt(
         id_vars=["id_parameter", "id_subsector", "id_action_type"], var_name="year", value_name="factor"
@@ -93,7 +88,6 @@ def calculate_indicator_data(
             final_energy_saving_or_capacities,
             data_source,
             id_region,
-            years,
         )
 
     interim_data = _interim_data(

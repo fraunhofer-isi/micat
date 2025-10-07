@@ -333,10 +333,11 @@ class TestPrivateApi:
     )
     def test_interim_data(self):
         mocked_final_energy_saving_or_capacities = Mock()
+        mocked_data_source = Mock()
 
         result = calculation._interim_data(
             mocked_final_energy_saving_or_capacities,
-            "mocked_data_source",
+            mocked_data_source,
             "mocked_id_region",
             "mocked_years",
         )

@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from micat.calculation import extrapolation
+from micat.calculation.calculation import calculate_energy_produced
 from micat.calculation.ecologic import fuel_split
 from micat.calculation.economic import investment, population
 from micat.calculation.social import dwelling
@@ -39,6 +40,7 @@ def _get_measure_specific_data(
     population_of_municipality = population.population_of_municipality(measure)
 
     id_region = int(template_args["id_region"])
+    results = {}
     context = {
         "id_region": id_region,
         "id_subsector": int(measure["subsector"]["id"]),
@@ -53,7 +55,11 @@ def _get_measure_specific_data(
         database, id_region, confidential_database, global_parameters=template_args["global_parameters"]
     )
     df = data_source.mapping_table("mapping__subsector__sector")._data_frame
-    id_sector = df.loc[df["id_subsector"] == int(template_args["id_subsector"])]["id_sector"].item()
+
+    id_sector = None
+    is_renewable = int(template_args["id_subsector"]) >= 30
+    if not is_renewable:
+        id_sector = df.loc[df["id_subsector"] == int(template_args["id_subsector"])]["id_sector"].item()
 
     wuppertal_parameters = _wuppertal_parameters(
         context,
@@ -61,43 +67,35 @@ def _get_measure_specific_data(
         data_source,
     )
 
-    main = _get_main_data(
+    results["main"] = _get_main_data(
         context,
         final_energy_saving_or_capacities,
         wuppertal_parameters,
         data_source,
     )
 
-    affected_fuels = _get_fuel_data(
-        context,
-        final_energy_saving_or_capacities,
-        data_source,
-    )
+    if not is_renewable:
+        results["affectedFuels"] = _get_fuel_data(
+            context,
+            final_energy_saving_or_capacities,
+            data_source,
+        )
+        results["fuelSwitch"] = _get_fuel_switch_data(final_energy_saving_or_capacities.years, id_sector, data_source)
 
-    years = final_energy_saving_or_capacities.years
-    fuel_switch = _get_fuel_switch_data(years, id_sector, data_source)
-
-    residential = _get_residential_data(
+    results["residential"] = _get_residential_data(
         context,
         final_energy_saving_or_capacities,
         wuppertal_parameters,
         data_source,
     )
 
-    context = [
+    results["context"] = [
         {"id_region": "id_region", "0": context["id_region"]},
         {"id_region": "id_subsector", "0": context["id_subsector"]},
         {"id_region": "id_action_type", "0": context["id_action_type"]},
         {"id_region": "population", "0": context["population_of_municipality"]},
     ]
-
-    return {
-        "affectedFuels": affected_fuels,
-        "residential": residential,
-        "fuelSwitch": fuel_switch,
-        "context": context,
-        "main": main,
-    }
+    return results
 
 
 def _wuppertal_parameters(
@@ -161,7 +159,9 @@ def _get_main_data(
     investment_cost = investment.investment_cost_in_euro(
         final_energy_saving_or_capacities,
         data_source,
+        id_region=context["id_region"],
     )
+
     # Convert to million euros to display the advanced parameter investment cost in mio. €
     investment_cost._data_frame = investment_cost._data_frame.select_dtypes(exclude=["object", "datetime"]) / 1_000_000
     main_data["investment_costs"] = (

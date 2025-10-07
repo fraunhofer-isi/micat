@@ -79,6 +79,13 @@ def main():
 
     database_import.write_to_sqlite(primary_parameters, "primes_primary_parameters")
 
+    # Import investments_RES.xlsx
+    investments_res_path = import_folder + "/investments_RES.xlsx"
+    investments_res = pd.read_excel(investments_res_path, sheet_name="OPEX")
+    investments_res = investments_res.drop(columns=["Source", "Assumption"])
+    investments_res = investments_res.set_index(["id_parameter", "id_subsector", "id_action_type"])
+    database_import.write_to_sqlite(Table(investments_res), "investments_res")
+
     Logger.info("# importing primes_technology_parameters")
     _import_utilization(utilization_file_path, database_import)
 
