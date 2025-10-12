@@ -69,6 +69,30 @@ def main():
     )
     database_import.write_to_sqlite(fraunhofer_conversion_efficiency, "fraunhofer_conversion_efficiency")
 
+    # Efficiency_RES.xlsx
+    efficiency_res_path = import_path + "/Efficiency_RES.xlsx"
+    raw_efficiency_res = pd.read_excel(efficiency_res_path)
+    efficiency_res = Table(raw_efficiency_res)
+    id_parameter = 66
+    fraunhofer_efficiency_res = efficiency_res.insert_index_column(
+        "id_parameter",
+        1,
+        id_parameter,
+    )
+    database_import.write_to_sqlite(fraunhofer_efficiency_res, "fraunhofer_efficiency_res")
+
+    # substitution_factors.xlsx
+    substitution_factors_path = import_path + "/substitution_factors.xlsx"
+    raw_substitution_factors = pd.read_excel(substitution_factors_path)
+    substitution_factors = Table(raw_substitution_factors)
+    id_parameter = 67
+    fraunhofer_substitution_factors = substitution_factors.insert_index_column(
+        "id_parameter",
+        1,
+        id_parameter,
+    )
+    database_import.write_to_sqlite(fraunhofer_substitution_factors, "fraunhofer_substitution_factors")
+
 
 if __name__ == "__main__":
     main()
