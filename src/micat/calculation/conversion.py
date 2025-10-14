@@ -29,6 +29,10 @@ def primary_energy_saving(
     h2_conversion_efficiency._data_frame = h2_conversion_efficiency._data_frame[common_years]
     h2_saving_final = h2_saving * h2_coefficient / h2_conversion_efficiency
 
+    import ipdb
+
+    ipdb.set_trace()
+
     # Heat
     heat_saving = final_energy_saving.reduce("id_final_energy_carrier", [6])
     del heat_saving["id_final_energy_carrier"]
@@ -47,6 +51,7 @@ def primary_energy_saving(
     del h2["id_primary_energy_carrier"]
     electricity_total = electricity_saving + heat + h2
     # Then calculate primary energy savings for electricity
+    # TODO: Replace electrictiy coefficient with substition factors if id_action_type != 37
     electricity_coefficient = eurostat_primary_parameters.reduce("id_parameter", 21)
     electricity_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 1)
     electricity_conversion_efficiency._data_frame = electricity_conversion_efficiency._data_frame[common_years]

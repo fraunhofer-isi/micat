@@ -18,6 +18,7 @@ def energy_saving_by_final_energy_carrier(
     id_region,
     subsector_ids,
 ):
+    # TODO: Replace by #511
     fuel_split_by_action_type = fuel_split.fuel_split_by_action_type(
         final_energy_saving_or_capacities,
         data_source,

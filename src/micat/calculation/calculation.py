@@ -89,6 +89,10 @@ def calculate_indicator_data(
             data_source,
             id_region,
         )
+        # Interpolate missing years in efficiency_res table
+        efficiency_res = extrapolation.extrapolate(
+            data_source.table("fraunhofer_efficiency_res", {}), final_energy_saving_or_capacities.years
+        )
 
     interim_data = _interim_data(
         final_energy_saving_or_capacities,
