@@ -100,11 +100,32 @@ def subsector_parameters(
     id_region,
     subsector_ids,
 ):
+    # TODO: Remove
+    is_renewable = subsector_ids[0] >= 30
+    if is_renewable:
+        old_subsector_id = subsector_ids[0]
+        subsector_ids = [1]  # Dummy value for renewables
     where_clause = {
         "id_region": str(id_region),
         "id_subsector": subsector_ids,
     }
     table = data_source.table("iiasa_final_subsector_parameters", where_clause)
+
+    if is_renewable:
+        # TODO: Workaround for #507
+        df = table._data_frame
+        # Convert MultiIndex to DataFrame for modification
+        index_df = df.index.to_frame(index=False)
+
+        # Overwrite the subsector column
+        index_df["id_subsector"] = old_subsector_id
+
+        # Recreate the MultiIndex
+        df.index = pd.MultiIndex.from_frame(index_df)
+
+        df = df.sort_index()  # optional for clean ordering
+        table = Table(df)
+
     return table
 
 
@@ -115,6 +136,7 @@ def _factorial_reduction(
     year_numbers = list_utils.string_to_integer(energy_saving_by_final_energy_carrier.columns)
     extrapolated_factor = extrapolation.extrapolate(conversion_factor_by_final_energy_carrier, year_numbers)
     output = energy_saving_by_final_energy_carrier * extrapolated_factor
+
     if output.contains_nan():
         message = (
             "Result of multiplication contains NaN values. " + "Factors need to be provided for all energy carriers."

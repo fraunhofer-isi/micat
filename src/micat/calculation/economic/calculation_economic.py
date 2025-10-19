@@ -26,7 +26,6 @@ def economic_indicators(  # pylint: disable=too-many-locals
     years,
 ):
     total_primary_energy_saving = interim_data["total_primary_energy_saving"]
-    energy_saving_by_final_energy_carrier = interim_data["energy_saving_by_final_energy_carrier"]
 
     scaled_gross_available_energy = gross_available_energy.gross_available_energy(
         data_source,
@@ -45,9 +44,13 @@ def economic_indicators(  # pylint: disable=too-many-locals
 
     reduction_of_energy_cost = interim_data["reduction_of_energy_cost"]
 
-    reduction_of_energy_cost_by_final_energy_carrier = energy_cost.reduction_of_energy_cost_by_final_energy_carrier(
-        reduction_of_energy_cost,
-    )
+    if reduction_of_energy_cost is None:
+        # TODO: #507
+        reduction_of_energy_cost_by_final_energy_carrier = None
+    else:
+        reduction_of_energy_cost_by_final_energy_carrier = energy_cost.reduction_of_energy_cost_by_final_energy_carrier(
+            reduction_of_energy_cost,
+        )
 
     scaled_gross_domestic_product = gross_domestic_product.gross_domestic_product(
         data_source,
@@ -62,11 +65,15 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #        population_of_municipality,
     #    )
 
-    impact_on_gross_domestic_product = gross_domestic_product.impact_on_gross_domestic_product(
-        final_energy_saving_or_capacities,
-        data_source,
-        id_region,
-    )
+    if reduction_of_energy_cost is None:
+        # TODO: #507
+        impact_on_gross_domestic_product = None
+    else:
+        impact_on_gross_domestic_product = gross_domestic_product.impact_on_gross_domestic_product(
+            final_energy_saving_or_capacities,
+            data_source,
+            id_region,
+        )
 
     # TO DO: use different sources for non_energy_use, depending on id_mode? #268
     # eurostat_primary_parameters = interim_data["eurostat_primary_parameters"]
@@ -80,13 +87,17 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #        additional_primary_energy_saving,
     #    )
 
-    energy_intensity_difference = energy_intensity.energy_intensity_difference(
-        scaled_gross_available_energy,
-        scaled_gross_domestic_product,
-        impact_on_gross_domestic_product,
-        # primary_non_energy_use,
-        additional_primary_energy_saving,
-    )
+    if reduction_of_energy_cost is None:
+        # TODO: #507
+        energy_intensity_difference = None
+    else:
+        energy_intensity_difference = energy_intensity.energy_intensity_difference(
+            scaled_gross_available_energy,
+            scaled_gross_domestic_product,
+            impact_on_gross_domestic_product,
+            # primary_non_energy_use,
+            additional_primary_energy_saving,
+        )
 
     reduction_of_import_dependency_table = import_dependency.impact_on_import_dependency(
         total_primary_energy_saving,
@@ -95,18 +106,26 @@ def economic_indicators(  # pylint: disable=too-many-locals
         # primary_non_energy_use,
     )
 
-    additional_employment = employment.additional_employment(
-        final_energy_saving_or_capacities,
-        data_source,
-        id_region,
-    )
+    if reduction_of_energy_cost is None:
+        # TODO: #507
+        additional_employment = None
+    else:
+        additional_employment = employment.additional_employment(
+            final_energy_saving_or_capacities,
+            data_source,
+            id_region,
+        )
 
-    added_asset_value_of_buildings = buildings.added_asset_value_of_buildings(
-        reduction_of_energy_cost,
-        data_source,
-        id_region,
-        years,
-    )
+    if reduction_of_energy_cost is None:
+        # TODO: #507
+        added_asset_value_of_buildings = None
+    else:
+        added_asset_value_of_buildings = buildings.added_asset_value_of_buildings(
+            reduction_of_energy_cost,
+            data_source,
+            id_region,
+            years,
+        )
 
     #    change_in_unit_costs_of_production = production.change_in_unit_costs_of_production(
     #        reduction_of_energy_cost,
@@ -116,10 +135,14 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #        id_region,
     #    )
 
-    turnover_of_energy_efficiency_goods = energy_efficiency.turnover_of_energy_efficiency_goods(
-        final_energy_saving_or_capacities,
-        data_source,
-    )
+    if reduction_of_energy_cost is None:
+        # TODO: #507
+        turnover_of_energy_efficiency_goods = None
+    else:
+        turnover_of_energy_efficiency_goods = energy_efficiency.turnover_of_energy_efficiency_goods(
+            final_energy_saving_or_capacities,
+            data_source,
+        )
 
     reduction_of_additional_capacities_in_grid = ecologic_indicators["reductionOfAdditionalCapacitiesInGrid"]
 

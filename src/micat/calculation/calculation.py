@@ -329,11 +329,24 @@ def _interim_data(
     conversion_efficiency._data_frame = conversion_efficiency._data_frame.reindex(columns=all_years).interpolate(axis=1)
     conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(str)
 
+    # Substitution factors
+    substitution_factors = data_source.table("fraunhofer_substitution_factors", {})
+    del substitution_factors["id_parameter"]
+    substitution_factors = extrapolation.extrapolate(substitution_factors, final_energy_saving_or_capacities.years)
+    # Filter for id_region
+    substitution_factors = substitution_factors.reduce("id_region", id_region)
+    # Filter for id_subsector
+    substitution_factors = substitution_factors.reduce("id_subsector", subsector_ids)
+    # Filter for id_action_type
+    action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
+    substitution_factors = substitution_factors.reduce("id_action_type", action_type_ids)
+
     conventional_primary_energy_saving = conversion.primary_energy_saving(
         energy_saving_by_final_energy_carrier,
         eurostat_primary_parameters,
         h2_coefficient,
         conversion_efficiency,
+        substitution_factors,
     )
 
     additional_primary_energy_saving = _additional_primary_energy_saving(
@@ -346,26 +359,35 @@ def _interim_data(
         additional_primary_energy_saving,
     )
 
-    air_pollution_parameters = air_pollution.subsector_parameters(
-        data_source,
-        id_region,
-        subsector_ids,
-    )
-
-    reduction_of_energy_cost = energy_cost.reduction_of_energy_cost(
-        energy_saving_by_final_energy_carrier,
-        data_source,
-        id_region,
-    )
-
-    return {
+    results = {
         "additional_primary_energy_saving": additional_primary_energy_saving,
-        "air_pollution_parameters": air_pollution_parameters,
         "energy_saving_by_final_energy_carrier": energy_saving_by_final_energy_carrier,
         "eurostat_primary_parameters": eurostat_primary_parameters,
-        "reduction_of_energy_cost": reduction_of_energy_cost,
         "total_primary_energy_saving": total_primary_energy_saving,
     }
+
+    if subsector_ids[0] >= 30:
+        # TODO: #507
+        results["air_pollution_parameters"] = air_pollution.subsector_parameters(
+            data_source,
+            id_region,
+            subsector_ids,
+        )
+        results["reduction_of_energy_cost"] = None
+    else:
+        results["air_pollution_parameters"] = air_pollution.subsector_parameters(
+            data_source,
+            id_region,
+            subsector_ids,
+        )
+
+        results["reduction_of_energy_cost"] = energy_cost.reduction_of_energy_cost(
+            energy_saving_by_final_energy_carrier,
+            data_source,
+            id_region,
+        )
+
+    return results
 
 
 def _mapping_from_final_to_primary_energy_carrier(database):
@@ -438,12 +460,18 @@ def _translate_result(key, table, data_source):
 
 
 def _translate_result_tables(result_tables, data_source):
-    translated_results = {key: _translate_result(key, table, data_source) for key, table in result_tables.items()}
+    translated_results = {
+        key: _translate_result(key, table, data_source)
+        for key, table in result_tables.items()
+        if isinstance(table, Table)
+    }
     return translated_results
 
 
 def _validate_data(tables):
     for table_name, table in tables.items():
+        if not isinstance(table, Table):
+            continue
         if table.contains_nan():
             message = "Table " + table_name + " contains NaN values!"
             raise ValueError(message)
