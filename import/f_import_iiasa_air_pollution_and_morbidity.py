@@ -26,6 +26,7 @@ def main():  # pylint: disable=too-many-locals
     id_parameter_table = database.id_table("id_parameter")
     id_subsector_table = database.id_table("id_subsector")
     id_final_energy_carrier_table = database.id_table("id_final_energy_carrier")
+    id_primary_energy_carrier_table = database.id_table("id_primary_energy_carrier")
 
     print("Reading input files...")
 
@@ -221,6 +222,15 @@ def main():  # pylint: disable=too-many-locals
         )
     )
 
+    # Rename primary energy carriers
+    raw_air_pollution_heat_electricity_gen_factor.MICAT_FUEL = (
+        raw_air_pollution_heat_electricity_gen_factor.MICAT_FUEL.replace(
+            {
+                "Biomass and Waste": "Biomass and renewable waste",
+            }
+        )
+    )
+
     # morbidity factors are specified in 1/PJ
     raw_morbidity_heat_electricity_gen_factor = pd.read_excel(
         import_folder + "/IIASA_FACTORS_MOR_GENERATION_2025.xlsx", engine="openpyxl"
@@ -248,37 +258,20 @@ def main():  # pylint: disable=too-many-locals
             "Labor force WLD": "Lost work days",
         }
     )
-
-    # Replicate entries for different energy carriers
-    for identifier, new_carriers in carrier_value_mapping.items():
-        replicates = raw_air_pollution_heat_electricity_gen_factor.loc[
-            raw_air_pollution_heat_electricity_gen_factor["MICAT_FUEL"] == identifier
-        ]
-        for index in new_carriers:
-            carrier = id_final_energy_carrier_table._data_frame.loc[index]["label"]
-            replicates.MICAT_FUEL = replicates.MICAT_FUEL.replace({identifier: carrier})
-            raw_air_pollution_heat_electricity_gen_factor = pd.concat(
-                [raw_air_pollution_heat_electricity_gen_factor, replicates]
-            )
-            replicates.MICAT_FUEL = replicates.MICAT_FUEL.replace({carrier: identifier})
-    for identifier, new_carriers in carrier_value_mapping.items():
-        replicates = raw_morbidity_heat_electricity_gen_factor.loc[
-            raw_morbidity_heat_electricity_gen_factor["MICAT_FUEL"] == identifier
-        ]
-        for index in new_carriers:
-            carrier = id_final_energy_carrier_table._data_frame.loc[index]["label"]
-            replicates.MICAT_FUEL = replicates.MICAT_FUEL.replace({identifier: carrier})
-            raw_morbidity_heat_electricity_gen_factor = pd.concat(
-                [raw_morbidity_heat_electricity_gen_factor, replicates]
-            )
-            replicates.MICAT_FUEL = replicates.MICAT_FUEL.replace({carrier: identifier})
+    # Rename primary energy carriers
+    raw_morbidity_heat_electricity_gen_factor.MICAT_FUEL = raw_morbidity_heat_electricity_gen_factor.MICAT_FUEL.replace(
+        {
+            "Biomass and Waste": "Biomass and renewable waste",
+        }
+    )
 
     raw_air_pollution_heat_electricity_gen_factor_in_kt_per_pj, missing_entries = _translate_iiasa_table(
         raw_air_pollution_heat_electricity_gen_factor,
         id_region_table,
         id_parameter_table,
         None,
-        id_final_energy_carrier_table,
+        None,
+        id_primary_energy_carrier_table,
     )
     air_pollution_heat_electricity_gen_factor_in_kt_per_ktoe = (
         raw_air_pollution_heat_electricity_gen_factor_in_kt_per_pj * 1 / pj_to_ktoe
@@ -311,8 +304,9 @@ def main():  # pylint: disable=too-many-locals
         raw_morbidity_heat_electricity_gen_factor,
         id_region_table,
         id_parameter_table,
-        id_subsector_table,
-        id_final_energy_carrier_table,
+        None,
+        None,
+        id_primary_energy_carrier_table,
     )
 
     morbidity_heat_electricity_gen_factor_in_1_over_ktoe = morbidity_heat_electricity_gen_factor * 1 / pj_to_ktoe
@@ -370,6 +364,7 @@ def _translate_iiasa_table(
     id_parameter_table,
     id_subsector_table,
     id_final_energy_carrier_table,
+    id_primary_energy_carrier_table=None,
 ):
     df["YEAR"] = df["YEAR"].astype(str)
 
@@ -377,16 +372,26 @@ def _translate_iiasa_table(
     translated_df = id_parameter_table.label_to_id(translated_df, "Parameter")
     if id_subsector_table is not None:
         translated_df = id_subsector_table.label_to_id(translated_df, "MICAT_SECTOR")
-    translated_df = id_final_energy_carrier_table.label_to_id(translated_df, "MICAT_FUEL")
+    if id_final_energy_carrier_table is not None:
+        translated_df = id_final_energy_carrier_table.label_to_id(translated_df, "MICAT_FUEL")
+    if id_primary_energy_carrier_table is not None:
+        translated_df = id_primary_energy_carrier_table.label_to_id(
+            translated_df,
+            "MICAT_FUEL",
+        )
 
     contains_nan_values = translated_df.isna().any().any()
     if contains_nan_values:
         raise ValueError("Data contains rows with missing values")
 
     if id_subsector_table is not None:
-        index = ["id_region", "id_parameter", "id_subsector", "id_final_energy_carrier"]
+        index = ["id_region", "id_parameter", "id_subsector"]
     else:
-        index = ["id_region", "id_parameter", "id_final_energy_carrier"]
+        index = ["id_region", "id_parameter"]
+    if id_final_energy_carrier_table is not None:
+        index.append("id_final_energy_carrier")
+    if id_primary_energy_carrier_table is not None:
+        index.append("id_primary_energy_carrier")
 
     result = translated_df.pivot_table(
         values="FACTOR",
@@ -408,6 +413,7 @@ def _translate_iiasa_table(
             id_parameter_table,
             id_subsector_table,
             id_final_energy_carrier_table,
+            id_primary_energy_carrier_table,
         )
 
         result = result[~result.isna().any(axis=1)]
@@ -423,6 +429,7 @@ def _missing_entries_from_ids(
     id_parameter_table,
     id_subsector_table,
     id_final_energy_carrier_table,
+    id_primary_energy_carrier_table,
 ):
     missing_entries = []
     years = list(df.columns)
@@ -437,6 +444,7 @@ def _missing_entries_from_ids(
                     id_parameter_table,
                     id_subsector_table,
                     id_final_energy_carrier_table,
+                    id_primary_energy_carrier_table,
                 )
                 missing_entries.append(missing_entry)
 
@@ -450,6 +458,7 @@ def _create_missing_entry(  # pylint: disable=too-many-arguments
     id_parameter_table,
     id_subsector_table,
     id_final_energy_carrier_table,
+    id_primary_energy_carrier_table,
 ):
     entry = {"year": year}
 
@@ -466,12 +475,20 @@ def _create_missing_entry(  # pylint: disable=too-many-arguments
         subsector_label = id_subsector_table.label(id_subsector)
         entry["id_subsector"] = (id_subsector, subsector_label)
 
-    id_final_energy_carrier = int(df_row["id_final_energy_carrier"])
-    final_energy_carrier_label = id_final_energy_carrier_table.label(id_final_energy_carrier)
-    entry["id_final_energy_carrier"] = (
-        id_final_energy_carrier,
-        final_energy_carrier_label,
-    )
+    if id_final_energy_carrier_table is not None:
+        id_final_energy_carrier = int(df_row["id_final_energy_carrier"])
+        final_energy_carrier_label = id_final_energy_carrier_table.label(id_final_energy_carrier)
+        entry["id_final_energy_carrier"] = (
+            id_final_energy_carrier,
+            final_energy_carrier_label,
+        )
+    if id_primary_energy_carrier_table is not None:
+        id_primary_energy_carrier = int(df_row["id_primary_energy_carrier"])
+        primary_energy_carrier_label = id_primary_energy_carrier_table.label(id_primary_energy_carrier)
+        entry["id_primary_energy_carrier"] = (
+            id_primary_energy_carrier,
+            primary_energy_carrier_label,
+        )
 
     return entry
 
