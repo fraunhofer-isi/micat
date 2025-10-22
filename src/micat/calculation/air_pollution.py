@@ -18,7 +18,12 @@ def reduction_of_air_pollution(
     energy_saving_by_final_energy_carrier,
 ):
     air_pollution_factor_in_kt_per_ktoe = iiasa_parameters.reduce("id_parameter", [5, 6, 7])
+    # TODO: #507 replace heat and electricity calculation with previous generated factors
     reduction_in_kt = _factorial_reduction(air_pollution_factor_in_kt_per_ktoe, energy_saving_by_final_energy_carrier)
+    import ipdb
+
+    ipdb.set_trace()
+
     return reduction_in_kt
 
 

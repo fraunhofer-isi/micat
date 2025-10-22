@@ -89,10 +89,6 @@ def calculate_indicator_data(
             data_source,
             id_region,
         )
-        # Interpolate missing years in efficiency_res table
-        efficiency_res = extrapolation.extrapolate(
-            data_source.table("fraunhofer_efficiency_res", {}), final_energy_saving_or_capacities.years
-        )
 
     interim_data = _interim_data(
         final_energy_saving_or_capacities,
@@ -330,16 +326,19 @@ def _interim_data(
     conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(str)
 
     # Substitution factors
-    substitution_factors = data_source.table("fraunhofer_substitution_factors", {})
-    del substitution_factors["id_parameter"]
-    substitution_factors = extrapolation.extrapolate(substitution_factors, final_energy_saving_or_capacities.years)
-    # Filter for id_region
-    substitution_factors = substitution_factors.reduce("id_region", id_region)
-    # Filter for id_subsector
-    substitution_factors = substitution_factors.reduce("id_subsector", subsector_ids)
-    # Filter for id_action_type
-    action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
-    substitution_factors = substitution_factors.reduce("id_action_type", action_type_ids)
+    if subsector_ids[0] >= 30:
+        substitution_factors = data_source.table("fraunhofer_substitution_factors", {})
+        del substitution_factors["id_parameter"]
+        substitution_factors = extrapolation.extrapolate(substitution_factors, final_energy_saving_or_capacities.years)
+        # Filter for id_region
+        substitution_factors = substitution_factors.reduce("id_region", id_region)
+        # Filter for id_subsector
+        substitution_factors = substitution_factors.reduce("id_subsector", subsector_ids)
+        # Filter for id_action_type
+        action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
+        substitution_factors = substitution_factors.reduce("id_action_type", action_type_ids)
+    else:
+        substitution_factors = None
 
     conventional_primary_energy_saving = conversion.primary_energy_saving(
         energy_saving_by_final_energy_carrier,
