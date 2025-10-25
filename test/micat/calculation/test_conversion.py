@@ -116,12 +116,14 @@ def test_primary_energy_saving():
             {"id_primary_energy_carrier": 7, "id_final_energy_carrier": 7, "2020": 5, "2030": 10},
         ]
     )
+    substitution_factors = None
 
-    result = primary_energy_saving(
+    heat_saving_final, electricity_saving_final, h2_saving_final = primary_energy_saving(
         final_energy_savings_by_action_type,
         eurostat_primary_parameters,
         h2_coefficient,
         conversion_efficiency,
+        substitution_factors,
     )
-
+    result = heat_saving_final + electricity_saving_final + h2_saving_final
     assert result.columns == ["2020", "2030"]

@@ -18,26 +18,38 @@ def ecologic_indicators(
     interim_data,
     data_source,
     id_region,
+    heat_saving_final,
+    electricity_saving_final,
 ):
-    air_pollution_parameters = interim_data["air_pollution_parameters"]
+    iiasa_final_subsector_parameters = interim_data["iiasa_final_subsector_parameters"]
+    iiasa_final_subsector_parameters_generation = interim_data["iiasa_final_subsector_parameters_generation"]
     energy_saving_by_final_energy_carrier = interim_data["energy_saving_by_final_energy_carrier"]
     total_primary_energy_saving = interim_data["total_primary_energy_saving"]
 
     energy_saving_table = energy_saving.energy_saving(total_primary_energy_saving)
 
     reduction_of_air_pollution_table = air_pollution.reduction_of_air_pollution(
-        air_pollution_parameters,
+        iiasa_final_subsector_parameters,
+        iiasa_final_subsector_parameters_generation,
         energy_saving_by_final_energy_carrier,
+        heat_saving_final,
+        electricity_saving_final,
     )
 
     reduction_of_green_house_gas_emission_table = air_pollution.reduction_of_green_house_gas_emission(
-        air_pollution_parameters,
+        iiasa_final_subsector_parameters,
+        iiasa_final_subsector_parameters_generation,
         energy_saving_by_final_energy_carrier,
+        heat_saving_final,
+        electricity_saving_final,
     )
 
     reduction_of_mortality_morbidity_table = air_pollution.reduction_of_mortality_morbidity(
-        air_pollution_parameters,
+        iiasa_final_subsector_parameters,
+        iiasa_final_subsector_parameters_generation,
         energy_saving_by_final_energy_carrier,
+        heat_saving_final,
+        electricity_saving_final,
     )
 
     reduction_of_mortality_morbidity_monetization_table = air_pollution.reduction_of_mortality_morbidity_monetization(

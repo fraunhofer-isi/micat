@@ -28,11 +28,16 @@ from micat.test_utils.isi_mock import Mock, patch
 def test_social_indicators():
     mocked_interim_data = Mock()
 
+    mocked_heat_saving_final = Mock()
+    mocked_electricity_saving_final = Mock()
+
     result = calculation_social.social_indicators(
         "mocked_final_energy_saving_or_capacities",
         "mocked_population_of_municipality",
         mocked_interim_data,
         "mocked_data_source",
         "mocked_id_region",
+        mocked_heat_saving_final,
+        mocked_electricity_saving_final,
     )
     assert len(result) == 8

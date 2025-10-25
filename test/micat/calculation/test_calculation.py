@@ -90,7 +90,7 @@ class TestPublicApi:
     )
     @patch(
         calculation._interim_data,
-        "mocked_interim_data",
+        ("interim_data", "heat_saving_final", "electricity_saving_final"),
     )
     @patch(
         calculation_social.social_indicators,
@@ -313,7 +313,7 @@ class TestPrivateApi:
     )
     @patch(
         calculation.conversion.primary_energy_saving,
-        Mock(),
+        (Mock(), Mock(), Mock()),
     )
     @patch(
         calculation._additional_primary_energy_saving,
@@ -324,15 +324,12 @@ class TestPrivateApi:
         Mock(),
     )
     @patch(
-        calculation.air_pollution.subsector_parameters,
-        Mock(),
-    )
-    @patch(
         calculation.energy_cost.reduction_of_energy_cost,
         Mock(),
     )
     def test_interim_data(self):
         mocked_final_energy_saving_or_capacities = Mock()
+        mocked_final_energy_saving_or_capacities.unique_index_values = Mock([1])
         mocked_data_source = Mock()
 
         result = calculation._interim_data(
@@ -341,7 +338,8 @@ class TestPrivateApi:
             "mocked_id_region",
             "mocked_years",
         )
-        assert len(result) == 6
+        assert len(result) == 3
+        assert len(result[0]) == 7
 
     def test_mapping_from_final_to_primary_energy_carrier(self):
         database = Mock()

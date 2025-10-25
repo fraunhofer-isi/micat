@@ -90,7 +90,7 @@ def calculate_indicator_data(
             id_region,
         )
 
-    interim_data = _interim_data(
+    interim_data, heat_saving_final, electricity_saving_final = _interim_data(
         final_energy_saving_or_capacities,
         data_source,
         id_region,
@@ -105,6 +105,8 @@ def calculate_indicator_data(
         interim_data,
         data_source,
         id_region,
+        heat_saving_final,
+        electricity_saving_final,
     )
     _validate_data(social_indicators)
 
@@ -112,6 +114,8 @@ def calculate_indicator_data(
         interim_data,
         data_source,
         id_region,
+        heat_saving_final,
+        electricity_saving_final,
     )
     _validate_data(ecologic_indicators)
 
@@ -340,13 +344,14 @@ def _interim_data(
     else:
         substitution_factors = None
 
-    conventional_primary_energy_saving = conversion.primary_energy_saving(
+    heat_saving_final, electricity_saving_final, h2_saving_final = conversion.primary_energy_saving(
         energy_saving_by_final_energy_carrier,
         eurostat_primary_parameters,
         h2_coefficient,
         conversion_efficiency,
         substitution_factors,
     )
+    conventional_primary_energy_saving = heat_saving_final + electricity_saving_final + h2_saving_final
 
     additional_primary_energy_saving = _additional_primary_energy_saving(
         energy_saving_by_final_energy_carrier,
@@ -358,35 +363,37 @@ def _interim_data(
         additional_primary_energy_saving,
     )
 
+    iiasa_final_subsector_parameters = data_source.table(
+        "iiasa_final_subsector_parameters",
+        {
+            "id_region": str(id_region),
+            "id_subsector": subsector_ids,
+        },
+    )
+    iiasa_final_subsector_parameters_generation = data_source.table(
+        "iiasa_final_subsector_parameters_generation",
+        {
+            "id_region": str(id_region),
+        },
+    )
+
+    reduction_of_energy_cost = energy_cost.reduction_of_energy_cost(
+        energy_saving_by_final_energy_carrier,
+        data_source,
+        id_region,
+    )
+
     results = {
         "additional_primary_energy_saving": additional_primary_energy_saving,
         "energy_saving_by_final_energy_carrier": energy_saving_by_final_energy_carrier,
         "eurostat_primary_parameters": eurostat_primary_parameters,
         "total_primary_energy_saving": total_primary_energy_saving,
+        "iiasa_final_subsector_parameters": iiasa_final_subsector_parameters,
+        "iiasa_final_subsector_parameters_generation": iiasa_final_subsector_parameters_generation,
+        "reduction_of_energy_cost": reduction_of_energy_cost,
     }
 
-    if subsector_ids[0] >= 30:
-        # TODO: #507
-        results["air_pollution_parameters"] = air_pollution.subsector_parameters(
-            data_source,
-            id_region,
-            subsector_ids,
-        )
-        results["reduction_of_energy_cost"] = None
-    else:
-        results["air_pollution_parameters"] = air_pollution.subsector_parameters(
-            data_source,
-            id_region,
-            subsector_ids,
-        )
-
-        results["reduction_of_energy_cost"] = energy_cost.reduction_of_energy_cost(
-            energy_saving_by_final_energy_carrier,
-            data_source,
-            id_region,
-        )
-
-    return results
+    return results, heat_saving_final, electricity_saving_final
 
 
 def _mapping_from_final_to_primary_energy_carrier(database):
@@ -459,11 +466,7 @@ def _translate_result(key, table, data_source):
 
 
 def _translate_result_tables(result_tables, data_source):
-    translated_results = {
-        key: _translate_result(key, table, data_source)
-        for key, table in result_tables.items()
-        if isinstance(table, Table)
-    }
+    translated_results = {key: _translate_result(key, table, data_source) for key, table in result_tables.items()}
     return translated_results
 
 

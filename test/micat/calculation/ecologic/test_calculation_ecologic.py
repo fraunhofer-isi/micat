@@ -29,10 +29,14 @@ class TestEcologicIndicators:
         id_region = 0
 
         mocked_data_source = Mock()
+        mocked_heat_saving_final = Mock()
+        mocked_electricity_saving_final = Mock()
 
         result = calculation_ecologic.ecologic_indicators(
             mocked_interim_data,
             mocked_data_source,
             id_region,
+            mocked_heat_saving_final,
+            mocked_electricity_saving_final,
         )
         assert len(result) == 9

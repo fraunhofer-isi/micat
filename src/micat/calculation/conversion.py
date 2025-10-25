@@ -61,7 +61,7 @@ def primary_energy_saving(
     electricity_conversion_efficiency._data_frame = electricity_conversion_efficiency._data_frame[common_years]
     electricity_saving_final = electricity_total * electricity_coefficient / electricity_conversion_efficiency
 
-    return heat_saving_final + electricity_saving_final + h2_saving_final
+    return heat_saving_final, electricity_saving_final, h2_saving_final
 
 
 def convert_units_of_measure_specific_parameters(measure_specific_parameters):
