@@ -299,8 +299,11 @@ def _share_of_energy_poor_population_owner(
         _extrapolated_parameters=None,
         _constants=None,
     ):
-        reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce("id_measure", id_measure)
-        reduction_of_energy_cost_for_measure = reduction_of_energy_cost_by_energy_carrier.sum()
+        if reduction_of_energy_cost is None:
+            reduction_of_energy_cost_for_measure = None
+        else:
+            reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce("id_measure", id_measure)
+            reduction_of_energy_cost_for_measure = reduction_of_energy_cost_by_energy_carrier.sum()
 
         lifetime_for_measure = measure_specific_lifetime.reduce("id_measure", id_measure)
         number_of_affected_dwellings_for_measure = number_of_affected_dwellings.reduce("id_measure", id_measure)
@@ -358,12 +361,16 @@ def _share_of_energy_poor_population_tenant(
         _extrapolated_parameters=None,
         _constants=None,
     ):
-        reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce("id_measure", id_measure)
+        if reduction_of_energy_cost is None:
+            reduction_of_energy_cost_for_measure = None
+        else:
+            reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce("id_measure", id_measure)
+            reduction_of_energy_cost_for_measure = reduction_of_energy_cost_by_energy_carrier.sum()
 
         share_input = {
             "subsidy_rate": subsidy_rate,
             "energy_poverty_gap": energy_poverty_gap,
-            "reduction_of_energy_cost": reduction_of_energy_cost_by_energy_carrier.sum(),
+            "reduction_of_energy_cost": reduction_of_energy_cost_for_measure,
             "m2_equivalence_coefficient": m2_equivalence_coefficient,
             "number_of_affected_dwellings": number_of_affected_dwellings.reduce("id_measure", id_measure),
             "investment_in_euro": investment_in_euro.reduce("id_measure", id_measure),

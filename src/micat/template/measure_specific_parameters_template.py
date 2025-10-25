@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 
 from micat.calculation import extrapolation
-from micat.calculation.calculation import calculate_energy_produced
 from micat.calculation.ecologic import fuel_split
 from micat.calculation.economic import investment, population
 from micat.calculation.social import dwelling

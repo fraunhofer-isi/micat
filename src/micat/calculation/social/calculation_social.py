@@ -18,9 +18,12 @@ def social_indicators(
     interim_data,
     data_source,
     id_region,
+    heat_saving_final,
+    electricity_saving_final,
 ):
     # pylint: disable-msg=too-many-locals
-    air_pollution_parameters = interim_data["air_pollution_parameters"]
+    iiasa_final_subsector_parameters = interim_data["iiasa_final_subsector_parameters"]
+    iiasa_final_subsector_parameters_generation = interim_data["iiasa_final_subsector_parameters_generation"]
     energy_saving_by_final_energy_carrier = interim_data["energy_saving_by_final_energy_carrier"]
     reduction_of_energy_cost = interim_data["reduction_of_energy_cost"]
 
@@ -33,8 +36,11 @@ def social_indicators(
     )
 
     reduction_of_lost_work_days_table = air_pollution.reduction_of_lost_work_days(
-        air_pollution_parameters,
+        iiasa_final_subsector_parameters,
+        iiasa_final_subsector_parameters_generation,
         energy_saving_by_final_energy_carrier,
+        heat_saving_final,
+        electricity_saving_final,
     )
 
     lost_working_days_monetization_table = (

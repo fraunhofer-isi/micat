@@ -15,39 +15,91 @@ from micat.table.table import Table
 
 def reduction_of_air_pollution(
     iiasa_parameters,
+    iiasa_parameters_generation,
     energy_saving_by_final_energy_carrier,
+    heat_saving_final,
+    electricity_saving_final,
 ):
     air_pollution_factor_in_kt_per_ktoe = iiasa_parameters.reduce("id_parameter", [5, 6, 7])
     reduction_in_kt = _factorial_reduction(air_pollution_factor_in_kt_per_ktoe, energy_saving_by_final_energy_carrier)
-    return reduction_in_kt
+
+    # Adjust for electricity generation savings
+    electricity_generation_factor = iiasa_parameters_generation.reduce("id_parameter", [5, 6, 7])
+    electricity_adjustment = _factorial_reduction(
+        electricity_generation_factor,
+        electricity_saving_final,
+    )
+
+    # Adjust for heat generation savings
+    heat_generation_factor = iiasa_parameters_generation.reduce("id_parameter", [5, 6, 7])
+    heat_adjustment = _factorial_reduction(
+        heat_generation_factor,
+        heat_saving_final,
+    )
+
+    return reduction_in_kt + electricity_adjustment + heat_adjustment
 
 
 def reduction_of_green_house_gas_emission(
     iiasa_parameters,
+    iiasa_parameters_generation,
     energy_saving_by_final_energy_carrier,
+    heat_saving_final,
+    electricity_saving_final,
 ):
     ghg_factor_in_kt_per_ktoe = iiasa_parameters.query("id_parameter==4")
     reduction_in_kt = _factorial_reduction(
         ghg_factor_in_kt_per_ktoe,
         energy_saving_by_final_energy_carrier,
     )
-    reduction_in_kt = reduction_in_kt.reduce("id_parameter", [4])
-    del reduction_in_kt["id_parameter"]
-    return reduction_in_kt
+
+    # Adjust for electricity generation savings
+    electricity_generation_factor = iiasa_parameters_generation.reduce("id_parameter", [4])
+    electricity_adjustment = _factorial_reduction(
+        electricity_generation_factor,
+        electricity_saving_final,
+    )
+
+    # Adjust for heat generation savings
+    heat_generation_factor = iiasa_parameters_generation.reduce("id_parameter", [4])
+    heat_adjustment = _factorial_reduction(
+        heat_generation_factor,
+        heat_saving_final,
+    )
+
+    result = reduction_in_kt + electricity_adjustment + heat_adjustment
+    del result["id_parameter"]
+
+    return result
 
 
 def reduction_of_mortality_morbidity(  # = id_indicator 4, human_health_I
     iiasa_parameters,
+    iiasa_parameters_generation,
     energy_saving_by_final_energy_carrier,
+    heat_saving_final,
+    electricity_saving_final,
 ):
     mortality_morbidity_factor = iiasa_parameters.reduce("id_parameter", [8, 9])
     reduction = _factorial_reduction(
         mortality_morbidity_factor,
         energy_saving_by_final_energy_carrier,
     )
-    # TO DO: can this include two values for id_parameter? If not, remove id_parameter from result
-    # it seems that id_parameter = 9 is missing in iiasa data?
-    return reduction
+
+    # Adjust for electricity generation savings
+    electricity_generation_factor = iiasa_parameters_generation.reduce("id_parameter", [8, 9])
+    electricity_adjustment = _factorial_reduction(
+        electricity_generation_factor,
+        electricity_saving_final,
+    )
+
+    # Adjust for heat generation savings
+    heat_generation_factor = iiasa_parameters_generation.reduce("id_parameter", [8, 9])
+    heat_adjustment = _factorial_reduction(
+        heat_generation_factor,
+        heat_saving_final,
+    )
+    return reduction + electricity_adjustment + heat_adjustment
 
 
 def reduction_of_mortality_morbidity_monetization(
@@ -83,29 +135,33 @@ def reduction_of_mortality_morbidity_monetization(
 
 def reduction_of_lost_work_days(
     iiasa_parameters,
+    iiasa_parameters_generation,
     energy_saving_by_final_energy_carrier,
+    heat_saving_final,
+    electricity_saving_final,
 ):
     lost_work_days_factor = iiasa_parameters.query("id_parameter==23")
     reduction = _factorial_reduction(
         lost_work_days_factor,
         energy_saving_by_final_energy_carrier,
     )
-    reduction = reduction.reduce("id_parameter", [23])
-    del reduction["id_parameter"]
-    return reduction
 
+    # Adjust for electricity generation savings
+    electricity_generation_factor = iiasa_parameters_generation.reduce("id_parameter", [23])
+    electricity_adjustment = _factorial_reduction(
+        electricity_generation_factor,
+        electricity_saving_final,
+    )
 
-def subsector_parameters(
-    data_source,
-    id_region,
-    subsector_ids,
-):
-    where_clause = {
-        "id_region": str(id_region),
-        "id_subsector": subsector_ids,
-    }
-    table = data_source.table("iiasa_final_subsector_parameters", where_clause)
-    return table
+    # Adjust for heat generation savings
+    heat_generation_factor = iiasa_parameters_generation.reduce("id_parameter", [23])
+    heat_adjustment = _factorial_reduction(
+        heat_generation_factor,
+        heat_saving_final,
+    )
+    results = reduction + electricity_adjustment + heat_adjustment
+    del results["id_parameter"]
+    return results
 
 
 def _factorial_reduction(
@@ -115,6 +171,7 @@ def _factorial_reduction(
     year_numbers = list_utils.string_to_integer(energy_saving_by_final_energy_carrier.columns)
     extrapolated_factor = extrapolation.extrapolate(conversion_factor_by_final_energy_carrier, year_numbers)
     output = energy_saving_by_final_energy_carrier * extrapolated_factor
+
     if output.contains_nan():
         message = (
             "Result of multiplication contains NaN values. " + "Factors need to be provided for all energy carriers."

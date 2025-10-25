@@ -90,7 +90,7 @@ def calculate_indicator_data(
             id_region,
         )
 
-    interim_data = _interim_data(
+    interim_data, heat_saving_final, electricity_saving_final = _interim_data(
         final_energy_saving_or_capacities,
         data_source,
         id_region,
@@ -105,6 +105,8 @@ def calculate_indicator_data(
         interim_data,
         data_source,
         id_region,
+        heat_saving_final,
+        electricity_saving_final,
     )
     _validate_data(social_indicators)
 
@@ -112,6 +114,8 @@ def calculate_indicator_data(
         interim_data,
         data_source,
         id_region,
+        heat_saving_final,
+        electricity_saving_final,
     )
     _validate_data(ecologic_indicators)
 
@@ -325,12 +329,29 @@ def _interim_data(
     conversion_efficiency._data_frame = conversion_efficiency._data_frame.reindex(columns=all_years).interpolate(axis=1)
     conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(str)
 
-    conventional_primary_energy_saving = conversion.primary_energy_saving(
+    # Substitution factors
+    if subsector_ids[0] >= 30:
+        substitution_factors = data_source.table("fraunhofer_substitution_factors", {})
+        del substitution_factors["id_parameter"]
+        substitution_factors = extrapolation.extrapolate(substitution_factors, final_energy_saving_or_capacities.years)
+        # Filter for id_region
+        substitution_factors = substitution_factors.reduce("id_region", id_region)
+        # Filter for id_subsector
+        substitution_factors = substitution_factors.reduce("id_subsector", subsector_ids)
+        # Filter for id_action_type
+        action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
+        substitution_factors = substitution_factors.reduce("id_action_type", action_type_ids)
+    else:
+        substitution_factors = None
+
+    heat_saving_final, electricity_saving_final, h2_saving_final = conversion.primary_energy_saving(
         energy_saving_by_final_energy_carrier,
         eurostat_primary_parameters,
         h2_coefficient,
         conversion_efficiency,
+        substitution_factors,
     )
+    conventional_primary_energy_saving = heat_saving_final + electricity_saving_final + h2_saving_final
 
     additional_primary_energy_saving = _additional_primary_energy_saving(
         energy_saving_by_final_energy_carrier,
@@ -342,10 +363,18 @@ def _interim_data(
         additional_primary_energy_saving,
     )
 
-    air_pollution_parameters = air_pollution.subsector_parameters(
-        data_source,
-        id_region,
-        subsector_ids,
+    iiasa_final_subsector_parameters = data_source.table(
+        "iiasa_final_subsector_parameters",
+        {
+            "id_region": str(id_region),
+            "id_subsector": subsector_ids,
+        },
+    )
+    iiasa_final_subsector_parameters_generation = data_source.table(
+        "iiasa_final_subsector_parameters_generation",
+        {
+            "id_region": str(id_region),
+        },
     )
 
     reduction_of_energy_cost = energy_cost.reduction_of_energy_cost(
@@ -354,14 +383,17 @@ def _interim_data(
         id_region,
     )
 
-    return {
+    results = {
         "additional_primary_energy_saving": additional_primary_energy_saving,
-        "air_pollution_parameters": air_pollution_parameters,
         "energy_saving_by_final_energy_carrier": energy_saving_by_final_energy_carrier,
         "eurostat_primary_parameters": eurostat_primary_parameters,
-        "reduction_of_energy_cost": reduction_of_energy_cost,
         "total_primary_energy_saving": total_primary_energy_saving,
+        "iiasa_final_subsector_parameters": iiasa_final_subsector_parameters,
+        "iiasa_final_subsector_parameters_generation": iiasa_final_subsector_parameters_generation,
+        "reduction_of_energy_cost": reduction_of_energy_cost,
     }
+
+    return results, heat_saving_final, electricity_saving_final
 
 
 def _mapping_from_final_to_primary_energy_carrier(database):
@@ -440,6 +472,8 @@ def _translate_result_tables(result_tables, data_source):
 
 def _validate_data(tables):
     for table_name, table in tables.items():
+        if not isinstance(table, Table):
+            continue
         if table.contains_nan():
             message = "Table " + table_name + " contains NaN values!"
             raise ValueError(message)

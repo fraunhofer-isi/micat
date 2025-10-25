@@ -44,7 +44,7 @@ def test_energy_saving_by_final_energy_carrier():
         mocked_final_energy_saving_or_capacities,
         "mocked_data_source",
         "mocked_id_region",
-        "mocked_subsector_ids",
+        [1],
     )
     assert result == "mocked_result"
 

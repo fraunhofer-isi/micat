@@ -24,17 +24,22 @@ mocked_fuel_split = Table(
 
 @patch(
     air_pollution._factorial_reduction,
-    "mocked_result",
+    "_factorial_reduction",
 )
 def test_reduction_of_air_pollution():
     mocked_iiasa_parameters = Mock()
     mocked_iiasa_parameters.reduce = Mock()
+    mocked_iiasa_parameters_generation = Mock()
+    mocked_iiasa_parameters_generation.reduce = Mock()
     result = air_pollution.reduction_of_air_pollution(
         mocked_iiasa_parameters,
+        mocked_iiasa_parameters_generation,
         "mocked_energy_saving_by_final_energy_carrier",
+        "mocked_heat_saving_final",
+        "mocked_electricity_saving_final",
     )
 
-    assert result == "mocked_result"
+    assert result == "_factorial_reduction_factorial_reduction_factorial_reduction"
 
 
 mocked_reduction = Table(
@@ -51,27 +56,37 @@ mocked_reduction = Table(
 def test_reduction_of_green_house_gas_emission():
     mocked_iiasa_parameters = Mock()
     mocked_iiasa_parameters.reduce = Mock()
+    mocked_iiasa_parameters_generation = Mock()
+    mocked_iiasa_parameters_generation.reduce = Mock()
     result = air_pollution.reduction_of_green_house_gas_emission(
         mocked_iiasa_parameters,
+        mocked_iiasa_parameters_generation,
         "mocked_energy_saving_by_final_energy_carrier",
+        "mocked_heat_saving_final",
+        "mocked_electricity_saving_final",
     )
 
-    assert result["2020"][1] == 99
+    assert result["2020"][1] == 99 * 3
 
 
 @patch(
     air_pollution._factorial_reduction,
-    "mocked_result",
+    "_factorial_reduction",
 )
 def test_reduction_of_mortality_morbidity():
     mocked_iiasa_parameters = Mock()
     mocked_iiasa_parameters.reduce = Mock()
+    mocked_iiasa_parameters_generation = Mock()
+    mocked_iiasa_parameters_generation.reduce = Mock()
     result = air_pollution.reduction_of_mortality_morbidity(
         mocked_iiasa_parameters,
+        mocked_iiasa_parameters_generation,
         "mocked_energy_saving_by_final_energy_carrier",
+        "mocked_heat_saving_final",
+        "mocked_electricity_saving_final",
     )
 
-    assert result == "mocked_result"
+    assert result == "_factorial_reduction_factorial_reduction_factorial_reduction"
 
 
 mocked_reduction = AnnualSeries({"2020": 1000, "2030": 2000})
@@ -133,24 +148,17 @@ mocked_reduction = Table(
 def test_reduction_of_lost_work_days():
     mocked_iiasa_parameters = Mock()
     mocked_iiasa_parameters.reduce = Mock()
+    mocked_iiasa_parameters_generation = Mock()
+    mocked_iiasa_parameters_generation.reduce = Mock()
     result = air_pollution.reduction_of_lost_work_days(
         mocked_iiasa_parameters,
+        mocked_iiasa_parameters_generation,
         "mocked_energy_saving_by_final_energy_carrier",
+        "mocked_heat_saving_final",
+        "mocked_electricity_saving_final",
     )
 
-    assert result["2020"][1] == 33
-
-
-def test_subsector_parameters():
-    mocked_database = Mock()
-    mocked_database.table = Mock("mocked_result")
-
-    result = air_pollution.subsector_parameters(
-        mocked_database,
-        "mocked_id_region",
-        "mocked_subsector_ids",
-    )
-    assert result == "mocked_result"
+    assert result["2020"][1] == 33 * 3
 
 
 @patch(micat.utils.list.string_to_integer, "mocked_columns")
