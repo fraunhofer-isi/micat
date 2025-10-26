@@ -20,6 +20,11 @@ def main():
     data = Table.read_excel(e3m_parameters_path)
     database_import.write_to_sqlite(data, "e3m_parameters")
 
+    # Import e3m_parameters for renewable energy
+    e3m_parameters_path = import_path + "/e3m_parameters_RES.xlsx"
+    data = Table.read_excel(e3m_parameters_path)
+    database_import.write_to_sqlite(data, "e3m_parameters_res")
+
     # Import e3m_global_parameters
     investments_per_ktoe_path = import_path + "/investments_per_ktoe_updated.xlsx"
     investments_per_ktoe = Table.read_excel(investments_per_ktoe_path)
