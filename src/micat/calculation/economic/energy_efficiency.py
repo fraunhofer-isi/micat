@@ -11,8 +11,13 @@ def turnover_of_energy_efficiency_goods(
 ):
     years = final_energy_saving_or_capacities.years
     action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
-    specific_turnover = _specific_turnover(data_source, action_type_ids, years)
-    turnover = specific_turnover * final_energy_saving_or_capacities
+    if action_type_ids[0] >= 30:
+        # Return zero values for renewables
+        turnover = final_energy_saving_or_capacities.copy()
+        turnover._data_frame = turnover._data_frame * 0
+    else:
+        specific_turnover = _specific_turnover(data_source, action_type_ids, years)
+        turnover = specific_turnover * final_energy_saving_or_capacities
     del turnover["id_subsector"]
     del turnover["id_action_type"]
     return turnover

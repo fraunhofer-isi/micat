@@ -103,7 +103,7 @@ def investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_r
             _provide_default_investment,
         )
 
-        del investment["id_subsector"]
+    del investment["id_subsector"]
     return investment
 
 

@@ -363,13 +363,27 @@ def _interim_data(
         additional_primary_energy_saving,
     )
 
-    iiasa_final_subsector_parameters = data_source.table(
-        "iiasa_final_subsector_parameters",
-        {
-            "id_region": str(id_region),
-            "id_subsector": subsector_ids,
-        },
-    )
+    if subsector_ids[0] >= 30:
+        # Mock iiasa_final_subsector_parameters for renewables to avoid errors in social and ecologic calculations
+        iiasa_final_subsector_parameters = data_source.table(
+            "iiasa_final_subsector_parameters",
+            {
+                "id_region": str(id_region),
+                "id_subsector": [1],
+            },
+        )
+        iiasa_final_subsector_parameters._data_frame[:] = 0
+        iiasa_final_subsector_parameters._data_frame = iiasa_final_subsector_parameters._data_frame.rename(
+            index=lambda x: subsector_ids[0], level="id_subsector"
+        )
+    else:
+        iiasa_final_subsector_parameters = data_source.table(
+            "iiasa_final_subsector_parameters",
+            {
+                "id_region": str(id_region),
+                "id_subsector": subsector_ids,
+            },
+        )
     iiasa_final_subsector_parameters_generation = data_source.table(
         "iiasa_final_subsector_parameters_generation",
         {

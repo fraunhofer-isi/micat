@@ -13,6 +13,12 @@ def reduction_of_energy_cost(
     data_source,
     id_region,
 ):
+    subsector_id = energy_saving_by_final_energy_carrier_in_ktoe.unique_index_values("id_subsector")[0]
+    if subsector_id >= 30:
+        # Return zero values for renewables
+        total_reduction_of_energy_costs_in_euro = energy_saving_by_final_energy_carrier_in_ktoe.copy()
+        total_reduction_of_energy_costs_in_euro._data_frame = total_reduction_of_energy_costs_in_euro._data_frame * 0
+        return total_reduction_of_energy_costs_in_euro
     e3m_energy_prices = _e3m_energy_prices(
         energy_saving_by_final_energy_carrier_in_ktoe,
         data_source,
@@ -93,6 +99,10 @@ def _total_reduction_of_energy_costs_in_euro(
 def reduction_of_energy_cost_by_final_energy_carrier(
     reduction_of_energy_cost_by_action_type,
 ):
+    action_type_ids = reduction_of_energy_cost_by_action_type.unique_index_values("id_action_type")
+    if action_type_ids[0] >= 30:
+        # Return zero values for renewables
+        reduction_of_energy_cost_by_action_type._data_frame = reduction_of_energy_cost_by_action_type._data_frame * 0
     reduction_by_final_energy_carrier = reduction_of_energy_cost_by_action_type.aggregate_to(
         ["id_measure", "id_final_energy_carrier"],
     )

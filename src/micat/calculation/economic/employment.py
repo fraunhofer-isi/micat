@@ -19,14 +19,18 @@ def additional_employment(
         id_region,
     )
 
-    e3m_parameters = data_source.table(
-        "e3m_parameters",
-        {
-            "id_region": str(id_region),
-            "id_action_type": action_type_ids,
-        },
-    )
-    employment_coefficient_in_number_per_euro = e3m_parameters.reduce("id_parameter", 39)
+    if action_type_ids[0] >= 30:
+        # Return zero values for renewables
+        employment_coefficient_in_number_per_euro = 0
+    else:
+        e3m_parameters = data_source.table(
+            "e3m_parameters",
+            {
+                "id_region": str(id_region),
+                "id_action_type": action_type_ids,
+            },
+        )
+        employment_coefficient_in_number_per_euro = e3m_parameters.reduce("id_parameter", 39)
 
     extra_employment = annual_investment_cost_in_euro * employment_coefficient_in_number_per_euro
     del extra_employment["id_action_type"]
