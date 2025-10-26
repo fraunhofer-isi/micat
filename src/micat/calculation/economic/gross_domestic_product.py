@@ -19,19 +19,22 @@ def impact_on_gross_domestic_product(
     )
 
     action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
+    subsector_ids = final_energy_saving_or_capacities.unique_index_values("id_subsector")
 
+    table_name = "e3m_parameters"
+    where_clause = {
+        "id_region": str(id_region),
+        "id_action_type": action_type_ids,
+    }
     if action_type_ids[0] >= 30:
-        # Return zero values for renewables
-        gdp_coefficient_in_euro_per_euro = 0
-    else:
-        e3m_parameters = data_source.table(
-            "e3m_parameters",
-            {
-                "id_region": str(id_region),
-                "id_action_type": action_type_ids,
-            },
-        )
-        gdp_coefficient_in_euro_per_euro = e3m_parameters.reduce("id_parameter", 38)
+        table_name = "e3m_parameters_res"
+        where_clause["id_subsector"] = subsector_ids
+
+    e3m_parameters = data_source.table(
+        table_name,
+        where_clause,
+    )
+    gdp_coefficient_in_euro_per_euro = e3m_parameters.reduce("id_parameter", 38)
 
     additional_gdp_in_euro = annual_investment_in_euro * gdp_coefficient_in_euro_per_euro
     del additional_gdp_in_euro["id_action_type"]
