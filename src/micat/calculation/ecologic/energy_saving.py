@@ -6,6 +6,7 @@
 import pandas as pd
 
 from micat.calculation.ecologic import fuel_split
+from micat.calculation import extrapolation
 from micat.table.table import Table
 
 
@@ -21,11 +22,11 @@ def efficiency_res_by_action_type(final_energy_saving_or_capacities, data_source
             "id_parameter": "66",  # RES energy allocation
         },
     )
+    efficiency_res = extrapolation.extrapolate(efficiency_res, final_energy_saving_or_capacities.years)
     efficiency_res_df = efficiency_res._data_frame
     capacities = final_energy_saving_or_capacities._data_frame
     results = []
 
-    # Iterate through each measure in your first DataFrame
     for (id_measure, id_subsector, id_action_type), values in capacities.iterrows():
         # Filter efficiency_res for matching subsector & action_type
         subset = efficiency_res_df[

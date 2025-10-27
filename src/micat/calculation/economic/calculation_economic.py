@@ -147,5 +147,5 @@ def economic_indicators(  # pylint: disable=too-many-locals
         "reductionOfAdditionalCapacitiesInGridMonetization": monetization_of_reduction_of_additional_capacities_in_grid,
         "reductionOfEnergyCost": reduction_of_energy_cost_by_final_energy_carrier,
         "reductionOfImportDependency": reduction_of_import_dependency_table,
-        "turnoverOfEnergyEfficiencyGoods": turnover_of_energy_efficiency_goods,
+        # "turnoverOfEnergyEfficiencyGoods": turnover_of_energy_efficiency_goods,
     }

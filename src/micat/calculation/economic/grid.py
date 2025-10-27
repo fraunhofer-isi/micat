@@ -13,11 +13,16 @@ def reduction_of_additional_capacities_in_grid(
     id_region,
 ):
     years = final_energy_saving_electricity.years
-    capacity_reduction_factor = _capacity_reduction_factor(
-        data_source,
-        id_region,
-        years,
-    )
+    subsector_ids = final_energy_saving_electricity.unique_index_values("id_subsector")
+    if subsector_ids[0] >= 30:
+        # Return zero values for renewables
+        capacity_reduction_factor = 0
+    else:
+        capacity_reduction_factor = _capacity_reduction_factor(
+            data_source,
+            id_region,
+            years,
+        )
     product = final_energy_saving_electricity * capacity_reduction_factor
 
     del product["id_subsector"]

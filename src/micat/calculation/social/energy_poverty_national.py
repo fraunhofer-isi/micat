@@ -299,11 +299,8 @@ def _share_of_energy_poor_population_owner(
         _extrapolated_parameters=None,
         _constants=None,
     ):
-        if reduction_of_energy_cost is None:
-            reduction_of_energy_cost_for_measure = None
-        else:
-            reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce("id_measure", id_measure)
-            reduction_of_energy_cost_for_measure = reduction_of_energy_cost_by_energy_carrier.sum()
+        reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce("id_measure", id_measure)
+        reduction_of_energy_cost_for_measure = reduction_of_energy_cost_by_energy_carrier.sum()
 
         lifetime_for_measure = measure_specific_lifetime.reduce("id_measure", id_measure)
         number_of_affected_dwellings_for_measure = number_of_affected_dwellings.reduce("id_measure", id_measure)

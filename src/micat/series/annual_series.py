@@ -64,6 +64,10 @@ class AnnualSeries(AbstractSeries):
     def __len__(self):
         return len(self._series)
 
+    def sum(self):
+        total = self._series.sum()
+        return total
+
     def map(self, mapping_function):
         series = self._series
         new_series_data = [mapping_function(value, year) for year, value in series.items()]
