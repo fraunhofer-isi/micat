@@ -115,10 +115,10 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #        id_region,
     #    )
 
-    turnover_of_energy_efficiency_goods = energy_efficiency.turnover_of_energy_efficiency_goods(
-        final_energy_saving_or_capacities,
-        data_source,
-    )
+    # turnover_of_energy_efficiency_goods = energy_efficiency.turnover_of_energy_efficiency_goods(
+    #     final_energy_saving_or_capacities,
+    #     data_source,
+    # )
 
     reduction_of_additional_capacities_in_grid = ecologic_indicators["reductionOfAdditionalCapacitiesInGrid"]
 
