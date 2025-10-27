@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Investments
 description: This page shows how to determine the investments flowing into the calculations.
 license: AGPL

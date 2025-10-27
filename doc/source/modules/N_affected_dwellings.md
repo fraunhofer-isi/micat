@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Number of affected dwellings assumption
 description: This page shows the equation used to assume the number of affected buildings for residential sector measures.
 license: AGPL

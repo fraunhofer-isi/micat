@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Employment effects
 description: This page shows the equations necessary to calculate employment effects.
 license: AGPL

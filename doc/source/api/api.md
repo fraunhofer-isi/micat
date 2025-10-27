@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: API
 description: Documentation of the Appliation Programming Interface (API)
 license: AGPL

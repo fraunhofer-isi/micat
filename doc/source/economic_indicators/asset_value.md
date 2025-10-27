@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Asset value of buildings
 description: This page shows the equations necessary to calculate the impact of energy efficiency on asset values of residential and tertiary buildings.
 license: AGPL

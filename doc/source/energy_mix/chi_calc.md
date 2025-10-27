@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Calculation of the improvement action energy mix coefficient
 description: This page shows the equations necessary to calculate the coefficient to convert the (sub-)sectoral energy mix to improvement action energy mix.
 license: AGPL

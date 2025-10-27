@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Avoided investments in additional capacity
 description: This page shows the equations necessary to calculate avoided investments in additional capacity due to energy efficiency.
 license: AGPL

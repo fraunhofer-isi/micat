@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Impact on energy intensity
 description: This page shows the equations necessary to calculate the impact of energy savings on energy intensity.
 license: AGPL

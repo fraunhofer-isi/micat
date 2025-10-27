@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Selection of the geographic area
 description: How to use the geographic selection pane and how it works in the back end
 tooltip: True

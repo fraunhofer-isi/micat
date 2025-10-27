@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Primary and final energy savings
 description: This page shows the equations necessary to calculate primary and final energy savings.
 license: AGPL

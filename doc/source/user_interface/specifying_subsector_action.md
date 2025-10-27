@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Selection of (sub-)sector and improvement action
 description: This page helps with the selection of (sub-)sector and improvement action in the MICATool vizard
 license: AGPL

@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Glossary of pages
 description: This page lists all the pages contained in the MICATool documentation.
 license: AGPL

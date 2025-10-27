@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: FEC-to-PEC conversion
 description: This page contains the equations to convert final energy (FEC) to primary energy consumption (PEC).
 license: AGPL

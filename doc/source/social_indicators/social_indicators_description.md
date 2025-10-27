@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Social indicators
 description: This page describes the underlying assumptions and data sources for the social indicators.
 license: AGPL

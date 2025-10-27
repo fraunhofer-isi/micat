@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Avoided lost work days due to air pollution
 description: This page shows the equations necessary to calculate the health effects linked to reduced air pollution in terms of lost work days.
 license: AGPL

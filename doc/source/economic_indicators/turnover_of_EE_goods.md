@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Turnover of energy efficiency goods
 description: This page shows the equations necessary to calculate the turnover of energy efficiency goods.
 license: AGPL

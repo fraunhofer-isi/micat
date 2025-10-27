@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: The front end vizard of the MICATool
 description: How to use the front end of the MICATool, in simple steps
 tooltip: True

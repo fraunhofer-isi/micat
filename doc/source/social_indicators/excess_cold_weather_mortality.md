@@ -1,4 +1,8 @@
 ---
+# © 2025 Fraunhofer-Gesellschaft e.V., München
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 title: Health effects linked to indoor climate
 description: This page shows the equations necessary to calculate the health effects linked to improved indoor climate.
 license: AGPL
