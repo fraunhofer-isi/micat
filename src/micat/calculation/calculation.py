@@ -205,7 +205,7 @@ def _extra_nuclear_table(
     id_action_type,
     columns,
 ):
-    id_primary_energy_carrier_electricity = 1
+    id_primary_energy_carrier_electricity = 7
     id_primary_energy_carrier_renewables = 5
     id_primary_energy_carrier_other = 6
 
