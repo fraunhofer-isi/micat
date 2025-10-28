@@ -205,6 +205,7 @@ def _extra_nuclear_table(
     id_action_type,
     columns,
 ):
+    id_primary_energy_carrier_electricity = 1
     id_primary_energy_carrier_renewables = 5
     id_primary_energy_carrier_other = 6
 
@@ -215,11 +216,13 @@ def _extra_nuclear_table(
     }
     for year in columns:
         base_entry[year] = 0
+    electricity_entry = base_entry.copy()
+    electricity_entry["id_primary_energy_carrier"] = id_primary_energy_carrier_electricity
     renewables_entry = base_entry.copy()
     renewables_entry["id_primary_energy_carrier"] = id_primary_energy_carrier_renewables
     other_entry = base_entry.copy()
     other_entry["id_primary_energy_carrier"] = id_primary_energy_carrier_other
-    extra_nuclear_table = Table([renewables_entry, other_entry])
+    extra_nuclear_table = Table([electricity_entry, renewables_entry, other_entry])
     return extra_nuclear_table
 
 
