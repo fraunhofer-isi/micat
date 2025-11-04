@@ -124,6 +124,8 @@ def test_primary_energy_saving():
         h2_coefficient,
         conversion_efficiency,
         substitution_factors,
+        Mock(),
+        1,
     )
     result = heat_saving_final + electricity_saving_final + h2_saving_final
     assert result.columns == ["2020", "2030"]

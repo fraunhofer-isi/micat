@@ -71,14 +71,17 @@ def _get_measure_specific_data(
         final_energy_saving_or_capacities,
         wuppertal_parameters,
         data_source,
+        is_renewable,
+    )
+
+    results["affectedFuels"] = _get_fuel_data(
+        context,
+        final_energy_saving_or_capacities,
+        data_source,
+        is_renewable,
     )
 
     if not is_renewable:
-        results["affectedFuels"] = _get_fuel_data(
-            context,
-            final_energy_saving_or_capacities,
-            data_source,
-        )
         results["fuelSwitch"] = _get_fuel_switch_data(final_energy_saving_or_capacities.years, id_sector, data_source)
 
     results["residential"] = _get_residential_data(
@@ -86,6 +89,7 @@ def _get_measure_specific_data(
         final_energy_saving_or_capacities,
         wuppertal_parameters,
         data_source,
+        is_renewable,
     )
 
     results["context"] = [
@@ -115,24 +119,9 @@ def _get_main_data(
     final_energy_saving_or_capacities,
     wuppertal_parameters,
     data_source,
+    is_renewable=None,
 ):
     main_data = {
-        "energy_savings": {
-            "id_parameter": None,
-            "id_final_energy_carrier": None,
-            "label": "Energy savings",
-            "unit": context["unit"]["symbol"],
-            "importance": "mandatory",
-            "constants": None,
-        },
-        "investment_costs": {
-            "id_parameter": 40,
-            "id_final_energy_carrier": None,
-            "label": "Investment costs",
-            "unit": "Mio. \u20ac",
-            "importance": "mandatory",
-            "constants": None,
-        },
         "subsidy_rate": {
             "id_parameter": 35,
             "id_final_energy_carrier": None,
@@ -150,25 +139,119 @@ def _get_main_data(
             "constants": _lifetime(context, data_source),
         },
     }
-
-    main_data["energy_savings"] = (
-        main_data["energy_savings"] | final_energy_saving_or_capacities._data_frame.to_dict(orient="records")[0]
-    )
-
-    investment_cost = investment.investment_cost_in_euro(
-        final_energy_saving_or_capacities,
-        data_source,
-        id_region=context["id_region"],
-    )
-
-    # Convert to million euros to display the advanced parameter investment cost in mio. €
-    investment_cost._data_frame = investment_cost._data_frame.select_dtypes(exclude=["object", "datetime"]) / 1_000_000
-    main_data["investment_costs"] = (
-        main_data["investment_costs"] | investment_cost._data_frame.to_dict(orient="records")[0]
-    )
-
     subsidy_rate = wuppertal_parameters.reduce("id_parameter", 35)
     main_data["subsidy_rate"] = main_data["subsidy_rate"] | subsidy_rate._series.to_dict()
+
+    if is_renewable:
+        id_subsector = final_energy_saving_or_capacities.unique_index_values("id_subsector")[0]
+        id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
+        main_data["capacity_factors"] = {
+            "id_parameter": 64,
+            "id_final_energy_carrier": None,
+            "label": "Capacity factors",
+            "unit": "",
+            "importance": "mandatory",
+            "constants": None,
+        }
+        capacity_factors = data_source.table(
+            "fraunhofer_capacity_factors",
+            {
+                "id_region": str(context["id_region"]),
+                "id_parameter": "64",
+                "id_subsector": str(id_subsector),
+                "id_action_type": str(id_action_type),
+            },
+        )
+        # Interpolate capacity factors for missing years
+        _capacity_factors = extrapolation.extrapolate(capacity_factors, final_energy_saving_or_capacities.years)
+        main_data["capacity_factors"] = (
+            main_data["capacity_factors"] | _capacity_factors._data_frame.to_dict(orient="records")[0]
+        )
+
+        main_data["capex"] = {
+            "id_parameter": 68,
+            "id_final_energy_carrier": None,
+            "label": "Capital investments",
+            "unit": "\u20ac",
+            "importance": "mandatory",
+            "constants": None,
+        }
+        capex = investment.calculate_capex(
+            data_source,
+            id_subsector,
+            id_action_type,
+            final_energy_saving_or_capacities,
+        )
+        capex = capex.droplevel("id_parameter")
+        main_data["capex"] = main_data["capex"] | capex._data_frame.to_dict(orient="records")[0]
+        main_data["opex"] = {
+            "id_parameter": 69,
+            "id_final_energy_carrier": None,
+            "label": "Running costs",
+            "unit": "\u20ac",
+            "importance": "mandatory",
+            "constants": None,
+        }
+        opex = investment.calculate_opex(
+            data_source,
+            id_subsector,
+            id_action_type,
+            final_energy_saving_or_capacities,
+        )
+        opex = opex.droplevel("id_parameter")
+        main_data["opex"] = main_data["opex"] | opex._data_frame.to_dict(orient="records")[0]
+        main_data["vopex"] = {
+            "id_parameter": 70,
+            "id_final_energy_carrier": None,
+            "label": "Variable running costs",
+            "unit": "\u20ac",
+            "importance": "mandatory",
+            "constants": None,
+        }
+        vopex = investment.calculate_vopex(
+            data_source,
+            id_subsector,
+            id_action_type,
+            context["id_region"],
+            final_energy_saving_or_capacities,
+        )
+        vopex = vopex.droplevel("id_parameter")
+        main_data["vopex"] = main_data["vopex"] | vopex._data_frame.to_dict(orient="records")[0]
+    else:
+        main_data["energy_savings"] = {
+            "id_parameter": None,
+            "id_final_energy_carrier": None,
+            "label": "Energy savings",
+            "unit": context["unit"]["symbol"],
+            "importance": "mandatory",
+            "constants": None,
+        }
+        main_data["investment_costs"] = {
+            "id_parameter": 40,
+            "id_final_energy_carrier": None,
+            "label": "Investment costs",
+            "unit": "Mio. \u20ac",
+            "importance": "mandatory",
+            "constants": None,
+        }
+
+        main_data["energy_savings"] = (
+            main_data["energy_savings"] | final_energy_saving_or_capacities._data_frame.to_dict(orient="records")[0]
+        )
+
+        investment_cost = investment.investment_cost_in_euro(
+            final_energy_saving_or_capacities,
+            data_source,
+            id_region=context["id_region"],
+        )
+
+        # Convert to million euros to display the advanced parameter investment cost in mio. €
+        investment_cost._data_frame = (
+            investment_cost._data_frame.select_dtypes(exclude=["object", "datetime"]) / 1_000_000
+        )
+        main_data["investment_costs"] = (
+            main_data["investment_costs"] | investment_cost._data_frame.to_dict(orient="records")[0]
+        )
     return list(main_data.values())
 
 
@@ -176,72 +259,153 @@ def _get_fuel_data(
     context,
     final_energy_saving_or_capacities,
     data_source,
+    is_renewable=None,
 ):
-    data = {
-        1: {
-            "id_parameter": 16,
-            "id_final_energy_carrier": 1,
-            "label": "Share of electricity among affected",
-            "unit": "%",
-            "importance": "recommended",
-        },
-        2: {
-            "id_parameter": 16,
-            "id_final_energy_carrier": 2,
-            "label": "Share of oil among affected",
-            "unit": "%",
-            "importance": "recommended",
-        },
-        3: {
-            "id_parameter": 16,
-            "id_final_energy_carrier": 3,
-            "label": "Share of coal among affected",
-            "unit": "%",
-            "importance": "recommended",
-        },
-        4: {
-            "id_parameter": 16,
-            "id_final_energy_carrier": 4,
-            "label": "Share of gas among affected",
-            "unit": "%",
-            "importance": "recommended",
-        },
-        5: {
-            "id_parameter": 16,
-            "id_final_energy_carrier": 5,
-            "label": "Share of biomass and waste among affected",
-            "unit": "%",
-            "importance": "recommended",
-        },
-        6: {
-            "id_parameter": 16,
-            "id_final_energy_carrier": 6,
-            "label": "Share of heat among affected",
-            "unit": "%",
-            "importance": "recommended",
-        },
-        7: {
-            "id_parameter": 16,
-            "id_final_energy_carrier": 7,
-            "label": "Share of H2 and e-fuels among affected",
-            "unit": "%",
-            "importance": "recommended",
-        },
-    }
     id_region = context["id_region"]
     id_subsector = context["id_subsector"]
     subsector_ids = [id_subsector]
 
-    share_affected = fuel_split.fuel_split_by_action_type(
-        final_energy_saving_or_capacities,
-        data_source,
-        id_region,
-        subsector_ids,
-        round=True,
-    )
+    if is_renewable:
+        id_subsector = final_energy_saving_or_capacities.unique_index_values("id_subsector")[0]
+        id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
+        data = {
+            1: {
+                "id_parameter": 67,
+                "id_primary_energy_carrier": 1,
+                "label": "Oil",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            2: {
+                "id_parameter": 67,
+                "id_primary_energy_carrier": 2,
+                "label": "Coal",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            3: {
+                "id_parameter": 67,
+                "id_primary_energy_carrier": 3,
+                "label": "Gas",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            4: {
+                "id_parameter": 67,
+                "id_primary_energy_carrier": 4,
+                "label": "Biomass and renewable waste",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            5: {
+                "id_parameter": 67,
+                "id_primary_energy_carrier": 5,
+                "label": "Renewables",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            6: {
+                "id_parameter": 67,
+                "id_primary_energy_carrier": 6,
+                "label": "Other",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            7: {
+                "id_parameter": 67,
+                "id_primary_energy_carrier": 7,
+                "label": "Electricity",
+                "unit": "%",
+                "importance": "recommended",
+            },
+        }
+        if id_action_type == 37:
+            factors = data_source.table(
+                "eurostat_primary_parameters",
+                {
+                    "id_region": str(context["id_region"]),
+                    "id_parameter": "20",
+                },
+            )
+            del factors["id_parameter"]
+            factors = extrapolation.extrapolate(factors, final_energy_saving_or_capacities.years)
+            for index, values in factors._data_frame.to_dict(orient="index").items():
+                data[index] = data[index] | values
+        else:
+            factors = data_source.table(
+                "fraunhofer_substitution_factors",
+                {
+                    "id_region": str(context["id_region"]),
+                    "id_subsector": str(id_subsector),
+                    "id_action_type": str(id_action_type),
+                },
+            )
+            del factors["id_parameter"]
+            factors = extrapolation.extrapolate(factors, final_energy_saving_or_capacities.years)
+            for index, values in factors._data_frame.to_dict(orient="index").items():
+                data[index[2]] = data[index[2]] | values
+    else:
+        data = {
+            1: {
+                "id_parameter": 16,
+                "id_final_energy_carrier": 1,
+                "label": "Share of electricity among affected",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            2: {
+                "id_parameter": 16,
+                "id_final_energy_carrier": 2,
+                "label": "Share of oil among affected",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            3: {
+                "id_parameter": 16,
+                "id_final_energy_carrier": 3,
+                "label": "Share of coal among affected",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            4: {
+                "id_parameter": 16,
+                "id_final_energy_carrier": 4,
+                "label": "Share of gas among affected",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            5: {
+                "id_parameter": 16,
+                "id_final_energy_carrier": 5,
+                "label": "Share of biomass and waste among affected",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            6: {
+                "id_parameter": 16,
+                "id_final_energy_carrier": 6,
+                "label": "Share of heat among affected",
+                "unit": "%",
+                "importance": "recommended",
+            },
+            7: {
+                "id_parameter": 16,
+                "id_final_energy_carrier": 7,
+                "label": "Share of H2 and e-fuels among affected",
+                "unit": "%",
+                "importance": "recommended",
+            },
+        }
+        share_affected = fuel_split.fuel_split_by_action_type(
+            final_energy_saving_or_capacities,
+            data_source,
+            id_region,
+            subsector_ids,
+            round=True,
+        )
 
-    for index, values in share_affected._data_frame.to_dict(orient="index").items():
-        data[index[2]] = data[index[2]] | values
+        for index, values in share_affected._data_frame.to_dict(orient="index").items():
+            data[index[2]] = data[index[2]] | values
 
     return list(data.values())
 
@@ -268,6 +432,7 @@ def _get_residential_data(
     final_energy_saving_or_capacities,
     wuppertal_parameters,
     data_source,
+    is_renewable=None,
 ):
     data = {
         "number_of_affected_dwellings": {
@@ -294,26 +459,7 @@ def _get_residential_data(
             "unit": "absolute",
             "importance": "optional",
         },
-        "average_hh_per_building": {
-            "id_parameter": 31,
-            "label": "Average number of households per building",
-            "unit": "absolute",
-            "importance": "optional",
-        },
-        "average_rent": {
-            "id_parameter": 29,
-            "label": "Average rent of energy poor households",
-            "unit": "\u20ac/year",
-            "importance": "optional",
-        },
-        "rent_premium": {
-            "id_parameter": 34,
-            "label": "Average renovation rent premium",
-            "unit": "% of rent",
-            "importance": "optional",
-        },
     }
-
     id_region = context["id_region"]
     population_of_municipality = context["population_of_municipality"]
 
@@ -331,7 +477,6 @@ def _get_residential_data(
     data["annual_renovation_rate"] = data["annual_renovation_rate"] | {
         str(y): 0 for y in final_energy_saving_or_capacities.years
     }
-
     energy_poverty_target = wuppertal_parameters.reduce("id_parameter", 25)
     data["energy_poverty_target"] = data["energy_poverty_target"] | energy_poverty_target._series.to_dict()
 
@@ -347,14 +492,34 @@ def _get_residential_data(
         data["total_dwelling_stock"] | dwelling_stock._data_frame.to_dict(orient="records")[0]
     )
 
-    average_hh_per_building = wuppertal_parameters.reduce("id_parameter", 31)
-    data["average_hh_per_building"] = data["average_hh_per_building"] | average_hh_per_building._series.to_dict()
+    if not is_renewable:
+        data["average_hh_per_building"] = {
+            "id_parameter": 31,
+            "label": "Average number of households per building",
+            "unit": "absolute",
+            "importance": "optional",
+        }
+        data["average_rent"] = {
+            "id_parameter": 29,
+            "label": "Average rent of energy poor households",
+            "unit": "\u20ac/year",
+            "importance": "optional",
+        }
+        data["rent_premium"] = {
+            "id_parameter": 34,
+            "label": "Average renovation rent premium",
+            "unit": "% of rent",
+            "importance": "optional",
+        }
 
-    average_rent = wuppertal_parameters.reduce("id_parameter", 29)
-    data["average_rent"] = data["average_rent"] | average_rent._series.to_dict()
+        average_hh_per_building = wuppertal_parameters.reduce("id_parameter", 31)
+        data["average_hh_per_building"] = data["average_hh_per_building"] | average_hh_per_building._series.to_dict()
 
-    rent_premium = wuppertal_parameters.reduce("id_parameter", 34)
-    data["rent_premium"] = data["rent_premium"] | rent_premium._series.to_dict()
+        average_rent = wuppertal_parameters.reduce("id_parameter", 29)
+        data["average_rent"] = data["average_rent"] | average_rent._series.to_dict()
+
+        rent_premium = wuppertal_parameters.reduce("id_parameter", 34)
+        data["rent_premium"] = data["rent_premium"] | rent_premium._series.to_dict()
 
     return list(data.values())
 

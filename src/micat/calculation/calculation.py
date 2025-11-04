@@ -21,26 +21,27 @@ from micat.table.table import Table
 
 
 def calculate_energy_produced(final_energy_saving_or_capacities, data_source, id_region):
-    capacity_factors = data_source.table("fraunhofer_capacity_factors", {})
-    # Interpolate capacity factors for missing years
-    _capacity_factors = extrapolation.extrapolate(capacity_factors, final_energy_saving_or_capacities.years)
+    id_subsector = final_energy_saving_or_capacities.unique_index_values("id_subsector")[0]
+    id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
 
-    # Multiply capacities with capacity factors
-    df1 = final_energy_saving_or_capacities._data_frame.reset_index()
-    df2 = _capacity_factors._data_frame.reset_index()
-    df1_long = df1.melt(id_vars=["id_measure", "id_subsector", "id_action_type"], var_name="year", value_name="value")
-    df2_long = df2.melt(
-        id_vars=["id_parameter", "id_subsector", "id_action_type"], var_name="year", value_name="factor"
+    capacity_factors_table = data_source.table(
+        "fraunhofer_capacity_factors",
+        {
+            "id_region": str(id_region),
+            "id_parameter": "64",
+            "id_subsector": str(id_subsector),
+            "id_action_type": str(id_action_type),
+        },
     )
-    merged = df1_long.merge(df2_long, on=["id_subsector", "id_action_type", "year"], how="left")
-    merged["result"] = (
-        merged["value"] * merged["factor"] * (365 * 24 * 0.00008598)
-    )  # (365d/yr⋅24h/d⋅0.00008598ktoe/MWh)
-    energy_produced = merged.pivot_table(
-        index=["id_measure", "id_subsector", "id_action_type"], columns="year", values="result", aggfunc="first"
+    _capacity_factors = extrapolation.extrapolate(capacity_factors_table, final_energy_saving_or_capacities.years)
+
+    capacity_factors = data_source.measure_specific_parameter_using_default_table(
+        final_energy_saving_or_capacities,
+        64,
+        _capacity_factors,
     )
 
-    final_energy_saving_or_capacities._data_frame = energy_produced.sort_index(axis=1)  # Jahre sortieren
+    final_energy_saving_or_capacities = final_energy_saving_or_capacities * capacity_factors * (365 * 24 * 0.00008598)
     return final_energy_saving_or_capacities
 
 
@@ -306,6 +307,7 @@ def _interim_data(
     years,
 ):
     subsector_ids = final_energy_saving_or_capacities.unique_index_values("id_subsector")
+    id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
 
     eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
 
@@ -333,17 +335,55 @@ def _interim_data(
     conversion_efficiency._data_frame.columns = conversion_efficiency._data_frame.columns.astype(str)
 
     # Substitution factors
-    if subsector_ids[0] >= 30:
-        substitution_factors = data_source.table("fraunhofer_substitution_factors", {})
-        del substitution_factors["id_parameter"]
-        substitution_factors = extrapolation.extrapolate(substitution_factors, final_energy_saving_or_capacities.years)
-        # Filter for id_region
-        substitution_factors = substitution_factors.reduce("id_region", id_region)
-        # Filter for id_subsector
-        substitution_factors = substitution_factors.reduce("id_subsector", subsector_ids)
-        # Filter for id_action_type
-        action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
-        substitution_factors = substitution_factors.reduce("id_action_type", action_type_ids)
+    if subsector_ids[0] >= 30 and not id_action_type == 37:
+
+        def _determine_table_for_measure(
+            _id_measure,
+            id_subsector,
+            id_action_type,
+            energy_saving,
+            extrapolated_final_parameters,
+            _extrapolated_parameters,
+            _constants,
+        ):
+            table = extrapolated_final_parameters.reduce("id_parameter", 67)
+            table = table.insert_index_column("id_subsector", 1, id_subsector)
+            return table
+
+        def _provide_default(
+            id_measure,
+            id_subsector,
+            _id_action_type,
+            _savings,
+            _substitution_factors,
+        ):
+            query = "id_subsector==" + str(id_subsector)
+            _lambda = _substitution_factors.query(query)
+            _lambda = _lambda.insert_index_column("id_measure", 0, id_measure)
+            return _lambda
+
+        _substitution_factors = data_source.table(
+            "fraunhofer_substitution_factors",
+            {
+                "id_region": str(id_region),
+                "id_subsector": str(subsector_ids[0]),
+                "id_action_type": str(id_action_type),
+            },
+        )
+        _substitution_factors = extrapolation.extrapolate(
+            _substitution_factors, final_energy_saving_or_capacities.years
+        )
+        substitution_factors = data_source.measure_specific_calculation(
+            final_energy_saving_or_capacities,
+            _determine_table_for_measure,
+            lambda id_measure, id_subsector, id_action_type, savings: _provide_default(
+                id_measure,
+                id_subsector,
+                id_action_type,
+                savings,
+                _substitution_factors,
+            ),
+        )
     else:
         substitution_factors = None
 
@@ -353,6 +393,8 @@ def _interim_data(
         h2_coefficient,
         conversion_efficiency,
         substitution_factors,
+        data_source,
+        id_action_type,
     )
     conventional_primary_energy_saving = heat_saving_final + electricity_saving_final + h2_saving_final
 

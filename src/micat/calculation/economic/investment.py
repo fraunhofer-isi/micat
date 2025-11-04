@@ -30,59 +30,100 @@ def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_sourc
     return filtered_annual_investment_cost
 
 
+def calculate_capex(data_source, id_subsector, id_action_type, final_energy_saving_or_capacities):
+    # Capital investments (CAPEX)
+    investments_res_capex = data_source.table(
+        "investments_res",
+        {
+            "id_subsector": str(id_subsector),
+            "id_action_type": str(id_action_type),
+            "id_parameter": "68",  # Investment costs per capacity
+        },
+    )
+    capex = final_energy_saving_or_capacities * extrapolation.extrapolate(
+        investments_res_capex, final_energy_saving_or_capacities.years
+    )
+    return capex
+
+
+def calculate_opex(data_source, id_subsector, id_action_type, final_energy_saving_or_capacities):
+    # Running costs (OPEX)
+    investments_res_opex = data_source.table(
+        "investments_res",
+        {
+            "id_subsector": str(id_subsector),
+            "id_action_type": str(id_action_type),
+            "id_parameter": "69",  # Running costs
+        },
+    )
+    opex = final_energy_saving_or_capacities * extrapolation.extrapolate(
+        investments_res_opex, final_energy_saving_or_capacities.years
+    )
+    return opex
+
+
+def calculate_vopex(data_source, id_subsector, id_action_type, id_region, final_energy_saving_or_capacities):
+    # Variable running costs (VOPEX)
+    investments_res_vopex = data_source.table(
+        "investments_res",
+        {
+            "id_subsector": str(id_subsector),
+            "id_action_type": str(id_action_type),
+            "id_parameter": "70",  # Variable running costs
+        },
+    )
+    generated_energy_quantity = calculation.calculate_energy_produced(
+        final_energy_saving_or_capacities.copy(),
+        data_source,
+        id_region,
+    )
+    vopex = generated_energy_quantity * extrapolation.extrapolate(
+        investments_res_vopex, final_energy_saving_or_capacities.years
+    )
+    return vopex
+
+
 def investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_region):
     years = final_energy_saving_or_capacities.years
     id_subsector = final_energy_saving_or_capacities.unique_index_values("id_subsector")[0]
     id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
 
     if id_subsector >= 30:
-        # Capital investments (CAPEX)
-        investments_res_capex = data_source.table(
-            "investments_res",
-            {
-                "id_subsector": str(id_subsector),
-                "id_action_type": str(id_action_type),
-                "id_parameter": "68",  # Investment costs per capacity
-            },
-        )
-        capex = final_energy_saving_or_capacities * extrapolation.extrapolate(
-            investments_res_capex, final_energy_saving_or_capacities.years
-        )
-        capex = capex.droplevel("id_parameter")
-
-        # Running costs (OPEX)
-        investments_res_opex = data_source.table(
-            "investments_res",
-            {
-                "id_subsector": str(id_subsector),
-                "id_action_type": str(id_action_type),
-                "id_parameter": "69",  # Running costs
-            },
-        )
-        opex = final_energy_saving_or_capacities * extrapolation.extrapolate(
-            investments_res_opex, final_energy_saving_or_capacities.years
-        )
-        opex = opex.droplevel("id_parameter")
-
-        # Variable running costs (VOPEX)
-        investments_res_vopex = data_source.table(
-            "investments_res",
-            {
-                "id_subsector": str(id_subsector),
-                "id_action_type": str(id_action_type),
-                "id_parameter": "70",  # Variable running costs
-            },
-        )
-        generated_energy_quantity = calculation.calculate_energy_produced(
-            final_energy_saving_or_capacities.copy(),
+        _capex = calculate_capex(
             data_source,
+            id_subsector,
+            id_action_type,
+            final_energy_saving_or_capacities,
+        )
+        _opex = calculate_opex(
+            data_source,
+            id_subsector,
+            id_action_type,
+            final_energy_saving_or_capacities,
+        )
+        _vopex = calculate_vopex(
+            data_source,
+            id_subsector,
+            id_action_type,
             id_region,
+            final_energy_saving_or_capacities,
         )
-        vopex = generated_energy_quantity * extrapolation.extrapolate(
-            investments_res_vopex, final_energy_saving_or_capacities.years
+        # Check if the advanced parameters have been adjusted by the user
+        capex = data_source.measure_specific_parameter_using_default_table(
+            final_energy_saving_or_capacities,
+            68,
+            _capex,
         )
-        vopex = vopex.droplevel("id_parameter")
-
+        opex = data_source.measure_specific_parameter_using_default_table(
+            final_energy_saving_or_capacities,
+            69,
+            _opex,
+        )
+        vopex = data_source.measure_specific_parameter_using_default_table(
+            final_energy_saving_or_capacities,
+            70,
+            _vopex,
+        )
         investment = capex + opex + vopex
     else:
         investment_cost_per_ktoe = _investment_cost_per_ktoe(data_source, years)

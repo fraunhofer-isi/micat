@@ -19,6 +19,8 @@ def primary_energy_saving(
     _h2_coefficient,
     conversion_efficiency,
     substitution_factors,
+    data_source,
+    id_action_type,
 ):
     # H2 and sythentic fuels
     h2_saving = final_energy_saving.reduce("id_final_energy_carrier", [7])
@@ -33,7 +35,14 @@ def primary_energy_saving(
     # Heat
     heat_saving = final_energy_saving.reduce("id_final_energy_carrier", [6])
     del heat_saving["id_final_energy_carrier"]
-    heat_coefficient = eurostat_primary_parameters.reduce("id_parameter", 20)
+    advanced_parameters = data_source.table("measure_final_parameters", {"id_parameter": [67]})
+    if id_action_type == 37 and advanced_parameters:
+        # Consider advanced parameters for heat only
+        heat_coefficient = data_source.table("measure_final_parameters", {"id_parameter": [67]})
+        del heat_coefficient["id_measure"]
+        del heat_coefficient["id_parameter"]
+    else:
+        heat_coefficient = eurostat_primary_parameters.reduce("id_parameter", 20)
     heat_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 6)
     heat_conversion_efficiency._data_frame = heat_conversion_efficiency._data_frame[common_years]
     heat_saving_final = heat_saving * heat_coefficient / heat_conversion_efficiency
@@ -54,7 +63,7 @@ def primary_energy_saving(
     ):
         electricity_coefficient = substitution_factors
         del electricity_coefficient["id_subsector"]
-        del electricity_coefficient["id_action_type"]
+        del electricity_coefficient["id_parameter"]
     else:
         electricity_coefficient = eurostat_primary_parameters.reduce("id_parameter", 21)
     electricity_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 1)
