@@ -11,6 +11,7 @@ def additional_employment(
     final_energy_saving_or_capacities,
     data_source,
     id_region,
+    starting_year,
 ):
     action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")
     subsector_ids = final_energy_saving_or_capacities.unique_index_values("id_subsector")
@@ -18,6 +19,7 @@ def additional_employment(
         final_energy_saving_or_capacities,
         data_source,
         id_region,
+        starting_year,
     )
 
     table_name = "e3m_parameters"

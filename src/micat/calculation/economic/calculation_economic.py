@@ -24,6 +24,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
     data_source,
     id_region,
     years,
+    starting_year,
 ):
     total_primary_energy_saving = interim_data["total_primary_energy_saving"]
 
@@ -65,6 +66,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
         final_energy_saving_or_capacities,
         data_source,
         id_region,
+        starting_year,
     )
 
     # TO DO: use different sources for non_energy_use, depending on id_mode? #268
@@ -98,6 +100,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
         final_energy_saving_or_capacities,
         data_source,
         id_region,
+        starting_year,
     )
 
     added_asset_value_of_buildings = buildings.added_asset_value_of_buildings(

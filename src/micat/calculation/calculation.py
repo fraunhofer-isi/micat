@@ -80,6 +80,7 @@ def calculate_indicator_data(
 
     final_energy_saving_or_capacities = arguments["final_energy_saving_or_capacities"]
     years = final_energy_saving_or_capacities.years
+    starting_year = arguments["starting_year"]
 
     # Check if subsectors belong to renewables (id >= 30) and calculate energy produced
     if any(
@@ -128,6 +129,7 @@ def calculate_indicator_data(
         data_source,
         id_region,
         years,
+        starting_year,
     )
     _validate_data(economic_indicators)
 
@@ -296,6 +298,7 @@ def _front_end_arguments(http_request):
         "population_of_municipality": population_of_municipality,
         "parameters": parameters,
         "measure_specific_parameters": measure_specific_parameters,
+        "starting_year": query_parameters.get("starting_year", None),
     }
 
 
@@ -486,6 +489,8 @@ def _parse_request(http_request):
             query_dict["savings"] = [measure["savings"] for measure in http_request.json["measures"]]
         else:
             raise AttributeError("Query must include the measures in the JSON body")
+        if "starting_year" in http_request.json:
+            query_dict["starting_year"] = http_request.json["starting_year"]
     else:
         raise AttributeError("Unknown content type:" + http_request.content_type)
     return query_dict

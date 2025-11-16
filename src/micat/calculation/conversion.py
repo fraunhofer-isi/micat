@@ -45,6 +45,7 @@ def primary_energy_saving(
         heat_coefficient = eurostat_primary_parameters.reduce("id_parameter", 20)
     heat_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 6)
     heat_conversion_efficiency._data_frame = heat_conversion_efficiency._data_frame[common_years]
+
     heat_saving_final = heat_saving * heat_coefficient / heat_conversion_efficiency
 
     # Electricity

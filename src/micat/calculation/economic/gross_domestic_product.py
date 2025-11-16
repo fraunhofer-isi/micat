@@ -11,11 +11,13 @@ def impact_on_gross_domestic_product(
     final_energy_saving_or_capacities,
     data_source,
     id_region,
+    starting_year,
 ):
     annual_investment_in_euro = investment.annual_investment_cost_in_euro(
         final_energy_saving_or_capacities,
         data_source,
         id_region,
+        starting_year,
     )
 
     action_type_ids = final_energy_saving_or_capacities.unique_index_values("id_action_type")

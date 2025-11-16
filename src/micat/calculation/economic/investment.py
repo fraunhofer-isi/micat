@@ -6,7 +6,7 @@
 from micat.calculation import extrapolation, calculation
 
 
-def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_region):
+def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_region, starting_year):
     # Investment cost is specified as cumulated data
     # in order to determine the annual investment, we subtract the
     # value of the previous year (or zero).
@@ -18,6 +18,8 @@ def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_sourc
     )
 
     years = final_energy_saving_or_capacities.years
+    if starting_year and starting_year not in years:
+        years = [starting_year] + years
     annual_years = _annual_years(years)
     interpolated_cumulated_investment_cost = extrapolation.extrapolate(cumulated_investment_cost, annual_years)
     annual_investment_cost = interpolated_cumulated_investment_cost.map(
@@ -27,6 +29,10 @@ def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_sourc
     )
 
     filtered_annual_investment_cost = extrapolation.extrapolate(annual_investment_cost, years)
+
+    # Remove starting year if it was not in the original years
+    if starting_year and starting_year not in final_energy_saving_or_capacities.years:
+        del filtered_annual_investment_cost[str(starting_year)]
     return filtered_annual_investment_cost
 
 
