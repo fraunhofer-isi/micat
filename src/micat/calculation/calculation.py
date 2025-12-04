@@ -14,6 +14,7 @@ from micat.calculation.economic import (
     eurostat,
     population,
 )
+from micat.calculation.economic.investment import _annual_years
 from micat.calculation.social import calculation_social
 from micat.input.data_source import DataSource
 from micat.series.annual_series import AnnualSeries
@@ -137,6 +138,7 @@ def calculate_indicator_data(
         final_energy_saving_or_capacities,
         id_region,
         data_source,
+        starting_year,
     )
     result_tables = social_indicators | economic_indicators | ecologic_indicators | cost_benefit_analysis_parameters
     translated_result_tables = _translate_result_tables(result_tables, data_source)
@@ -320,6 +322,7 @@ def _interim_data(
         id_region,
         subsector_ids,
     )
+
     # Interpolate missing years in h2_coefficient table
     h2_coefficient = data_source.table("fraunhofer_hydrogen_synthetic_fuels_generation", {})
     h2_coefficient._data_frame.columns = h2_coefficient._data_frame.columns.astype(int)

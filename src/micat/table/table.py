@@ -6,6 +6,8 @@ import json
 
 import numpy as np
 import pandas as pd
+from scipy.interpolate import interp1d
+
 from micat.log.logger import Logger
 from micat.table.abstract_table import (
     AbstractTable,  # pylint: disable=import-error, no-name-in-module
@@ -342,7 +344,17 @@ class Table(AbstractTable):
         year_column_names.sort()
         sorted_data_frame = self._data_frame[year_column_names]
 
-        interpolated_data_frame = sorted_data_frame.interpolate(method="linear", axis=1, s=0, limit_direction="both")
+        years = sorted_data_frame.columns.astype(int)
+
+        def interp_row(row):
+            mask = ~row.isna()
+            f = interp1d(years[mask], row[mask], kind="linear", fill_value="extrapolate")
+            return f(years)
+
+        interpolated_data_frame = sorted_data_frame.apply(interp_row, axis=1, result_type="expand")
+        interpolated_data_frame.columns = sorted_data_frame.columns
+
+        # interpolated_data_frame = sorted_data_frame.interpolate(method="linear", axis=1, s=0, limit_direction="both")
 
         interpolated_data_includes_negative_values = (interpolated_data_frame < 0).any().any()
         if interpolated_data_includes_negative_values:

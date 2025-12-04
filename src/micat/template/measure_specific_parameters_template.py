@@ -172,7 +172,7 @@ def _get_main_data(
             "id_parameter": 68,
             "id_final_energy_carrier": None,
             "label": "Capital investments",
-            "unit": "\u20ac",
+            "unit": "Mio. \u20ac",
             "importance": "mandatory",
             "constants": None,
         }
@@ -188,7 +188,7 @@ def _get_main_data(
             "id_parameter": 69,
             "id_final_energy_carrier": None,
             "label": "Running costs",
-            "unit": "\u20ac",
+            "unit": "Mio. \u20ac",
             "importance": "mandatory",
             "constants": None,
         }
@@ -204,7 +204,7 @@ def _get_main_data(
             "id_parameter": 70,
             "id_final_energy_carrier": None,
             "label": "Variable running costs",
-            "unit": "\u20ac",
+            "unit": "Mio. \u20ac",
             "importance": "mandatory",
             "constants": None,
         }

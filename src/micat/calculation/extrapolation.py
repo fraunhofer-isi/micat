@@ -5,6 +5,8 @@
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/56
 import math
 
+import pandas as pd
+
 from micat.series.annual_series import AnnualSeries
 
 
@@ -41,4 +43,10 @@ def _create_nan_entries_for_missing_year_columns(table_or_annual_series, year_nu
             raise ValueError("Year numbers must not be passed as strings!")
         if year not in table_or_annual_series.columns:
             new_table_or_annual_series[year] = math.nan
+    # If first year is NaN, set the year before to zero to allow extrapolation
+    first_year = sorted_year_numbers[0]
+    val = new_table_or_annual_series[first_year]
+    if isinstance(val, float) and pd.isna(val) or isinstance(val, pd.Series) and val.isna().any():
+        year_before = first_year - 1
+        new_table_or_annual_series[year_before] = 0.0
     return new_table_or_annual_series
