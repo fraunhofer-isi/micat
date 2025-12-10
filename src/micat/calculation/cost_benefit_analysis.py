@@ -9,6 +9,7 @@ from micat.calculation.economic.investment import _annual_years, investment_cost
 
 def parameters(
     final_energy_saving_or_capacities,
+    ecologic_indicators,
     id_region,
     data_source,
     starting_year,
@@ -43,10 +44,15 @@ def parameters(
     ).droplevel(["id_action_type"])
     extrapolated_investment_costs = extrapolation.extrapolate(investment_costs, years_to_extrapolate)
 
+    extrapolated_co2_savings = extrapolation.extrapolate(
+        ecologic_indicators["reductionOfGreenHouseGasEmission"], years_to_extrapolate
+    )
+
     cost_benefit_analysis_parameters = {
         "lifetime": measure_specific_lifetime,
         "subsidyRate": subsidy_rate,
         "totalAnnualEnergySavings": extrapolated_final_energy_saving_or_capacities,
+        "totalAnnualCO2Savings": extrapolated_co2_savings,
         "investmentCosts": extrapolated_investment_costs,
     }
     return cost_benefit_analysis_parameters

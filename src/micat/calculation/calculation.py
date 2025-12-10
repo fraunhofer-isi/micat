@@ -136,6 +136,7 @@ def calculate_indicator_data(
 
     cost_benefit_analysis_parameters = cost_benefit_analysis.parameters(
         final_energy_saving_or_capacities,
+        ecologic_indicators,
         id_region,
         data_source,
         starting_year,
