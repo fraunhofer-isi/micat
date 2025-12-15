@@ -582,7 +582,7 @@ def merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
 
     electricity_in = merge_nrg_bal_entries(
         data_frame,
-        ["TI_EHG_MAPE_E", "TI_EHG_APE_E"],
+        ["GEP"],
         primary_energy_carrier_mapping,
         year_column_names,
     )
@@ -596,8 +596,12 @@ def merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
 
 def merge_nrg_bal_entries(data_frame, nrg_bal_codes, primary_energy_carrier_mapping, year_column_names):
     left_frame = extract_nrg_bal(data_frame, nrg_bal_codes[0])
-    right_frame = extract_nrg_bal(data_frame, nrg_bal_codes[1])
-    frame = left_frame + right_frame
+    try:
+        right_frame = extract_nrg_bal(data_frame, nrg_bal_codes[1])
+    except IndexError:
+        frame = left_frame
+    else:
+        frame = left_frame + right_frame
     frame = join_and_merge_primary_energy_carriers(frame, primary_energy_carrier_mapping, year_column_names)
 
     includes_nan = frame.isna().any().any()
