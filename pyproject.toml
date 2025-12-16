@@ -29,9 +29,9 @@ license = {text = 'GNU Affero General Public License v3 or later (AGPLv3+)'}
 dependencies = [
     ## web
     'flask==3.1.2',
-    'flask-cors==6.0.1',
+    'flask-cors==6.0.2',
     'flask-compress==1.23',
-    'urllib3==2.5.0',
+    'urllib3==2.6.2',
     'waitress==3.0.2',
     'Werkzeug==3.1.4',
     'requests==2.32.5',
@@ -39,6 +39,7 @@ dependencies = [
     ## scientific calculus
     'pandas==2.3.3',
     'numpy==2.3.5',
+    'scipy==1.16.3',
     ## excel
     'XlsxWriter==3.2.9',
     'openpyxl==3.1.5',
@@ -53,13 +54,13 @@ lint = [
 ]
 
 format = [
-    'black[d]==25.11.0',
+    'black[d]==25.12.0',
 ]
 
 test = [
-    'pytest==9.0.1',
+    'pytest==9.0.2',
     'pytest-cov==7.0.0',
-    'coverage==7.12.0',
+    'coverage==7.13.0',
     'mock==5.2.0',
 ]
 
@@ -68,7 +69,7 @@ debug = [
 ]
 
 doc = [
-    'Sphinx==9.0.1',
+    'Sphinx==9.0.4',
     'myst-parser==4.0.1',
     'sphinx-rtd-theme==3.0.2',
     'sphinxcontrib-applehelp==2.0.0',
@@ -78,7 +79,7 @@ doc = [
 
 data = [   
     'paramiko==4.0.0', # for uploading files to weblication
-    'xlwings==0.33.16; sys_platform == "win32"', # for excel automation to extract values in a loop
+    'xlwings==0.33.18; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
 
 license = [
@@ -86,7 +87,7 @@ license = [
     'license_scanner==0.4.4',
     'reuse==6.2.0',
     'pipreqs==0.5.0',
-    'third-party-license-file-generator==2025.10.23'
+    'third-party-license-file-generator==2025.12.12'
 
 ]
 
