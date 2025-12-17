@@ -11,6 +11,7 @@ import pandas as pd
 from micat.table import table
 from micat.template import constants, database_utils, validators, xlsx_utils
 from micat.utils import api
+from micat.calculation import extrapolation
 
 
 def parameters_template(request, database, confidential_database=None):
@@ -503,7 +504,7 @@ def _subsector_final_add_parameter_data(
     id_parameter,
     id_subsector_table,
     id_final_energy_carrier_table,
-    years=None,
+    years,
     ignore_years=[],
 ):
     where_clause = {
@@ -526,7 +527,32 @@ def _subsector_final_add_parameter_data(
             confidential_database, confidential_table_name, filtered_confidential_column_names, where_clause
         )
 
-        data_table = table.merge_tables(data_table, confidential_data_table, False)
+        # Calculate percentages for confidential data
+        df = confidential_data_table._data_frame
+        group_levels = ["id_parameter", "id_subsector"]
+        confidential_data_table._data_frame = (
+            df
+            .div(df.groupby(level=group_levels).transform("sum"))
+        )
+
+        # Interpolate missing values
+        confidential_data_table = extrapolation.extrapolate(confidential_data_table, [int(y) for y in years])
+        df_fallback = confidential_data_table._data_frame
+
+        df_preferred = data_table._data_frame
+
+        # Align columns (union of years)
+        all_years = df_preferred.columns.union(df_fallback.columns)
+
+        df_preferred = df_preferred.reindex(columns=all_years)
+        df_fallback = df_fallback.reindex(columns=all_years)
+
+        # Prefer data_table values, fall back to confidential_data_table
+        data_table._data_frame = df_preferred.combine_first(df_fallback)
+
+
+    # If years are missing in both, extrapolate
+    data_table = extrapolation.extrapolate(data_table, [int(y) for y in years])
 
     data_table = data_table.reduce("id_parameter", id_parameter)
 
@@ -581,7 +607,7 @@ def _primary_add_parameter_data(
     id_region,
     id_parameter,
     id_primary_energy_carrier_table,
-    years=None,
+    years,
     ignore_years=[],
 ):
     where_clause = {
@@ -601,7 +627,25 @@ def _primary_add_parameter_data(
         confidential_database, confidential_table_name, filtered_confidential_column_names, where_clause
     )
 
-    data_table = table.merge_tables(data_table, confidential_data_table, False).reduce("id_parameter", id_parameter)
+    # Interpolate missing values
+    confidential_data_table = extrapolation.extrapolate(confidential_data_table, [int(y) for y in years])
+    df_fallback = confidential_data_table._data_frame
+
+    df_preferred = data_table._data_frame
+
+    # Align columns (union of years)
+    all_years = df_preferred.columns.union(df_fallback.columns)
+
+    df_preferred = df_preferred.reindex(columns=all_years)
+    df_fallback = df_fallback.reindex(columns=all_years)
+
+    # Prefer data_table values, fall back to confidential_data_table
+    data_table._data_frame = df_preferred.combine_first(df_fallback)
+
+    # If years are missing in both, extrapolate
+    data_table = extrapolation.extrapolate(data_table, [int(y) for y in years])
+
+    data_table = data_table.reduce("id_parameter", id_parameter)
 
     data_table = data_table.join_id_column(
         id_primary_energy_carrier_table,
