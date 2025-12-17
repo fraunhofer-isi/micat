@@ -350,15 +350,32 @@ class BackEnd:
                 worksheet.write(row_idx, 1, "Euro", italic)
                 row_idx += 1
 
+                list_results = {}
                 for key, result in program.items():
-                    if key == "parameters":
+                    if key in ["parameters", "years"]:
+                        continue
+                    if isinstance(result, list):
+                        list_results[key] = result
                         continue
                     worksheet.write(row_idx, 0, key, bold)
                     worksheet.write(row_idx, 1, result, number_format)
                     row_idx += 1
 
-                # Add parameters
                 row_idx += 1
+                col_idx = 1
+                for year in program["years"]:
+                    worksheet.write(row_idx, col_idx, year, bold)
+                    col_idx += 1
+                for key, result in list_results.items():
+                    row_idx += 1
+                    worksheet.write(row_idx, 0, key, bold)
+                    col_idx = 1
+                    for row in result:
+                        worksheet.write(row_idx, col_idx, entry, number_format)
+                        col_idx += 1
+
+                # Add parameters
+                row_idx += 2
                 worksheet.write(row_idx, 0, "Parameters", bold)
                 row_idx += 1
                 for key, value in program["parameters"].items():
