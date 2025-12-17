@@ -366,12 +366,13 @@ class BackEnd:
                 for year in program["years"]:
                     worksheet.write(row_idx, col_idx, year, bold)
                     col_idx += 1
+                
                 for key, result in list_results.items():
                     row_idx += 1
                     worksheet.write(row_idx, 0, key, bold)
                     col_idx = 1
                     for row in result:
-                        worksheet.write(row_idx, col_idx, entry, number_format)
+                        worksheet.write(row_idx, col_idx, row, number_format)
                         col_idx += 1
 
                 # Add parameters
