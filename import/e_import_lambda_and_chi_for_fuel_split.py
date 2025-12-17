@@ -4,6 +4,7 @@
 
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/24
 # pylint: disable=duplicate-code
+import argparse
 import warnings
 
 import pandas as pd
@@ -17,6 +18,14 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--create-missing-entries',
+        action='store_true',
+        help='Create missing entries'
+    )
+    args = parser.parse_args()
+
     public_database_path, raw_data_path = import_config.get_paths()
 
     database = Database(public_database_path)
@@ -32,11 +41,11 @@ def main():
     id_region_table = database.id_table("id_region")
     final_energy_carrier_ids = read_final_energy_carrier_ids(database)
     chi = determine_chi(import_folder, id_region_table, final_energy_carrier_ids)
-
-    print("Determining missing entries for chi...")
-    missing_entries = database_import.validate_table(chi, "mixed_final_constant_parameters")
     file_path = import_folder + "/chi_missing_entries.xlsx"
-    _write_missing_entries_as_excel_file(missing_entries, file_path)
+    
+    if not args.create_missing_entries:
+        missing_entries = database_import.validate_table(chi, "mixed_final_constant_parameters")
+        _write_missing_entries_as_excel_file(missing_entries, file_path)
 
     print("Merging missing entries...")
     chi_missing_entries = pd.read_excel(file_path)

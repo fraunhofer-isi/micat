@@ -1,7 +1,7 @@
 # © 2024 Fraunhofer-Gesellschaft e.V., München
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-
+import argparse
 import math
 import warnings
 
@@ -15,6 +15,14 @@ from micat.table.table import Table
 
 
 def main():  # pylint: disable=too-many-locals
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--create-missing-entries',
+        action='store_true',
+        help='Create missing entries'
+    )
+    args = parser.parse_args()
+
     public_database_path, raw_data_path = import_config.get_paths()
 
     database = Database(public_database_path)
@@ -145,7 +153,7 @@ def main():  # pylint: disable=too-many-locals
     exclusions = {"id_region": 0}  # we exclude european values because they are calculated
     dummy_value_for_missing_entries = -999
 
-    if len(missing_entries) > 0:
+    if len(missing_entries) > 0 and args.create_missing_entries:
         print("Writing missing entries...")
         database_import.write_missing_entries_as_excel_file(
             "missing_entries_air_pollution.xlsx",
@@ -179,7 +187,7 @@ def main():  # pylint: disable=too-many-locals
     )
     years = _extract_years(raw_morbidity_factor)
 
-    if len(missing_entries) > 0:
+    if len(missing_entries) > 0 and args.create_missing_entries:
         print("Writing missing entries...")
         database_import.write_missing_entries_as_excel_file(
             "missing_entries_morbidity.xlsx",
@@ -287,7 +295,7 @@ def main():  # pylint: disable=too-many-locals
     exclusions = {"id_region": 0}  # we exclude european values because they are calculated
     dummy_value_for_missing_entries = -999
 
-    if len(missing_entries) > 0:
+    if len(missing_entries) > 0 and args.create_missing_entries:
         print("Writing missing entries...")
         database_import.write_missing_entries_as_excel_file(
             "missing_entries_air_pollution_heat_electricity_gen_factor.xlsx",
@@ -319,7 +327,7 @@ def main():  # pylint: disable=too-many-locals
     )
     years = _extract_years(raw_morbidity_heat_electricity_gen_factor)
 
-    if len(missing_entries) > 0:
+    if len(missing_entries) > 0 and args.create_missing_entries:
         print("Writing missing entries...")
         database_import.write_missing_entries_as_excel_file(
             "missing_entries_morbidity_heat_electricity_gen_factor.xlsx",
