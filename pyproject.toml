@@ -39,7 +39,7 @@ dependencies = [
     ## scientific calculus
     'pandas==2.3.3',
     'numpy==2.4.1',
-    'scipy==1.16.3',
+    'scipy==1.17.0',
     ## excel
     'XlsxWriter==3.2.9',
     'openpyxl==3.1.5',
