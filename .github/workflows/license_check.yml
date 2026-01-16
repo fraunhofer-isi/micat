@@ -14,15 +14,19 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - name: extract python version
-      uses: ./.github/actions/extract-python-version
-    - uses: actions/setup-python@v6
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-    - name: install dependencies
-      run: |
-        pip install .[license]
-    - name: license check
-      run: |    
-        python check/check_licenses.py
+      - uses: actions/checkout@v6
+      - name: install system deps
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config python3-dev
+      - name: extract python version
+        uses: ./.github/actions/extract-python-version
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: install dependencies
+        run: |
+          pip install .[license]
+      - name: license check
+        run: |
+          python check/check_licenses.py
