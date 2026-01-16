@@ -15,23 +15,37 @@
     ":disableDependencyDashboard"
   ],
   "forkProcessing": "enabled",
-  "autodiscoverFilter": ["fraunhofer-isi/micat"],
+  "autodiscoverFilter": [
+    "fraunhofer-isi/micat"
+  ],
   "packageRules": [
     {
-     "description": "lockFileMaintenance",
-     "matchUpdateTypes": [
-       "pin",
-       "digest",
-       "patch",
-       "minor",
-       "major",
-       "lockFileMaintenance"
-     ],
-     "automerge": true,
-     "automergeType": "branch",
-     "ignoreTests": true, // set to false if you want updates only to be installed if tests pass
-     "dependencyDashboardApproval": false,
-     "minimumReleaseAge": null
+      "description": "lockFileMaintenance",
+      "matchUpdateTypes": [
+        "pin",
+        "digest",
+        "patch",
+        "minor",
+        "major",
+        "lockFileMaintenance"
+      ],
+      "automerge": true,
+      "automergeType": "branch",
+      "ignoreTests": true,
+      // set to false if you want updates only to be installed if tests pass
+      "dependencyDashboardApproval": false,
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "pin pipreqs to 0.4.13",
+      "matchPackageNames": [
+        "pipreqs"
+      ],
+      "matchDatasources": [
+        "pypi"
+      ],
+      "allowedVersions": "0.4.13",
+      "rangeStrategy": "replace"
     }
   ]
 }
