@@ -211,7 +211,7 @@ def main():  # pylint: disable=too-many-locals
     # #############################
 
     raw_air_pollution_heat_electricity_gen_factor = pd.read_excel(
-        import_folder + "/IIASA_FACTORS_EM_GENERATION_2025.xlsx", engine="openpyxl"
+        import_folder + "/IIASA_FACTORS_EM_Generation_2025.xlsx", engine="openpyxl"
     )
     raw_air_pollution_heat_electricity_gen_factor = raw_air_pollution_heat_electricity_gen_factor.rename(
         columns={
@@ -241,7 +241,7 @@ def main():  # pylint: disable=too-many-locals
 
     # morbidity factors are specified in 1/PJ
     raw_morbidity_heat_electricity_gen_factor = pd.read_excel(
-        import_folder + "/IIASA_FACTORS_MOR_GENERATION_2025.xlsx", engine="openpyxl"
+        import_folder + "/IIASA_FACTORS_MOR_Generation_2025.xlsx", engine="openpyxl"
     )
     # Rename columns
     raw_morbidity_heat_electricity_gen_factor = raw_morbidity_heat_electricity_gen_factor.rename(
