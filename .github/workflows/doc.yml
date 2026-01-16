@@ -6,7 +6,7 @@ name: doc
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -17,7 +17,7 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-jobs:    
+jobs:
   doc:
     environment:
       name: github-pages
@@ -30,8 +30,12 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+      - name: install system deps
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config python3-dev
       - name: install python dependencies
-        run: |   
+        run: |
           # also see settings in pyproject.toml
           pip install .[doc]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems        
       - name: build html doc
@@ -39,7 +43,7 @@ jobs:
           cd doc
           make html
       - name: install latex
-        run: |          
+        run: |
           sudo apt-get update -y || true
           sudo apt-get install -y latexmk
           sudo apt-get install -y texlive-latex-extra  # otherwise LaTeX Error: File `cmap.sty' not found
@@ -55,7 +59,7 @@ jobs:
         uses: actions/configure-pages@v5
       - name: pages artifact
         uses: actions/upload-pages-artifact@v4
-        with:              
+        with:
           path: 'doc/build/html'
       - name: deploy to github pages
         id: deployment
