@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: install system deps
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config python3-dev
       - name: extract python version
         uses: ./.github/actions/extract-python-version
       - uses: actions/setup-python@v6
