@@ -46,7 +46,11 @@ def _create_nan_entries_for_missing_year_columns(table_or_annual_series, year_nu
     # If first year is NaN, set the year before to zero to allow extrapolation
     first_year = sorted_year_numbers[0]
     val = new_table_or_annual_series[first_year]
-    if isinstance(val, float) and pd.isna(val) or isinstance(val, pd.Series) and val.isna().any():
+    if (
+        (isinstance(val, float) and pd.isna(val))
+        or (isinstance(val, pd.Series) and val.isna().any())
+        and not any([year for year in table_or_annual_series.columns if year < first_year])
+    ):
         year_before = first_year - 1
         new_table_or_annual_series[year_before] = 0.0
     return new_table_or_annual_series

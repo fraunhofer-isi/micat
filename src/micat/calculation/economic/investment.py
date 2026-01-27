@@ -203,6 +203,5 @@ def _specific_investment_cost(
 def _investment_cost_per_ktoe(data_source, years):
     e3m_global_parameters = data_source.table("e3m_global_parameters", {})
     investment_cost_per_ktoe_raw = e3m_global_parameters.reduce("id_parameter", 41)
-
     investment_cost_per_ktoe = extrapolation.extrapolate(investment_cost_per_ktoe_raw, years)
     return investment_cost_per_ktoe
