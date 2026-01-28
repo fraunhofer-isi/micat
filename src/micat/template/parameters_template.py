@@ -514,17 +514,17 @@ def _subsector_final_add_parameter_data(
 
     # Database
     column_names = database_utils.column_names(database, table_name)
-    filtered_column_names = database_utils.filter_column_names_by_year(column_names, years)
-    data_table = database_utils.table(database, table_name, filtered_column_names, where_clause)
+    if table_name == "e3m_energy_prices":
+        data_table = database_utils.table(database, table_name, column_names, where_clause)
+    else:
+        filtered_column_names = database_utils.filter_column_names_by_year(column_names, years)
+        data_table = database_utils.table(database, table_name, filtered_column_names, where_clause)
 
     # Confidential Database
     if confidential_database is not None and confidential_table_name is not None:
         confidential_column_names = database_utils.column_names(confidential_database, confidential_table_name)
-        filtered_confidential_column_names = database_utils.filter_column_names_by_year(
-            confidential_column_names, years
-        )
         confidential_data_table = database_utils.table(
-            confidential_database, confidential_table_name, filtered_confidential_column_names, where_clause
+            confidential_database, confidential_table_name, confidential_column_names, where_clause
         )
 
         # Calculate percentages for confidential data
@@ -618,9 +618,8 @@ def _primary_add_parameter_data(
 
     # Confidential Database
     confidential_column_names = database_utils.column_names(confidential_database, confidential_table_name)
-    filtered_confidential_column_names = database_utils.filter_column_names_by_year(confidential_column_names, years)
     confidential_data_table = database_utils.table(
-        confidential_database, confidential_table_name, filtered_confidential_column_names, where_clause
+        confidential_database, confidential_table_name, confidential_column_names, where_clause
     )
 
     # Interpolate missing values
@@ -636,7 +635,7 @@ def _primary_add_parameter_data(
     df_fallback = df_fallback.reindex(columns=all_years)
 
     # Prefer data_table values, fall back to confidential_data_table
-    data_table._data_frame = df_preferred.combine_first(df_fallback)
+    data_table._data_frame = df_preferred.combine_first(df_fallback).fillna(0)
 
     # If years are missing in both, extrapolate
     data_table = extrapolation.extrapolate(data_table, [int(y) for y in years])
