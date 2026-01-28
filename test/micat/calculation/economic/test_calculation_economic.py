@@ -48,5 +48,6 @@ class TestEconomicIndicators:
             "mocked_data_source",
             "mocked_id_region",
             "mocked_years",
+            None,
         )
         assert len(result) == 7

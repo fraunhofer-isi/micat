@@ -4,7 +4,6 @@
 
 from micat.calculation import extrapolation
 from micat.calculation.social import lifetime
-from micat.calculation.economic.investment import _annual_years, investment_cost_in_euro
 
 
 def parameters(
@@ -28,7 +27,7 @@ def parameters(
     years_to_extrapolate = final_energy_saving_or_capacities.years.copy()
     if starting_year and starting_year not in years_to_extrapolate:
         years_to_extrapolate = [starting_year] + years_to_extrapolate
-    years_to_extrapolate = _annual_years(years_to_extrapolate)
+    years_to_extrapolate = extrapolation._annual_years(years_to_extrapolate)
     extrapolated_final_energy_saving_or_capacities = extrapolation.extrapolate(
         final_energy_saving_or_capacities, years_to_extrapolate
     )
@@ -36,6 +35,9 @@ def parameters(
     extrapolated_final_energy_saving_or_capacities = extrapolated_final_energy_saving_or_capacities.droplevel(
         ["id_subsector", "id_action_type"]
     )
+
+    # Needs to be imported here to avoid circular imports
+    from micat.calculation.economic.investment import investment_cost_in_euro
 
     investment_costs = investment_cost_in_euro(
         final_energy_saving_or_capacities,

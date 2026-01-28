@@ -74,6 +74,7 @@ def mocked_front_end_arguments():
         "measure_specific_parameters": mocked_parameters(),
         "parameters": mocked_parameters(),
         "population_of_municipality": "mocked_population",
+        "starting_year": None,
     }
 
 

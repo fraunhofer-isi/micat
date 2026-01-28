@@ -157,8 +157,11 @@ def test_wuppertal_parameters():
 @patch(measure_specific_parameters_template._interpolate_annual_data)
 @patch(measure_specific_parameters_template._fill_unit)
 def test_get_main_data():
-    final_energy_saving_or_capacities = Mock()
-    final_energy_saving_or_capacities.unique_index_values = Mock([1])
+    final_energy_saving_or_capacities = Table(
+        [
+            {"id_measure": 1, "id_subsector": 2, "id_action_type": 3, "2000": 0, "2010": 10},
+        ]
+    )
     data_source = Mock()
     wuppertal_parameters = Mock()
 
@@ -196,7 +199,11 @@ def test_get_fuel_switch_data():
 
 
 def test_get_residential_data():
-    final_energy_saving_or_capacities = Mock()
+    final_energy_saving_or_capacities = Table(
+        [
+            {"id_measure": 1, "id_subsector": 2, "id_action_type": 3, "2000": 0, "2010": 10},
+        ]
+    )
     context = Mock()
     data_source = Mock()
     wuppertal_parameters = Mock()

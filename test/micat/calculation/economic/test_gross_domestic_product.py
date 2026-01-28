@@ -43,6 +43,7 @@ def test_impact_on_gross_domestic_product():
         final_energy_saving_or_capacities,
         data_source,
         "mocked_id_region",
+        None,
     )
 
     assert result["2020"][1] == 0.01 * 10000

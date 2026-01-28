@@ -42,5 +42,6 @@ def test_reduction_of_energy_cost():
         final_energy_saving_or_capacities,
         data_source,
         "mocked_id_region",
+        None,
     )
     assert result["2020"][1] == 30

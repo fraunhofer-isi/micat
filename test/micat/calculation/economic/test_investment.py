@@ -18,7 +18,10 @@ def test_annual_investment_cost_in_euro():
         final_energy_saving_or_capacities = Mock()
         final_energy_saving_or_capacities.years = years
         result = investment.annual_investment_cost_in_euro(
-            final_energy_saving_or_capacities, "mocked_data_source", "mocked_id_region"
+            final_energy_saving_or_capacities,
+            "mocked_data_source",
+            "mocked_id_region",
+            None,
         )
         assert result.years == years
         assert result["2000"][1] == 10
@@ -57,15 +60,29 @@ def test_investment_cost_in_euro():
     data_source = Mock()
     data_source.measure_specific_parameter = mocked_measure_specific_parameter
 
-    final_energy_saving_or_capacities = Mock()
-    final_energy_saving_or_capacities.unique_index_values = Mock([1])
+    final_energy_saving_or_capacities = Table(
+        [
+            {
+                "id_measure": 1,
+                "id_subsector": 3,
+                "id_action_type": 8,
+                "2020": 5000,
+                "2025": 4000,
+                "2030": 3000,
+            },
+            {
+                "id_measure": 2,
+                "id_subsector": 3,
+                "id_action_type": 11,
+                "2020": 10000,
+                "2025": 9000,
+                "2030": 8000,
+            },
+        ]
+    )
+
     result = investment.investment_cost_in_euro(final_energy_saving_or_capacities, data_source, "mocked_id_region")
     assert result["2000"][1, 1] == 10
-
-
-def test_annual_years():
-    result = investment._annual_years([2000, 2005])
-    assert result == [2000, 2001, 2002, 2003, 2004, 2005]
 
 
 class TestDifferenceToPreviousYear:

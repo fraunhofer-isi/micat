@@ -20,7 +20,7 @@ def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_sourc
     years = final_energy_saving_or_capacities.years
     if starting_year and starting_year not in years:
         years = [starting_year] + years
-    annual_years = _annual_years(years)
+    annual_years = extrapolation._annual_years(years)
     interpolated_cumulated_investment_cost = extrapolation.extrapolate(cumulated_investment_cost, annual_years)
     annual_investment_cost = interpolated_cumulated_investment_cost.map(
         lambda value, index, column_name: _difference_to_previous_year(
@@ -152,13 +152,6 @@ def investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_r
 
     del investment["id_subsector"]
     return investment
-
-
-def _annual_years(years):
-    first_year = years[0]
-    last_year = years[len(years) - 1]
-    annual_years = list(range(first_year, last_year + 1))
-    return annual_years
 
 
 def _difference_to_previous_year(

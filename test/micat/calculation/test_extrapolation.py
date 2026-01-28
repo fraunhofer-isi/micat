@@ -67,14 +67,14 @@ class TestExtrapolate:
                     "2012": 17507752,
                     "2013": 16914282,
                     "2014": 16672871,
-                    "2015": 15301375,
+                    "2015": 13929879,
                 },
             ]
         )
 
         year_numbers = range(2016, 2022)
         result = extrapolation.extrapolate(support_point, year_numbers)
-        assert int(result["2016"][1][1]) == 15301375
+        assert int(result["2016"][1][1]) == 11186887
 
 
 extrapolated_series = pd.Series([1, 2, 3], index=[2010, 2020, 2030])
@@ -124,4 +124,4 @@ class TestNanEntriesForMissingYearColumns:
         )
         _id_column_names, year_column_names, _ = result.column_names
 
-        assert year_column_names == [2010, 2020, 2030, 2005, 2011]
+        assert year_column_names == [2010, 2020, 2030, 2005, 2011, 2004]

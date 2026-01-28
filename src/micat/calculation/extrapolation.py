@@ -10,6 +10,13 @@ import pandas as pd
 from micat.series.annual_series import AnnualSeries
 
 
+def _annual_years(years):
+    first_year = years[0]
+    last_year = years[len(years) - 1]
+    annual_years = list(range(first_year, last_year + 1))
+    return annual_years
+
+
 def extrapolate(table, year_numbers):
     if table is None:
         raise ValueError("Table must not be None.")

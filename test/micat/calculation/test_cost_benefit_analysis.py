@@ -5,11 +5,16 @@
 # pylint: disable=protected-access
 
 from micat.calculation import cost_benefit_analysis, extrapolation
+from micat.calculation.economic import investment
 from micat.calculation.social import lifetime
 from micat.table.table import Table
 from micat.test_utils.isi_mock import Mock, patch
 
 
+@patch(
+    investment.investment_cost_in_euro,
+    Table([{"id_measure": 1, "id_action_type": 1, "2000": 10, "2010": 20, "2020": 30}]),
+)
 @patch(
     lifetime.measure_specific_lifetime,
     Mock("mocked_lifetime"),
@@ -25,13 +30,26 @@ def test_parameters():
     mocked_data_source = Mock()
     mocked_data_source.table = Mock(mocked_table)
 
-    mocked_final_energy_saving_or_capacities = Mock()
-    mocked_final_energy_saving_or_capacities.years = ["2000"]
+    mocked_final_energy_saving_or_capacities = Table(
+        [
+            {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2000": 10},
+        ]
+    )
+
+    mocked_ecologic_indicators = {
+        "reductionOfGreenHouseGasEmission": Table(
+            [
+                {"id_measure": 1, "2000": 1},
+            ]
+        )
+    }
 
     parameters = cost_benefit_analysis.parameters(
         mocked_final_energy_saving_or_capacities,
-        1,
-        mocked_data_source,
+        ecologic_indicators=mocked_ecologic_indicators,
+        id_region=1,
+        data_source=mocked_data_source,
+        starting_year=None,
     )
     assert parameters["lifetime"] == "mocked_lifetime"
     assert parameters["subsidyRate"] == "mocked_subsidy_rate"

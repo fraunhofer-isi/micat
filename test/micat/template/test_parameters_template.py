@@ -268,6 +268,7 @@ def test_subsector_final_add_parameter_data(*args):  # pylint: disable=unused-ar
         "mocked_id_parameter",
         "mocked_id_subsector_table",
         "mocked_id_final_energy_carrier_table",
+        years=["2020", "2025"],
     )
 
     assert result is not None
@@ -322,6 +323,7 @@ def test_primary_add_parameter_data(*args):  # pylint: disable=unused-argument
         "mocked_id_region",
         "mocked_id_parameter",
         "mocked_id_primary_energy_carrier_table",
+        years=["2020", "2025"],
     )
 
     assert result is not None

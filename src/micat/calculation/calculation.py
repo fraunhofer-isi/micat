@@ -14,7 +14,6 @@ from micat.calculation.economic import (
     eurostat,
     population,
 )
-from micat.calculation.economic.investment import _annual_years
 from micat.calculation.social import calculation_social
 from micat.input.data_source import DataSource
 from micat.series.annual_series import AnnualSeries

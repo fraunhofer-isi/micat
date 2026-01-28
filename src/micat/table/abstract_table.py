@@ -13,9 +13,7 @@ from micat.log.logger import Logger
 class AbstractTable:
     def __init__(self, data_frame):
         if data_frame.empty:
-            raise ValueError(
-                "Empty tables are not supported. Please provide non-empty data columns."
-            )
+            raise ValueError("Empty tables are not supported. Please provide non-empty data columns.")
         self._data_frame = data_frame
 
     @staticmethod
@@ -51,9 +49,7 @@ class AbstractTable:
             )
             raise KeyError(message)
 
-        data_frame = AbstractTable._handle_unmapped_reverse_entries(
-            data_frame, mapping_table
-        )
+        data_frame = AbstractTable._handle_unmapped_reverse_entries(data_frame, mapping_table)
         # noinspection PyProtectedMember
         result_data_frame = data_frame.merge(
             mapping_table._data_frame,  # pylint: disable=protected-access
@@ -67,12 +63,7 @@ class AbstractTable:
     def _check_for_special_values_and_remove_them(df, dummy_value, table_name):
         contains_dummy_value = AbstractTable._contains(df, dummy_value)
         if contains_dummy_value:
-            message = (
-                "Removing special values "
-                + str(dummy_value)
-                + " from table "
-                + table_name
-            )
+            message = "Removing special values " + str(dummy_value) + " from table " + table_name
             Logger.debug(message)
             cleaned_df = AbstractTable._remove_rows_containing_value(df, dummy_value)
             return cleaned_df
@@ -165,10 +156,7 @@ class AbstractTable:
         if contains_non_exiting_ids:
             unmapped_id_values = set(source_series[non_existing_ids].values)
             message = (
-                "Dataframe includes id values for "
-                + source_column
-                + " that wont be mapped: "
-                + str(unmapped_id_values)
+                "Dataframe includes id values for " + source_column + " that wont be mapped: " + str(unmapped_id_values)
             )
             Logger.warn(message)
 
@@ -386,9 +374,7 @@ class AbstractTable:
         )
         return column_result
 
-    def _multi_index_lookup_for_cell(
-        self, index_value_or_tuple, column_name, index_order
-    ):
+    def _multi_index_lookup_for_cell(self, index_value_or_tuple, column_name, index_order):
         if isinstance(index_value_or_tuple, tuple):
             index_value = self._create_index_entry(index_value_or_tuple, index_order)
         else:
