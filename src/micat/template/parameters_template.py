@@ -530,7 +530,8 @@ def _subsector_final_add_parameter_data(
         # Calculate percentages for confidential data
         df = confidential_data_table._data_frame
         group_levels = ["id_parameter", "id_subsector"]
-        confidential_data_table._data_frame = df.div(df.groupby(level=group_levels).transform("sum"))
+        denom = df.groupby(level=group_levels).transform("sum")
+        confidential_data_table._data_frame = df.div(denom).fillna(0)
 
         # Interpolate missing values
         confidential_data_table = extrapolation.extrapolate(confidential_data_table, [int(y) for y in years])
