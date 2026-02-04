@@ -64,7 +64,8 @@ def primary_energy_saving(
     ):
         electricity_coefficient = substitution_factors
         del electricity_coefficient["id_subsector"]
-        del electricity_coefficient["id_parameter"]
+        if "id_parameter" in electricity_coefficient.index.names:
+            del electricity_coefficient["id_parameter"]
     else:
         electricity_coefficient = eurostat_primary_parameters.reduce("id_parameter", 21)
     electricity_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 1)

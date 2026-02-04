@@ -249,6 +249,7 @@ def _measure_specific_share_of_energy_poor_population_tenant_others(share_input)
 
     number_of_deciles = delta_di.map(number_of_smaller_deciles)
     share = number_of_deciles / 10
+
     return share
 
 
