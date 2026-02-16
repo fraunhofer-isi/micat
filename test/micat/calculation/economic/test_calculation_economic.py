@@ -16,6 +16,7 @@ from micat.calculation.economic import (
     production,
     supplier_diversity,
 )
+from micat.table.table import Table
 
 # pylint: disable=protected-access
 from micat.test_utils.isi_mock import Mock, patch
@@ -40,8 +41,20 @@ class TestEconomicIndicators:
         mocked_interim_data = Mock()
         mocked_ecologic_indicators = Mock()
 
+        final_energy_saving_or_capacities = Table(
+            [
+                {
+                    "id_measure": 1,
+                    "id_subsector": 1,
+                    "id_action_type": 1,
+                    "2020": 10,
+                    "2030": 20,
+                },
+            ]
+        )
+
         result = calculation_economic.economic_indicators(
-            "mocked_final_energy_saving_or_capacities",
+            final_energy_saving_or_capacities,
             "mocked_population_of_municipality",
             mocked_interim_data,
             mocked_ecologic_indicators,

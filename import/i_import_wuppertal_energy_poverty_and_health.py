@@ -26,7 +26,7 @@ def main():
         file_path, engine="openpyxl", sheet_name="material_intensity"
     )
     raw_material_intensity_parameters = raw_material_intensity_parameters.rename(
-        columns={"id_material intensity": "id_material_intensity"}
+        columns={"id_material intensity": "id_crm"}
     ).iloc[:, :-2]
     material_intensity = Table(raw_material_intensity_parameters)
     database_import.write_to_sqlite(material_intensity, "wuppertal_material_intensity")
