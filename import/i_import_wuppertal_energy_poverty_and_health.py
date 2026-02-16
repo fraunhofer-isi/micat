@@ -95,14 +95,15 @@ def main():
         axis=1
     )
     # Combine already existing entries
-    # extended_parameters._data_frame = pd.concat(
-    #     [
-    #         extended_parameters._data_frame,
-    #         database.table("wuppertal_parameters", {})._data_frame,
-    #     ],
-    #     ignore_index=False,
-    #     sort=False,
-    # )
+    extended_parameters._data_frame = pd.concat(
+        [
+            extended_parameters._data_frame,
+            database.table("wuppertal_parameters", {})._data_frame,
+        ],
+        ignore_index=False,
+        sort=False,
+    )
+    extended_parameters._data_frame = extended_parameters._data_frame.fillna(0)
     database_import.write_to_sqlite(extended_parameters, "wuppertal_parameters")
 
     file_path = import_path + "/health.xlsx"
