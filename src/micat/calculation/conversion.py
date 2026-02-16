@@ -25,26 +25,40 @@ def primary_energy_saving(
     # H2 and sythentic fuels
     h2_saving = final_energy_saving.reduce("id_final_energy_carrier", [7])
     del h2_saving["id_final_energy_carrier"]
-    common_years = h2_saving._data_frame.columns.intersection(_h2_coefficient._data_frame.columns)
+    common_years = h2_saving._data_frame.columns.intersection(
+        _h2_coefficient._data_frame.columns
+    )
     h2_coefficient = _h2_coefficient.reduce("id_parameter", 22)
     h2_coefficient._data_frame = h2_coefficient._data_frame[common_years]
-    h2_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 7)
-    h2_conversion_efficiency._data_frame = h2_conversion_efficiency._data_frame[common_years]
+    h2_conversion_efficiency = conversion_efficiency.reduce(
+        "id_final_energy_carrier", 7
+    )
+    h2_conversion_efficiency._data_frame = h2_conversion_efficiency._data_frame[
+        common_years
+    ]
     h2_saving_final = h2_saving * h2_coefficient / h2_conversion_efficiency
 
     # Heat
     heat_saving = final_energy_saving.reduce("id_final_energy_carrier", [6])
     del heat_saving["id_final_energy_carrier"]
-    advanced_parameters = data_source.table("measure_final_parameters", {"id_parameter": [67]})
+    advanced_parameters = data_source.table(
+        "measure_final_parameters", {"id_parameter": [67]}
+    )
     if id_action_type == 37 and advanced_parameters:
         # Consider advanced parameters for heat only
-        heat_coefficient = data_source.table("measure_final_parameters", {"id_parameter": [67]})
+        heat_coefficient = data_source.table(
+            "measure_final_parameters", {"id_parameter": [67]}
+        )
         del heat_coefficient["id_measure"]
         del heat_coefficient["id_parameter"]
     else:
         heat_coefficient = eurostat_primary_parameters.reduce("id_parameter", 20)
-    heat_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 6)
-    heat_conversion_efficiency._data_frame = heat_conversion_efficiency._data_frame[common_years]
+    heat_conversion_efficiency = conversion_efficiency.reduce(
+        "id_final_energy_carrier", 6
+    )
+    heat_conversion_efficiency._data_frame = heat_conversion_efficiency._data_frame[
+        common_years
+    ]
 
     heat_saving_final = heat_saving * heat_coefficient / heat_conversion_efficiency
 
@@ -60,7 +74,11 @@ def primary_energy_saving(
     # Then calculate primary energy savings for electricity
     # Replace electricity coefficient with substition factors if id_action_type < 30 or == 37
     if any(
-        x for x in final_energy_saving.index.get_level_values("id_action_type").unique().tolist() if x >= 30 and x != 37
+        x
+        for x in final_energy_saving.index.get_level_values("id_action_type")
+        .unique()
+        .tolist()
+        if x >= 30 and x != 37
     ):
         electricity_coefficient = substitution_factors
         del electricity_coefficient["id_subsector"]
@@ -68,9 +86,15 @@ def primary_energy_saving(
             del electricity_coefficient["id_parameter"]
     else:
         electricity_coefficient = eurostat_primary_parameters.reduce("id_parameter", 21)
-    electricity_conversion_efficiency = conversion_efficiency.reduce("id_final_energy_carrier", 1)
-    electricity_conversion_efficiency._data_frame = electricity_conversion_efficiency._data_frame[common_years]
-    electricity_saving_final = electricity_total * electricity_coefficient / electricity_conversion_efficiency
+    electricity_conversion_efficiency = conversion_efficiency.reduce(
+        "id_final_energy_carrier", 1
+    )
+    electricity_conversion_efficiency._data_frame = (
+        electricity_conversion_efficiency._data_frame[common_years]
+    )
+    electricity_saving_final = (
+        electricity_total * electricity_coefficient / electricity_conversion_efficiency
+    )
 
     return heat_saving_final, electricity_saving_final, h2_saving_final
 

@@ -21,18 +21,30 @@ def alleviation_of_energy_poverty_on_national_level(
 ):
     years = final_energy_saving_or_capacities.years
 
-    energy_poverty_gap_owner, energy_poverty_gap_tenant = _energy_poverty_gap(data_source, id_region, years, mode_2m)
+    energy_poverty_gap_owner, energy_poverty_gap_tenant = _energy_poverty_gap(
+        data_source, id_region, years, mode_2m
+    )
 
-    measure_specific_lifetime = lifetime.measure_specific_lifetime(final_energy_saving_or_capacities, data_source)
+    measure_specific_lifetime = lifetime.measure_specific_lifetime(
+        final_energy_saving_or_capacities, data_source
+    )
 
-    wuppertal_parameters = data_source.table("wuppertal_parameters", {"id_region": str(id_region)})
+    wuppertal_parameters = data_source.table(
+        "wuppertal_parameters", {"id_region": str(id_region)}
+    )
 
-    wuppertal_constant_parameters = data_source.table("wuppertal_constant_parameters", {"id_region": str(id_region)})
+    wuppertal_constant_parameters = data_source.table(
+        "wuppertal_constant_parameters", {"id_region": str(id_region)}
+    )
 
     if mode_2m:
-        equivalence_coefficient = wuppertal_constant_parameters.reduce("id_parameter", 60)
+        equivalence_coefficient = wuppertal_constant_parameters.reduce(
+            "id_parameter", 60
+        )
     else:
-        equivalence_coefficient = wuppertal_constant_parameters.reduce("id_parameter", 59)
+        equivalence_coefficient = wuppertal_constant_parameters.reduce(
+            "id_parameter", 59
+        )
 
     policy_targetedness = _extrapolated_series(25, wuppertal_parameters, years)
 
@@ -68,16 +80,18 @@ def alleviation_of_energy_poverty_on_national_level(
         id_region,
     )
 
-    share_of_energy_poor_population_owner_occupiers = _share_of_energy_poor_population_owner(
-        final_energy_saving_or_capacities,
-        reduction_of_energy_cost,
-        equivalence_coefficient,
-        measure_specific_lifetime,
-        subsidy_rate,
-        energy_poverty_gap_owner,
-        number_of_affected_dwellings,
-        investment_in_euro,
-        data_source,
+    share_of_energy_poor_population_owner_occupiers = (
+        _share_of_energy_poor_population_owner(
+            final_energy_saving_or_capacities,
+            reduction_of_energy_cost,
+            equivalence_coefficient,
+            measure_specific_lifetime,
+            subsidy_rate,
+            energy_poverty_gap_owner,
+            number_of_affected_dwellings,
+            investment_in_euro,
+            data_source,
+        )
     )
 
     share_of_energy_poor_population_tenant = _share_of_energy_poor_population_tenant(
@@ -109,14 +123,26 @@ def alleviation_of_energy_poverty_on_national_level(
 
 
 def _energy_poverty_gap(data_source, id_region, years, mode_2m=False):
-    wuppertal_decile_parameters = data_source.table("wuppertal_decile_parameters", {"id_region": str(id_region)})
-    extrapolated_decile_parameters = extrapolation.extrapolate(wuppertal_decile_parameters, years)
+    wuppertal_decile_parameters = data_source.table(
+        "wuppertal_decile_parameters", {"id_region": str(id_region)}
+    )
+    extrapolated_decile_parameters = extrapolation.extrapolate(
+        wuppertal_decile_parameters, years
+    )
     if mode_2m:
-        energy_poverty_gap_owner = extrapolated_decile_parameters.reduce("id_parameter", 57)
-        energy_poverty_gap_tenant = extrapolated_decile_parameters.reduce("id_parameter", 58)
+        energy_poverty_gap_owner = extrapolated_decile_parameters.reduce(
+            "id_parameter", 57
+        )
+        energy_poverty_gap_tenant = extrapolated_decile_parameters.reduce(
+            "id_parameter", 58
+        )
     else:
-        energy_poverty_gap_owner = extrapolated_decile_parameters.reduce("id_parameter", 27)
-        energy_poverty_gap_tenant = extrapolated_decile_parameters.reduce("id_parameter", 28)
+        energy_poverty_gap_owner = extrapolated_decile_parameters.reduce(
+            "id_parameter", 27
+        )
+        energy_poverty_gap_tenant = extrapolated_decile_parameters.reduce(
+            "id_parameter", 28
+        )
     return energy_poverty_gap_owner, energy_poverty_gap_tenant
 
 
@@ -141,16 +167,24 @@ def _measure_specific_share_of_energy_poor_population_owner(
         return zero_table
 
     if id_action_type in [1, 2, 3]:
-        annual_values = _measure_specific_share_of_energy_poor_population_owner_others(share_input)
+        annual_values = _measure_specific_share_of_energy_poor_population_owner_others(
+            share_input
+        )
         table = annual_values.transpose("id_measure", id_measure)
         return table
     elif id_action_type == 4:
-        annual_values = _measure_specific_share_of_energy_poor_population_electric(share_input)
+        annual_values = _measure_specific_share_of_energy_poor_population_electric(
+            share_input
+        )
         table = annual_values.transpose("id_measure", id_measure)
         return table
 
     else:
-        message = "Unknown id_ind_use value " + str(id_action_type) + " for subsector 17 (residential)"
+        message = (
+            "Unknown id_ind_use value "
+            + str(id_action_type)
+            + " for subsector 17 (residential)"
+        )
         raise KeyError(message)
 
 
@@ -165,7 +199,10 @@ def _measure_specific_share_of_energy_poor_population_electric(share_input):
 
     delta_di = (
         reduction_of_energy_cost / m2_equivalence_coefficient
-        - investment_in_euro / m2_equivalence_coefficient / measure_specific_lifetime * (1 - subsidy_rate / 100)
+        - investment_in_euro
+        / m2_equivalence_coefficient
+        / measure_specific_lifetime
+        * (1 - subsidy_rate / 100)
     ) / number_of_affected_dwellings
 
     def number_of_smaller_deciles(value, year):
@@ -189,7 +226,10 @@ def _measure_specific_share_of_energy_poor_population_owner_others(share_input):
 
     delta_di = (
         reduction_of_energy_cost / m2_equivalence_coefficient
-        - investment_in_euro / m2_equivalence_coefficient / measure_specific_lifetime * (1 - subsidy_rate / 100)
+        - investment_in_euro
+        / m2_equivalence_coefficient
+        / measure_specific_lifetime
+        * (1 - subsidy_rate / 100)
     ) / number_of_affected_dwellings
 
     def number_of_smaller_deciles(value, year):
@@ -216,16 +256,24 @@ def _measure_specific_share_of_energy_poor_population_tenant(
         return zero_row_table
 
     elif id_action_type in [1, 2, 3]:
-        annual_values = _measure_specific_share_of_energy_poor_population_tenant_others(share_input)
+        annual_values = _measure_specific_share_of_energy_poor_population_tenant_others(
+            share_input
+        )
         table = annual_values.transpose("id_measure", id_measure)
         return table
     elif id_action_type == 4:
-        annual_values = _measure_specific_share_of_energy_poor_population_electric(share_input)
+        annual_values = _measure_specific_share_of_energy_poor_population_electric(
+            share_input
+        )
         table = annual_values.transpose("id_measure", id_measure)
         return table
 
     else:
-        message = "Unknown id_action_type value" + str(id_action_type) + " for subsector 17 (residential)"
+        message = (
+            "Unknown id_action_type value"
+            + str(id_action_type)
+            + " for subsector 17 (residential)"
+        )
         raise KeyError(message)
 
 
@@ -300,12 +348,22 @@ def _share_of_energy_poor_population_owner(
         _extrapolated_parameters=None,
         _constants=None,
     ):
-        reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce("id_measure", id_measure)
-        reduction_of_energy_cost_for_measure = reduction_of_energy_cost_by_energy_carrier.sum()
+        reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce(
+            "id_measure", id_measure
+        )
+        reduction_of_energy_cost_for_measure = (
+            reduction_of_energy_cost_by_energy_carrier.sum()
+        )
 
-        lifetime_for_measure = measure_specific_lifetime.reduce("id_measure", id_measure)
-        number_of_affected_dwellings_for_measure = number_of_affected_dwellings.reduce("id_measure", id_measure)
-        investment_in_euro_for_measure = investment_in_euro.reduce("id_measure", id_measure)
+        lifetime_for_measure = measure_specific_lifetime.reduce(
+            "id_measure", id_measure
+        )
+        number_of_affected_dwellings_for_measure = number_of_affected_dwellings.reduce(
+            "id_measure", id_measure
+        )
+        investment_in_euro_for_measure = investment_in_euro.reduce(
+            "id_measure", id_measure
+        )
 
         share_input = {
             "reduction_of_energy_cost": reduction_of_energy_cost_for_measure,
@@ -362,15 +420,21 @@ def _share_of_energy_poor_population_tenant(
         if reduction_of_energy_cost is None:
             reduction_of_energy_cost_for_measure = None
         else:
-            reduction_of_energy_cost_by_energy_carrier = reduction_of_energy_cost.reduce("id_measure", id_measure)
-            reduction_of_energy_cost_for_measure = reduction_of_energy_cost_by_energy_carrier.sum()
+            reduction_of_energy_cost_by_energy_carrier = (
+                reduction_of_energy_cost.reduce("id_measure", id_measure)
+            )
+            reduction_of_energy_cost_for_measure = (
+                reduction_of_energy_cost_by_energy_carrier.sum()
+            )
 
         share_input = {
             "subsidy_rate": subsidy_rate,
             "energy_poverty_gap": energy_poverty_gap,
             "reduction_of_energy_cost": reduction_of_energy_cost_for_measure,
             "m2_equivalence_coefficient": m2_equivalence_coefficient,
-            "number_of_affected_dwellings": number_of_affected_dwellings.reduce("id_measure", id_measure),
+            "number_of_affected_dwellings": number_of_affected_dwellings.reduce(
+                "id_measure", id_measure
+            ),
             "investment_in_euro": investment_in_euro.reduce("id_measure", id_measure),
             "lifetime": measure_specific_lifetime.reduce("id_measure", id_measure),
             "rent_premium": rent_premium.reduce("id_measure", id_measure),
