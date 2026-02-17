@@ -11,7 +11,7 @@ from micat.test_utils.isi_mock import Mock, patch
 def test_material_demand():
     final_energy_saving_or_capacities = Table(
         [
-            {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 0},
+            {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 1},
         ]
     )
 
@@ -24,6 +24,13 @@ def test_material_demand():
                 "id_crm": 1,
                 "value": 3,
             },
+            {
+                "id_parameter": 39,
+                "id_action_type": 1,
+                "id_subsector": 1,
+                "id_crm": 1,
+                "value": 5,
+            },
         ]
     )
 
@@ -34,4 +41,32 @@ def test_material_demand():
         final_energy_saving_or_capacities,
         data_source,
     )
-    assert result["2020"][1] == 0
+    assert result["2020"][1] == 8
+
+
+def test_supply_risk_factor():
+    final_energy_saving_or_capacities = Table(
+        [
+            {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 10},
+        ]
+    )
+
+    wuppertal_supply_risk_factor = ValueTable(
+        [
+            {
+                "id_parameter": 39,
+                "id_action_type": 1,
+                "id_subsector": 1,
+                "value": 3,
+            },
+        ]
+    )
+
+    data_source = Mock()
+    data_source.table = Mock(wuppertal_supply_risk_factor)
+
+    result = renewables.supply_risk_factor(
+        final_energy_saving_or_capacities,
+        data_source,
+    )
+    assert result["2020"][1] == 30

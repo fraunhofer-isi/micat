@@ -170,6 +170,9 @@ def economic_indicators(  # pylint: disable=too-many-locals
             final_energy_saving_or_capacities,
             data_source,
         )
-        # results["supplyRiskFactor"] = supply_risk_factor
+        results["supplyRiskFactor"] = renewables.supply_risk_factor(
+            final_energy_saving_or_capacities,
+            data_source,
+        )
 
     return results

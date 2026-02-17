@@ -55,3 +55,37 @@ def material_demand(
     )
 
     return Table(result)
+
+
+def supply_risk_factor(
+    final_energy_saving_or_capacities,
+    data_source,
+):
+    action_type_ids = final_energy_saving_or_capacities.unique_index_values(
+        "id_action_type"
+    )
+    subsector_ids = final_energy_saving_or_capacities.unique_index_values(
+        "id_subsector"
+    )
+
+    table_name = "wuppertal_supply_risk_factor"
+    where_clause = {
+        "id_subsector": subsector_ids,
+        "id_action_type": action_type_ids,
+    }
+    supply_risk_factor = data_source.table(
+        table_name,
+        where_clause,
+    )
+
+    df = final_energy_saving_or_capacities._data_frame
+    risk = supply_risk_factor._data_frame.droplevel("id_parameter")
+
+    df_result = (
+        df.join(risk, on=["id_subsector", "id_action_type"])
+        .pipe(lambda d: d[df.columns].multiply(d["value"], axis=0))
+        .groupby(level="id_measure")
+        .sum()
+    )
+
+    return Table(df_result)
