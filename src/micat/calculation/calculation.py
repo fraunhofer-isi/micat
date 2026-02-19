@@ -604,6 +604,7 @@ def _translate_result(key, table, data_source):
     translated_table = _translate_id_if_exists(
         translated_table, "id_technology", data_source
     )
+    translated_table = _translate_id_if_exists(translated_table, "id_crm", data_source)
     _validate_remaining_index_column_names(translated_table)
 
     return translated_table

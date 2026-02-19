@@ -22,6 +22,7 @@ def material_demand(
         "id_subsector": subsector_ids,
         "id_action_type": action_type_ids,
     }
+
     material_intensity = data_source.table(
         table_name,
         where_clause,
@@ -31,27 +32,34 @@ def material_demand(
     df2 = material_intensity._data_frame
 
     # ------------------------------------------------------------
-    # 1) Bring both DataFrames to compatible index structure
+    # 1) Align indices
     # ------------------------------------------------------------
 
-    # df1 index: (id_measure, id_subsector, id_action_type)
-    # -> move id_measure to last level so first two match df2
     df1_aligned = df1.reorder_levels(
         ["id_subsector", "id_action_type", "id_measure"]
     ).sort_index()
 
-    # df2 index: (id_subsector, id_action_type, id_parameter, id_crm)
-    # -> aggregate material intensity per (id_subsector, id_action_type)
-    intensity = df2["value"].groupby(level=["id_subsector", "id_action_type"]).sum()
+    intensity = df2["value"].sort_index()
 
     # ------------------------------------------------------------
-    # 2) Multiply (automatic alignment on shared index levels)
+    # 2) Multiply while keeping CRM dimension
+    # ------------------------------------------------------------
+
+    result = df1_aligned.mul(intensity, axis=0)
+
+    # ------------------------------------------------------------
+    # 3) Remove id_subsector from index
     # ------------------------------------------------------------
 
     result = (
-        df1_aligned.mul(intensity, axis=0)  # broadcast over id_measure
-        .groupby(level="id_measure")
+        result.groupby(
+            level=[
+                "id_measure",
+                "id_crm",
+            ]
+        )
         .sum()
+        .sort_index()
     )
 
     return Table(result)
