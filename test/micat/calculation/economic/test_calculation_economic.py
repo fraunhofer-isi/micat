@@ -52,6 +52,7 @@ class TestEconomicIndicators:
                 },
             ]
         )
+        installed_capacity = final_energy_saving_or_capacities.copy()
 
         result = calculation_economic.economic_indicators(
             final_energy_saving_or_capacities,
@@ -62,5 +63,6 @@ class TestEconomicIndicators:
             "mocked_id_region",
             "mocked_years",
             None,
+            installed_capacity,
         )
         assert len(result) == 7

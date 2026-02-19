@@ -41,7 +41,7 @@ def test_material_demand():
         final_energy_saving_or_capacities,
         data_source,
     )
-    assert result["2020"][1] == 8
+    assert result._data_frame["2020"].loc[(1, 1)]
 
 
 def test_supply_risk_factor():
