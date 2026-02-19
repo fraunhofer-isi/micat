@@ -25,6 +25,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
     id_region,
     years,
     starting_year,
+    installed_capacity,
 ):
     total_primary_energy_saving = interim_data["total_primary_energy_saving"]
 
@@ -167,11 +168,11 @@ def economic_indicators(  # pylint: disable=too-many-locals
     )[0]
     if subsector_id >= 30:
         results["materialDemand"] = renewables.material_demand(
-            final_energy_saving_or_capacities,
+            installed_capacity,
             data_source,
         )
         results["supplyRiskFactor"] = renewables.supply_risk_factor(
-            final_energy_saving_or_capacities,
+            installed_capacity,
             data_source,
         )
 
