@@ -93,7 +93,8 @@ class BackEnd:
 
         @app.route("/id_region")
         def id_region():
-            return self._get_table("id_region", self._flask.request)
+            table = self._get_table("id_region", self._flask.request)
+            return table
 
         @app.route("/id_subsector")
         def id_subsector():
@@ -119,7 +120,9 @@ class BackEnd:
 
         @app.route("/mapping__subsector__action_type")
         def mapping__subsector__action_type():
-            return self._get_table("mapping__subsector__action_type", self._flask.request)
+            return self._get_table(
+                "mapping__subsector__action_type", self._flask.request
+            )
 
         # API routes for calculations and templates
 
@@ -169,7 +172,9 @@ class BackEnd:
             #   "parameters": {}
             # }
             request = self._flask.request
-            json_object = calculation.calculate_indicator_data(request, self._database, self._confidential_database)
+            json_object = calculation.calculate_indicator_data(
+                request, self._database, self._confidential_database
+            )
             # Create dummy response while developing
             # json_object = _dummy_indicator_data()
             json_string = self._flask.json.dumps(json_object)
@@ -182,7 +187,9 @@ class BackEnd:
             # Example query:
             # https://micatool-dev.eu/parameters?id_region=0&file_name=parameters.xlsx
             request = self._flask.request
-            parameter_bytes = parameters_template.parameters_template(request, self._database)
+            parameter_bytes = parameters_template.parameters_template(
+                request, self._database
+            )
             return self.create_excel_file_response(parameter_bytes, request)
 
         @app.route("/json_parameters")
@@ -244,10 +251,14 @@ class BackEnd:
                 worksheet.write(row_idx, 1, region["label"].values[0], bold)
                 row_idx += 1
                 worksheet.write(row_idx, 0, "Subsector")
-                worksheet.write(row_idx, 1, program.get("subsectorName", program["subsector"]), bold)
+                worksheet.write(
+                    row_idx, 1, program.get("subsectorName", program["subsector"]), bold
+                )
                 row_idx += 2
                 for improvement in program["improvements"]:
-                    worksheet.write(row_idx, 0, improvement.get("name", improvement["id"]), italic)
+                    worksheet.write(
+                        row_idx, 0, improvement.get("name", improvement["id"]), italic
+                    )
                     row_idx += 1
                     col_idx = 0
                     for key, value in improvement["values"].items():
@@ -260,14 +271,22 @@ class BackEnd:
             # Outputs
             for program in data["results"]:
                 aggregation_measurements = []
-                title_appendix = f" ({program['name']})" if len(data["results"]) > 1 else ""
+                title_appendix = (
+                    f" ({program['name']})" if len(data["results"]) > 1 else ""
+                )
                 for key, category in data["categories"].items():
                     if key not in ["quantification", "monetization"]:
                         continue
-                    worksheet = workbook.add_worksheet(f"{category['title']}{title_appendix}")
+                    worksheet = workbook.add_worksheet(
+                        f"{category['title']}{title_appendix}"
+                    )
                     row_idx = 0
                     for measurement in category["measurements"]:
-                        if key == "monetization" or measurement["identifier"] == "impactOnGrossDomesticProduct":
+                        if (
+                            key == "monetization"
+                            or measurement["identifier"]
+                            == "impactOnGrossDomesticProduct"
+                        ):
                             aggregation_measurements.append(measurement)
                         if row_idx > 0:
                             row_idx += 1
@@ -295,13 +314,17 @@ class BackEnd:
                                 except IndexError:
                                     if col_idx == 0:
                                         col_idx += 1
-                                    worksheet.write(row_idx, col_idx, entry, number_format)
+                                    worksheet.write(
+                                        row_idx, col_idx, entry, number_format
+                                    )
                                     total[col_idx - 1] += entry
                                 else:
                                     if column_name == "id_measure":
                                         continue
                                     else:
-                                        worksheet.write(row_idx, col_idx, entry, number_format)
+                                        worksheet.write(
+                                            row_idx, col_idx, entry, number_format
+                                        )
                                 col_idx += 1
                             row_idx += 1
                             col_idx = 0
@@ -335,14 +358,18 @@ class BackEnd:
                                 if column_name == "id_measure":
                                     continue
                                 else:
-                                    worksheet.write(row_idx, col_idx, entry, number_format)
+                                    worksheet.write(
+                                        row_idx, col_idx, entry, number_format
+                                    )
                             col_idx += 1
                         row_idx += 1
                         col_idx = 0
 
             # CBA
             for program in data["cbaData"]:
-                worksheet = workbook.add_worksheet(f"CBA ({program['name']})" if len(data["results"]) > 1 else "CBA")
+                worksheet = workbook.add_worksheet(
+                    f"CBA ({program['name']})" if len(data["results"]) > 1 else "CBA"
+                )
                 row_idx = 0
 
                 # Add unit
@@ -366,7 +393,7 @@ class BackEnd:
                 for year in program["years"]:
                     worksheet.write(row_idx, col_idx, year, bold)
                     col_idx += 1
-                
+
                 for key, result in list_results.items():
                     row_idx += 1
                     worksheet.write(row_idx, 0, key, bold)
@@ -427,8 +454,12 @@ class BackEnd:
             #         row_idx += 2
             workbook.close()
             response = self._flask.make_response(output.getvalue())
-            response.headers["Content-Disposition"] = "attachment; filename=MICAT_results.xlsx"
-            response.headers["Content-type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            response.headers["Content-Disposition"] = (
+                "attachment; filename=MICAT_results.xlsx"
+            )
+            response.headers["Content-type"] = (
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
             return response
 
         @app.route("/export-input", methods=["POST"])
@@ -438,7 +469,14 @@ class BackEnd:
             output = io.StringIO()
             writer = csv.DictWriter(
                 output,
-                fieldnames=["time_frame", "region", "unit", "municipality", "inhabitants", "years"],
+                fieldnames=[
+                    "time_frame",
+                    "region",
+                    "unit",
+                    "municipality",
+                    "inhabitants",
+                    "years",
+                ],
             )
             writer.writeheader()
             writer.writerow(
@@ -452,7 +490,9 @@ class BackEnd:
                 }
             )
             response = self._flask.make_response(output.getvalue())
-            response.headers["Content-Disposition"] = "attachment; filename=MICAT_inputs.csv"
+            response.headers["Content-Disposition"] = (
+                "attachment; filename=MICAT_inputs.csv"
+            )
             response.headers["Content-type"] = "text/csv"
             return response
 
@@ -486,17 +526,23 @@ class BackEnd:
             region = request.args.get("region", "European Unoion")
             start = int(request.args.get("start", "2000"))
             end = int(request.args.get("end", "2022"))
-            df = pd.read_csv(os.path.join(os.getcwd(), "data/enerdata_odyssee_240911_170909.csv"))
+            df = pd.read_csv(
+                os.path.join(os.getcwd(), "data/enerdata_odyssee_240911_170909.csv")
+            )
             df = df.loc[(df["Item Code"] == category) & (df["Zone Name"] == region)]
             df.sort_values("Year", inplace=True)
             data = {}
             previous_value = 0
             # Deaggregate to get the yearly values
             for year, value in df[["Year", "Value"]].values.tolist():
-                data[year] = float((Decimal(value) - previous_value) * Decimal(1000))  # Convert from mtoe to ktoe
+                data[year] = float(
+                    (Decimal(value) - previous_value) * Decimal(1000)
+                )  # Convert from mtoe to ktoe
                 previous_value = Decimal(value)
             # Filter years
-            filtered_data = {k: v for k, v in data.items() if int(k) >= start and int(k) <= end}
+            filtered_data = {
+                k: v for k, v in data.items() if int(k) >= start and int(k) <= end
+            }
             # Aggregate again
             data = {}
             previous_value = 0
@@ -637,8 +683,12 @@ class BackEnd:
         # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/66
         response.headers.set("Access-Control-Allow-Origin", "*")
         response.headers.set("Content-Type", "application/json")
-        response.headers.set("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS")
-        response.headers.set("Access-Control-Allow-Headers", "Content-Type,Authorization")
+        response.headers.set(
+            "Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS"
+        )
+        response.headers.set(
+            "Access-Control-Allow-Headers", "Content-Type,Authorization"
+        )
         response.headers.set("Access-Control-Expose-Headers", "*")
         return response
 
@@ -647,5 +697,7 @@ class BackEnd:
             file_name = request.args["file_name"]
         output = self._flask.make_response(excel_bytes.getvalue())
         output.headers["Content-Disposition"] = "attachment; filename=" + file_name
-        output.headers["Content-type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        output.headers["Content-type"] = (
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
         return output

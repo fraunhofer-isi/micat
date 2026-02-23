@@ -6,13 +6,13 @@ from micat.calculation.economic import (
     buildings,
     employment,
     energy_cost,
-    energy_efficiency,
     energy_intensity,
     grid,
     gross_available_energy,
     gross_domestic_product,
     import_dependency,
     production,
+    renewables,
 )
 
 
@@ -25,6 +25,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
     id_region,
     years,
     starting_year,
+    installed_capacity,
 ):
     total_primary_energy_saving = interim_data["total_primary_energy_saving"]
 
@@ -45,8 +46,10 @@ def economic_indicators(  # pylint: disable=too-many-locals
 
     reduction_of_energy_cost = interim_data["reduction_of_energy_cost"]
 
-    reduction_of_energy_cost_by_final_energy_carrier = energy_cost.reduction_of_energy_cost_by_final_energy_carrier(
-        reduction_of_energy_cost,
+    reduction_of_energy_cost_by_final_energy_carrier = (
+        energy_cost.reduction_of_energy_cost_by_final_energy_carrier(
+            reduction_of_energy_cost,
+        )
     )
 
     scaled_gross_domestic_product = gross_domestic_product.gross_domestic_product(
@@ -62,11 +65,13 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #        population_of_municipality,
     #    )
 
-    impact_on_gross_domestic_product = gross_domestic_product.impact_on_gross_domestic_product(
-        final_energy_saving_or_capacities,
-        data_source,
-        id_region,
-        starting_year,
+    impact_on_gross_domestic_product = (
+        gross_domestic_product.impact_on_gross_domestic_product(
+            final_energy_saving_or_capacities,
+            data_source,
+            id_region,
+            starting_year,
+        )
     )
 
     # TO DO: use different sources for non_energy_use, depending on id_mode? #268
@@ -89,11 +94,13 @@ def economic_indicators(  # pylint: disable=too-many-locals
         additional_primary_energy_saving,
     )
 
-    reduction_of_import_dependency_table = import_dependency.impact_on_import_dependency(
-        total_primary_energy_saving,
-        primary_production,
-        scaled_gross_available_energy,
-        # primary_non_energy_use,
+    reduction_of_import_dependency_table = (
+        import_dependency.impact_on_import_dependency(
+            total_primary_energy_saving,
+            primary_production,
+            scaled_gross_available_energy,
+            # primary_non_energy_use,
+        )
     )
 
     additional_employment = employment.additional_employment(
@@ -123,7 +130,9 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #     data_source,
     # )
 
-    reduction_of_additional_capacities_in_grid = ecologic_indicators["reductionOfAdditionalCapacitiesInGrid"]
+    reduction_of_additional_capacities_in_grid = ecologic_indicators[
+        "reductionOfAdditionalCapacitiesInGrid"
+    ]
 
     monetization_of_reduction_of_additional_capacities_in_grid = (
         grid.monetization_of_reduction_of_additional_capacities_in_grid(
@@ -140,7 +149,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
     #        )
     #    )
 
-    return {
+    results = {
         "addedAssetValueOfBuildings": added_asset_value_of_buildings,
         "additionalEmployment": additional_employment,
         # "changeInUnitCostsOfProduction": change_in_unit_costs_of_production,
@@ -152,3 +161,19 @@ def economic_indicators(  # pylint: disable=too-many-locals
         "reductionOfImportDependency": reduction_of_import_dependency_table,
         # "turnoverOfEnergyEfficiencyGoods": turnover_of_energy_efficiency_goods,
     }
+
+    # Check if renewables are selected
+    subsector_id = final_energy_saving_or_capacities.unique_index_values(
+        "id_subsector"
+    )[0]
+    if subsector_id >= 30:
+        results["materialDemand"] = renewables.material_demand(
+            installed_capacity,
+            data_source,
+        )
+        results["supplyRiskFactor"] = renewables.supply_risk_factor(
+            installed_capacity,
+            data_source,
+        )
+
+    return results

@@ -25,6 +25,8 @@ def main():
 
     database_import.import_id_table("id_subsector", raw_data_path)
 
+    database_import.import_id_table("id_crm", raw_data_path)
+
     database_import.import_mapping_table(
         "mapping__subsector__sector",
         "id_subsector",

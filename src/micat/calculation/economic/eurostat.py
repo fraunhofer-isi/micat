@@ -12,7 +12,9 @@ def primary_parameters(
     years,
 ):
     regional_parameter_data = _primary_parameters_raw(data_source, id_region)
-    extrapolated_parameter_data = extrapolation.extrapolate(regional_parameter_data, years)
+    extrapolated_parameter_data = extrapolation.extrapolate(
+        regional_parameter_data, years
+    )
     return extrapolated_parameter_data
 
 
@@ -22,7 +24,9 @@ def technology_parameters(
     years,
 ):
     regional_parameter_data = _technology_parameters_raw(data_source, id_region)
-    extrapolated_parameter_data = extrapolation.extrapolate(regional_parameter_data, years)
+    extrapolated_parameter_data = extrapolation.extrapolate(
+        regional_parameter_data, years
+    )
     return extrapolated_parameter_data
 
 

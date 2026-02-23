@@ -20,23 +20,53 @@ def main():
 
     import_path = raw_data_path + "/wuppertal"
 
+    # Import material intensity
+    file_path = import_path + "/material_demand.xlsx"
+    raw_material_intensity_parameters = pd.read_excel(
+        file_path, engine="openpyxl", sheet_name="material_intensity"
+    )
+    raw_material_intensity_parameters = raw_material_intensity_parameters.rename(
+        columns={"id_material intensity": "id_crm"}
+    ).iloc[:, :-2]
+    material_intensity = Table(raw_material_intensity_parameters)
+    database_import.write_to_sqlite(material_intensity, "wuppertal_material_intensity")
+
+    # Import supply risk factor
+    file_path = import_path + "/supply_risk_factor.xlsx"
+    raw_supply_risk_factor_parameters = pd.read_excel(
+        file_path, engine="openpyxl", sheet_name="supply_risk_factor"
+    )
+    supply_risk_factor = Table(raw_supply_risk_factor_parameters)
+    database_import.write_to_sqlite(supply_risk_factor, "wuppertal_supply_risk_factor")
+
+    # Import energy poverty and health parameters
     database_import.import_id_table("id_decile", import_path)
 
     file_path = import_path + "/energy_poverty.xlsx"
-    raw_energy_poverty_parameters = pd.read_excel(file_path, engine="openpyxl", sheet_name=None)
-
-    decile_parameters, sector_parameters, constant_parameters, parameters = _read_energy_poverty_tables(
-        raw_energy_poverty_parameters
+    raw_energy_poverty_parameters = pd.read_excel(
+        file_path, engine="openpyxl", sheet_name=None
     )
-    extended_decile_parameters = PopulationUtils.extend_european_values(decile_parameters, database)
+
+    decile_parameters, sector_parameters, constant_parameters, parameters = (
+        _read_energy_poverty_tables(raw_energy_poverty_parameters)
+    )
+    extended_decile_parameters = PopulationUtils.extend_european_values(
+        decile_parameters, database
+    )
 
     extended_parameters = PopulationUtils.extend_european_values(parameters, database)
     # Filter out parameter, since they are handled in d_download_and_import_eurostat_data.py
-    extended_parameters = extended_parameters[~extended_parameters.index.isin([25], level=1)]
+    extended_parameters = extended_parameters[
+        ~extended_parameters.index.isin([25], level=1)
+    ]
 
-    database_import.write_to_sqlite(extended_decile_parameters, "wuppertal_decile_parameters")
+    database_import.write_to_sqlite(
+        extended_decile_parameters, "wuppertal_decile_parameters"
+    )
     database_import.write_to_sqlite(sector_parameters, "wuppertal_sector_parameters")
-    database_import.write_to_sqlite(constant_parameters, "wuppertal_constant_parameters")
+    database_import.write_to_sqlite(
+        constant_parameters, "wuppertal_constant_parameters"
+    )
     # We enhance the table only, since it's are already in the database due to d_download_and_import_eurostat_data.py
     # We need to interpolate missing values though
     for year in [
@@ -61,13 +91,19 @@ def main():
         "2023",
     ]:
         extended_parameters._data_frame.insert(1, year, np.nan)
-    extended_parameters._data_frame = extended_parameters._data_frame.interpolate(axis=1)
+    extended_parameters._data_frame = extended_parameters._data_frame.interpolate(
+        axis=1
+    )
     # Combine already existing entries
     extended_parameters._data_frame = pd.concat(
-        [extended_parameters._data_frame, database.table("wuppertal_parameters", {})._data_frame],
+        [
+            extended_parameters._data_frame,
+            database.table("wuppertal_parameters", {})._data_frame,
+        ],
         ignore_index=False,
         sort=False,
     )
+    extended_parameters._data_frame = extended_parameters._data_frame.fillna(0)
     database_import.write_to_sqlite(extended_parameters, "wuppertal_parameters")
 
     file_path = import_path + "/health.xlsx"

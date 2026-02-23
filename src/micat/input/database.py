@@ -117,5 +117,7 @@ class Database:
             message = "Could not query database for " + query_string
             raise IOError(message, exception) from exception
         if len(data["rows"]) == 0:
-            raise DatabaseException(f'Fetching data with "{query_string}" did not return any results.')
+            raise DatabaseException(
+                f'Fetching data with "{query_string}" did not return any results.'
+            )
         return data
