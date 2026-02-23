@@ -39,6 +39,30 @@ def main():
     supply_risk_factor = Table(raw_supply_risk_factor_parameters)
     database_import.write_to_sqlite(supply_risk_factor, "wuppertal_supply_risk_factor")
 
+    # Import land use (renewables)
+    file_path = import_path + "/landuse_res.xlsx"
+    raw_land_use_renewables_parameters = pd.read_excel(
+        file_path,
+        engine="openpyxl",
+        sheet_name="landuse_RES",
+        usecols="A:D",
+    )
+    land_use_renewables = Table(raw_land_use_renewables_parameters)
+    database_import.write_to_sqlite(land_use_renewables, "wuppertal_landuse_res")
+
+    # Import land use (conventional)
+    file_path = import_path + "/landuse_conventional.xlsx"
+    raw_land_use_conventional_parameters = pd.read_excel(
+        file_path,
+        engine="openpyxl",
+        sheet_name="landuse_conventional",
+        usecols="A:C",
+    )
+    land_use_conventional = Table(raw_land_use_conventional_parameters)
+    database_import.write_to_sqlite(
+        land_use_conventional, "wuppertal_landuse_conventional"
+    )
+
     # Import energy poverty and health parameters
     database_import.import_id_table("id_decile", import_path)
 
