@@ -10,6 +10,7 @@ from micat.calculation.ecologic import (
     targets,
 )
 from micat.calculation.economic import grid
+from micat.table.table import Table
 from micat.test_utils.isi_mock import Mock, patch
 
 
@@ -28,6 +29,26 @@ class TestEcologicIndicators:
 
         id_region = 0
 
+        final_energy_saving_or_capacities = Table(
+            [
+                {
+                    "id_measure": 1,
+                    "id_subsector": 3,
+                    "id_action_type": 8,
+                    "2020": 5000,
+                    "2025": 4000,
+                    "2030": 3000,
+                },
+                {
+                    "id_measure": 2,
+                    "id_subsector": 3,
+                    "id_action_type": 11,
+                    "2020": 10000,
+                    "2025": 9000,
+                    "2030": 8000,
+                },
+            ]
+        )
         mocked_data_source = Mock()
         mocked_heat_saving_final = Mock()
         mocked_electricity_saving_final = Mock()
@@ -38,5 +59,6 @@ class TestEcologicIndicators:
             id_region,
             mocked_heat_saving_final,
             mocked_electricity_saving_final,
+            final_energy_saving_or_capacities,
         )
         assert len(result) == 9

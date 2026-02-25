@@ -6,7 +6,6 @@
 from urllib.parse import parse_qs
 
 from micat.calculation import (
-    air_pollution,
     conversion,
     cost_benefit_analysis,
     extrapolation,
@@ -139,6 +138,7 @@ def calculate_indicator_data(
         id_region,
         heat_saving_final,
         electricity_saving_final,
+        final_energy_saving_or_capacities,
     )
     _validate_data(ecologic_indicators)
 

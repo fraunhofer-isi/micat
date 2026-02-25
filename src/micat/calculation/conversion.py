@@ -10,6 +10,10 @@ def total_primary_energy_saving(
     additional_primary_energy_saving,
 ):
     result = conventional_primary_energy_saving + additional_primary_energy_saving
+    # Remove electricity
+    result._data_frame = result._data_frame[
+        result._data_frame.index.get_level_values("id_primary_energy_carrier") != 7
+    ]
     return result
 
 
