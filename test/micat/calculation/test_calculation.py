@@ -30,8 +30,22 @@ database_path = determine_database_path()
 def mocked_savings():
     savings = Table(
         [
-            {"id_measure": 1, "id_subsector": 3, "id_action_type": 8, "2020": 5000, "2025": 4000, "2030": 3000},
-            {"id_measure": 2, "id_subsector": 3, "id_action_type": 11, "2020": 10000, "2025": 9000, "2030": 8000},
+            {
+                "id_measure": 1,
+                "id_subsector": 3,
+                "id_action_type": 8,
+                "2020": 5000,
+                "2025": 4000,
+                "2030": 3000,
+            },
+            {
+                "id_measure": 2,
+                "id_subsector": 3,
+                "id_action_type": 11,
+                "2020": 10000,
+                "2025": 9000,
+                "2030": 8000,
+            },
         ]
     )
     return savings
@@ -234,7 +248,9 @@ class TestPrivateApi:
                 "details": {"foo": "baa"},
             },
         ]
-        details, measures_without_detail = calculation._extract_details_from_measures(measures)
+        details, measures_without_detail = calculation._extract_details_from_measures(
+            measures
+        )
         first_detail = details[1]
         assert first_detail["foo"] == "baa"
 
@@ -252,7 +268,16 @@ class TestPrivateApi:
         Mock(
             (
                 "mocked_measure_specific_parameters",
-                [{"id_measure": 1, "id_subsector": 3, "id_action_type": 8, "2020": 1, "2025": 0, "2030": 0}],
+                [
+                    {
+                        "id_measure": 1,
+                        "id_subsector": 3,
+                        "id_action_type": 8,
+                        "2020": 1,
+                        "2025": 0,
+                        "2030": 0,
+                    }
+                ],
             ),
         ),
     )
@@ -340,7 +365,7 @@ class TestPrivateApi:
             "mocked_years",
         )
         assert len(result) == 3
-        assert len(result[0]) == 7
+        assert len(result[0]) == 8
 
     def test_mapping_from_final_to_primary_energy_carrier(self):
         database = Mock()

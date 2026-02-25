@@ -15,7 +15,9 @@ from micat.table.table import Table
 
 
 def land_use_change(
-    energy_produced, data_source, id_region, final_energy_saving_or_capacities
+    energy_produced,
+    data_source,
+    substitution_factors,
 ):
     action_type_ids = energy_produced.unique_index_values("id_action_type")
     subsector_ids = energy_produced.unique_index_values("id_subsector")
@@ -46,24 +48,14 @@ def land_use_change(
     )
 
     # Conventional
-    _substitution_factors = data_source.table(
-        "fraunhofer_substitution_factors",
-        {
-            "id_region": str(id_region),
-            "id_subsector": str(subsector_ids[0]),
-            "id_action_type": str(action_type_ids[0]),
-        },
-    )
-    _substitution_factors = extrapolation.extrapolate(
-        _substitution_factors, final_energy_saving_or_capacities.years
-    )
     landuse_conventional = data_source.table(
         "wuppertal_landuse_conventional",
         {},
     )
-    df1 = _substitution_factors._data_frame
+    df1 = substitution_factors._data_frame
     df2 = landuse_conventional._data_frame
     factor = df2["value"].sort_index()
+
     # align factor to df1 via id_primary_energy_carrier and multiply
     weighted = df1.mul(
         factor.droplevel("id_parameter"),
@@ -203,8 +195,7 @@ def ecologic_indicators(
         results["netLandUseChange"] = land_use_change(
             energy_produced,
             data_source,
-            id_region,
-            energy_saving_by_final_energy_carrier,
+            interim_data["substitution_factors"],
         )
 
     return results

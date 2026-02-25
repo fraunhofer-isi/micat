@@ -517,6 +517,7 @@ def _interim_data(
         "iiasa_final_subsector_parameters": iiasa_final_subsector_parameters,
         "iiasa_final_subsector_parameters_generation": iiasa_final_subsector_parameters_generation,
         "reduction_of_energy_cost": reduction_of_energy_cost,
+        "substitution_factors": substitution_factors,
     }
 
     return results, heat_saving_final, electricity_saving_final
