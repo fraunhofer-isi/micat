@@ -4,7 +4,7 @@
 
 # pylint: disable = no-name-in-module
 
-from micat.calculation import air_pollution, extrapolation
+from micat.calculation import air_pollution
 from micat.calculation.ecologic import (
     energy_saving,
     reduction_of_green_house_gas_emission_monetization,
@@ -12,6 +12,65 @@ from micat.calculation.ecologic import (
 )
 from micat.calculation.economic import grid
 from micat.table.table import Table
+
+
+def material_demand(
+    final_energy_saving_or_capacities,
+    data_source,
+):
+    action_type_ids = final_energy_saving_or_capacities.unique_index_values(
+        "id_action_type"
+    )
+    subsector_ids = final_energy_saving_or_capacities.unique_index_values(
+        "id_subsector"
+    )
+
+    table_name = "wuppertal_material_intensity"
+    where_clause = {
+        "id_subsector": subsector_ids,
+        "id_action_type": action_type_ids,
+    }
+
+    material_intensity = data_source.table(
+        table_name,
+        where_clause,
+    )
+
+    df1 = final_energy_saving_or_capacities._data_frame
+    df2 = material_intensity._data_frame
+
+    # ------------------------------------------------------------
+    # 1) Align indices
+    # ------------------------------------------------------------
+
+    df1_aligned = df1.reorder_levels(
+        ["id_subsector", "id_action_type", "id_measure"]
+    ).sort_index()
+
+    intensity = df2["value"].sort_index()
+
+    # ------------------------------------------------------------
+    # 2) Multiply while keeping CRM dimension
+    # ------------------------------------------------------------
+
+    result = df1_aligned.mul(intensity, axis=0)
+
+    # ------------------------------------------------------------
+    # 3) Remove id_subsector from index
+    # ------------------------------------------------------------
+
+    result = (
+        result.groupby(
+            level=[
+                "id_measure",
+                "id_crm",
+            ]
+        )
+        .sum()
+        .sort_index()
+    )
+
+    return Table(result)
 
 
 def land_use_change(
@@ -86,6 +145,7 @@ def ecologic_indicators(
     heat_saving_final,
     electricity_saving_final,
     energy_produced,
+    installed_capacity,
 ):
     iiasa_final_subsector_parameters = interim_data["iiasa_final_subsector_parameters"]
     iiasa_final_subsector_parameters_generation = interim_data[
@@ -196,6 +256,10 @@ def ecologic_indicators(
             energy_produced,
             data_source,
             interim_data["substitution_factors"],
+        )
+        results["materialDemand"] = material_demand(
+            installed_capacity,
+            data_source,
         )
 
     return results

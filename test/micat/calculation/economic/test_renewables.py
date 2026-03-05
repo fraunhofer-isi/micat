@@ -5,43 +5,7 @@
 from micat.calculation.economic import renewables
 from micat.table.table import Table
 from micat.table.value_table import ValueTable
-from micat.test_utils.isi_mock import Mock, patch
-
-
-def test_material_demand():
-    final_energy_saving_or_capacities = Table(
-        [
-            {"id_measure": 1, "id_subsector": 1, "id_action_type": 1, "2020": 1},
-        ]
-    )
-
-    wuppertal_material_intensity = ValueTable(
-        [
-            {
-                "id_parameter": 39,
-                "id_action_type": 1,
-                "id_subsector": 1,
-                "id_crm": 1,
-                "value": 3,
-            },
-            {
-                "id_parameter": 39,
-                "id_action_type": 1,
-                "id_subsector": 1,
-                "id_crm": 1,
-                "value": 5,
-            },
-        ]
-    )
-
-    data_source = Mock()
-    data_source.table = Mock(wuppertal_material_intensity)
-
-    result = renewables.material_demand(
-        final_energy_saving_or_capacities,
-        data_source,
-    )
-    assert result._data_frame["2020"].loc[(1, 1)]
+from micat.test_utils.isi_mock import Mock
 
 
 def test_supply_risk_factor():

@@ -63,6 +63,16 @@ def main():
         land_use_conventional, "wuppertal_landuse_conventional"
     )
 
+    # Import energy system cost
+    file_path = import_path + "/energy_system_cost.xlsx"
+    raw_energy_system_cost_parameters = pd.read_excel(
+        file_path,
+        engine="openpyxl",
+        sheet_name="ID_energy system_cost",
+    )
+    energy_system_cost = Table(raw_energy_system_cost_parameters)
+    database_import.write_to_sqlite(energy_system_cost, "wuppertal_energy_system_cost")
+
     # Import energy poverty and health parameters
     database_import.import_id_table("id_decile", import_path)
 

@@ -139,6 +139,7 @@ def calculate_indicator_data(
         heat_saving_final,
         electricity_saving_final,
         final_energy_saving_or_capacities,
+        installed_capacity,
     )
     _validate_data(ecologic_indicators)
 

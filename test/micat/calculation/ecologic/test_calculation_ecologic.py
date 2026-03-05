@@ -52,6 +52,7 @@ class TestEcologicIndicators:
         mocked_data_source = Mock()
         mocked_heat_saving_final = Mock()
         mocked_electricity_saving_final = Mock()
+        installed_capacity = final_energy_saving_or_capacities.copy()
 
         result = calculation_ecologic.ecologic_indicators(
             mocked_interim_data,
@@ -60,5 +61,6 @@ class TestEcologicIndicators:
             mocked_heat_saving_final,
             mocked_electricity_saving_final,
             final_energy_saving_or_capacities,
+            installed_capacity=installed_capacity,
         )
         assert len(result) == 9
