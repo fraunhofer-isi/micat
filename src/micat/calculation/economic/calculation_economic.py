@@ -171,5 +171,10 @@ def economic_indicators(  # pylint: disable=too-many-locals
             installed_capacity,
             data_source,
         )
+        results["vreEnergySystemCosts"] = renewables.vre_energy_system_costs(
+            final_energy_saving_or_capacities,
+            data_source,
+            id_region,
+        )
 
     return results
