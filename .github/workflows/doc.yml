@@ -63,7 +63,7 @@ jobs:
           path: 'doc/build/html'
       - name: deploy to github pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
       - name: deploy to web server
         uses: pressidium/lftp-mirror-action@v1
         with:
