@@ -56,7 +56,7 @@ jobs:
           cd doc
           make latexpdf
       - name: setup github pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
