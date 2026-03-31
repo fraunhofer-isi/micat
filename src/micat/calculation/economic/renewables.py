@@ -58,7 +58,7 @@ def vre_energy_system_costs(
         energy_system_cost,
         list_utils.string_to_integer(energy_produced.columns),
     )
-    df1 = energy_produced._data_frame
+    df1 = energy_produced._data_frame / 0.00008598
     df2 = extrapolated_energy_system_cost._data_frame
     result = df1.mul(df2.iloc[0], axis=1)
     result = result.droplevel(["id_subsector", "id_action_type"])
