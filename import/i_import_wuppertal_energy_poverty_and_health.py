@@ -84,6 +84,7 @@ def main():
     decile_parameters, sector_parameters, constant_parameters, parameters = (
         _read_energy_poverty_tables(raw_energy_poverty_parameters)
     )
+
     extended_decile_parameters = PopulationUtils.extend_european_values(
         decile_parameters, database
     )
@@ -103,28 +104,13 @@ def main():
     )
     # We enhance the table only, since it's are already in the database due to d_download_and_import_eurostat_data.py
     # We need to interpolate missing values though
-    for year in [
-        "2003",
-        "2004",
-        "2005",
-        "2006",
-        "2007",
-        "2008",
-        "2009",
-        "2011",
-        "2012",
-        "2013",
-        "2014",
-        "2015",
-        "2016",
-        "2017",
-        "2018",
-        "2019",
-        "2021",
-        "2022",
-        "2023",
-    ]:
-        extended_parameters._data_frame.insert(1, year, np.nan)
+    missing_years = sorted(
+        set(range(2000, 2051))
+        - set(extended_parameters._data_frame.columns.astype(int))
+    )
+    for year in missing_years:
+        extended_parameters._data_frame.insert(1, str(year), np.nan)
+
     extended_parameters._data_frame = extended_parameters._data_frame.interpolate(
         axis=1
     )

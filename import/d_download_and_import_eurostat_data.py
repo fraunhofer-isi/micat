@@ -23,11 +23,13 @@ def main():
 
     siec_relation_url = (
         "https://ec.europa.eu/eurostat/documents/38154/4956218/Energy-Balance-Formulas.xlsx/cc2f9ade"
-        "-5c0b-47b5-b83d-c05fe86eef6c "
+        "-5c0b-47b5-b83d-c05fe86eef6c"
     )
     siec_relation_file_path = import_folder + "/energy_balance_formulas.xlsx"
 
-    utilization_file_path = import_folder + "/renewable_energy_system_utilization_eurostat.xlsx"
+    utilization_file_path = (
+        import_folder + "/renewable_energy_system_utilization_eurostat.xlsx"
+    )
 
     # output_at_basic_price_file_path = import_folder + "/output_at_basic_price.xlsx"
 
@@ -43,7 +45,9 @@ def main():
     try:
         siec_relations = read_siec_relations(siec_relation_file_path)
     except FileNotFoundError as exception:
-        raise AttributeError("Could not find file. Please disable flag for skipping the download.") from exception
+        raise AttributeError(
+            "Could not find file. Please disable flag for skipping the download."
+        ) from exception
 
     for dataset in [
         {
@@ -69,17 +73,25 @@ def main():
         print("Reading eurostat data...")
         original_data_frame = pd.read_csv(file_path, sep="\t", decimal=".")
         original_data_frame.rename(columns={"geo\\TIME_PERIOD": "geo"}, inplace=True)
-        year_column_names = original_data_frame.columns.to_list()[5:][::-1]  # Filter out non-year columns
+        year_column_names = original_data_frame.columns.to_list()[5:][
+            ::-1
+        ]  # Filter out non-year columns
         if dataset["code"] == "nrg_bal_c":
             # Replace all non numeric values in year columns with NaN
-            original_data_frame[year_column_names] = original_data_frame[year_column_names].apply(
+            original_data_frame[year_column_names] = original_data_frame[
+                year_column_names
+            ].apply(
                 pd.to_numeric,
                 errors="coerce",
             )
 
-        cleaned_data_frame = clean_and_remove_redundant_rows(dataset, original_data_frame, siec_relations)
+        cleaned_data_frame = clean_and_remove_redundant_rows(
+            dataset, original_data_frame, siec_relations
+        )
 
-        regional_data_frame = join_region(cleaned_data_frame, database_import, import_folder)
+        regional_data_frame = join_region(
+            cleaned_data_frame, database_import, import_folder
+        )
 
         regional_data_frame = regional_data_frame[regional_data_frame["freq"] == "A"]
         del regional_data_frame["freq"]
@@ -123,7 +135,9 @@ def main():
             #    database_import,
             # )
         elif dataset["code"] == "sdg_07_60":
-            regional_data_frame = regional_data_frame[regional_data_frame["incgrp"] == "TOTAL"]
+            regional_data_frame = regional_data_frame[
+                regional_data_frame["incgrp"] == "TOTAL"
+            ]
             del regional_data_frame["hhtyp"]
             del regional_data_frame["incgrp"]
             regional_data_frame = regional_data_frame.replace(r"[a-z]", "", regex=True)
@@ -136,11 +150,15 @@ def main():
                     # Only consider columns with years
                     continue
                 regional_data_frame[column] = regional_data_frame[column].fillna(
-                    regional_data_frame[prev] if prev in regional_data_frame.columns else regional_data_frame[next]
+                    regional_data_frame[prev]
+                    if prev in regional_data_frame.columns
+                    else regional_data_frame[next]
                 )
                 if regional_data_frame[column].isnull().any():
                     # If there are still NaN values, search for the next year
-                    regional_data_frame[column] = regional_data_frame[column].fillna(regional_data_frame[next])
+                    regional_data_frame[column] = regional_data_frame[column].fillna(
+                        regional_data_frame[next]
+                    )
 
             # Copy 2003 values to 2000
             regional_data_frame["2000"] = regional_data_frame["2003"]
@@ -187,7 +205,11 @@ def _create_data_for_final_energy_carrier(
     # zero values.
     sector_id_columns = ["id_region", "id_subsector", "id_final_energy_carrier"]
 
-    aggregated_sector_data_frame = sector_data_frame.groupby(sector_id_columns)[year_column_names].sum().reset_index()
+    aggregated_sector_data_frame = (
+        sector_data_frame.groupby(sector_id_columns)[year_column_names]
+        .sum()
+        .reset_index()
+    )
     sector_table = Table(aggregated_sector_data_frame)
 
     sector_table = _fill_missing_values_for_final_energy_consumption(sector_table)
@@ -197,13 +219,19 @@ def _create_data_for_final_energy_carrier(
 
     # b) map siec to parameter
     # note: join does not sum rows with same target ids => ids might not be unique
-    parameter_data_frame = join_parameter(final_energy_carrier_data_frame, database_import, import_folder)
+    parameter_data_frame = join_parameter(
+        final_energy_carrier_data_frame, database_import, import_folder
+    )
 
     # We sum up the rows having same ids => afterward row ids are unique
     # During summation existing NaN values (might come for example from :z not applicable values) become
     # zero values.
     parameter_id_columns = ["id_region", "id_parameter", "id_final_energy_carrier"]
-    parameter_data_frame = parameter_data_frame.groupby(parameter_id_columns)[year_column_names].sum().reset_index()
+    parameter_data_frame = (
+        parameter_data_frame.groupby(parameter_id_columns)[year_column_names]
+        .sum()
+        .reset_index()
+    )
 
     parameter_table = Table(parameter_data_frame)
 
@@ -220,14 +248,22 @@ def _create_data_for_primary_energy_carrier(
     year_column_names,
 ):
     # note: join does not sum rows with same target ids => ids might not be unique
-    primary_energy_carrier_data_frame = join_primary_energy_carrier(regional_data_frame, database_import, import_folder)
+    primary_energy_carrier_data_frame = join_primary_energy_carrier(
+        regional_data_frame, database_import, import_folder
+    )
 
     # note: join does not sum rows with same target ids => ids might not be unique
-    parameter_data_frame = join_parameter(primary_energy_carrier_data_frame, database_import, import_folder)
+    parameter_data_frame = join_parameter(
+        primary_energy_carrier_data_frame, database_import, import_folder
+    )
 
     # we sum up the rows having same ids => afterwards row ids are unique
     parameter_id_columns = ["id_region", "id_parameter", "id_primary_energy_carrier"]
-    parameter_data_frame = parameter_data_frame.groupby(parameter_id_columns)[year_column_names].sum().reset_index()
+    parameter_data_frame = (
+        parameter_data_frame.groupby(parameter_id_columns)[year_column_names]
+        .sum()
+        .reset_index()
+    )
     parameter_table = Table(parameter_data_frame)
 
     extra_primary_parameters_table = calculate_extra_primary_parameters(
@@ -281,7 +317,9 @@ def _import_supplier_diversity(
     imported_energy.fill_missing_values("id_final_energy_carrier", [1, 5, 6, 7], -999)
 
     print("# Writing eurostat_partner_relation_parameters")
-    database_import.write_to_sqlite(imported_energy, "eurostat_partner_relation_parameters")
+    database_import.write_to_sqlite(
+        imported_energy, "eurostat_partner_relation_parameters"
+    )
 
 
 def _clean_population_sheet(population_sheet):
@@ -520,7 +558,9 @@ def join_subsector(data_frame, database_import, micat_folder):
     return subsector_data_frame
 
 
-def calculate_extra_primary_parameters(data_frame, database_import, micat_folder, year_column_names):
+def calculate_extra_primary_parameters(
+    data_frame, database_import, micat_folder, year_column_names
+):
     primary_energy_carrier_mapping = database_import.read_mapping_table(
         "mapping__siec__energy_carrier",
         "siec",
@@ -528,25 +568,33 @@ def calculate_extra_primary_parameters(data_frame, database_import, micat_folder
         micat_folder,
     )
 
-    merged_nrg_bal = merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
+    merged_nrg_bal = merge_nrg_bal(
+        data_frame, primary_energy_carrier_mapping, year_column_names
+    )
     heat_in_carriers = merged_nrg_bal["heat_in"]
     electricity_in_carriers = merged_nrg_bal["electricity_in"]
     table = None
-    primary_energy_carrier_ids = heat_in_carriers.unique_index_values("id_primary_energy_carrier")
+    primary_energy_carrier_ids = heat_in_carriers.unique_index_values(
+        "id_primary_energy_carrier"
+    )
     region_ids = heat_in_carriers.unique_index_values("id_region")
 
     for carrier_id in primary_energy_carrier_ids:
         # HEAT
         heat_in = heat_in_carriers.reduce("id_primary_energy_carrier", carrier_id)
         heat_in = heat_in.insert_index_column("id_parameter", 1, 20)
-        heat_in = heat_in.insert_index_column("id_primary_energy_carrier", 2, carrier_id)
+        heat_in = heat_in.insert_index_column(
+            "id_primary_energy_carrier", 2, carrier_id
+        )
         if table is None:
             table = heat_in
         else:
             table = Table.concat([table, heat_in])
 
         # ELECTRICITY
-        electricity_in = electricity_in_carriers.reduce("id_primary_energy_carrier", carrier_id)
+        electricity_in = electricity_in_carriers.reduce(
+            "id_primary_energy_carrier", carrier_id
+        )
         # Check if some entries are missing
         existing_regions = electricity_in.unique_index_values("id_region")
         missing_regions = set(region_ids) - set(existing_regions)
@@ -557,12 +605,16 @@ def calculate_extra_primary_parameters(data_frame, database_import, micat_folder
             electricity_in._data_frame = electricity_in._data_frame.sort_index()
 
         electricity_in = electricity_in.insert_index_column("id_parameter", 1, 21)
-        electricity_in = electricity_in.insert_index_column("id_primary_energy_carrier", 2, carrier_id)
+        electricity_in = electricity_in.insert_index_column(
+            "id_primary_energy_carrier", 2, carrier_id
+        )
 
         table = Table.concat([table, electricity_in])
     # For heat and electricity calculate the shares for each region
     # Group by region + parameter (ignoring carrier for now) and sum across carriers
-    totals = table._data_frame.groupby(level=["id_region", "id_parameter"]).transform("sum")
+    totals = table._data_frame.groupby(level=["id_region", "id_parameter"]).transform(
+        "sum"
+    )
 
     # Divide each carrier value by the total -> share
     table._data_frame = table._data_frame / totals
@@ -594,7 +646,9 @@ def merge_nrg_bal(data_frame, primary_energy_carrier_mapping, year_column_names)
     return merged_nrg_bal
 
 
-def merge_nrg_bal_entries(data_frame, nrg_bal_codes, primary_energy_carrier_mapping, year_column_names):
+def merge_nrg_bal_entries(
+    data_frame, nrg_bal_codes, primary_energy_carrier_mapping, year_column_names
+):
     left_frame = extract_nrg_bal(data_frame, nrg_bal_codes[0])
     try:
         right_frame = extract_nrg_bal(data_frame, nrg_bal_codes[1])
@@ -602,7 +656,9 @@ def merge_nrg_bal_entries(data_frame, nrg_bal_codes, primary_energy_carrier_mapp
         frame = left_frame
     else:
         frame = left_frame + right_frame
-    frame = join_and_merge_primary_energy_carriers(frame, primary_energy_carrier_mapping, year_column_names)
+    frame = join_and_merge_primary_energy_carriers(
+        frame, primary_energy_carrier_mapping, year_column_names
+    )
 
     includes_nan = frame.isna().any().any()
     if includes_nan:
@@ -668,7 +724,9 @@ def join_parameter(data_frame, database_import, micat_folder):
     )
 
     parameter_data_frame = mapping_nrg_bal_parameter.apply_for(data_frame)
-    parameter_data_frame["id_parameter"] = parameter_data_frame["id_parameter"].astype(int)
+    parameter_data_frame["id_parameter"] = parameter_data_frame["id_parameter"].astype(
+        int
+    )
     return parameter_data_frame
 
 
@@ -695,23 +753,40 @@ def join_primary_energy_carrier(data_frame, database_import, micat_folder):
     return data_frame
 
 
-def join_and_merge_primary_energy_carriers(data_frame, primary_energy_carrier_mapping, year_column_names):
+def join_and_merge_primary_energy_carriers(
+    data_frame, primary_energy_carrier_mapping, year_column_names
+):
     data_frame.reset_index(inplace=True)
     data_frame = primary_energy_carrier_mapping.apply_for(data_frame)
 
     data_frame = data_frame[
         (data_frame["id_primary_energy_carrier"] != -99)
-        & (data_frame["id_primary_energy_carrier"] != -999)  # -99: redundant entries  # -999: unmapped entries
+        & (
+            data_frame["id_primary_energy_carrier"] != -999
+        )  # -99: redundant entries  # -999: unmapped entries
     ]
 
-    data_frame = data_frame.groupby(["id_region", "id_primary_energy_carrier"])[year_column_names].sum().reset_index()
+    data_frame = (
+        data_frame.groupby(["id_region", "id_primary_energy_carrier"])[
+            year_column_names
+        ]
+        .sum()
+        .reset_index()
+    )
     return data_frame
 
 
 def download_relations(relation_url, relation_file_path):
-    relation_ref = requests.get(relation_url, allow_redirects=True, timeout=None)
-    with open(relation_file_path, "wb") as file:
-        file.write(relation_ref.content)
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "*/*",
+    }
+    with requests.get(relation_url, stream=True, headers=headers) as r:
+        r.raise_for_status()
+        with open(relation_file_path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
 
 
 def read_siec_relations(relation_file_path):
