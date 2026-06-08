@@ -5,10 +5,12 @@
 import gzip
 from warnings import warn
 
+import numpy as np
 import pandas as pd
 import requests
 from config import import_config
 
+from micat.calculation import extrapolation
 from micat.data_import.database_import import DatabaseImport
 from micat.table.table import Table
 
@@ -169,10 +171,19 @@ def main():
             # Copy 2023 values to 2050
             regional_data_frame["2050"] = regional_data_frame["2023"]
             regional_data_frame = regional_data_frame[sorted(regional_data_frame)]
-            table = Table(regional_data_frame)
+            id_region = regional_data_frame["id_region"]
+            year_df = regional_data_frame.drop(columns=["id_region"]).copy()
+
+            year_df.columns = year_df.columns.astype(int)
+
+            # Convert everything to float
+            year_df = year_df.astype(float)
+
+            result = year_df.T.reindex(range(2000, 2051)).interpolate(method="index").T
+
+            result["id_region"] = id_region.values
+            table = Table(result)
             table = table.insert_index_column("id_parameter", 1, 25)
-            # Remove column 2024 as it is not present in the wuppertal data
-            table = table.drop("2024", axis=1)
             # IMPORTANT: This action clears the whole table, hence the Wuppertal import must be run after this one
             database_import.write_to_sqlite(table, "wuppertal_parameters")
 
