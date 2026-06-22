@@ -47,7 +47,7 @@
     },
     {
       description: "pin scipy to 1.17.1",
-      matchPackageNames: ["numpy"],
+      matchPackageNames: ["scipy"],
       matchDatasources: ["pypi"],
       allowedVersions: "1.17.1",
       rangeStrategy: "replace",
