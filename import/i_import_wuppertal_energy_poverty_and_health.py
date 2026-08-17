@@ -89,7 +89,9 @@ def main():
         decile_parameters, database
     )
 
-    extended_parameters = PopulationUtils.extend_european_values(parameters, database)
+    extended_parameters = PopulationUtils.extend_european_values(
+        parameters, database, sum_parameter_ids=[32]
+    )
     # Filter out parameter, since they are handled in d_download_and_import_eurostat_data.py
     extended_parameters = extended_parameters[
         ~extended_parameters.index.isin([25], level=1)

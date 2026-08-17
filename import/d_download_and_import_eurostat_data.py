@@ -138,10 +138,10 @@ def main():
             # )
         elif dataset["code"] == "sdg_07_60":
             regional_data_frame = regional_data_frame[
-                regional_data_frame["incgrp"] == "TOTAL"
+                regional_data_frame["rskpovth"] == "TOTAL"
             ]
-            del regional_data_frame["hhtyp"]
-            del regional_data_frame["incgrp"]
+            del regional_data_frame["hhcomp"]
+            del regional_data_frame["rskpovth"]
             regional_data_frame = regional_data_frame.replace(r"[a-z]", "", regex=True)
             # Replace NaN values by copying values from previous or next years
             for column in regional_data_frame.columns:
