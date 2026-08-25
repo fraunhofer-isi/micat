@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py -v)",
+      "Bash(python -m pytest test/micat/calculation/social/test_energy_poverty_national.py test/micat/calculation/social/test_affected_dwellings.py test/micat/calculation/social/test_dwelling.py -v)",
+      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py test/micat/calculation/social/test_energy_poverty_national.py -v)",
+      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py test/micat/calculation/social/test_energy_poverty_national.py test/micat/calculation/social/test_affected_dwellings.py -v)",
+      "Bash(python -m pytest test/micat/calculation/ecologic/test_fuel_split.py test/micat/calculation/test_calculation.py -v)",
+      "Bash(python -m pytest test/micat/input/ -v)",
+      "Bash(python -m pytest test/micat/input/test_data_source.py -x -q)",
+      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py test/micat/calculation/social/test_energy_poverty_national.py test/micat/calculation/ecologic/test_fuel_split.py test/micat/calculation/test_calculation.py -x -q)",
+      "Bash(python -m pytest test/micat/calculation/social/test_energy_poverty_national.py test/micat/calculation/ecologic/test_fuel_split.py test/micat/calculation/test_calculation.py test/micat/input/test_data_source.py -x -q)",
+      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py -x -q)",
+      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py::test_improvement_actions_per_energy_unit -v)",
+      "Bash(git stash *)",
+      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py::TestProvideDefaultNumberOfAffectedDwellings::test_for_id_action_type_4 -v)"
+    ]
+  }
+}

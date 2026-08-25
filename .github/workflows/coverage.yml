@@ -14,14 +14,14 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: install system deps
         run: |
           sudo apt-get update -y
           sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config python3-dev
       - name: extract python version
         uses: ./.github/actions/extract-python-version
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install dependencies
@@ -37,7 +37,7 @@ jobs:
           echo "PYTEST_COVERAGE=$PYTEST_COVERAGE" >> $GITHUB_ENV
           echo "Pytest coverage is $PYTEST_COVERAGE"
       - name: badge
-        uses: schneegans/dynamic-badges-action@v1.7.0
+        uses: schneegans/dynamic-badges-action@v1.9.0
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: ${{ secrets.GIST_ID }}

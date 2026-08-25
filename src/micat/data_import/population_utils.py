@@ -10,19 +10,35 @@ from micat.table.table import Table
 
 class PopulationUtils:
     @staticmethod
-    def extend_european_values(table, database):
+    def extend_european_values(table, database, sum_parameter_ids=None):
+        if sum_parameter_ids is None:
+            sum_parameter_ids = []
+
         years = table.years
         population = PopulationUtils._population(database, years)
         european_population = PopulationUtils._european_population(population)
         population_without_europe = population.query('id_region != 0')
 
-        european_table = PopulationUtils._european_table(
-            table,
+        tables_to_concat = [table]
+
+        if sum_parameter_ids:
+            rate_table = table[~table.index.isin(sum_parameter_ids, level='id_parameter')]
+            sum_table = table[table.index.isin(sum_parameter_ids, level='id_parameter')]
+
+            european_sum_table = sum_table.aggregate('id_region')
+            european_sum_table = european_sum_table.insert_index_column('id_region', 0, 0)
+            tables_to_concat.append(european_sum_table)
+        else:
+            rate_table = table
+
+        european_rate_table = PopulationUtils._european_table(
+            rate_table,
             population_without_europe,
             european_population,
         )
+        tables_to_concat.append(european_rate_table)
 
-        extended_table = Table.concat([table, european_table])
+        extended_table = Table.concat(tables_to_concat)
         return extended_table
 
     @staticmethod

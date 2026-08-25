@@ -124,11 +124,11 @@ def test_extrapolated_series():
 class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
     @patch(DataSource.row_table, "mocked_result")
     def test_non_residential(self):
-        id_subsector = 1
+        id_sector = 1
 
         result = energy_poverty_national._measure_specific_share_of_energy_poor_population_owner(
             "mocked_id_measure",
-            id_subsector,
+            id_sector,
             "mocked_id_action_type",
             "mocked_years",
             "mocked_share_input",
@@ -136,7 +136,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
         assert result == "mocked_result"
 
     class TestResidential:
-        id_subsector = 17
+        id_sector = 4
         extrapolated_final_parameters = Mock()
 
         @patch(
@@ -155,7 +155,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
             ):
                 result = energy_poverty_national._measure_specific_share_of_energy_poor_population_owner(
                     "mocked_id_measure",
-                    self.id_subsector,
+                    self.id_sector,
                     id_action_type,
                     self.extrapolated_final_parameters,
                     "mocked_share_input",
@@ -175,7 +175,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
             ):
                 result = energy_poverty_national._measure_specific_share_of_energy_poor_population_owner(
                     "mocked_id_measure",
-                    self.id_subsector,
+                    self.id_sector,
                     id_action_type,
                     self.extrapolated_final_parameters,
                     "mocked_share_input",
@@ -188,7 +188,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
 
             result = energy_poverty_national._measure_specific_share_of_energy_poor_population_owner(
                 "mocked_id_measure",
-                self.id_subsector,
+                self.id_sector,
                 id_action_type,
                 self.extrapolated_final_parameters,
                 "mocked_share_input",
@@ -202,7 +202,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationOwner:
             with raises(KeyError):
                 energy_poverty_national._measure_specific_share_of_energy_poor_population_owner(
                     "mocked_id_measure",
-                    self.id_subsector,
+                    self.id_sector,
                     id_action_type,
                     self.extrapolated_final_parameters,
                     "mocked_share_input",
@@ -252,11 +252,11 @@ def test_measure_specific_share_of_energy_poor_population_owner_others():
 class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
     @patch(DataSource.row_table, "mocked_result")
     def test_non_residential(self):
-        id_subsector = 1
+        id_sector = 1
 
         result = energy_poverty_national._measure_specific_share_of_energy_poor_population_tenant(
             "mocked_id_measure",
-            id_subsector,
+            id_sector,
             "mocked_id_action_type",
             "mocked_years",
             "mocked_share_input",
@@ -264,7 +264,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
         assert result == "mocked_result"
 
     class TestResidential:
-        id_subsector = 17
+        id_sector = 4
         extrapolated_final_parameters = Mock()
 
         mocked_series = Mock()
@@ -283,7 +283,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
 
             result = energy_poverty_national._measure_specific_share_of_energy_poor_population_tenant(
                 "mocked_id_measure",
-                self.id_subsector,
+                self.id_sector,
                 id_action_type,
                 "mocked_years",
                 "mocked_share_input",
@@ -303,7 +303,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
 
             result = energy_poverty_national._measure_specific_share_of_energy_poor_population_tenant(
                 "mocked_id_measure",
-                self.id_subsector,
+                self.id_sector,
                 id_action_type,
                 "mocked_years",
                 "mocked_share_input",
@@ -316,7 +316,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
 
             result = energy_poverty_national._measure_specific_share_of_energy_poor_population_tenant(
                 "mocked_id_measure",
-                self.id_subsector,
+                self.id_sector,
                 id_action_type,
                 "mocked_years",
                 "mocked_share_input",
@@ -330,7 +330,7 @@ class TestMeasureSpecificShareOfEnergyPoorPopulationTenant:
             with raises(KeyError):
                 energy_poverty_national._measure_specific_share_of_energy_poor_population_tenant(
                     "mocked_id_measure",
-                    self.id_subsector,
+                    self.id_sector,
                     id_action_type,
                     "mocked_years",
                     "mocked_share_input",
@@ -361,7 +361,7 @@ def test_number_of_smaller_deciles():
 def test_provide_default_investment():
     result = energy_poverty_national._provide_default_investment(
         "mocked_id_measure",
-        "mocked__id_subsector",
+        "mocked__id_sector",
         "mocked__id_action_type",
         "mocked_year",
     )
@@ -371,7 +371,7 @@ def test_provide_default_investment():
 def test_provide_default_renovation_rate():
     result = energy_poverty_national._provide_default_renovation_rate(
         "mocked_id_measure",
-        "mocked__id_subsector",
+        "mocked__id_sector",
         "mocked__id_action_type",
         "mocked_year",
     )
@@ -408,6 +408,7 @@ def test_share_of_energy_poor_population_owner():
         determine_table_for_measure(
             "mocked_id_measure",
             "mocked_id_subsector",
+            "mocked_id_sector",
             "mocked_id_action_type",
             "mocked__energy_saving",
             "mocked__extrapolated_final_parameters",
@@ -451,6 +452,7 @@ def test_share_of_energy_poor_population_tenant():
         determine_table_for_measure(
             "mocked_id_measure",
             "mocked_id_subsector",
+            "mocked_id_sector",
             "mocked_id_action_type",
             "mocked__energy_saving",
             "mocked__extrapolated_final_parameters",

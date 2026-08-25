@@ -6,7 +6,6 @@
 from urllib.parse import parse_qs
 
 from micat.calculation import (
-    air_pollution,
     conversion,
     cost_benefit_analysis,
     extrapolation,
@@ -139,6 +138,8 @@ def calculate_indicator_data(
         id_region,
         heat_saving_final,
         electricity_saving_final,
+        final_energy_saving_or_capacities,
+        installed_capacity,
     )
     _validate_data(ecologic_indicators)
 
@@ -401,6 +402,7 @@ def _interim_data(
         def _determine_table_for_measure(
             _id_measure,
             id_subsector,
+            _id_sector,
             id_action_type,
             energy_saving,
             extrapolated_final_parameters,
@@ -414,6 +416,7 @@ def _interim_data(
         def _provide_default(
             id_measure,
             id_subsector,
+            _id_sector,
             _id_action_type,
             _savings,
             _substitution_factors,
@@ -437,9 +440,10 @@ def _interim_data(
         substitution_factors = data_source.measure_specific_calculation(
             final_energy_saving_or_capacities,
             _determine_table_for_measure,
-            lambda id_measure, id_subsector, id_action_type, savings: _provide_default(
+            lambda id_measure, id_subsector, _id_sector, id_action_type, savings: _provide_default(
                 id_measure,
                 id_subsector,
+                _id_sector,
                 id_action_type,
                 savings,
                 _substitution_factors,
@@ -517,6 +521,7 @@ def _interim_data(
         "iiasa_final_subsector_parameters": iiasa_final_subsector_parameters,
         "iiasa_final_subsector_parameters_generation": iiasa_final_subsector_parameters_generation,
         "reduction_of_energy_cost": reduction_of_energy_cost,
+        "substitution_factors": substitution_factors,
     }
 
     return results, heat_saving_final, electricity_saving_final

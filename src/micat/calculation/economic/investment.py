@@ -6,7 +6,9 @@
 from micat.calculation import extrapolation, calculation
 
 
-def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_region, starting_year):
+def annual_investment_cost_in_euro(
+    final_energy_saving_or_capacities, data_source, id_region, starting_year
+):
     # Investment cost is specified as cumulated data
     # in order to determine the annual investment, we subtract the
     # value of the previous year (or zero).
@@ -21,14 +23,18 @@ def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_sourc
     if starting_year and starting_year not in years:
         years = [starting_year] + years
     annual_years = extrapolation._annual_years(years)
-    interpolated_cumulated_investment_cost = extrapolation.extrapolate(cumulated_investment_cost, annual_years)
+    interpolated_cumulated_investment_cost = extrapolation.extrapolate(
+        cumulated_investment_cost, annual_years
+    )
     annual_investment_cost = interpolated_cumulated_investment_cost.map(
         lambda value, index, column_name: _difference_to_previous_year(
             value, index, column_name, interpolated_cumulated_investment_cost
         )
     )
 
-    filtered_annual_investment_cost = extrapolation.extrapolate(annual_investment_cost, years)
+    filtered_annual_investment_cost = extrapolation.extrapolate(
+        annual_investment_cost, years
+    )
 
     # Remove starting year if it was not in the original years
     if starting_year and starting_year not in final_energy_saving_or_capacities.years:
@@ -36,7 +42,9 @@ def annual_investment_cost_in_euro(final_energy_saving_or_capacities, data_sourc
     return filtered_annual_investment_cost
 
 
-def calculate_capex(data_source, id_subsector, id_action_type, final_energy_saving_or_capacities):
+def calculate_capex(
+    data_source, id_subsector, id_action_type, final_energy_saving_or_capacities
+):
     # Capital investments (CAPEX)
     investments_res_capex = data_source.table(
         "investments_res",
@@ -52,7 +60,9 @@ def calculate_capex(data_source, id_subsector, id_action_type, final_energy_savi
     return capex
 
 
-def calculate_opex(data_source, id_subsector, id_action_type, final_energy_saving_or_capacities):
+def calculate_opex(
+    data_source, id_subsector, id_action_type, final_energy_saving_or_capacities
+):
     # Running costs (OPEX)
     investments_res_opex = data_source.table(
         "investments_res",
@@ -68,7 +78,13 @@ def calculate_opex(data_source, id_subsector, id_action_type, final_energy_savin
     return opex
 
 
-def calculate_vopex(data_source, id_subsector, id_action_type, id_region, final_energy_saving_or_capacities):
+def calculate_vopex(
+    data_source,
+    id_subsector,
+    id_action_type,
+    id_region,
+    final_energy_saving_or_capacities,
+):
     # Variable running costs (VOPEX)
     investments_res_vopex = data_source.table(
         "investments_res",
@@ -91,8 +107,12 @@ def calculate_vopex(data_source, id_subsector, id_action_type, id_region, final_
 
 def investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_region):
     years = final_energy_saving_or_capacities.years
-    id_subsector = final_energy_saving_or_capacities.unique_index_values("id_subsector")[0]
-    id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
+    id_subsector = final_energy_saving_or_capacities.unique_index_values(
+        "id_subsector"
+    )[0]
+    id_action_type = final_energy_saving_or_capacities.unique_index_values(
+        "id_action_type"
+    )[0]
 
     if id_subsector >= 30:
         _capex = calculate_capex(
@@ -131,10 +151,13 @@ def investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_r
             _vopex,
         )
         investment = capex + opex + vopex
+        investment *= 1_000_000  # Convert to million euros, otherwise the results will be displayed in mio. €
     else:
         investment_cost_per_ktoe = _investment_cost_per_ktoe(data_source, years)
 
-        def _provide_default_investment(_id_measure, _id_subsector, id_action_type, year, saving):
+        def _provide_default_investment(
+            _id_measure, _id_subsector, id_action_type, year, saving
+        ):
             default_investment = _default_investment(
                 saving,
                 investment_cost_per_ktoe,
@@ -177,7 +200,9 @@ def _default_investment(
     id_action_type,
     year,
 ):
-    specific_investment_cost = _specific_investment_cost(investment_cost_per_ktoe, id_action_type, year)
+    specific_investment_cost = _specific_investment_cost(
+        investment_cost_per_ktoe, id_action_type, year
+    )
     investment = saving * specific_investment_cost
     # Convert to million euros, otherwise the results will be displayed in mio. €
     return investment * 1_000_000
@@ -188,7 +213,9 @@ def _specific_investment_cost(
     id_action_type,
     year,
 ):
-    specific_investment_cost_series = investment_cost_per_ktoe.reduce("id_action_type", id_action_type)
+    specific_investment_cost_series = investment_cost_per_ktoe.reduce(
+        "id_action_type", id_action_type
+    )
     specific_investment_cost = specific_investment_cost_series[str(year)]
     return specific_investment_cost
 
@@ -196,5 +223,7 @@ def _specific_investment_cost(
 def _investment_cost_per_ktoe(data_source, years):
     e3m_global_parameters = data_source.table("e3m_global_parameters", {})
     investment_cost_per_ktoe_raw = e3m_global_parameters.reduce("id_parameter", 41)
-    investment_cost_per_ktoe = extrapolation.extrapolate(investment_cost_per_ktoe_raw, years)
+    investment_cost_per_ktoe = extrapolation.extrapolate(
+        investment_cost_per_ktoe_raw, years
+    )
     return investment_cost_per_ktoe

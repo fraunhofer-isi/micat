@@ -39,6 +39,40 @@ def main():
     supply_risk_factor = Table(raw_supply_risk_factor_parameters)
     database_import.write_to_sqlite(supply_risk_factor, "wuppertal_supply_risk_factor")
 
+    # Import land use (renewables)
+    file_path = import_path + "/landuse_res.xlsx"
+    raw_land_use_renewables_parameters = pd.read_excel(
+        file_path,
+        engine="openpyxl",
+        sheet_name="landuse_RES",
+        usecols="A:D",
+    )
+    land_use_renewables = Table(raw_land_use_renewables_parameters)
+    database_import.write_to_sqlite(land_use_renewables, "wuppertal_landuse_res")
+
+    # Import land use (conventional)
+    file_path = import_path + "/landuse_conventional.xlsx"
+    raw_land_use_conventional_parameters = pd.read_excel(
+        file_path,
+        engine="openpyxl",
+        sheet_name="landuse_conventional",
+        usecols="A:C",
+    )
+    land_use_conventional = Table(raw_land_use_conventional_parameters)
+    database_import.write_to_sqlite(
+        land_use_conventional, "wuppertal_landuse_conventional"
+    )
+
+    # Import energy system cost
+    file_path = import_path + "/energy_system_cost.xlsx"
+    raw_energy_system_cost_parameters = pd.read_excel(
+        file_path,
+        engine="openpyxl",
+        sheet_name="ID_energy system_cost",
+    )
+    energy_system_cost = Table(raw_energy_system_cost_parameters)
+    database_import.write_to_sqlite(energy_system_cost, "wuppertal_energy_system_cost")
+
     # Import energy poverty and health parameters
     database_import.import_id_table("id_decile", import_path)
 
@@ -50,11 +84,14 @@ def main():
     decile_parameters, sector_parameters, constant_parameters, parameters = (
         _read_energy_poverty_tables(raw_energy_poverty_parameters)
     )
+
     extended_decile_parameters = PopulationUtils.extend_european_values(
         decile_parameters, database
     )
 
-    extended_parameters = PopulationUtils.extend_european_values(parameters, database)
+    extended_parameters = PopulationUtils.extend_european_values(
+        parameters, database, sum_parameter_ids=[32]
+    )
     # Filter out parameter, since they are handled in d_download_and_import_eurostat_data.py
     extended_parameters = extended_parameters[
         ~extended_parameters.index.isin([25], level=1)
@@ -69,28 +106,13 @@ def main():
     )
     # We enhance the table only, since it's are already in the database due to d_download_and_import_eurostat_data.py
     # We need to interpolate missing values though
-    for year in [
-        "2003",
-        "2004",
-        "2005",
-        "2006",
-        "2007",
-        "2008",
-        "2009",
-        "2011",
-        "2012",
-        "2013",
-        "2014",
-        "2015",
-        "2016",
-        "2017",
-        "2018",
-        "2019",
-        "2021",
-        "2022",
-        "2023",
-    ]:
-        extended_parameters._data_frame.insert(1, year, np.nan)
+    missing_years = sorted(
+        set(range(2000, 2051))
+        - set(extended_parameters._data_frame.columns.astype(int))
+    )
+    for year in missing_years:
+        extended_parameters._data_frame.insert(1, str(year), np.nan)
+
     extended_parameters._data_frame = extended_parameters._data_frame.interpolate(
         axis=1
     )

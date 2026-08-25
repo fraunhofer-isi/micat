@@ -20,7 +20,7 @@ def fuel_split_by_action_type(final_energy_saving_or_capacities, data_source, id
     measure_specific_lambda = data_source.measure_specific_calculation(
         final_energy_saving_or_capacities,
         _determine_lambda_for_measure,
-        lambda id_measure, id_subsector, id_action_type, savings: _provide_default_lambda(
+        lambda id_measure, id_subsector, _id_sector, id_action_type, savings: _provide_default_lambda(
             id_measure,
             id_subsector,
             id_action_type,
@@ -40,13 +40,13 @@ def fuel_split_by_action_type(final_energy_saving_or_capacities, data_source, id
 
     measure_specific_chi = data_source.measure_specific_calculation(
         final_energy_saving_or_capacities,
-        lambda id_measure, id_subsector, id_action_type, savings, _first, _second, _third: _determine_chi_for_measure(
+        lambda id_measure, id_subsector, _id_sector, id_action_type, savings, _first, _second, _third: _determine_chi_for_measure(
             id_measure,
             id_subsector,
             id_action_type,
             basic_chi,
         ),
-        lambda id_measure, id_subsector, id_action_type, savings: _provide_default_chi(
+        lambda id_measure, id_subsector, _id_sector, id_action_type, savings: _provide_default_chi(
             id_measure,
             id_subsector,
             id_action_type,
@@ -90,6 +90,7 @@ def _basic_chi(
 def _determine_lambda_for_measure(
     _id_measure,
     id_subsector,
+    _id_sector,
     id_action_type,
     energy_saving,
     extrapolated_final_parameters,

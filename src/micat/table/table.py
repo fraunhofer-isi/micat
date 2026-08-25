@@ -364,6 +364,23 @@ class Table(AbstractTable):
 
         return self._create(interpolated_data_frame)
 
+    def fill_nan_values_by_nearest(self):
+        _, year_column_names, _ = self.column_names
+        year_column_names.sort()
+        sorted_data_frame = self._data_frame[year_column_names]
+
+        years = sorted_data_frame.columns.astype(int)
+
+        def fill_row(row):
+            mask = ~row.isna()
+            f = interp1d(years[mask], row[mask], kind="nearest", fill_value="extrapolate")
+            return f(years)
+
+        filled_data_frame = sorted_data_frame.apply(fill_row, axis=1, result_type="expand")
+        filled_data_frame.columns = sorted_data_frame.columns
+
+        return self._create(filled_data_frame)
+
     def has_index_column(self, index_column_name):
         index_column_names, _year_column_names, _ = self.column_names
         has_column = index_column_name in index_column_names

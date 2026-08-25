@@ -31,6 +31,37 @@ def test_extend_european_values():
     assert result['2000'][2, 1] == 2
 
 
+class TestExtendEuropeanValuesWithSumParameters:
+    @patch(
+        PopulationUtils._population,
+        Table(
+            [
+                {'id_region': 0, '2000': 3},
+                {'id_region': 1, '2000': 1},
+                {'id_region': 2, '2000': 2},
+            ]
+        ),
+    )
+    def test_sum_parameter_ids(self):
+        table = Table(
+            [
+                {'id_region': 1, 'id_parameter': 32, '2000': 100},
+                {'id_region': 2, 'id_parameter': 32, '2000': 200},
+                {'id_region': 1, 'id_parameter': 33, '2000': 10},
+                {'id_region': 2, 'id_parameter': 33, '2000': 20},
+            ]
+        )
+
+        database = Mock()
+        result = PopulationUtils.extend_european_values(table, database, sum_parameter_ids=[32])
+
+        # Param 32 (absolute count): EU value = simple sum = 300
+        assert result['2000'][0, 32] == 300
+
+        # Param 33 (rate): EU value = population-weighted average = (10*1 + 20*2) / 3 = 50/3
+        assert result['2000'][0, 33] == 1 / 3 * (10 * 1 + 20 * 2)
+
+
 class TestEuropeanTable:
     def test_two_index_columns(self):
         table = Table(

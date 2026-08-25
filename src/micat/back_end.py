@@ -282,6 +282,10 @@ class BackEnd:
                     )
                     row_idx = 0
                     for measurement in category["measurements"]:
+                        try:
+                            result = program["data"][measurement["identifier"]]
+                        except KeyError:
+                            continue
                         if (
                             key == "monetization"
                             or measurement["identifier"]
@@ -301,7 +305,6 @@ class BackEnd:
                         # unit
                         worksheet.write(row_idx, 0, measurement["yAxis"], italic)
                         row_idx += 1
-                        result = program["data"][measurement["identifier"]]
                         for year_idx, year in enumerate(result["yearColumnNames"]):
                             worksheet.write(row_idx, year_idx + 1, year, bold)
                         row_idx += 1

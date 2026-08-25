@@ -14,14 +14,14 @@ jobs:
   import:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: install system deps
         run: |
           sudo apt-get update -y
           sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config python3-dev
       - name: extract python version
         uses: ./.github/actions/extract-python-version
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install dependencies
@@ -34,7 +34,7 @@ jobs:
           cd import
           python a_run_all_public_data_imports.py
       - name: artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: import
           path: src/micat/data/public.sqlite

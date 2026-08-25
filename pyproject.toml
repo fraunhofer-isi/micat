@@ -29,16 +29,16 @@ license = { text = 'GNU Affero General Public License v3 or later (AGPLv3+)' }
 dependencies = [
     ## web
     'flask==3.1.3',
-    'flask-cors==6.0.2',
-    'flask-compress==1.23',
-    'urllib3==2.6.3',
+    'flask-cors==6.0.5',
+    'flask-compress==1.24',
+    'urllib3==2.7.0',
     'waitress==3.0.2',
-    'Werkzeug==3.1.6',
-    'requests==2.32.5',
+    'Werkzeug==3.1.8',
+    'requests==2.34.2',
     'watchdog==6.0.0',
     ## scientific calculus
-    'pandas==3.0.1',
-    'numpy==2.4.2',
+    'pandas==3.0.5',
+    'numpy==2.4.6',
     'scipy==1.17.1',
     ## excel
     'XlsxWriter==3.2.9',
@@ -48,7 +48,7 @@ dependencies = [
 
 [project.optional-dependencies]
 lint = [
-    'pylint==4.0.5',
+    'pylint==4.0.7',
     'pylint-exit==1.2.0',
     'dill==0.4.1',
 ]
@@ -58,9 +58,9 @@ format = [
 ]
 
 test = [
-    'pytest==9.0.2',
-    'pytest-cov==7.0.0',
-    'coverage==7.13.4',
+    'pytest==9.1.1',
+    'pytest-cov==7.1.0',
+    'coverage==7.15.4',
     'mock==5.2.0',
 ]
 
@@ -70,7 +70,7 @@ debug = [
 
 doc = [
     'Sphinx==9.1.0',
-    'myst-parser==5.0.0',
+    'myst-parser==5.1.0',
     'sphinx-rtd-theme==3.1.0',
     'sphinxcontrib-applehelp==2.0.0',
     'sphinxcontrib-htmlhelp==2.1.0',
@@ -78,12 +78,12 @@ doc = [
 ]
 
 data = [
-    'paramiko==4.0.0', # for uploading files to weblication
-    'xlwings==0.33.20; sys_platform == "win32"', # for excel automation to extract values in a loop
+    'paramiko==5.0.0', # for uploading files to weblication
+    'xlwings==0.36.17; sys_platform == "win32"', # for excel automation to extract values in a loop
 ]
 
 license = [
-    'licensecheck==2025.1.0',
+    'licensecheck==2026.0.8',
     'license_scanner==0.4.4',
     'reuse==6.2.0',
     'pipreqs==0.4.13',

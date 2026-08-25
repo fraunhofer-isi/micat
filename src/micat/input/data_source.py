@@ -68,10 +68,12 @@ class DataSource:
         determine_table_for_measure,
         provide_default_table,
         years,
+        subsector_to_sector,
     ):
         id_measure = multi_index[0]
         id_subsector = multi_index[1]
         id_action_type = multi_index[2]
+        id_sector = subsector_to_sector.get(id_subsector)
 
         if id_measure in measure_ids_for_which_extra_data_exists:
             extrapolated_final_parameters = DataSource._extrapolated_final_parameters(
@@ -91,6 +93,7 @@ class DataSource:
             table = determine_table_for_measure(
                 id_measure,
                 id_subsector,
+                id_sector,
                 id_action_type,
                 savings,
                 extrapolated_final_parameters,
@@ -102,6 +105,7 @@ class DataSource:
             default_table = provide_default_table(
                 id_measure,
                 id_subsector,
+                id_sector,
                 id_action_type,
                 savings,
             )
@@ -278,6 +282,7 @@ class DataSource:
         measure_constants,
         determine_table_for_measure,
         provide_default_table,
+        subsector_to_sector,
     ):
         years = final_energy_saving_or_capacities.years
         measure_tables = []
@@ -292,6 +297,7 @@ class DataSource:
                 determine_table_for_measure,
                 provide_default_table,
                 years,
+                subsector_to_sector,
             )
             measure_tables.append(measure_table)
         measure_specific_table = Table.concat(measure_tables)
@@ -525,6 +531,11 @@ class DataSource:
 
             return default_table
 
+    def _subsector_to_sector_mapping(self):
+        mapping_table = self.mapping_table("mapping__subsector__sector")
+        df = mapping_table._data_frame
+        return dict(zip(df["id_subsector"], df["id_sector"]))
+
     @staticmethod
     def _measure_ids_for_which_extra_data_exists(
         measure_final_parameters,
@@ -616,6 +627,8 @@ class DataSource:
         # measure_specific_parameter
         # instead.
 
+        subsector_to_sector = self._subsector_to_sector_mapping()
+
         measure_final_parameters = self.table("measure_final_parameters")
         measure_parameters = self.table("measure_parameters")
         measure_constants = self.table("measure_constants")
@@ -632,6 +645,7 @@ class DataSource:
                 None,
                 determine_table_for_measure,
                 provide_default_table,
+                subsector_to_sector,
             )
             return measure_specific_table
         else:
@@ -650,6 +664,7 @@ class DataSource:
                 measure_constants,
                 determine_table_for_measure,
                 provide_default_table,
+                subsector_to_sector,
             )
             return measure_specific_table
 

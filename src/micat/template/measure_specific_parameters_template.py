@@ -48,17 +48,24 @@ def _get_measure_specific_data(
         "population_of_municipality": population_of_municipality,
     }
 
-    final_energy_saving_or_capacities = _final_energy_saving_or_capacities(measure, context)
+    final_energy_saving_or_capacities = _final_energy_saving_or_capacities(
+        measure, context
+    )
 
     data_source = DataSource(
-        database, id_region, confidential_database, global_parameters=template_args["global_parameters"]
+        database,
+        id_region,
+        confidential_database,
+        global_parameters=template_args["global_parameters"],
     )
     df = data_source.mapping_table("mapping__subsector__sector")._data_frame
 
     id_sector = None
     is_renewable = int(template_args["id_subsector"]) >= 30
     if not is_renewable:
-        id_sector = df.loc[df["id_subsector"] == int(template_args["id_subsector"])]["id_sector"].item()
+        id_sector = df.loc[df["id_subsector"] == int(template_args["id_subsector"])][
+            "id_sector"
+        ].item()
 
     wuppertal_parameters = _wuppertal_parameters(
         context,
@@ -82,7 +89,9 @@ def _get_measure_specific_data(
     )
 
     if not is_renewable:
-        results["fuelSwitch"] = _get_fuel_switch_data(final_energy_saving_or_capacities.years, id_sector, data_source)
+        results["fuelSwitch"] = _get_fuel_switch_data(
+            final_energy_saving_or_capacities.years, id_sector, data_source
+        )
 
     results["residential"] = _get_residential_data(
         context,
@@ -107,7 +116,9 @@ def _wuppertal_parameters(
     data_source,
 ):
     id_region = context["id_region"]
-    wuppertal_parameters_raw = data_source.table("wuppertal_parameters", {"id_region": str(id_region)})
+    wuppertal_parameters_raw = data_source.table(
+        "wuppertal_parameters", {"id_region": str(id_region)}
+    )
 
     years = final_energy_saving_or_capacities.years
     wuppertal_parameters = extrapolation.extrapolate(wuppertal_parameters_raw, years)
@@ -140,11 +151,17 @@ def _get_main_data(
         },
     }
     subsidy_rate = wuppertal_parameters.reduce("id_parameter", 35)
-    main_data["subsidy_rate"] = main_data["subsidy_rate"] | subsidy_rate._series.to_dict()
+    main_data["subsidy_rate"] = (
+        main_data["subsidy_rate"] | subsidy_rate._series.to_dict()
+    )
 
     if is_renewable:
-        id_subsector = final_energy_saving_or_capacities.unique_index_values("id_subsector")[0]
-        id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
+        id_subsector = final_energy_saving_or_capacities.unique_index_values(
+            "id_subsector"
+        )[0]
+        id_action_type = final_energy_saving_or_capacities.unique_index_values(
+            "id_action_type"
+        )[0]
         main_data["capacity_factors"] = {
             "id_parameter": 64,
             "id_final_energy_carrier": None,
@@ -163,9 +180,12 @@ def _get_main_data(
             },
         )
         # Interpolate capacity factors for missing years
-        _capacity_factors = extrapolation.extrapolate(capacity_factors, final_energy_saving_or_capacities.years)
+        _capacity_factors = extrapolation.extrapolate(
+            capacity_factors, final_energy_saving_or_capacities.years
+        )
         main_data["capacity_factors"] = (
-            main_data["capacity_factors"] | _capacity_factors._data_frame.to_dict(orient="records")[0]
+            main_data["capacity_factors"]
+            | _capacity_factors._data_frame.to_dict(orient="records")[0]
         )
 
         main_data["capex"] = {
@@ -183,7 +203,9 @@ def _get_main_data(
             final_energy_saving_or_capacities,
         )
         capex = capex.droplevel("id_parameter")
-        main_data["capex"] = main_data["capex"] | capex._data_frame.to_dict(orient="records")[0]
+        main_data["capex"] = (
+            main_data["capex"] | capex._data_frame.to_dict(orient="records")[0]
+        )
         main_data["opex"] = {
             "id_parameter": 69,
             "id_final_energy_carrier": None,
@@ -199,7 +221,9 @@ def _get_main_data(
             final_energy_saving_or_capacities,
         )
         opex = opex.droplevel("id_parameter")
-        main_data["opex"] = main_data["opex"] | opex._data_frame.to_dict(orient="records")[0]
+        main_data["opex"] = (
+            main_data["opex"] | opex._data_frame.to_dict(orient="records")[0]
+        )
         main_data["vopex"] = {
             "id_parameter": 70,
             "id_final_energy_carrier": None,
@@ -216,7 +240,9 @@ def _get_main_data(
             final_energy_saving_or_capacities,
         )
         vopex = vopex.droplevel("id_parameter")
-        main_data["vopex"] = main_data["vopex"] | vopex._data_frame.to_dict(orient="records")[0]
+        main_data["vopex"] = (
+            main_data["vopex"] | vopex._data_frame.to_dict(orient="records")[0]
+        )
     else:
         main_data["energy_savings"] = {
             "id_parameter": None,
@@ -236,7 +262,8 @@ def _get_main_data(
         }
 
         main_data["energy_savings"] = (
-            main_data["energy_savings"] | final_energy_saving_or_capacities._data_frame.to_dict(orient="records")[0]
+            main_data["energy_savings"]
+            | final_energy_saving_or_capacities._data_frame.to_dict(orient="records")[0]
         )
 
         investment_cost = investment.investment_cost_in_euro(
@@ -247,10 +274,12 @@ def _get_main_data(
 
         # Convert to million euros to display the advanced parameter investment cost in mio. €
         investment_cost._data_frame = (
-            investment_cost._data_frame.select_dtypes(exclude=["object", "datetime"]) / 1_000_000
+            investment_cost._data_frame.select_dtypes(exclude=["object", "datetime"])
+            / 1_000_000
         )
         main_data["investment_costs"] = (
-            main_data["investment_costs"] | investment_cost._data_frame.to_dict(orient="records")[0]
+            main_data["investment_costs"]
+            | investment_cost._data_frame.to_dict(orient="records")[0]
         )
     return list(main_data.values())
 
@@ -266,8 +295,12 @@ def _get_fuel_data(
     subsector_ids = [id_subsector]
 
     if is_renewable:
-        id_subsector = final_energy_saving_or_capacities.unique_index_values("id_subsector")[0]
-        id_action_type = final_energy_saving_or_capacities.unique_index_values("id_action_type")[0]
+        id_subsector = final_energy_saving_or_capacities.unique_index_values(
+            "id_subsector"
+        )[0]
+        id_action_type = final_energy_saving_or_capacities.unique_index_values(
+            "id_action_type"
+        )[0]
         data = {
             1: {
                 "id_parameter": 67,
@@ -328,7 +361,9 @@ def _get_fuel_data(
                 },
             )
             del factors["id_parameter"]
-            factors = extrapolation.extrapolate(factors, final_energy_saving_or_capacities.years)
+            factors = extrapolation.extrapolate(
+                factors, final_energy_saving_or_capacities.years
+            )
             for index, values in factors._data_frame.to_dict(orient="index").items():
                 data[index] = data[index] | values
         else:
@@ -341,7 +376,9 @@ def _get_fuel_data(
                 },
             )
             del factors["id_parameter"]
-            factors = extrapolation.extrapolate(factors, final_energy_saving_or_capacities.years)
+            factors = extrapolation.extrapolate(
+                factors, final_energy_saving_or_capacities.years
+            )
             for index, values in factors._data_frame.to_dict(orient="index").items():
                 data[index[2]] = data[index[2]] | values
     else:
@@ -411,7 +448,9 @@ def _get_fuel_data(
 
 
 def _get_fuel_switch_data(years, id_sector, data_source):
-    table = data_source.table("measurement_specific_parameters_fuel_switch", {"id_sector": str(id_sector)})
+    table = data_source.table(
+        "measurement_specific_parameters_fuel_switch", {"id_sector": str(id_sector)}
+    )
     # Extract the columns with year numbers
     annual_df = table._data_frame.filter(regex="[1-3][0-9]{3}")
     annual_df.apply(pd.to_numeric)
@@ -470,7 +509,8 @@ def _get_residential_data(
         population_of_municipality,
     )
     data["number_of_affected_dwellings"] = (
-        data["number_of_affected_dwellings"] | number_of_affected_dwellings._data_frame.to_dict(orient="records")[0]
+        data["number_of_affected_dwellings"]
+        | number_of_affected_dwellings._data_frame.to_dict(orient="records")[0]
     )
 
     # TODO: Annual renovation rate is not available yet
@@ -478,7 +518,9 @@ def _get_residential_data(
         str(y): 0 for y in final_energy_saving_or_capacities.years
     }
     energy_poverty_target = wuppertal_parameters.reduce("id_parameter", 25)
-    data["energy_poverty_target"] = data["energy_poverty_target"] | energy_poverty_target._series.to_dict()
+    data["energy_poverty_target"] = (
+        data["energy_poverty_target"] | energy_poverty_target._series.to_dict()
+    )
 
     id_region = context["id_region"]
     population_of_municipality = context["population_of_municipality"]
@@ -489,7 +531,8 @@ def _get_residential_data(
         population_of_municipality,
     )
     data["total_dwelling_stock"] = (
-        data["total_dwelling_stock"] | dwelling_stock._data_frame.to_dict(orient="records")[0]
+        data["total_dwelling_stock"]
+        | dwelling_stock._data_frame.to_dict(orient="records")[0]
     )
 
     if not is_renewable:
@@ -513,7 +556,9 @@ def _get_residential_data(
         }
 
         average_hh_per_building = wuppertal_parameters.reduce("id_parameter", 31)
-        data["average_hh_per_building"] = data["average_hh_per_building"] | average_hh_per_building._series.to_dict()
+        data["average_hh_per_building"] = (
+            data["average_hh_per_building"] | average_hh_per_building._series.to_dict()
+        )
 
         average_rent = wuppertal_parameters.reduce("id_parameter", 29)
         data["average_rent"] = data["average_rent"] | average_rent._series.to_dict()
@@ -634,7 +679,8 @@ def _lifetime(context, database):
     id_subsector = context["id_subsector"]
     id_action_type = context["id_action_type"]
     wuppertal_sector_parameters = database.table(
-        "wuppertal_sector_parameters", {"id_subsector": str(id_subsector), "id_action_type": str(id_action_type)}
+        "wuppertal_sector_parameters",
+        {"id_subsector": str(id_subsector), "id_action_type": str(id_action_type)},
     )
     lifetime = wuppertal_sector_parameters.reduce("id_parameter", 36)
     return lifetime

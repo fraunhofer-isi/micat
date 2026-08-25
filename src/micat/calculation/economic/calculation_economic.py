@@ -167,13 +167,14 @@ def economic_indicators(  # pylint: disable=too-many-locals
         "id_subsector"
     )[0]
     if subsector_id >= 30:
-        results["materialDemand"] = renewables.material_demand(
-            installed_capacity,
-            data_source,
-        )
         results["supplyRiskFactor"] = renewables.supply_risk_factor(
             installed_capacity,
             data_source,
+        )
+        results["vreEnergySystemCosts"] = renewables.vre_energy_system_costs(
+            final_energy_saving_or_capacities,
+            data_source,
+            id_region,
         )
 
     return results
