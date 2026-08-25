@@ -106,6 +106,10 @@ class TestPublicApi:
             DataSource._loop_over_measures_and_collect_tables,
             "mocked_result",
         )
+        @patch(
+            DataSource._subsector_to_sector_mapping,
+            {},
+        )
         def test_without_measure_specific_parameters(self, sut):
             sut.table = Mock(None)
 
@@ -123,6 +127,10 @@ class TestPublicApi:
         @patch(
             DataSource._measure_ids_for_which_extra_data_exists,
             "mocked_id_values",
+        )
+        @patch(
+            DataSource._subsector_to_sector_mapping,
+            {},
         )
         def test_with_measure_specific_parameters(self, sut):
             mocked_table = Mock()
@@ -412,6 +420,7 @@ class TestPrivateApi:
                 determine_table_for_measure,
                 "mocked_provide_default_table",
                 "mocked_years",
+                {2: 1},
             )
             assert result == "mocked_result"
 
@@ -434,6 +443,7 @@ class TestPrivateApi:
                 "mocked_determine_table_for_measure",
                 provide_default_table,
                 "mocked_years",
+                {2: 1},
             )
             assert result == "mocked_result"
 
@@ -859,6 +869,7 @@ class TestPrivateApi:
                 "mocked_measure_constants",
                 "mocked_determine_table_for_measure",
                 "mocked_provide_default_value",
+                {1: 1},
             )
             assert result["2020"][1] == 99
 
@@ -887,6 +898,7 @@ class TestPrivateApi:
                 "mocked_measure_constants",
                 "mocked_determine_table_for_measure",
                 "mocked_provide_default_value",
+                {1: 1},
             )
             assert result["value"][1] == 99
 

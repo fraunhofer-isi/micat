@@ -402,6 +402,7 @@ def _interim_data(
         def _determine_table_for_measure(
             _id_measure,
             id_subsector,
+            _id_sector,
             id_action_type,
             energy_saving,
             extrapolated_final_parameters,
@@ -415,6 +416,7 @@ def _interim_data(
         def _provide_default(
             id_measure,
             id_subsector,
+            _id_sector,
             _id_action_type,
             _savings,
             _substitution_factors,
@@ -438,9 +440,10 @@ def _interim_data(
         substitution_factors = data_source.measure_specific_calculation(
             final_energy_saving_or_capacities,
             _determine_table_for_measure,
-            lambda id_measure, id_subsector, id_action_type, savings: _provide_default(
+            lambda id_measure, id_subsector, _id_sector, id_action_type, savings: _provide_default(
                 id_measure,
                 id_subsector,
+                _id_sector,
                 id_action_type,
                 savings,
                 _substitution_factors,

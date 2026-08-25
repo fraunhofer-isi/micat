@@ -154,13 +154,13 @@ def _extrapolated_series(id_parameter, parameters, years):
 
 def _measure_specific_share_of_energy_poor_population_owner(
     id_measure,
-    id_subsector,
+    id_sector,
     id_action_type,
     years,
     share_input,
 ):
     zero_table = DataSource.row_table(id_measure, years, 0)
-    if id_subsector != 17:
+    if id_sector != 4:
         return zero_table
 
     if id_action_type in [5, 6]:
@@ -243,13 +243,13 @@ def _measure_specific_share_of_energy_poor_population_owner_others(share_input):
 
 def _measure_specific_share_of_energy_poor_population_tenant(
     id_measure,
-    id_subsector,
+    id_sector,
     id_action_type,
     years,
     share_input,
 ):
     zero_row_table = DataSource.row_table(id_measure, years, 0)
-    if id_subsector != 17:
+    if id_sector != 4:
         return zero_row_table
 
     if id_action_type in [5, 6]:
@@ -310,7 +310,7 @@ def _number_of_smaller_deciles(value, year, decile_values):
 
 def _provide_default_investment(
     _id_measure,
-    _id_subsector,
+    _id_sector,
     _id_action_type,
     _year,
 ):
@@ -319,7 +319,7 @@ def _provide_default_investment(
 
 def _provide_default_renovation_rate(
     _id_measure,
-    _id_subsector,
+    _id_sector,
     _id_action_type,
     _year,
 ):
@@ -341,7 +341,8 @@ def _share_of_energy_poor_population_owner(
 
     def _determine_table_for_measure(
         id_measure,
-        id_subsector,
+        _id_subsector,
+        id_sector,
         id_action_type,
         _energy_saving,
         _extrapolated_final_parameters=None,
@@ -377,7 +378,7 @@ def _share_of_energy_poor_population_owner(
 
         table = _measure_specific_share_of_energy_poor_population_owner(
             id_measure,
-            id_subsector,
+            id_sector,
             id_action_type,
             years,
             share_input,
@@ -410,7 +411,8 @@ def _share_of_energy_poor_population_tenant(
 
     def _determine_table_for_measure(
         id_measure,
-        id_subsector,
+        _id_subsector,
+        id_sector,
         id_action_type,
         _energy_saving,
         _extrapolated_final_parameters=None,
@@ -443,7 +445,7 @@ def _share_of_energy_poor_population_tenant(
 
         table = _measure_specific_share_of_energy_poor_population_tenant(
             id_measure,
-            id_subsector,
+            id_sector,
             id_action_type,
             years,
             share_input,

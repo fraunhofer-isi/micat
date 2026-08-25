@@ -90,6 +90,7 @@ class TestDetermineLambdaForMeasure:
         result = fuel_split._determine_lambda_for_measure(
             "mocked_id_measure",
             "mocked_id_subsector",
+            "mocked_id_sector",
             id_action_type,
             "mocked_energy_saving",
             "mocked_extrapolated_final_parameters",
@@ -107,6 +108,7 @@ class TestDetermineLambdaForMeasure:
         result = fuel_split._determine_lambda_for_measure(
             "mocked_id_measure",
             "mocked_id_subsector",
+            "mocked_id_sector",
             id_action_type,
             "mocked_energy_saving",
             "mocked_extrapolated_final_parameters",

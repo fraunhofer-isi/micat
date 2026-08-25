@@ -27,6 +27,7 @@ def test_number_of_affected_dwellings():
         provide_default_table(
             "mocked_id_measure",
             "mocked_id_subsector",
+            "mocked_id_sector",
             "mocked_id_action_type",
             "mocked_savings",
         )
@@ -56,7 +57,7 @@ def test_dwelling_stock():
     assert result == "mocked_result"
 
 
-@patch(extrapolation.extrapolate, "mocked_result")
+@patch(extrapolation.interpolate_and_fill_nearest, "mocked_result")
 def test_improvement_actions_per_energy_unit():
     data_source = Mock()
     result = dwelling._improvement_actions_per_energy_unit(data_source, "mocked_years")
@@ -64,15 +65,15 @@ def test_improvement_actions_per_energy_unit():
 
 
 class TestProvideDefaultNumberOfAffectedDwellings:
-    def test_for_different_subsector(self):
+    def test_for_different_sector(self):
         energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
-        id_subsector = 18
+        id_sector = 1
 
         result = dwelling._provide_default_number_of_affected_dwellings(
             id_measure,
-            id_subsector,
+            id_sector,
             "mocked__id_action_type",
             energy_savings,
             "mocked_improvement_actions_per_energy_unit",
@@ -84,14 +85,14 @@ class TestProvideDefaultNumberOfAffectedDwellings:
         energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
-        id_subsector = 17
+        id_sector = 4
         id_action_type = 1
         improvement_actions_per_energy_unit = Mock()
         improvement_actions_per_energy_unit.reduce = Mock(2)
 
         result = dwelling._provide_default_number_of_affected_dwellings(
             id_measure,
-            id_subsector,
+            id_sector,
             id_action_type,
             energy_savings,
             improvement_actions_per_energy_unit,
@@ -103,12 +104,12 @@ class TestProvideDefaultNumberOfAffectedDwellings:
         energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
-        id_subsector = 17
+        id_sector = 4
         id_action_type = 4
 
         result = dwelling._provide_default_number_of_affected_dwellings(
             id_measure,
-            id_subsector,
+            id_sector,
             id_action_type,
             energy_savings,
             "mocked_improvement_actions_per_energy_unit",
@@ -120,12 +121,12 @@ class TestProvideDefaultNumberOfAffectedDwellings:
         energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
-        id_subsector = 17
+        id_sector = 4
         id_action_type = 5
 
         result = dwelling._provide_default_number_of_affected_dwellings(
             id_measure,
-            id_subsector,
+            id_sector,
             id_action_type,
             energy_savings,
             "mocked_improvement_actions_per_energy_unit",
@@ -137,13 +138,13 @@ class TestProvideDefaultNumberOfAffectedDwellings:
         energy_savings = AnnualSeries({"2000": 1, "2010": 2})
 
         id_measure = 1
-        id_subsector = 17
+        id_sector = 4
         id_action_type = 99
 
         with raises(KeyError):
             dwelling._provide_default_number_of_affected_dwellings(
                 id_measure,
-                id_subsector,
+                id_sector,
                 id_action_type,
                 energy_savings,
                 "mocked_improvement_actions_per_energy_unit",
@@ -153,13 +154,13 @@ class TestProvideDefaultNumberOfAffectedDwellings:
 class TestMeasureSpecificNumberOfAffectedDwellings:
     @patch(DataSource.row_table, "mocked_result")
     def test_non_residential(self):
-        id_subsector = 1
+        id_sector = 1
         extrapolated_final_parameters = Mock()
         mocked_dwelling_stock = Mock()
 
         result = dwelling._measure_specific_number_of_affected_dwellings(
             "mocked_id_measure",
-            id_subsector,
+            id_sector,
             "mocked_id_action_type",
             "mocked_energy_saving",
             extrapolated_final_parameters,
@@ -178,14 +179,14 @@ class TestMeasureSpecificNumberOfAffectedDwellings:
         @patch(DataSource.row_table, "mocked_result")
         def test_for_action_type_123(self):
             id_action_type = 1
-            id_subsector = 17
+            id_sector = 4
             extrapolated_final_parameters = Mock()
             mocked_improvement_actions_per_energy_unit = Mock()
             mocked_dwelling_stock = Mock()
 
             result = dwelling._measure_specific_number_of_affected_dwellings(
                 "mocked_id_measure",
-                id_subsector,
+                id_sector,
                 id_action_type,
                 "mocked_energy_saving",
                 extrapolated_final_parameters,
@@ -202,12 +203,12 @@ class TestMeasureSpecificNumberOfAffectedDwellings:
         @patch(dwelling._result_to_table, "mocked_result")
         def test_action_type_4(self):
             id_action_type = 4
-            id_subsector = 17
+            id_sector = 4
             mocked_dwelling_stock = Mock()
 
             result = dwelling._measure_specific_number_of_affected_dwellings(
                 "mocked_id_measure",
-                id_subsector,
+                id_sector,
                 id_action_type,
                 "mocked_energy_saving",
                 self.extrapolated_final_parameters,
@@ -219,12 +220,12 @@ class TestMeasureSpecificNumberOfAffectedDwellings:
         @patch(DataSource.row_table, "mocked_result")
         def test_action_type_5_6(self):
             id_action_type = 5
-            id_subsector = 17
+            id_sector = 4
             mocked_dwelling_stock = Mock()
 
             result = dwelling._measure_specific_number_of_affected_dwellings(
                 "mocked_id_measure",
-                id_subsector,
+                id_sector,
                 id_action_type,
                 "mocked_energy_saving",
                 self.extrapolated_final_parameters,
@@ -236,13 +237,13 @@ class TestMeasureSpecificNumberOfAffectedDwellings:
         @patch(DataSource.row_table, "mocked_row_table")
         def test_action_type_other(self):
             id_action_type = 8
-            id_subsector = 17
+            id_sector = 4
             mocked_dwelling_stock = Mock()
 
             with raises(KeyError):
                 dwelling._measure_specific_number_of_affected_dwellings(
                     "mocked_id_measure",
-                    id_subsector,
+                    id_sector,
                     id_action_type,
                     "mocked_energy_saving",
                     self.extrapolated_final_parameters,

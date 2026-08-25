@@ -66,7 +66,7 @@ class TestProvideDefaultNumberOfAffectedDwellingsPerKtoe:
             "mocked_id_region",
             1,
             "mocked_id_measure",
-            "mocked_id_subsector",
+            "mocked_id_sector",
             2,
             2020,
             "mocked_saving",
@@ -79,7 +79,7 @@ class TestProvideDefaultNumberOfAffectedDwellingsPerKtoe:
             "mocked_id_region",
             1,
             "mocked_id_measure",
-            "mocked_id_subsector",
+            "mocked_id_sector",
             3,
             2020,
             "mocked_saving",
@@ -101,7 +101,7 @@ class TestProvideDefaultNationalDwellingStock:
             2,
             1,
             "mocked_id_measure",
-            "mocked_id_subsector",
+            "mocked_id_sector",
             "mocked_id_action_type",
             2020,
             "mocked_saving",
@@ -114,7 +114,7 @@ class TestProvideDefaultNationalDwellingStock:
             3,
             1,
             "mocked_id_measure",
-            "mocked_id_subsector",
+            "mocked_id_sector",
             "mocked_id_action_type",
             2020,
             "mocked_saving",
@@ -210,7 +210,7 @@ def test_fill_annual_renovation_rate_nan_values_for_id_action_type_less_than_fou
 
 def test_provide_default_parameter():
     result = affected_dwellings._provide_default_parameter(
-        "mocked_id_measure", "mocked_id_subsector", "mocked_id_action_type", "mocked_year", "mocked_saving"
+        "mocked_id_measure", "mocked_id_sector", "mocked_id_action_type", "mocked_year", "mocked_saving"
     )
     assert np.isnan(result)
 
