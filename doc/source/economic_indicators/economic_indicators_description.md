@@ -110,3 +110,49 @@ shares among these technologies.
 
 More details about the general methodology and cost assumptions can be found on the related [equations page](./avoided_additional_capacity.md)
 and in the [fact sheet](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Economic-impact-Avoided-additional-energy-generation-capacity.pdf).
+
+## Supply risk factor
+
+While material demand quantifies the absolute amount of critical raw materials required, the supply
+risk factor captures how vulnerable the supply of these materials is to disruption. For each material
+used in a given RE technology, the material demand is weighted by the material's supply risk, as
+assessed by the European Commission's Critical Raw Materials Report (2023). The supply risk factor
+accounts for supply concentration, governance performance, import reliance, trade restrictions, supply
+chain complexity, and recycling and substitution rates.
+
+The supply risk factor is a relative indicator: it reflects differences in supply risk across technologies
+and should not be interpreted as a standalone value. It is best used to compare use cases involving
+equivalent additions of RE capacity but different technology mixes, for example to assess whether a
+higher share of photovoltaics carries a higher supply risk than an equivalent capacity of wind.
+
+As with material demand, the supply risk factor is not monetised, since a consistent valuation of supply
+chain vulnerability is not feasible given the limited data on supply chains and price volatility for the
+materials assessed.
+
+The equations used to quantify the supply risk factor are shown on the related [equations page](./Material_demand_and_supply_risk.md). The fact sheet can be
+downloaded as [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets-finalised/SEED-MICAT-Environmental-impacts-critical-raw-materials-1.pdf).
+
+## Total energy system costs of variable renewable energy (VRE)
+
+Beyond the levelised cost of electricity (LCOE), the integration of variable renewable energy (VRE) —
+wind and solar — into the electricity system entails additional balancing, profile, and grid costs, which
+increase with the share of VRE in electricity generation (VRE penetration). The MICATool estimates
+these system-level costs using a pragmatic, literature-based approach rather than full power system
+modelling.
+
+VRE penetration rates for the EU and each Member State are derived from the EU PRIMES Reference
+Scenario 2020, with linear interpolation for years without data points. Each penetration rate is then
+mapped to a corresponding median energy system cost value (in €/MWh), based on aggregated cost
+estimates from Heptonstall & Gross (2021), which combine balancing, profile, and grid costs. The total
+energy system cost is obtained by multiplying the estimated annual VRE generation by the assigned
+cost factor for the relevant penetration band.
+
+The indicator is quantified only for photovoltaics (rooftop and utility-scale) and wind (onshore and
+offshore), as non-variable RE technologies (e.g., hydropower, geothermal, biomass and waste,
+hydrogen power plants) do not cause additional system integration costs. It is expressed in monetary
+terms and can be aggregated with other monetised multiple impact indicators in the Cost-Benefit
+Analysis (CBA). For energy efficiency measures, the indicator is not quantified separately, as their
+system-level effects are assumed to already be reflected in avoided energy costs.
+
+The equations used to quantify the total energy system costs of VRE are shown on the related [equations page](./energy_system_cost.md). The fact
+sheet can be downloaded as [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets-finalised/SEED-MICAT-Economic-impacts-Impact-on-energy-system-costs-1.pdf).

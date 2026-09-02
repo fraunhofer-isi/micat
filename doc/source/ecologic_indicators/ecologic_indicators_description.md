@@ -74,8 +74,50 @@ monetisation of air pollutants takes place within the indicator "Health effects 
 
 The equations can be found [here](./reduction_AP.md), whereas the fact sheet can be downloaded as a [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Social-impact-Human-health-due-to-reduced-air-pollution.pdf).
 
+## Net land use change
 
+The land use indicator assesses the net land use effect of expanding renewable energy generation.
+It captures both the additional land required for new RE installations (direct land use, such as turbine
+foundations or PV arrays, and indirect land use, such as raw material extraction or component
+manufacturing) and the land use avoided through the displacement of conventional fossil and nuclear
+generation.
 
+Land use intensities, expressed in m² per MWh, are derived from the scientific literature and multiplied
+by the annual RE generation resulting from the user's capacity, country, and commissioning date
+inputs, informed by a capacity factor based on PRIMES data. The avoided land use from displaced
+primary fuels is calculated analogously, using land use intensities for conventional power plants. The
+net land use change is the difference between the two.
+
+The indicator is quantified for photovoltaics (rooftop and utility-scale), wind (onshore and offshore),
+hydropower (reservoir and run-of-river), geothermal, biomass and waste, solar thermal, heat pumps,
+and hydrogen power plants. It is expressed solely in physical terms (m²), as land procurement costs
+are already included in investment costs and fuel prices, and monetisation would therefore constitute
+double counting.
+
+The equations used to quantify the net land use change are shown [here](./land_use.md). The fact sheet can be
+downloaded as [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets-finalised/SEED-MICAT-Environmental-impacts-Impact-on-land-use-1.pdf).
+
+## Material demand
+
+Building on a review of the scientific literature on critical raw materials (CRM) used in renewable
+energy (RE) technologies, the MICATool estimates the quantity of raw materials required for a given
+expansion of RE capacity. Material intensity values, expressed in kg per MW of installed capacity, are
+derived for each RE technology and multiplied by the user-defined capacity to determine the total
+material demand in tonnes.
+
+The selection of materials follows the EU's Critical Raw Materials list (European Commission, 2023).
+Not all listed materials are included, either because they are not used in the RE technologies covered
+by SEED MICAT, or because no reliable material intensity data could be identified in the literature.
+Structural materials such as steel or concrete are excluded, as the focus lies on materials whose
+supply may constrain RE deployment.
+
+The indicator is quantified for photovoltaics (rooftop and utility-scale), wind (onshore and offshore),
+hydro, geothermal, biomass and waste, heat pumps, and hydrogen power plants. There is no
+monetisation approach for material demand, as this would lead to double counting with the investment
+costs of RE technologies, which already reflect material expenses.
+
+The equations used to quantify material demand are shown [here](../economic_indicators/Material_demand_and_supply_risk.md). The fact sheet can be downloaded
+as [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets-finalised/SEED-MICAT-Environmental-impacts-critical-raw-materials-1.pdf).
 
 
 
