@@ -39,8 +39,8 @@ jobs:
         run: |
           mkdir ./pylint
           python -m pylint src --output-format=text . | tee ./pylint/pylint.log || pylint-exit $?
-          python -m pylint test --recursive=true
-          python -m pylint import --recursive=true   
+          python -m pylint test --recursive=true || pylint-exit $?
+          python -m pylint import --recursive=true || pylint-exit $?  
           PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' ./pylint/pylint.log)
           echo "PYLINT_SCORE=$PYLINT_SCORE" >> $GITHUB_ENV
           echo "Pylint score is $PYLINT_SCORE"
