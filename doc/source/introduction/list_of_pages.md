@@ -7,7 +7,6 @@ title: Glossary of pages
 description: This page lists all the pages contained in the MICATool documentation.
 license: AGPL
 ---
-
 <!--
 © 2024, 2025 Fraunhofer-Gesellschaft e.V., München
 
@@ -15,10 +14,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 Glossary of pages
-===
+=================
 
 General descriptive texts
--
+-------------------------
 
 [](../introduction/introduction.md)
 
@@ -35,7 +34,7 @@ General descriptive texts
 [](../ecologic_indicators/ecologic_indicators_description.md)
 
 User interface parts
--
+--------------------
 
 [](../user_interface/geography.md)
 
@@ -44,7 +43,7 @@ User interface parts
 [](../user_interface/energy_savings_input.md)
 
 Indicator equations
--
+-------------------
 
 ### Social indicators
 
@@ -86,8 +85,16 @@ Indicator equations
 
 [](../ecologic_indicators/reduction_GHG.md)
 
+
+Cost benefit analysis
+---------------------
+
+### Cost benefit analysis module
+
+[](../cba/cba.md)
+
 Module and energy mix equations
--
+-------------------------------
 
 ### Modules
 
