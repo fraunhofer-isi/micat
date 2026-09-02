@@ -28,7 +28,7 @@ jobs:
         run: |
           # python -m pip install --upgrade pip
           # also see settings in pyproject.toml
-          pip install .[dev]  | grep -v 'already satisfied' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
+          pip install --quiet '.[dev]' # The grep part removes "already satisfied" messages from the pip3 install output on linux systems
       - name: format
         run: |
           python -m isort .

@@ -52,5 +52,12 @@
       allowedVersions: "1.17.1",
       rangeStrategy: "replace",
     },
+    {
+        description: "pin sphinx to 9.0.4 (9.1.0 requires Python 3.12+)",
+        matchPackageNames: ["Sphinx"],
+        matchDatasources: ["pypi"],
+        allowedVersions: "9.0.4",
+        rangeStrategy: "replace",
+      }
   ],
 }
