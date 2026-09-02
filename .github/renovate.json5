@@ -58,6 +58,13 @@
         matchDatasources: ["pypi"],
         allowedVersions: "9.0.4",
         rangeStrategy: "replace",
-      }
+      },
+    {
+  description: "pin licensecheck to 2025.1.0 (2026.0.0+ requires Python 3.12+)",
+  matchPackageNames: ["licensecheck"],
+  matchDatasources: ["pypi"],
+  allowedVersions: "2025.1.0",
+  rangeStrategy: "replace",
+}
   ],
 }
