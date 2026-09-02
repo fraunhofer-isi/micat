@@ -23,6 +23,9 @@ def main():
     ignore_packages = [
         "reuse",  # combined license is not recognized: "Apache-2.0 AND CC0-1.0 AND CC-BY-SA-4.0 AND GPL-3.0-or-later"
         "referencing",  # has MIT license but is not recognized
+        "mypy-extensions",  # license not detected by license_scanner
+        "third-party-license-file-generator",  # license not detected by license_scanner
+        "third_party_license_file_generator",  # underscore variant of the same package
     ]
 
     fail_packages = []
@@ -32,6 +35,8 @@ def main():
         "APACHE SOFTWARE LICENSE",
         # work around for bug in licensecheck for dual license
         "MIT License;; Academic Free License (AFL)",
+        # waitress is licensed under the Zope Public License, which is permissive/compatible
+        "ZOPE PUBLIC LICENSE",
     ]
 
     fail_licenses = []
