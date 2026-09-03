@@ -73,6 +73,10 @@ Indicator equations
 
 [](../economic_indicators/avoided_additional_capacity.md)
 
+[](../economic_indicators/energy_system_cost.md)
+
+[](../economic_indicators/Material_demand_and_supply_risk.md)
+
 ### Ecologic indicators
 
 [](../ecologic_indicators/PEC_FEC_savings.md)
@@ -85,6 +89,7 @@ Indicator equations
 
 [](../ecologic_indicators/reduction_GHG.md)
 
+[](../ecologic_indicators/land_use.md)
 
 Cost benefit analysis
 ---------------------

@@ -25,7 +25,7 @@ ballpark conversion from energy savings is carried out, although the accuracy se
 The coefficients have been provided by e3m and have been calculated from a scenario similar to the EU Reference Scenario
 2020 (although not the original one, due to confidentiality issues).
 
-The relevant equations are on [this page](./GDP.md), the fact sheet can be found as a PDF [here](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Economic-impact-Impact-on-GDP.pdf).
+The relevant equations are on [this page](./GDP.md), the fact sheet can be found as a PDF [here](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets/SEED-MICAT-Economic-impacts-impact-on-GDP.pdf).
 
 Employment effects
 -
@@ -33,7 +33,7 @@ Employment effects
 Similar to Impact on GDP, Employment effects scale with investments. Thus, similar caveats as described above apply. The
 data source is also identical.
 
-The relevant equations are on [this page](./employment_effects.md), the fact sheet can be found as a PDF [here](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Economic-impact-Employment-effects.pdf).
+The relevant equations are on [this page](./employment_effects.md), the fact sheet can be found as a PDF [here](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets/SEED-MICAT-Employment-impacts-evaluating-the-socioeconomic-performance-of-climate-mitigation-actions.pdf).
 
 Impact on energy intensity
 -
@@ -45,8 +45,7 @@ Reference Scenario data does not allow enough disaggregation of the value to use
 consumption is orders of magnitude smaller than normal energy consumption and both values are affected similarly, 
 the effect should be negligible. We're working on addressing this issue.
 
-You can find the equations [here](./energy_intensity.md), the PDF of the fact sheet is downloadable from [here](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Economic-impact-Energy-Intensity.pdf).
-
+You can find the equations [here](./energy_intensity.md), the PDF of the fact sheet is downloadable from [here](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets/SEED-MICAT-Economic-impacts-energy-intensity-1.pdf)
 Asset value of buildings
 -
 

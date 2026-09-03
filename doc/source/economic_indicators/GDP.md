@@ -1,13 +1,6 @@
 ---
-# © 2025, 2026 Fraunhofer-Gesellschaft e.V., München
-#
-# SPDX-License-Identifier: AGPL-3.0-or-later
-
-title: Impact on GDP
-description: This page shows the equations necessary to calculate the impact on GDP.
-license: AGPL
+span
 ---
-
 <!--
 © 2024, 2025 Fraunhofer-Gesellschaft e.V., München
 
@@ -15,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 Impact on GDP
-=
+=============
 
 $\Delta GDP_{c,ss,a,y} = \phi_{c,ss,a,y} \cdot \Delta inv_{c,ss,a,y}$
 
@@ -24,4 +17,3 @@ $\Delta GDP_{c,ss,a,y} = $ impact on gross domestic product (id_indicator_chart 
 $\phi_{c,ss,a,y} = $ coefficient for GDP effect, extracted from e3m Excel file (id_parameter = 38)
 
 $\Delta inv_{c,ss,a,y} = $ annual total investment in € from measure specific parameters, source: module [Investments](../modules/investments.md)
-

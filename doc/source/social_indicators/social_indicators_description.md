@@ -71,7 +71,7 @@ for in mortality coefficients.
 
 The monetisation is based on the value of statistical life (VSL), with values being published by the WHO. 
 
-The equations can be found [here](./health_AP.md), the fact sheet can be downloaded as [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/Social-impact-Human-health-due-to-reduced-air-pollution.pdf).
+The equations can be found [here](./health_AP.md), the fact sheet can be downloaded as [PDF](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets/SEED-MICAT-UPDATED-environmental-impact-Air-pollution-related-mortality-and-morbidity.pdf).
 
 Avoided lost working days due to air pollution
 -
