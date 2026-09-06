@@ -13,7 +13,8 @@
       "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py -x -q)",
       "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py::test_improvement_actions_per_energy_unit -v)",
       "Bash(git stash *)",
-      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py::TestProvideDefaultNumberOfAffectedDwellings::test_for_id_action_type_4 -v)"
+      "Bash(python -m pytest test/micat/calculation/social/test_dwelling.py::TestProvideDefaultNumberOfAffectedDwellings::test_for_id_action_type_4 -v)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

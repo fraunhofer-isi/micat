@@ -93,6 +93,12 @@ def main():
     )
     database_import.write_to_sqlite(fraunhofer_substitution_factors, "fraunhofer_substitution_factors")
 
+    # reference_final_energy_consumption_2021_from_Odyssee.xlsx
+    reference_final_energy_consumption_path = import_path + "/reference_final_energy_consumption_2021_from_Odyssee.xlsx"
+    raw_reference_final_energy_consumption = pd.read_excel(reference_final_energy_consumption_path)
+    reference_final_energy_consumption = Table(raw_reference_final_energy_consumption)
+    database_import.write_to_sqlite(reference_final_energy_consumption, "fraunhofer_reference_final_energy_consumption")
+
 
 if __name__ == "__main__":
     main()

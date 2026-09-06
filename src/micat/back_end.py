@@ -116,6 +116,13 @@ class BackEnd:
         def id_indicator():
             return self._get_table("id_indicator", self._flask.request)
 
+        @app.route("/reference_energy_consumption")
+        def reference_energy_consumption():
+            return self._get_table(
+                "fraunhofer_reference_final_energy_consumption",
+                self._flask.request,
+            )
+
         # API route for mapping table
 
         @app.route("/mapping__subsector__action_type")
