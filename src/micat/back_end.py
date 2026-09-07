@@ -530,6 +530,14 @@ class BackEnd:
                     worksheet.insert_chart(row_idx + 3, 0, agg_chart)
 
             # ---- CBA ----
+            cba_units = {
+                "weightedAnnuity": "M-EUR",
+                "netPresentValue": "M-EUR",
+                "LCOE": "EUR/MWh",
+                "LCOCO2": "EUR/tCO2",
+                "CBR": "ratio",
+                "BCR": "ratio",
+            }
             for program in data["cbaData"]:
                 cba_title = (
                     f"CBA ({program['name']})" if len(data["results"]) > 1 else "CBA"
@@ -538,17 +546,16 @@ class BackEnd:
                 worksheet.set_tab_color("#0284c7")
                 worksheet.hide_gridlines(2)
                 worksheet.set_column(0, 0, 32)
-                worksheet.set_column(1, 1, 16)
+                worksheet.set_column(1, 1, 22)
+                worksheet.set_column(2, 2, 12)
                 toc_entries.append((
                     cba_title,
                     "Cost-benefit analysis results"
                     + (f" ({program['name']})" if len(data["results"]) > 1 else ""),
                 ))
                 row_idx = 0
-
-                worksheet.write(row_idx, 0, "unit", bold)
-                worksheet.write(row_idx, 1, "Euro", italic)
-                row_idx += 1
+                worksheet.write(row_idx, 0, "Cost-benefit analysis", title_format)
+                row_idx += 2
 
                 list_results = {}
                 dict_results = {}
@@ -564,6 +571,7 @@ class BackEnd:
                         continue
                     worksheet.write(row_idx, 0, key, bold)
                     worksheet.write(row_idx, 1, result, number_format)
+                    worksheet.write(row_idx, 2, cba_units.get(key, "EUR"), italic)
                     if key == "weightedAnnuity":
                         weighted_annuity_row = row_idx
                     row_idx += 1
@@ -571,40 +579,51 @@ class BackEnd:
                 if weighted_annuity_row is not None:
                     cell_ref = f"B{weighted_annuity_row + 1}"
                     worksheet.conditional_format(cell_ref, {
-                        "type": "cell",
-                        "criteria": "<",
-                        "value": 0,
+                        "type": "cell", "criteria": "<", "value": 0,
                         "format": negative_format,
                     })
                     worksheet.conditional_format(cell_ref, {
-                        "type": "cell",
-                        "criteria": ">=",
-                        "value": 0,
+                        "type": "cell", "criteria": ">=", "value": 0,
                         "format": positive_format,
                     })
 
-                row_idx += 1
-                col_idx = 1
-                for year in program["years"]:
-                    worksheet.write(row_idx, col_idx, year, header_format)
-                    col_idx += 1
-
-                for key, result in list_results.items():
+                # Per-year results (e.g. CBR by year)
+                if list_results:
                     row_idx += 1
-                    worksheet.write(row_idx, 0, key, bold)
+                    worksheet.write(row_idx, 0, "Per-year results", bold)
+                    row_idx += 1
                     col_idx = 1
-                    for row in result:
-                        worksheet.write(row_idx, col_idx, row, number_format)
+                    for year in program["years"]:
+                        worksheet.write(row_idx, col_idx, year, header_format)
                         col_idx += 1
-
-                for key, result in dict_results.items():
-                    row_idx += 2
-                    worksheet.write(row_idx, 0, key, bold)
-                    row_idx += 1
-                    for sub_key, sub_value in result.items():
-                        worksheet.write(row_idx, 0, sub_key)
-                        worksheet.write(row_idx, 1, sub_value, number_format)
+                    for key, result in list_results.items():
                         row_idx += 1
+                        worksheet.write(row_idx, 0, key, bold)
+                        col_idx = 1
+                        for value in result:
+                            worksheet.write(row_idx, col_idx, value, number_format)
+                            col_idx += 1
+
+                # Indicator annuities: annualised over the measure's lifetime,
+                # NOT tied to specific years - kept in a separate section so it
+                # is not mistaken for the per-year table above.
+                if dict_results:
+                    row_idx += 2
+                    worksheet.write(
+                        row_idx, 0,
+                        "Indicator annuities (annualised over the measure's "
+                        "lifetime - not per year)",
+                        bold,
+                    )
+                    row_idx += 1
+                    for key, result in dict_results.items():
+                        worksheet.write(row_idx, 0, key, bold)
+                        worksheet.write(row_idx, 2, "EUR", italic)
+                        row_idx += 1
+                        for sub_key, sub_value in result.items():
+                            worksheet.write(row_idx, 0, sub_key)
+                            worksheet.write(row_idx, 1, sub_value, number_format)
+                            row_idx += 1
 
                 row_idx += 2
                 worksheet.write(row_idx, 0, "Parameters", bold)
