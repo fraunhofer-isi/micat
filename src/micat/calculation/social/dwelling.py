@@ -122,18 +122,9 @@ def _measure_specific_number_of_affected_dwellings(
     # id_sector = 4 (residential) is mapped to the id_action_type values 1...6
     # and those id_action_type values are handled in different ways:
 
-    if id_action_type == 4:
-        result = _measure_specific_number_of_affected_dwellings_electric(
-            extrapolated_parameters,
-            scaled_dwelling_stock_for_measure,
-        )
-        table = _result_to_table(
-            result,
-            id_measure,
-            years,
-        )
-        return table
-    else:
+    if id_action_type in [5, 6]:
+        return zero_row_table
+    elif id_action_type in [1, 2, 3]:
         improvement_actions = improvement_actions_per_energy_unit.reduce(
             "id_action_type", id_action_type
         )
@@ -149,6 +140,23 @@ def _measure_specific_number_of_affected_dwellings(
             years,
         )
         return table
+    elif id_action_type == 4:
+        result = _measure_specific_number_of_affected_dwellings_electric(
+            extrapolated_parameters,
+            scaled_dwelling_stock_for_measure,
+        )
+        table = _result_to_table(
+            result,
+            id_measure,
+            years,
+        )
+        return table
+    else:
+        raise KeyError(
+            "Unknown id_action_type value "
+            + str(id_action_type)
+            + " for sector 4 (residential)"
+        )
 
 
 def _result_to_table(
@@ -227,9 +235,18 @@ def _provide_default_number_of_affected_dwellings(
     zero_row_table = DataSource.row_table(id_measure, years, 0)
     if id_sector != 4:
         return zero_row_table
-    improvement_actions = improvement_actions_per_energy_unit.reduce(
-        "id_action_type", id_action_type
-    )
-    series = improvement_actions * energy_savings
-    table = series.transpose("id_measure", id_measure)
-    return table
+    if id_action_type in [4, 5, 6]:
+        return zero_row_table
+    elif id_action_type in [1, 2, 3]:
+        improvement_actions = improvement_actions_per_energy_unit.reduce(
+            "id_action_type", id_action_type
+        )
+        series = improvement_actions * energy_savings
+        table = series.transpose("id_measure", id_measure)
+        return table
+    else:
+        raise KeyError(
+            "Unknown id_action_type value "
+            + str(id_action_type)
+            + " for sector 4 (residential)"
+        )

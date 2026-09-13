@@ -234,7 +234,7 @@ class AbstractTable:
         for index, row_series in indices_of_values_to_be_replaced.iterrows():
             for column_name, index_tuple in row_series.items():
                 index = self._create_index_entry(index_tuple, index_order)
-                result_data_frame[column_name][index] = value
+                result_data_frame.loc[index, column_name] = value
         return self._create(result_data_frame)
 
     def to_string(self):

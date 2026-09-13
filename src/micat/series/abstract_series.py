@@ -46,6 +46,9 @@ class AbstractSeries:
         column_series.index = column_series.index.map(str)
         return column_series
 
+    def __iter__(self):
+        return iter(self._series)
+
     def items(self):
         return self._series.items()
 

@@ -108,7 +108,9 @@ class DatabaseImport:
 
             column_names = list(column_mapping.keys())
             column_names.remove("FACTOR")
-            df.set_index(column_names, inplace=True, verify_integrity=True)
+            df.set_index(column_names, inplace=True)
+            if not df.index.is_unique:
+                raise ValueError("Index has duplicate entries")
             df.to_excel("indexed_" + file_path)
 
     @staticmethod

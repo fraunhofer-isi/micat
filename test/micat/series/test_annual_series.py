@@ -217,10 +217,11 @@ class TestPublicAPI:
 
             right_series = AnnualSeries({'2000': 1, '2020': 2})
 
-            result = left_frame * right_series
+            result = right_series.__rmul__(left_frame)
 
-            assert result['2000'][1] == 10
-            assert result['2020'][1] == 20
+            assert isinstance(result, AnnualSeries)
+            assert result['2000'] == 10
+            assert result['2020'] == 40
 
         def test_annual_series_times_data_frame(self):
             left_series = AnnualSeries({'2000': 1, '2020': 2})
