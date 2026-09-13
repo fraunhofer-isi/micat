@@ -22,3 +22,4 @@ confidential.sqlite
 .DS_Store
 .vscode/
 ~$*
+.claude

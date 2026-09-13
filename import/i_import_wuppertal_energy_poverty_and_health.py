@@ -73,6 +73,16 @@ def main():
     energy_system_cost = Table(raw_energy_system_cost_parameters)
     database_import.write_to_sqlite(energy_system_cost, "wuppertal_energy_system_cost")
 
+    # Import value of energy parameters
+    file_path = import_path + "/value of energy.xlsx"
+    raw_value_of_energy_parameters = pd.read_excel(
+        file_path,
+        engine="openpyxl",
+        sheet_name="value of energy",
+    )
+    value_of_energy = Table(raw_value_of_energy_parameters)
+    database_import.write_to_sqlite(value_of_energy, "wuppertal_value_of_energy")
+
     # Import energy poverty and health parameters
     database_import.import_id_table("id_decile", import_path)
 

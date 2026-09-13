@@ -14,6 +14,7 @@ from micat.calculation.economic import (
     gross_domestic_product,
     import_dependency,
     production,
+    renewables,
     supplier_diversity,
 )
 from micat.table.table import Table
@@ -66,3 +67,55 @@ class TestEconomicIndicators:
             installed_capacity,
         )
         assert len(result) == 7
+
+
+@patch(gross_available_energy.gross_available_energy)
+@patch(production.primary_production)
+@patch(energy_cost.reduction_of_energy_cost_by_final_energy_carrier)
+@patch(gross_domestic_product.gross_domestic_product)
+@patch(gross_domestic_product.gross_domestic_product_2015)
+@patch(gross_domestic_product.impact_on_gross_domestic_product)
+@patch(energy_intensity.energy_intensity)
+@patch(import_dependency.impact_on_import_dependency)
+@patch(employment.additional_employment)
+@patch(buildings.added_asset_value_of_buildings)
+@patch(production.change_in_unit_costs_of_production)
+@patch(energy_efficiency.turnover_of_energy_efficiency_goods)
+@patch(grid.monetization_of_reduction_of_additional_capacities_in_grid)
+@patch(supplier_diversity.change_in_supplier_diversity_by_energy_efficiency_impact)
+@patch(renewables.supply_risk_factor)
+@patch(renewables.vre_energy_system_costs)
+@patch(renewables.value_of_energy)
+class TestEconomicIndicatorsRenewables:
+    def test_indicators_renewables(self):
+        mocked_interim_data = Mock()
+        mocked_ecologic_indicators = Mock()
+
+        final_energy_saving_or_capacities = Table(
+            [
+                {
+                    "id_measure": 1,
+                    "id_subsector": 30,
+                    "id_action_type": 30,
+                    "2020": 10,
+                    "2030": 20,
+                },
+            ]
+        )
+        installed_capacity = final_energy_saving_or_capacities.copy()
+
+        result = calculation_economic.economic_indicators(
+            final_energy_saving_or_capacities,
+            "mocked_population_of_municipality",
+            mocked_interim_data,
+            mocked_ecologic_indicators,
+            "mocked_data_source",
+            "mocked_id_region",
+            "mocked_years",
+            None,
+            installed_capacity,
+        )
+        assert len(result) == 10
+        assert "supplyRiskFactor" in result
+        assert "vreEnergySystemCosts" in result
+        assert "valueOfEnergy" in result

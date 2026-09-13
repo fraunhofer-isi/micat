@@ -176,5 +176,13 @@ def economic_indicators(  # pylint: disable=too-many-locals
             data_source,
             id_region,
         )
+        id_action_type = final_energy_saving_or_capacities.unique_index_values(
+            "id_action_type"
+        )[0]
+        results["valueOfEnergy"] = renewables.value_of_energy(
+            total_primary_energy_saving,
+            data_source,
+            id_action_type,
+        )
 
     return results

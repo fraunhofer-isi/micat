@@ -8,6 +8,65 @@ from micat.table.table import Table
 from micat.utils import list as list_utils
 
 
+def value_of_energy(
+    total_primary_energy_saving,
+    data_source,
+    id_action_type,
+):
+    voe_data = data_source.table("wuppertal_value_of_energy", {})
+
+    wholesale_price = voe_data.reduce("id_parameter", [77])
+    del wholesale_price["id_parameter"]
+    ets_price = voe_data.reduce("id_parameter", [78])
+    del ets_price["id_parameter"]
+
+    if id_action_type == 37:
+        vnfc = voe_data.reduce("id_parameter", [80])
+    else:
+        vnfc = voe_data.reduce("id_parameter", [79])
+    del vnfc["id_parameter"]
+
+    conversion_efficiency = data_source.table("fraunhofer_conversion_efficiency", {})
+    del conversion_efficiency["id_parameter"]
+    conversion_efficiency._data_frame.columns = (
+        conversion_efficiency._data_frame.columns.astype(int)
+    )
+    all_years = range(
+        conversion_efficiency._data_frame.columns.min(),
+        conversion_efficiency._data_frame.columns.max() + 1,
+    )
+    conversion_efficiency._data_frame = conversion_efficiency._data_frame.reindex(
+        columns=all_years
+    ).interpolate(axis=1)
+    conversion_efficiency._data_frame.columns = (
+        conversion_efficiency._data_frame.columns.astype(str)
+    )
+
+    if id_action_type == 37:
+        eta = conversion_efficiency.reduce("id_final_energy_carrier", [6])
+    else:
+        eta = conversion_efficiency.reduce("id_final_energy_carrier", [1])
+    del eta["id_final_energy_carrier"]
+
+    years = list_utils.string_to_integer(total_primary_energy_saving.columns)
+    wholesale_price = extrapolation.extrapolate(wholesale_price, years)
+    ets_price = extrapolation.extrapolate(ets_price, years)
+    vnfc = extrapolation.extrapolate(vnfc, years)
+    eta = extrapolation.extrapolate(eta, years)
+
+    price_sum_df = (
+        wholesale_price._data_frame
+        + ets_price._data_frame
+        + vnfc._data_frame * eta._data_frame
+    )
+
+    savings_df = total_primary_energy_saving._data_frame
+    result_df = savings_df.mul(price_sum_df, level="id_primary_energy_carrier")
+    result_df = result_df.groupby(level="id_measure").sum()
+
+    return Table(result_df)
+
+
 def supply_risk_factor(
     final_energy_saving_or_capacities,
     data_source,
