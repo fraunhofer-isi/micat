@@ -106,6 +106,9 @@ def land_use_change(
         .sort_index()
     )
 
+    if substitution_factors is None:
+        return Table(lui_res)
+
     # Conventional
     landuse_conventional = data_source.table(
         "wuppertal_landuse_conventional",
