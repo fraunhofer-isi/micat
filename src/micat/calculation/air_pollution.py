@@ -129,7 +129,6 @@ def reduction_of_mortality_morbidity_monetization(
         reduction_of_mortality_morbidity_table.query("id_parameter == [9]") * extrapolated_hospitalisation_admission
     )
     health_costs = Table(pd.concat([mortality._data_frame, hospitalisation._data_frame]))
-    del health_costs["id_parameter"]
     return health_costs
 
 

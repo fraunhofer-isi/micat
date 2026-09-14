@@ -130,8 +130,10 @@ def test_reduction_of_mortality_morbidity_monetization():
         "mocked_id_region",
     )
 
-    assert result["2020"][1].iloc[0] == 2000000
-    assert result["2030"][1].iloc[0] == 8000000
+    assert result["2020"][1, 8] == 2000000
+    assert result["2030"][1, 8] == 8000000
+    assert result["2020"][1, 9] == 2000000
+    assert result["2030"][1, 9] == 8000000
 
 
 mocked_reduction = Table(
