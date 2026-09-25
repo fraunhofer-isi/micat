@@ -156,3 +156,41 @@ Other CBA aspects
 -------------------
 
 The slider for discount rate adjusts the discount rate (relevant for the discounting of one-time impacts). The sliders for energy price and investment sensitivity are multipliers for energy costs and discounted investments, respectively.
+
+### Granularity of stated years
+
+The weighted annuity, and the other CBA metrics derived from it, are
+built from values evaluated at the stated years (Stützjahre) chosen
+in the front end, combined with a savings-weighted average across
+the gaps between them (see [Weighted annuity](#weighted-annuity)).
+
+This means the accuracy of the weighted annuity - and of the metrics
+derived from it - depends on how many stated years are chosen and how
+evenly they are spaced. Coarser or unevenly spaced stated years widen
+the gaps that rely on this representative-value approximation, which
+can result in a less accurate estimate whenever the underlying
+measure's savings or investments do not grow evenly within a gap. For
+more precise results, especially for measures with an uneven savings
+or investment profile, we recommend choosing multiple, evenly spaced
+stated years.
+
+### Averaged, not summed, contributions
+
+The weighted annuity `A_m` (and the other CBA metrics derived from
+it) is a savings-weighted **average** of the (where applicable,
+already discounted) values per stated year - not a **sum**. This is
+consistent with the levelised-cost nature of the indicator: `A_m`
+represents a single, representative annual rate, comparable across
+measures of different sizes and durations, in line with `LCOE_m` and
+`LCOCO2_m`.
+
+One practical consequence: if a measure involves investments in
+several different years, `A_m` does **not** represent the sum of the
+individual annuitised repayments that these investments would imply
+in a real repayment schedule (where multiple "vintages" of
+investment can be outstanding, and being repaid, at the same time).
+Instead, it is a single blended rate. `A_m`, `NPV_m`, `LCOE_m`,
+`LCOCO2_m`, `CBR_m` and `BCR_m` should therefore be read as levelised,
+per-year-equivalent figures over the measure's lifetime, not as a
+projection of the actual net cash flow occurring in any one specific
+future calendar year.
