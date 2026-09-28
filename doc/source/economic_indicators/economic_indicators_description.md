@@ -46,6 +46,7 @@ consumption is orders of magnitude smaller than normal energy consumption and bo
 the effect should be negligible. We're working on addressing this issue.
 
 You can find the equations [here](./energy_intensity.md), the PDF of the fact sheet is downloadable from [here](https://micatool.eu/seed-micat-project-wAssets/docs/publications/factsheets/seed-micat-factsheets/SEED-MICAT-Economic-impacts-energy-intensity-1.pdf)
+
 Asset value of buildings
 -
 
