@@ -49,7 +49,7 @@ def energy_intensity_difference(
     gross_domestic_product_baseline,
     additional_gross_domestic_product,
     # primary_non_energy_use,
-    additional_primary_energy_saving,
+    total_primary_energy_saving,
 ):
     primary_energy_consumption_baseline = gross_available_energy  # - primary_non_energy_use
     sum_series_baseline = primary_energy_consumption_baseline.sum()
@@ -64,11 +64,11 @@ def energy_intensity_difference(
 
     gross_domestic_product = gross_domestic_product_baseline + additional_gross_domestic_product_all_measures_in_bio
 
-    additional_primary_energy_saving_all_measures = additional_primary_energy_saving.aggregate_to(
+    total_primary_energy_saving_all_measures = total_primary_energy_saving.aggregate_to(
         ["id_primary_energy_carrier"]
     )
 
-    primary_energy_consumption = primary_energy_consumption_baseline - additional_primary_energy_saving_all_measures
+    primary_energy_consumption = primary_energy_consumption_baseline - total_primary_energy_saving_all_measures
     sum_series = primary_energy_consumption.sum()
     energy_intensity_table = _intensity_diff_table(
         sum_series,

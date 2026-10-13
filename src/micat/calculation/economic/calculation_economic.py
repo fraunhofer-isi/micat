@@ -42,8 +42,6 @@ def economic_indicators(  # pylint: disable=too-many-locals
         years,
     )
 
-    additional_primary_energy_saving = interim_data["additional_primary_energy_saving"]
-
     reduction_of_energy_cost = interim_data["reduction_of_energy_cost"]
 
     reduction_of_energy_cost_by_final_energy_carrier = (
@@ -91,7 +89,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
         scaled_gross_domestic_product,
         impact_on_gross_domestic_product,
         # primary_non_energy_use,
-        additional_primary_energy_saving,
+        total_primary_energy_saving,
     )
 
     reduction_of_import_dependency_table = (
