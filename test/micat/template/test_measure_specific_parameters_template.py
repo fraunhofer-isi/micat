@@ -177,7 +177,7 @@ def test_get_main_data():
         wuppertal_parameters,
         data_source,
     )
-    assert len(res) == 4
+    assert len(res) == 5
 
 
 def test_get_fuel_switch_data():

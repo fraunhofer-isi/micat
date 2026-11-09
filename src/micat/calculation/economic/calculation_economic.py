@@ -12,6 +12,7 @@ from micat.calculation.economic import (
     gross_domestic_product,
     import_dependency,
     production,
+    public_budget,
     renewables,
 )
 
@@ -108,6 +109,12 @@ def economic_indicators(  # pylint: disable=too-many-locals
         starting_year,
     )
 
+    impact_on_public_budget = public_budget.impact_on_public_budget(
+        final_energy_saving_or_capacities,
+        data_source,
+        id_region,
+    )
+
     added_asset_value_of_buildings = buildings.added_asset_value_of_buildings(
         reduction_of_energy_cost,
         data_source,
@@ -154,6 +161,7 @@ def economic_indicators(  # pylint: disable=too-many-locals
         # "changeInSupplierDiversityByEnergyEfficiencyImpact": change_in_supplier_diversity_by_energy_efficiency_impact,
         "energyIntensity": energy_intensity_difference,
         "impactOnGrossDomesticProduct": impact_on_gross_domestic_product,
+        "impactOnPublicBudget": impact_on_public_budget,
         "reductionOfAdditionalCapacitiesInGridMonetization": monetization_of_reduction_of_additional_capacities_in_grid,
         "reductionOfEnergyCost": reduction_of_energy_cost_by_final_energy_carrier,
         "reductionOfImportDependency": reduction_of_import_dependency_table,

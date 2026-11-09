@@ -14,6 +14,7 @@ from micat.calculation.economic import (
     gross_domestic_product,
     import_dependency,
     production,
+    public_budget,
     renewables,
     supplier_diversity,
 )
@@ -37,6 +38,7 @@ from micat.test_utils.isi_mock import Mock, patch
 @patch(energy_efficiency.turnover_of_energy_efficiency_goods)
 @patch(grid.monetization_of_reduction_of_additional_capacities_in_grid)
 @patch(supplier_diversity.change_in_supplier_diversity_by_energy_efficiency_impact)
+@patch(public_budget.impact_on_public_budget)
 class TestEconomicIndicators:
     def test_indicators(self):
         mocked_interim_data = Mock()
@@ -66,7 +68,7 @@ class TestEconomicIndicators:
             None,
             installed_capacity,
         )
-        assert len(result) == 7
+        assert len(result) == 8
 
 
 @patch(gross_available_energy.gross_available_energy)
@@ -83,6 +85,7 @@ class TestEconomicIndicators:
 @patch(energy_efficiency.turnover_of_energy_efficiency_goods)
 @patch(grid.monetization_of_reduction_of_additional_capacities_in_grid)
 @patch(supplier_diversity.change_in_supplier_diversity_by_energy_efficiency_impact)
+@patch(public_budget.impact_on_public_budget)
 @patch(renewables.supply_risk_factor)
 @patch(renewables.vre_energy_system_costs)
 @patch(renewables.value_of_energy)
@@ -115,7 +118,7 @@ class TestEconomicIndicatorsRenewables:
             None,
             installed_capacity,
         )
-        assert len(result) == 10
+        assert len(result) == 11
         assert "supplyRiskFactor" in result
         assert "vreEnergySystemCosts" in result
         assert "valueOfEnergy" in result

@@ -149,11 +149,23 @@ def _get_main_data(
             "importance": "optional",
             "constants": _lifetime(context, data_source),
         },
+        "beta": {
+            "id_parameter": 84,
+            "id_final_energy_carrier": None,
+            "label": "Share of job-years filled by unemployed",
+            "unit": "ratio (0-1)",
+            "importance": "recommended",
+            "constants": None,
+        },
     }
     subsidy_rate = wuppertal_parameters.reduce("id_parameter", 35)
     main_data["subsidy_rate"] = (
         main_data["subsidy_rate"] | subsidy_rate._series.to_dict()
     )
+
+    beta = wuppertal_parameters.reduce("id_parameter", 84)
+    if beta is not None:
+        main_data["beta"] = main_data["beta"] | beta._series.to_dict()
 
     if is_renewable:
         id_subsector = final_energy_saving_or_capacities.unique_index_values(

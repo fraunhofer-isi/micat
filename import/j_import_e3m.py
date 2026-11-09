@@ -40,6 +40,11 @@ def main():
     energy_prices_in_mio = energy_prices / 1000000  # convert to mio €
     database_import.write_to_sqlite(energy_prices_in_mio, "e3m_energy_prices")
 
+    # Import public_budget_e3m
+    public_budget_path = import_path + "/public_budget_e3m.xlsx"
+    data = Table.read_excel(public_budget_path)
+    database_import.write_to_sqlite(data, "public_budget_e3m")
+
 
 if __name__ == "__main__":
     main()

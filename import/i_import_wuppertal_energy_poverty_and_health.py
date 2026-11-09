@@ -136,6 +136,22 @@ def main():
         sort=False,
     )
     extended_parameters._data_frame = extended_parameters._data_frame.fillna(0)
+
+    # Add beta parameter (id_parameter=84) with default value 0.5 for all regions and years
+    year_columns = [str(y) for y in range(2000, 2051)]
+    beta_rows = []
+    for id_region in range(28):
+        row = {"id_region": id_region, "id_parameter": 84}
+        for year in year_columns:
+            row[year] = 0.5
+        beta_rows.append(row)
+    beta_df = pd.DataFrame(beta_rows).set_index(["id_region", "id_parameter"])
+    extended_parameters._data_frame = pd.concat(
+        [extended_parameters._data_frame, beta_df],
+        ignore_index=False,
+        sort=False,
+    )
+
     database_import.write_to_sqlite(extended_parameters, "wuppertal_parameters")
 
     file_path = import_path + "/health.xlsx"
