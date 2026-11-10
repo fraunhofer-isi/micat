@@ -2,6 +2,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import sqlite3
+
+import openpyxl
 import pandas as pd
 from config import import_config
 
@@ -18,16 +21,24 @@ def main():
     import_path = raw_data_path + "/fraunhofer"
 
     # statistical_transfers.xlsx
-    cost_of_res_statistical_transfer_file_path = import_path + "/statistical_transfers.xlsx"
-    raw_cost_of_res_statistical_transfer = pd.read_excel(cost_of_res_statistical_transfer_file_path)
+    cost_of_res_statistical_transfer_file_path = (
+        import_path + "/statistical_transfers.xlsx"
+    )
+    raw_cost_of_res_statistical_transfer = pd.read_excel(
+        cost_of_res_statistical_transfer_file_path
+    )
     cost_of_res_statistical_transfer = Table(raw_cost_of_res_statistical_transfer)
     id_parameter = 61
-    fraunhofer_constant_parameters = cost_of_res_statistical_transfer.insert_index_column(
-        "id_parameter",
-        1,
-        id_parameter,
+    fraunhofer_constant_parameters = (
+        cost_of_res_statistical_transfer.insert_index_column(
+            "id_parameter",
+            1,
+            id_parameter,
+        )
     )
-    database_import.write_to_sqlite(fraunhofer_constant_parameters, "fraunhofer_constant_parameters")
+    database_import.write_to_sqlite(
+        fraunhofer_constant_parameters, "fraunhofer_constant_parameters"
+    )
 
     # capacity_factors.xlsx
     capacity_factors_path = import_path + "/capacity_factors.xlsx"
@@ -39,22 +50,31 @@ def main():
         1,
         id_parameter,
     )
-    database_import.write_to_sqlite(fraunhofer_capacity_factors, "fraunhofer_capacity_factors")
+    database_import.write_to_sqlite(
+        fraunhofer_capacity_factors, "fraunhofer_capacity_factors"
+    )
     # In case of issue with AnnualSeries, comment out "self._table_validator.validate(sorted_table, details)" in the
     # write_to_sqlite method of the DatabaseImport class
 
     # hydrogen_synthetic_fuels_generation.xlsx
-    hydrogen_synthetic_fuels_generation_path = import_path + "/hydrogen_synthetic_fuels_generation.xlsx"
-    raw_hydrogen_synthetic_fuels_generation = pd.read_excel(hydrogen_synthetic_fuels_generation_path)
+    hydrogen_synthetic_fuels_generation_path = (
+        import_path + "/hydrogen_synthetic_fuels_generation.xlsx"
+    )
+    raw_hydrogen_synthetic_fuels_generation = pd.read_excel(
+        hydrogen_synthetic_fuels_generation_path
+    )
     hydrogen_synthetic_fuels_generation = Table(raw_hydrogen_synthetic_fuels_generation)
     id_parameter = 22
-    fraunhofer_hydrogen_synthetic_fuels_generation = hydrogen_synthetic_fuels_generation.insert_index_column(
-        "id_parameter",
-        1,
-        id_parameter,
+    fraunhofer_hydrogen_synthetic_fuels_generation = (
+        hydrogen_synthetic_fuels_generation.insert_index_column(
+            "id_parameter",
+            1,
+            id_parameter,
+        )
     )
     database_import.write_to_sqlite(
-        fraunhofer_hydrogen_synthetic_fuels_generation, "fraunhofer_hydrogen_synthetic_fuels_generation"
+        fraunhofer_hydrogen_synthetic_fuels_generation,
+        "fraunhofer_hydrogen_synthetic_fuels_generation",
     )
 
     # conversion_efficiency.xlsx
@@ -67,7 +87,9 @@ def main():
         1,
         id_parameter,
     )
-    database_import.write_to_sqlite(fraunhofer_conversion_efficiency, "fraunhofer_conversion_efficiency")
+    database_import.write_to_sqlite(
+        fraunhofer_conversion_efficiency, "fraunhofer_conversion_efficiency"
+    )
 
     # Efficiency_RES.xlsx
     efficiency_res_path = import_path + "/Efficiency_RES.xlsx"
@@ -79,7 +101,9 @@ def main():
         1,
         id_parameter,
     )
-    database_import.write_to_sqlite(fraunhofer_efficiency_res, "fraunhofer_efficiency_res")
+    database_import.write_to_sqlite(
+        fraunhofer_efficiency_res, "fraunhofer_efficiency_res"
+    )
 
     # substitution_factors.xlsx
     substitution_factors_path = import_path + "/substitution_factors.xlsx"
@@ -91,13 +115,53 @@ def main():
         1,
         id_parameter,
     )
-    database_import.write_to_sqlite(fraunhofer_substitution_factors, "fraunhofer_substitution_factors")
+    database_import.write_to_sqlite(
+        fraunhofer_substitution_factors, "fraunhofer_substitution_factors"
+    )
 
     # reference_final_energy_consumption_2021_from_Odyssee.xlsx
-    reference_final_energy_consumption_path = import_path + "/reference_final_energy_consumption_2021_from_Odyssee.xlsx"
-    raw_reference_final_energy_consumption = pd.read_excel(reference_final_energy_consumption_path)
+    reference_final_energy_consumption_path = (
+        import_path + "/reference_final_energy_consumption_2021_from_Odyssee.xlsx"
+    )
+    raw_reference_final_energy_consumption = pd.read_excel(
+        reference_final_energy_consumption_path
+    )
     reference_final_energy_consumption = Table(raw_reference_final_energy_consumption)
-    database_import.write_to_sqlite(reference_final_energy_consumption, "fraunhofer_reference_final_energy_consumption")
+    database_import.write_to_sqlite(
+        reference_final_energy_consumption,
+        "fraunhofer_reference_final_energy_consumption",
+    )
+
+    # EU case study explorer_data.xlsx — predefined scenarios
+    _import_scenarios(public_database_path, import_path)
+
+
+def _import_scenarios(database_path, import_path):
+    explorer_file_path = import_path + "/EU case study explorer_data.xlsx"
+
+    wb = openpyxl.load_workbook(explorer_file_path, data_only=True)
+    wb.close()
+
+    ee_df = pd.read_excel(explorer_file_path, sheet_name="EE", header=2)
+    ee_df.columns = [str(c) for c in ee_df.columns]
+    ee_df = ee_df.rename(columns={"Sector": "sector", "Name": "name"})
+    ee_df = ee_df.replace("-", None)
+
+    res_df = pd.read_excel(explorer_file_path, sheet_name="RES", header=2)
+    unnamed_cols = [
+        c for c in res_df.columns if str(c).startswith("Unnamed") or pd.isna(c)
+    ]
+    res_df = res_df.drop(columns=unnamed_cols)
+    res_df.columns = [str(c) for c in res_df.columns]
+    res_df = res_df.rename(columns={"RES technology": "technology"})
+
+    with sqlite3.connect(database_path) as conn:
+        ee_df.to_sql(
+            "scenario_energy_efficiency", conn, index_label="id", if_exists="replace"
+        )
+        res_df.to_sql(
+            "scenario_renewables", conn, index_label="id", if_exists="replace"
+        )
 
 
 if __name__ == "__main__":
