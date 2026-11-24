@@ -68,6 +68,7 @@ def energy_intensity_difference(
     primary_energy_consumption_baseline = (
         gross_available_energy  # - primary_non_energy_use
     )
+    # TODO: Remove electricity from primary energy consumption before summing
     sum_series_baseline = primary_energy_consumption_baseline.sum()
     energy_intensity_table_baseline = _intensity_diff_table(
         sum_series_baseline,
@@ -98,8 +99,10 @@ def energy_intensity_difference(
     )
     # total_primary_energy_saving has no electricity rows (id_primary_energy_carrier == 7),
     # so the subtraction produces NaN for those carriers; restore the baseline values there.
-    primary_energy_consumption._data_frame = primary_energy_consumption._data_frame.fillna(
-        primary_energy_consumption_baseline._data_frame
+    primary_energy_consumption._data_frame = (
+        primary_energy_consumption._data_frame.fillna(
+            primary_energy_consumption_baseline._data_frame
+        )
     )
     sum_series = primary_energy_consumption.sum()
     energy_intensity_table = _intensity_diff_table(
@@ -109,6 +112,10 @@ def energy_intensity_difference(
 
     difference = energy_intensity_table - energy_intensity_table_baseline
     difference_table = difference.transpose("label", "difference")
+
+    # import ipdb
+
+    # ipdb.set_trace()
     return difference_table
 
 

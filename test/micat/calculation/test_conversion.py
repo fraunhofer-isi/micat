@@ -47,6 +47,84 @@ def test_total_primary_energy_saving():
     assert result["2030"][1] == 20 + 40
 
 
+def _carriers():
+    return [1, 2, 3, 4, 5, 6, 7]
+
+
+def _eurostat_primary_parameters():
+    rows = []
+    for param in [20, 21]:
+        for carrier in _carriers():
+            rows.append({"id_parameter": param, "id_primary_energy_carrier": carrier, "2020": 0.5, "2030": 0.7})
+    return Table(rows)
+
+
+def _h2_coefficient():
+    return Table(
+        [{"id_parameter": 22, "id_primary_energy_carrier": c, "2020": 5, "2030": 10} for c in _carriers()]
+    )
+
+
+def _conversion_efficiency():
+    rows = []
+    for carrier in _carriers():
+        for final_carrier in [1, 6, 7]:
+            rows.append(
+                {
+                    "id_primary_energy_carrier": carrier,
+                    "id_final_energy_carrier": final_carrier,
+                    "2020": 5,
+                    "2030": 10,
+                }
+            )
+    return Table(rows)
+
+
+def test_primary_energy_saving_with_two_renewable_measures():
+    final_energy_savings = Table(
+        [
+            {"id_measure": 1, "id_subsector": 30, "id_action_type": 30, "id_final_energy_carrier": fc, "2020": 6, "2030": 60}
+            for fc in [1, 6, 7]
+        ]
+        + [
+            {"id_measure": 2, "id_subsector": 30, "id_action_type": 31, "id_final_energy_carrier": fc, "2020": 8, "2030": 80}
+            for fc in [1, 6, 7]
+        ]
+    )
+
+    substitution_factors = Table(
+        [
+            {
+                "id_measure": m,
+                "id_parameter": 67,
+                "id_subsector": 30,
+                "id_action_type": at,
+                "id_primary_energy_carrier": c,
+                "2020": 0.2,
+                "2030": 0.3,
+            }
+            for m, at in [(1, 30), (2, 31)]
+            for c in _carriers()
+        ]
+    )
+
+    mock_data_source = Mock()
+    mock_data_source.table = Mock(return_value=None)
+
+    heat_saving_final, electricity_saving_final, h2_saving_final = primary_energy_saving(
+        final_energy_savings,
+        _eurostat_primary_parameters(),
+        _h2_coefficient(),
+        _conversion_efficiency(),
+        substitution_factors,
+        mock_data_source,
+        30,
+    )
+    result = heat_saving_final + electricity_saving_final + h2_saving_final
+    assert result.columns == ["2020", "2030"]
+    assert not result._data_frame.isnull().any().any()
+
+
 def test_primary_energy_saving():
     eurostat_primary_parameters = Table(
         [

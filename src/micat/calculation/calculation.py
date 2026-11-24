@@ -397,6 +397,9 @@ def _interim_data(
     )
 
     # Substitution factors
+    action_type_ids = final_energy_saving_or_capacities.unique_index_values(
+        "id_action_type"
+    )
     if subsector_ids[0] >= 30 and not id_action_type == 37:
 
         def _determine_table_for_measure(
@@ -417,11 +420,11 @@ def _interim_data(
             id_measure,
             id_subsector,
             _id_sector,
-            _id_action_type,
+            id_action_type,
             _savings,
             _substitution_factors,
         ):
-            query = "id_subsector==" + str(id_subsector)
+            query = "id_subsector==" + str(id_subsector) + " and id_action_type==" + str(id_action_type)
             _lambda = _substitution_factors.query(query)
             _lambda = _lambda.insert_index_column("id_measure", 0, id_measure)
             return _lambda
@@ -430,8 +433,8 @@ def _interim_data(
             "fraunhofer_substitution_factors",
             {
                 "id_region": str(id_region),
-                "id_subsector": str(subsector_ids[0]),
-                "id_action_type": str(id_action_type),
+                "id_subsector": str(subsector_ids),
+                "id_action_type": str(action_type_ids),
             },
         )
         _substitution_factors = extrapolation.extrapolate(
@@ -599,6 +602,12 @@ def _translate_result(key, table, data_source):
     translated_table = _translate_id_if_exists(table, "id_parameter", data_source)
     translated_table = _translate_id_if_exists(
         translated_table, "id_sector", data_source
+    )
+    translated_table = _translate_id_if_exists(
+        translated_table, "id_subsector", data_source
+    )
+    translated_table = _translate_id_if_exists(
+        translated_table, "id_action_type", data_source
     )
     translated_table = _translate_id_if_exists(
         translated_table, "id_final_energy_carrier", data_source

@@ -728,11 +728,28 @@ class DataSource:
     ):
         years = final_energy_saving_or_capacities.years
         default_values = parameter_default_values.reduce("id_parameter", id_parameter)
-        extrapolated_default_values = extrapolation.extrapolate_series(default_values, years)
 
-        def provide_default_value(_id_measure, _id_subsector, _id_action_type, year, _saving):
-            default_value = extrapolated_default_values[str(year)]
-            return default_value
+        if isinstance(default_values, Table):
+            extrapolated_defaults = extrapolation.extrapolate(default_values, years)
+
+            def provide_default_value(_id_measure, id_subsector, id_action_type, year, _saving):
+                conditions = []
+                index_names = extrapolated_defaults.index.names
+                if "id_measure" in index_names:
+                    conditions.append("id_measure==" + str(_id_measure))
+                if "id_subsector" in index_names:
+                    conditions.append("id_subsector==" + str(id_subsector))
+                if "id_action_type" in index_names:
+                    conditions.append("id_action_type==" + str(id_action_type))
+                row = extrapolated_defaults.query(" and ".join(conditions))
+                if row is not None:
+                    return row._data_frame[str(year)].iloc[0]
+                return 0
+        else:
+            extrapolated_default_values = extrapolation.extrapolate_series(default_values, years)
+
+            def provide_default_value(_id_measure, _id_subsector, _id_action_type, year, _saving):
+                return extrapolated_default_values[str(year)]
 
         measure_specific_parameter = self.measure_specific_parameter(
             final_energy_saving_or_capacities,

@@ -12,7 +12,10 @@ def gross_available_energy(
     years,
     population_of_municipality=None,
 ):
-    eurostat_primary_parameters = eurostat.primary_parameters(data_source, id_region, years)
+    # TODO: Use primary parameters if available and ignore eurostat duplicates
+    eurostat_primary_parameters = eurostat.primary_parameters(
+        data_source, id_region, years
+    )
     primes_primary_parameters = primes.primary_parameters(data_source, id_region, years)
     raw_gross_available_energy = merge_tables(
         eurostat_primary_parameters,

@@ -43,14 +43,14 @@ def annual_investment_cost_in_euro(
 
 
 def calculate_capex(
-    data_source, id_subsector, id_action_type, final_energy_saving_or_capacities
+    data_source, subsector_ids, action_type_ids, final_energy_saving_or_capacities
 ):
     # Capital investments (CAPEX)
     investments_res_capex = data_source.table(
         "investments_res",
         {
-            "id_subsector": str(id_subsector),
-            "id_action_type": str(id_action_type),
+            "id_subsector": str(subsector_ids),
+            "id_action_type": str(action_type_ids),
             "id_parameter": "68",  # Investment costs per capacity
         },
     )
@@ -61,14 +61,14 @@ def calculate_capex(
 
 
 def calculate_opex(
-    data_source, id_subsector, id_action_type, final_energy_saving_or_capacities
+    data_source, subsector_ids, action_type_ids, final_energy_saving_or_capacities
 ):
     # Running costs (OPEX)
     investments_res_opex = data_source.table(
         "investments_res",
         {
-            "id_subsector": str(id_subsector),
-            "id_action_type": str(id_action_type),
+            "id_subsector": str(subsector_ids),
+            "id_action_type": str(action_type_ids),
             "id_parameter": "69",  # Running costs
         },
     )
@@ -80,8 +80,8 @@ def calculate_opex(
 
 def calculate_vopex(
     data_source,
-    id_subsector,
-    id_action_type,
+    subsector_ids,
+    action_type_ids,
     id_region,
     final_energy_saving_or_capacities,
 ):
@@ -89,8 +89,8 @@ def calculate_vopex(
     investments_res_vopex = data_source.table(
         "investments_res",
         {
-            "id_subsector": str(id_subsector),
-            "id_action_type": str(id_action_type),
+            "id_subsector": str(subsector_ids),
+            "id_action_type": str(action_type_ids),
             "id_parameter": "70",  # Variable running costs
         },
     )
@@ -107,30 +107,30 @@ def calculate_vopex(
 
 def investment_cost_in_euro(final_energy_saving_or_capacities, data_source, id_region):
     years = final_energy_saving_or_capacities.years
-    id_subsector = final_energy_saving_or_capacities.unique_index_values(
+    subsector_ids = final_energy_saving_or_capacities.unique_index_values(
         "id_subsector"
-    )[0]
-    id_action_type = final_energy_saving_or_capacities.unique_index_values(
+    )
+    action_type_ids = final_energy_saving_or_capacities.unique_index_values(
         "id_action_type"
-    )[0]
+    )
 
-    if id_subsector >= 30:
+    if subsector_ids[0] >= 30:
         _capex = calculate_capex(
             data_source,
-            id_subsector,
-            id_action_type,
+            subsector_ids,
+            action_type_ids,
             final_energy_saving_or_capacities,
         )
         _opex = calculate_opex(
             data_source,
-            id_subsector,
-            id_action_type,
+            subsector_ids,
+            action_type_ids,
             final_energy_saving_or_capacities,
         )
         _vopex = calculate_vopex(
             data_source,
-            id_subsector,
-            id_action_type,
+            subsector_ids,
+            action_type_ids,
             id_region,
             final_energy_saving_or_capacities,
         )
