@@ -55,8 +55,9 @@ def merge_tables(first_table, second_table, interpolate=True):
     merged_df = df1.combine_first(df2)
 
     if interpolate:
-        # Interpolate missing values across years
-        first_table._data_frame = merged_df.interpolate(axis=1, limit_direction="both")
+        merged_df = merged_df.interpolate(axis=1, limit_direction="both")
+
+    first_table._data_frame = merged_df
     return first_table
 
 
