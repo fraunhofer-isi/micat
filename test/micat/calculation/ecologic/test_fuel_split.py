@@ -357,9 +357,11 @@ def test_provide_default_lambda():
     result = fuel_split._provide_default_lambda(
         id_measure,
         id_subsector,
-        "mocked_id_action_type",
-        "mocked_years",
+        None,
+        1,
+        "mocked_savings",
         basic_lambda,
+        {},
     )
     assert result["2020"][1, 2] == 99
 

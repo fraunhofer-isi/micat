@@ -4,7 +4,7 @@
 
 # https://gitlab.cc-asp.fraunhofer.de/isi/micat/-/issues/24
 from micat.calculation import extrapolation
-from micat.table.table import merge_tables
+from micat.table.table import Table, merge_tables
 
 
 # pylint: disable=too-many-locals
@@ -17,15 +17,19 @@ def fuel_split_by_action_type(final_energy_saving_or_capacities, data_source, id
     years = final_energy_saving_or_capacities.years
     basic_lambda = extrapolation.extrapolate(raw_lambda, years)
 
+    fuel_switch_defaults = _load_fuel_switch_defaults(data_source, subsector_ids, years)
+
     measure_specific_lambda = data_source.measure_specific_calculation(
         final_energy_saving_or_capacities,
         _determine_lambda_for_measure,
-        lambda id_measure, id_subsector, _id_sector, id_action_type, savings: _provide_default_lambda(
+        lambda id_measure, id_subsector, id_sector, id_action_type, savings: _provide_default_lambda(
             id_measure,
             id_subsector,
+            id_sector,
             id_action_type,
             savings,
             basic_lambda,
+            fuel_switch_defaults,
         ),
     )
 
@@ -222,17 +226,71 @@ def _measure_specific_fuel_split(lambda_, chi):
     return fuel_split
 
 
+def _load_fuel_switch_defaults(data_source, subsector_ids, years):
+    mapping_df = data_source.mapping_table("mapping__subsector__sector")._data_frame
+    defaults_by_sector = {}
+
+    for id_subsector in subsector_ids:
+        rows = mapping_df.loc[mapping_df["id_subsector"] == id_subsector, "id_sector"]
+        if rows.empty:
+            continue
+        id_sector = int(rows.item())
+        if id_sector in defaults_by_sector:
+            continue
+
+        try:
+            raw_table = data_source.table(
+                "measurement_specific_parameters_fuel_switch",
+                {"id_sector": str(id_sector)},
+            )
+        except Exception:
+            continue
+
+        if raw_table is None:
+            continue
+
+        df = raw_table._data_frame
+        df = df.droplevel("id_sector")
+        year_cols = [col for col in df.columns if str(col).isdigit()]
+        df = df[year_cols]
+        df.index = df.index.set_levels(
+            [level.astype(int) for level in df.index.levels]
+        )
+
+        fuel_switch_table = Table(df)
+        extrapolated = extrapolation.extrapolate(fuel_switch_table, years)
+        defaults_by_sector[id_sector] = extrapolated
+
+    return defaults_by_sector
+
+
 def _provide_default_lambda(
     id_measure,
     id_subsector,
-    _id_action_type,
-    _savings,
+    id_sector,
+    id_action_type,
+    savings,
     basic_lambda,
+    fuel_switch_defaults_by_sector,
 ):
-    query = "id_subsector==" + str(id_subsector)
-    _lambda = basic_lambda.query(query)
-    _lambda = _lambda.insert_index_column("id_measure", 0, id_measure)
-    return _lambda
+    non_effected_action_type_ids = [2, 10, 17]
+    if id_action_type in non_effected_action_type_ids and id_sector in fuel_switch_defaults_by_sector:
+        default_final_params = fuel_switch_defaults_by_sector[id_sector]
+        _lambda = _lambda_for_measure_with_non_effected_action_type(
+            id_subsector,
+            savings,
+            default_final_params,
+        )
+        _lambda = _lambda.insert_index_column("id_measure", 0, id_measure)
+        _lambda._data_frame = _lambda._data_frame.reorder_levels(
+            ["id_measure", "id_subsector", "id_final_energy_carrier"]
+        )
+        return _lambda
+    else:
+        query = "id_subsector==" + str(id_subsector)
+        _lambda = basic_lambda.query(query)
+        _lambda = _lambda.insert_index_column("id_measure", 0, id_measure)
+        return _lambda
 
 
 def _provide_default_chi(
@@ -242,9 +300,12 @@ def _provide_default_chi(
     _savings,
     basic_chi,
 ):
+    non_effected_action_type_ids = [2, 10, 17]
     query = "id_subsector==" + str(id_subsector) + "& id_action_type==" + str(id_action_type)
     chi = basic_chi.query(query)
     chi = chi.insert_index_column("id_measure", 0, id_measure)
+    if id_action_type in non_effected_action_type_ids:
+        chi["value"] = 1
     return chi
 
 

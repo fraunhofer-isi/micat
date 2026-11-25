@@ -415,6 +415,7 @@ class BackEnd:
                             col_idx = 0
                             num_years = len(result["yearColumnNames"])
                             total = [0 for _ in result["yearColumnNames"]]
+                            is_percentage_points = "%" in measurement.get("yAxis", "")
                             data_start_row = row_idx
                             for row in result["rows"]:
                                 for idx, entry in enumerate(row):
@@ -423,10 +424,15 @@ class BackEnd:
                                     except IndexError:
                                         if col_idx == 0:
                                             col_idx += 1
-                                        worksheet.write(
-                                            row_idx, col_idx, entry, number_format
+                                        value = (
+                                            entry * 100
+                                            if is_percentage_points
+                                            else entry
                                         )
-                                        total[col_idx - 1] += entry
+                                        worksheet.write(
+                                            row_idx, col_idx, value, number_format
+                                        )
+                                        total[col_idx - 1] += value
                                     else:
                                         if column_name == "id_measure":
                                             continue
